@@ -20,3 +20,7 @@ export * from "./components/ImportDialog";
 export * from "./components/LeagueRosterModal";
 export * from "./components/SwapBoard";
 export * from "./components/ManualDrawModal";
+export * from "./components/LiveMatchVisualizer";
+export * from "./components/WheelPicker";
+export * from "./components/MatchHeader";
+export * from "./components/MatchModal";

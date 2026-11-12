@@ -2,6 +2,7 @@
 import type { BestOf } from "@sabung/shared";
 import { gameWinProbability } from "./probability";
 import type { Rng } from "./rng";
+import { type Side, seriesState } from "./seriesRules";
 
 export type Tuning = { scale?: number; sigma?: number }; // defaults 40 and 4 (PRD §5.1)
 
@@ -23,17 +24,9 @@ export function simulateSeries({ ratingA, ratingB, formA = 0, formB = 0, bestOf,
   const effectiveA = ratingA + formA + rng.normal(sigma);
   const effectiveB = ratingB + formB + rng.normal(sigma);
   const p = gameWinProbability(effectiveA, effectiveB, scale);
-  const target = bestOf === 4 ? 3 : (bestOf + 1) / 2;
 
-  const games: ("A" | "B")[] = [];
-  let scoreA = 0;
-  let scoreB = 0;
-  while (scoreA < target && scoreB < target && games.length < bestOf) {
-    const winner = rng.next() < p ? "A" : "B";
-    games.push(winner);
-    if (winner === "A") scoreA++;
-    else scoreB++;
-  }
-  const result = scoreA === target ? "A" : scoreB === target ? "B" : "D"; // D only possible as Bo4 2–2
-  return { games, scoreA, scoreB, result };
+  const games: Side[] = [];
+  while (!seriesState(bestOf, games).result) games.push(rng.next() < p ? "A" : "B");
+  const { scoreA, scoreB, result } = seriesState(bestOf, games);
+  return { games, scoreA, scoreB, result: result! };
 }
