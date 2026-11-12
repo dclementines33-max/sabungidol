@@ -13,8 +13,9 @@ function final(player: MatchPlayer, comp: "DSG" | "MBK", round: string, a: strin
 }
 
 // Daesang = The Idols league winner (Superleague, user decision) v Unzure Cup champion.
-export function playGala(player: MatchPlayer, tables: LeagueTables, unzure: Title, bSide: Title[], notices: string[]) {
-  const daesang = final(player, "DSG", "F", tables.IDL![0].idolId, unzure, "Daesang Cup", notices);
-  const musicBank = D1_LEAGUES.map((code, i) => final(player, "MBK", code, tables[code]![0].idolId, bSide[i], `Music Bank Cup ${code}`, notices));
+export function playGala(player: MatchPlayer, tables: LeagueTables, unzure: Title | undefined, bSide: Title[] | undefined, notices: string[]) {
+  // A side switched off in Settings (or its feeder) skips that final.
+  const daesang = unzure && tables.IDL ? final(player, "DSG", "F", tables.IDL[0].idolId, unzure, "Daesang Cup", notices) : undefined;
+  const musicBank = bSide ? D1_LEAGUES.map((code, i) => final(player, "MBK", code, tables[code]![0].idolId, bSide[i]!, `Music Bank Cup ${code}`, notices)) : undefined;
   return { daesang, musicBank };
 }

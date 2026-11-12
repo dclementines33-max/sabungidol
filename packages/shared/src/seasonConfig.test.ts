@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bestOfFor, brokenByOff, readSeasonConfig } from "./seasonConfig";
+import { bestOfFor, brokenByOff, readSeasonConfig, seasonBestOf } from "./seasonConfig";
 
 describe("season settings", () => {
   it("uses the PRD default BoN unless the season changes it", () => {
@@ -26,5 +26,15 @@ describe("engine tuning in the season config", () => {
   it("defaults to the PRD constants and refuses values out of range", () => {
     expect(readSeasonConfig({}).tuning).toEqual({ scale: 40, sigma: 4 });
     expect(() => readSeasonConfig({ tuning: { scale: 5, sigma: 4 } })).toThrow();
+  });
+});
+
+describe("BoN per match", () => {
+  it("uses the season override for the stage, else the default with its round rules", () => {
+    const config = readSeasonConfig({ bestOf: { "NUG:KO": 5 } });
+    expect(seasonBestOf(config, "NUG", "KO", "R1")).toBe(5);
+    expect(seasonBestOf(undefined, "NUG", "KO", "SF")).toBe(5);
+    expect(seasonBestOf(undefined, "NUG", "KO", "R1")).toBe(3);
+    expect(seasonBestOf(readSeasonConfig({ bestOf: { "D1:LG": 5 } }), "D1C", "LG")).toBe(5);
   });
 });

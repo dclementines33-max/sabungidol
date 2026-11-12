@@ -76,9 +76,9 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
 // Single round robin in several groups at once (LCQ, Unzure groups); one matchday per yield.
 function* roundRobinGroups(player: MatchPlayer, comp: "LCQ" | "UZC", stage: "LQ" | "GS", groups: string[][]): Generator<void, StandingRow[][]> {
   const schedules = groups.map((ids) => roundRobin(ids, { double: false }));
-  const played = groups.map(() => [] as ReturnType<MatchPlayer["play"]>[]);
+  const played = groups.map(() => [] as NonNullable<ReturnType<MatchPlayer["play"]>>[]);
   for (let md = 0; md < schedules[0].length; md++) {
-    schedules.forEach((rounds, g) => rounds[md].forEach(([a, b], i) => played[g].push(player.play(comp, stage, `${LETTERS[g]}-MD${md + 1}`, i + 1, a, b))));
+    schedules.forEach((rounds, g) => rounds[md].forEach(([a, b], i) => played[g].push(player.play(comp, stage, `${LETTERS[g]}-MD${md + 1}`, i + 1, a, b)!)));
     yield;
   }
   return groups.map((ids, g) => computeStandings(ids.map((id) => ({ id, startRating: player.rating(id) })), played[g]));

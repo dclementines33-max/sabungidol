@@ -14,8 +14,8 @@ export function pickTheIdols(input: SeasonInput): string[] {
     .slice(0, 20).map((i) => i.id);
 }
 
-export function playLeaguePhase(input: SeasonInput, player: MatchPlayer): LeagueTables {
-  const rosters: [CompetitionCode, string[]][] = [...Object.entries(input.leagues) as [CompetitionCode, string[]][], ["IDL", pickTheIdols(input)]];
+export function playLeaguePhase(input: SeasonInput, player: MatchPlayer, withTheIdols = true): LeagueTables {
+  const rosters: [CompetitionCode, string[]][] = [...Object.entries(input.leagues) as [CompetitionCode, string[]][], ...(withTheIdols ? [["IDL", pickTheIdols(input)] as [CompetitionCode, string[]]] : [])];
   for (const [code, ids] of rosters) if (ids.length !== 20) throw new Error(`${code} must have 20 idols, has ${ids.length}`);
 
   const schedules = rosters.map(([code, ids]) => [code, roundRobin(ids, { double: true })] as const);

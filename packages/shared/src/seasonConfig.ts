@@ -52,3 +52,13 @@ export const TUNING_PRESETS = {
   Chaotic: { scale: 60, sigma: 8 }, // flatter odds, bigger off-days: more upsets
   Dominant: { scale: 28, sigma: 2 }, // steeper odds, steadier: favourites win more
 } as const;
+
+// Which Settings competition a code belongs to (D1A → D1, BSC → BS, ...).
+export const competitionKeyOf = (comp: string): CompetitionKey => SEASON_COMPETITIONS.find((c) => (c.codes as string[]).includes(comp))!.key;
+
+// The BoN a match plays with: the season's override for its stage, else the PRD default (which
+// also knows the round, e.g. the Nugu semi-final).
+export function seasonBestOf(config: SeasonConfig | undefined, comp: CompetitionCode, stage: StageCode, round?: string): BestOf {
+  const override = config?.bestOf[`${competitionKeyOf(comp)}:${stage}`] as BestOf | undefined;
+  return override ?? defaultBestOf(comp, stage, round);
+}
