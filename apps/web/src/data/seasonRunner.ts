@@ -3,7 +3,7 @@
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
 import { type Db, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
-import { type MatchRef, type SeasonInput, type SimMatch, runSeason } from "@sabung/engine";
+import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
 import { SEASON_COMPETITIONS, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 
 export type PlayTarget =
@@ -89,4 +89,37 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
       return { added, removed, done: result.done, paused: pauseRequested && !result.done && fresh.length > 0, pending: result.pending.length, titles: result.titles, notices: result.notices };
     }
   }
+}
+
+// One league's view (Fase 3 panels): standings, form (last 5 league results), position after every
+// matchday (for the sparkline), and all 38 matchdays — played or still open. Nothing is played.
+export async function leagueView(db: Db, comp: string) {
+  const input = await seasonInput(db);
+  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const roster = comp === "IDL" ? (input.theIdols ?? []) : (input.leagues as Record<string, string[]>)[comp] ?? [];
+  const played = result.matches.filter((m) => m.comp === comp && m.stage === "LG");
+  const start = roster.map((id) => ({ id, startRating: input.idols.find((i) => i.id === id)?.rating ?? 0 }));
+  const md = (round: string) => Number(round.slice(2));
+  const lastMd = Math.max(0, ...played.map((m) => md(m.round)));
+  const positions: Record<string, number[]> = Object.fromEntries(roster.map((id) => [id, []]));
+  for (let n = 1; n <= lastMd; n++) {
+    for (const row of computeStandings(start, played.filter((m) => md(m.round) <= n))) positions[row.idolId]!.push(row.rank);
+  }
+  const form: Record<string, ("W" | "D" | "L")[]> = Object.fromEntries(roster.map((id) => [id, []]));
+  for (const m of [...played].sort((a, b) => md(a.round) - md(b.round))) {
+    form[m.idolA]!.push(m.result === "D" ? "D" : m.result === "A" ? "W" : "L");
+    form[m.idolB]!.push(m.result === "D" ? "D" : m.result === "B" ? "W" : "L");
+  }
+  const fixtures = new Map<string, { id: string; idolA: string; idolB: string; scoreA?: number; scoreB?: number }[]>();
+  const open = result.pending.filter((p) => p.comp === comp && p.stage === "LG").map((p) => ({ ...p, scoreA: undefined, scoreB: undefined }));
+  for (const m of [...played, ...open]) {
+    fixtures.set(m.round, [...(fixtures.get(m.round) ?? []), { id: m.id, idolA: m.idolA, idolB: m.idolB, scoreA: m.scoreA, scoreB: m.scoreB }]);
+  }
+  return {
+    roster,
+    standings: computeStandings(start, played),
+    positions,
+    form: Object.fromEntries(Object.entries(form).map(([id, f]) => [id, f.slice(-5)])),
+    fixtures: [...fixtures.entries()].sort(([a], [b]) => md(a) - md(b)).map(([round, matches]) => ({ round, matches: matches.sort((x, y) => x.id.localeCompare(y.id)) })),
+  };
 }

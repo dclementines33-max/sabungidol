@@ -7,11 +7,11 @@ import { Pause, Play, SkipForward } from "lucide-react";
 import { useState } from "react";
 import { SeasonHonours } from "../../components/play/SeasonHonours";
 import { SeasonTimeline } from "../../components/play/SeasonTimeline";
-import { engine, onProgress } from "../../data/engineClient";
+import { usePlaySeason } from "../../components/play/usePlaySeason";
+import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
-import type { PlayTarget } from "../../data/seasonRunner";
 
 export const Route = createFileRoute("/play/")({ component: SabungIdol });
 
@@ -19,7 +19,7 @@ function SabungIdol() {
   const season = useCurrentSeason();
   const live = season?.status === "live";
   const { data: overview } = useQuery({ queryKey: [...SEASON_QUERY, "overview", season?.id, season?.status], queryFn: () => engine().seasonOverview(), enabled: live });
-  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const { progress, running, play } = usePlaySeason();
   const [problems, setProblems] = useState<string[]>([]);
 
   const start = async () => {
@@ -28,19 +28,6 @@ function SabungIdol() {
       notify({ level: "success", message: `${season!.name} dimulai` });
       await queryClient.invalidateQueries({ queryKey: SEASON_QUERY });
     } else setProblems(result.problems);
-  };
-  const play = async (target: PlayTarget) => {
-    setProgress({ done: 0, total: 1 });
-    try {
-      const result = await engine().playSeason(target, onProgress(setProgress));
-      notify({ level: "success", message: `${result.added.toLocaleString("id-ID")} match dimainkan${result.paused ? " (dijeda)" : ""}${result.done ? ". Season selesai!" : ""}` });
-      result.notices.forEach((message) => notify({ level: "info", message }, { log: false }));
-    } catch (error) {
-      notify({ level: "error", code: "E-PLAY-001", message: "Simulasi berhenti. Match yang sudah tersimpan tetap aman.", context: error instanceof Error ? error.message : String(error) });
-    } finally {
-      setProgress(null);
-      await queryClient.invalidateQueries({ queryKey: SEASON_QUERY });
-    }
   };
 
   if (!season) return <p className="text-text-secondary">Belum ada season.</p>;
@@ -60,7 +47,6 @@ function SabungIdol() {
     );
   }
   if (!overview) return <p className="text-text-secondary">Membaca season…</p>;
-  const running = progress !== null;
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center gap-3">
@@ -69,7 +55,7 @@ function SabungIdol() {
         <Button disabled={!running} onClick={() => engine().pauseSeason()}><Pause aria-hidden="true" size={16} strokeWidth={1.5} /> Pause</Button>
         <span className="font-mono text-sm text-text-secondary tabular-nums" aria-live="polite">{overview.played.toLocaleString("id-ID")} match dimainkan</span>
       </div>
-      {running && (
+      {progress && (
         <div role="status" aria-label="Progres simulasi">
           <p className="m-0 mb-2 text-sm">Mensimulasikan… {progress.done.toLocaleString("id-ID")} / ±{progress.total.toLocaleString("id-ID")} match</p>
           <div className="h-2 overflow-hidden rounded-full bg-surface-hover"><div className="h-full origin-left bg-accent-bright transition-transform" style={{ transform: `scaleX(${Math.min(1, progress.done / progress.total)})` }} /></div>

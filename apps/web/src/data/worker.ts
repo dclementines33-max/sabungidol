@@ -9,7 +9,7 @@ import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engin
 import * as Comlink from "comlink";
 import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
 import { fixIntegrity, integrityCheck } from "./integrityWorker";
-import { type PlayProgress, type PlayTarget, playSeason, requestPause, seasonOverview } from "./seasonRunner";
+import { type PlayProgress, type PlayTarget, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
@@ -105,6 +105,7 @@ const api = {
     return startSeason(db, (await currentSeason(db))!.id, pickTheIdols({ idols } as Parameters<typeof pickTheIdols>[0]));
   },
   seasonOverview: async () => seasonOverview(await open()),
+  leagueView: async (comp: string) => leagueView(await open(), comp),
   playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),
   pauseSeason: () => requestPause(),
   // Integrity check (PRD §14.2).
