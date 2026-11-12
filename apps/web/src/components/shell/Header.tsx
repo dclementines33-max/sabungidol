@@ -1,0 +1,26 @@
+// Top of the content area (agreed shell): page title, season chip, search, notifications.
+import { NotificationCenter } from "@sabung/ui";
+import { useLocation } from "@tanstack/react-router";
+import { Search } from "lucide-react";
+import { panelFor } from "./nav";
+
+export function Header({ onSearch }: { onSearch?: () => void }) {
+  const { pathname } = useLocation();
+  return (
+    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-bg-base px-4 py-3 md:px-8">
+      <h1 className="m-0 min-w-0 flex-1 truncate font-display text-xl md:text-2xl">{panelFor(pathname)?.label ?? "Tidak ditemukan"}</h1>
+      <span className="hidden rounded-control border border-border-strong px-2 py-0.5 text-xs text-text-secondary sm:inline">Belum ada season</span>
+      <button
+        type="button"
+        onClick={onSearch}
+        disabled={!onSearch} // the command palette arrives in Fase 1 step 11
+        className="hidden items-center gap-2 rounded-control border border-border-strong px-3 py-1.5 text-sm text-text-secondary hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold disabled:opacity-50 sm:flex"
+      >
+        <Search aria-hidden="true" size={16} strokeWidth={1.5} />
+        Cari…
+        <kbd className="font-mono text-xs">Ctrl K</kbd>
+      </button>
+      <NotificationCenter notices={[]} unread={0} onExport={() => {}} />
+    </header>
+  );
+}
