@@ -3,7 +3,10 @@ import { EmptyState } from "@sabung/ui";
 import { HeadContent, Link, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import { SearchX } from "lucide-react";
 import type { ReactNode } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "../components/shell/AppShell";
+import { IdolDataProvider } from "../data/IdolDataProvider";
+import { queryClient } from "../data/queryClient";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -16,7 +19,13 @@ export const Route = createRootRoute({
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootDocument,
-  component: () => <AppShell><Outlet /></AppShell>,
+  component: () => (
+    <QueryClientProvider client={queryClient}>
+      <IdolDataProvider>
+        <AppShell><Outlet /></AppShell>
+      </IdolDataProvider>
+    </QueryClientProvider>
+  ),
   notFoundComponent: NotFound,
 });
 

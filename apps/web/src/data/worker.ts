@@ -1,12 +1,14 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, addIdols, countMatches, deleteIdol, idols, listEvents, listGroups, listIdols, logEvent, openDb,
-  saveMatches, seasons, setActive, updateIdol,
+  type Db, type NewEvent, addIdols, countMatches, deleteIdol, getPhoto, idols, insertPhoto, listEvents, listGroups, listIdols,
+  logEvent, openDb, saveMatches, seasons, setActive, updateIdol,
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
+import { readPhotoFile, storePhotoFiles } from "./photoFiles";
+import { type PhotoSizes, bestStored } from "./photoSizes";
 import { type StorageKind, storageFor } from "./storageChoice";
 
 export type Progress = { phase: "simulating" | "saving"; done: number; total: number };
@@ -37,6 +39,21 @@ const api = {
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
   deleteIdol: async (id: string) => deleteIdol(await open(), id),
+
+  // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
+  savePhoto: async (image: Blob): Promise<string> => {
+    const db = await open();
+    const stored = await storePhotoFiles(DATABASE, image);
+    await insertPhoto(db, stored);
+    return stored.id;
+  },
+  // The best stored file for a wanted size (never a blown-up copy); null when the photo is unknown.
+  photoBlob: async (photoId: string, size: number): Promise<Blob | null> => {
+    const record = await getPhoto(await open(), photoId);
+    if (!record) return null;
+    const sizes = record.sizes as PhotoSizes;
+    return readPhotoFile(DATABASE, photoId, bestStored(sizes, size), sizes);
+  },
 
   // Fase 1 check: simulate the sample season and save it, one round per transaction (PRD §13).
   async simulateSampleSeason(onProgress: (p: Progress) => void): Promise<SampleRun> {
