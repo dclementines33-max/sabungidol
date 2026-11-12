@@ -1,4 +1,5 @@
 packages:
+  - "apps/*"
   - "packages/*"
 
 # esbuild (used by drizzle-kit) works without its install script; skip it explicitly.

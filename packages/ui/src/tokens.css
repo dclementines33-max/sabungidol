@@ -1,0 +1,83 @@
+/* Design tokens (PRD §10). The only place colours, type, radius, breakpoints and motion are set.
+   Tailwind's own palettes are switched off so every screen uses these. Contrast: tokens.test.ts. */
+@theme static { /* static: every token is a CSS variable, even if no class uses it yet */
+  --color-*: initial;
+  --color-bg-base: #15100d;
+  --color-bg-raised: #1e1612;
+  --color-surface: #261c17;
+  --color-surface-hover: #30241d;
+  --color-border: #3e3028; /* decorative lines only */
+  --color-border-strong: #786e69; /* control outlines and focus: 3:1 on every surface */
+  --color-text-primary: #f4ebe1;
+  --color-text-secondary: #bdaa98;
+  --color-accent-gold: #e9b44c;
+  --color-accent-coral: #f07a5a;
+  --color-accent-sage: #8ec39a;
+  --color-accent-sky: #7fb0d9;
+  --color-neutral-taupe: #9c8b7c;
+  --color-danger: #e6645d; /* PRD #E5615A, lifted to pass 4.5:1 on surface-hover */
+  --color-on-fill: #15100d; /* text on gold/danger fills; cream on danger fails (2.9:1) */
+
+  /* Competition branding: the 12 curated colours users pick from (PRD §10.1). */
+  --color-brand-gold: #e9b44c;
+  --color-brand-amber: #f2994a;
+  --color-brand-coral: #f07a5a;
+  --color-brand-rose: #f08ca0;
+  --color-brand-orchid: #d98bd9;
+  --color-brand-violet: #a99bf0;
+  --color-brand-indigo: #8fa3f5;
+  --color-brand-sky: #7fb0d9;
+  --color-brand-teal: #5fc4b8;
+  --color-brand-sage: #8ec39a;
+  --color-brand-lime: #b8d46a;
+  --color-brand-sand: #d9c29a;
+
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "Geist Variable", system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --text-*: initial;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 40px;
+  --text-3xl: 64px;
+
+  --spacing: 4px; /* PRD: multiples of 8 — use even steps (p-2 = 8px, p-4 = 16px) */
+
+  --radius-*: initial;
+  --radius-control: 8px;
+  --radius-card: 12px;
+
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 1024px;
+  --breakpoint-lg: 1440px;
+
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 100ms;
+    --duration-base: 100ms;
+    --duration-slow: 100ms;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+  }
+}

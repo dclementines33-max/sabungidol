@@ -1,0 +1,5 @@
+/* Everything an app needs from the design system: self-hosted fonts (work offline) + tokens. */
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "./tokens.css";

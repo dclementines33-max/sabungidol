@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@sabung/ui/theme.css";
+/* Generate the classes used inside the shared components too. */
+@source "../../../packages/ui/src";
