@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markOpened, neverOpened, requestReset, resetIfRequested } from "./databaseReset";
+import { markOpened, neverOpened, requestReset, requestWipe, resetIfRequested, wipeIfRequested } from "./databaseReset";
 
 // A stand-in for the OPFS root: entry names, directories end with "/".
 function fakeRoot(entries: string[], busyTimes = 0) {
@@ -51,5 +51,16 @@ describe("database reset (only with the user's yes, never after a successful ope
     await requestReset(root, "db");
     await expect(resetIfRequested(root, "db", 150)).rejects.toThrow("in use");
     expect(root.names.has("db.reset")).toBe(true);
+  });
+});
+
+describe("delete everything (Danger Zone)", () => {
+  it("only with the request, then removes the database, its photos and marks", async () => {
+    const root = fakeRoot(["db/", "db-photos/", "db.ready", "other/"]);
+    expect(await wipeIfRequested(root, "db")).toBe(false);
+    expect(root.names.size).toBe(4);
+    await requestWipe(root, "db");
+    expect(await wipeIfRequested(root, "db")).toBe(true);
+    expect([...root.names]).toEqual(["other/"]);
   });
 });

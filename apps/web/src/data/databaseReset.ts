@@ -41,3 +41,14 @@ export async function resetIfRequested(root: Dir, name: string, waitMs = 5000): 
   await root.removeEntry(`${name}.reset`);
   return true;
 }
+
+// Danger Zone → "Hapus semua data": the user's typed confirmation leaves "<name>.wipe"; the Worker
+// then deletes the database, its photos and its marks before opening, whatever their state.
+export const requestWipe = (root: Dir, name: string) => root.getFileHandle(`${name}.wipe`, { create: true });
+
+export async function wipeIfRequested(root: Dir, name: string, waitMs = 5000): Promise<boolean> {
+  if (!(await has(root, `${name}.wipe`))) return false;
+  for (const entry of [name, `${name}-photos`, `${name}.ready`, `${name}.reset`]) await removeWhenFree(root, entry, waitMs);
+  await root.removeEntry(`${name}.wipe`);
+  return true;
+}

@@ -27,6 +27,7 @@ const bestOf = z.union([z.literal(3), z.literal(4), z.literal(5), z.literal(7)])
 export const seasonConfigSchema = z.object({
   off: z.array(z.string()).default([]), // competition keys switched off
   bestOf: z.record(z.string(), bestOf).default({}), // "KEY:STAGE" → BoN, only where it differs from the default
+  tuning: z.object({ scale: z.number().min(10).max(100), sigma: z.number().min(0).max(15) }).default({ scale: 40, sigma: 4 }), // PRD §5.1
 });
 export type SeasonConfig = z.infer<typeof seasonConfigSchema>;
 export const readSeasonConfig = (raw: unknown): SeasonConfig => seasonConfigSchema.parse(raw ?? {});
@@ -44,3 +45,10 @@ export function brokenByOff(config: SeasonConfig): { key: CompetitionKey; missin
     .map((c) => ({ key: c.key, missing: c.needs.filter((n) => off.has(n)) }))
     .filter((c) => c.missing.length > 0);
 }
+
+// Engine Tuning presets (PRD §5.1 names them; the numbers are ours: Realistic = the PRD default).
+export const TUNING_PRESETS = {
+  Realistic: { scale: 40, sigma: 4 },
+  Chaotic: { scale: 60, sigma: 8 }, // flatter odds, bigger off-days: more upsets
+  Dominant: { scale: 28, sigma: 2 }, // steeper odds, steadier: favourites win more
+} as const;

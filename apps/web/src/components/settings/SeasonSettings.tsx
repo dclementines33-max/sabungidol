@@ -16,7 +16,8 @@ export function SeasonSettings({ season }: { season: SeasonRow }) {
   const broken = brokenByOff(config);
   const toggle = (key: string, on: boolean) => setConfig({ ...config, off: on ? config.off.filter((k) => k !== key) : [...config.off, key] });
   const save = async () => {
-    await engine().updateSeason(season.id, { name: name.trim() || season.name, config });
+    // Only this section's fields, over the latest saved config (Engine Tuning saves into it too).
+    await engine().updateSeason(season.id, { name: name.trim() || season.name, config: { ...readSeasonConfig(season.config), off: config.off, bestOf: config.bestOf } });
     notify({ level: "success", message: "Pengaturan season disimpan" });
     await refreshSeason();
   };

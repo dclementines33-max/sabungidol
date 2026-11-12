@@ -2,7 +2,7 @@
 // with its 12 league rosters saved in one transaction.
 import { and, asc, desc, eq } from "drizzle-orm";
 import type { Db, Tx } from "./openDb";
-import { competitions, entries, seasons } from "./schema";
+import { achievements, competitions, entries, idols, matches, placements, ratingHistory, seasons, statsCache } from "./schema";
 
 export type SeasonRow = { id: string; number: number; name: string; seed: string; status: string; config: unknown };
 
@@ -66,4 +66,23 @@ export async function listCompetitions(db: Db | Tx, seasonId: string) {
 export async function saveCompetition(db: Db, seasonId: string, code: string, name: string, branding: Branding) {
   await db.insert(competitions).values({ seasonId, code, name, branding })
     .onConflictDoUpdate({ target: [competitions.seasonId, competitions.code], set: { name, branding } });
+}
+
+// Danger Zone → Reset Season (PRD §8): the season back to a draft with the same rosters — its
+// matches, placements, badges and rating changes are removed and every idol gets back the rating
+// it had before the season. One transaction: all of it or nothing.
+export async function resetSeason(db: Db, seasonId: string) {
+  await db.transaction(async (tx) => {
+    const changes = await tx.select({ idolId: ratingHistory.idolId, old: ratingHistory.old }).from(ratingHistory)
+      .where(eq(ratingHistory.seasonId, seasonId)).orderBy(asc(ratingHistory.id));
+    const before = new Map<string, number>();
+    for (const c of changes) if (!before.has(c.idolId)) before.set(c.idolId, c.old); // the first change holds the start rating
+    for (const [idolId, rating] of before) await tx.update(idols).set({ rating }).where(eq(idols.id, idolId));
+    await tx.delete(ratingHistory).where(eq(ratingHistory.seasonId, seasonId));
+    await tx.delete(achievements).where(eq(achievements.seasonId, seasonId));
+    await tx.delete(placements).where(eq(placements.seasonId, seasonId));
+    await tx.delete(matches).where(eq(matches.seasonId, seasonId));
+    await tx.delete(statsCache); // a cache: always rebuilt from the tables
+    await tx.update(seasons).set({ status: "draft" }).where(eq(seasons.id, seasonId));
+  });
 }

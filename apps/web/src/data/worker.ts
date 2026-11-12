@@ -1,13 +1,13 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Branding, type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, saveCompetition, setLeagueRosters, updateSeason,
+  type Branding, type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
-import { markOpened, resetIfRequested } from "./databaseReset";
+import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
 import { loadDefaultData } from "./loadDefaultData";
@@ -27,6 +27,7 @@ const open = () => (database ??= (async () => {
   const { dataDir, storage } = storageFor(DATABASE);
   if (storage !== "opfs") return openDb(dataDir);
   const root = await navigator.storage.getDirectory();
+  await wipeIfRequested(root, DATABASE); // Danger Zone, after the user typed the confirmation
   await resetIfRequested(root, DATABASE); // only after the user confirmed it (databaseReset.ts)
   const db = await openDb(dataDir);
   await markOpened(root, DATABASE);
@@ -94,6 +95,12 @@ const api = {
   saveCompetition: async (seasonId: string, code: string, name: string, branding: Branding) => saveCompetition(await open(), seasonId, code, name, branding),
   // Data Maker: how the active idols would be split now (nothing saved).
   previewSplit: async () => splitLeagues((await listIdols(await open())).filter((i) => i.active)),
+  // Danger Zone: the season back to a draft; with redraw the 12 leagues are split again too.
+  resetSeason: async (seasonId: string, redraw: boolean) => {
+    const db = await open();
+    await resetSeason(db, seasonId);
+    if (redraw) await setLeagueRosters(db, seasonId, splitLeagues((await listIdols(db)).filter((i) => i.active)).leagues);
+  },
 
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
   savePhoto: async (image: Blob): Promise<string> => {

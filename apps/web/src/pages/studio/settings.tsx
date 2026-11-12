@@ -1,8 +1,11 @@
-// Settings (PRD §8). Part A (Fase 2 step 8): Season, Branding, Roster liga, Data Maker.
+// Settings (PRD §8): Season, Branding, Roster liga, Data Maker, Engine Tuning, Data, Danger Zone.
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { BrandingSettings } from "../../components/settings/BrandingSettings";
+import { DangerZone } from "../../components/settings/DangerZone";
 import { DataMaker } from "../../components/settings/DataMaker";
+import { DataSettings } from "../../components/settings/DataSettings";
+import { EngineTuning } from "../../components/settings/EngineTuning";
 import { RosterSettings } from "../../components/settings/RosterSettings";
 import { SeasonSettings } from "../../components/settings/SeasonSettings";
 import { engine } from "../../data/engineClient";
@@ -23,6 +26,9 @@ function Settings() {
       <BrandingSettings seasonId={season.id} />
       <RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} />
       <DataMaker seasonId={season.id} draft={draft} idols={idols} />
+      <EngineTuning key={`t-${season.id}`} season={season} />
+      <DataSettings />
+      <DangerZone season={season} />
     </div>
   );
 }

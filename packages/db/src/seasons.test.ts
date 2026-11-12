@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { addIdols } from "./idols";
+import { eq } from "drizzle-orm";
+import { countMatches } from "./countMatches";
+import { addIdols, listIdols } from "./idols";
+import { saveMatches } from "./saveMatches";
 import { type Db, openDb } from "./openDb";
-import { seasons } from "./schema";
-import { createDraftSeason, currentSeason, leagueRosters, listCompetitions, replaceInRoster, saveCompetition, setLeagueRosters, updateSeason } from "./seasons";
+import { idols, ratingHistory, seasons } from "./schema";
+import { createDraftSeason, currentSeason, leagueRosters, listCompetitions, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason } from "./seasons";
 
 let db: Db;
 beforeEach(async () => {
@@ -51,5 +54,23 @@ describe("season settings in the database", () => {
     await updateSeason(db, "S01", { config: { off: [] } });
     await db.update(seasons).set({ status: "live" });
     await expect(setLeagueRosters(db, "S01", { D1A: [] })).rejects.toThrow("Roster hanya bisa diubah saat season masih draft");
+  });
+});
+
+describe("Reset Season", () => {
+  it("removes what the season played and gives idols their starting rating back", async () => {
+    const { added: [a, b] } = await addIdols(db, ["A", "B"].map((name) => ({ name, groupName: null, rating: 70, seed: null, nationality: null, birthday: null })));
+    await createDraftSeason(db, { id: "S01", number: 1, name: "Season 1", seed: "x", leagues: { D1A: [a!, b!] } });
+    await db.update(seasons).set({ status: "live" });
+    await saveMatches(db, "S01", [{ id: "S01-D1A-LG-MD01-M01", comp: "D1A", stage: "LG", round: "MD01", idolA: a!, idolB: b!, games: ["A", "A", "A"],
+      scoreA: 3, scoreB: 0, result: "A", ratingA: 70, ratingB: 70, formA: "Steady", formB: "Steady" }]);
+    await db.insert(ratingHistory).values([{ idolId: a!, seasonId: "S01", old: 70, new: 73, source: "test" }, { idolId: a!, seasonId: "S01", old: 73, new: 75, source: "test" }]);
+    await db.update(idols).set({ rating: 75 }).where(eq(idols.id, a!));
+
+    await resetSeason(db, "S01");
+    expect(await currentSeason(db)).toMatchObject({ status: "draft" });
+    expect(await countMatches(db)).toBe(0);
+    expect((await listIdols(db)).find((i) => i.id === a)!.rating).toBe(70);
+    expect(await leagueRosters(db, "S01")).toEqual({ D1A: [a, b] }); // same rosters
   });
 });

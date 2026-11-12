@@ -21,3 +21,10 @@ describe("season settings", () => {
     expect(brokenByOff(readSeasonConfig({ off: ["SWS", "LCQ", "UZC", "DSG"] }))).toEqual([]);
   });
 });
+
+describe("engine tuning in the season config", () => {
+  it("defaults to the PRD constants and refuses values out of range", () => {
+    expect(readSeasonConfig({}).tuning).toEqual({ scale: 40, sigma: 4 });
+    expect(() => readSeasonConfig({ tuning: { scale: 5, sigma: 4 } })).toThrow();
+  });
+});
