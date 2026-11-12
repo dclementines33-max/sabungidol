@@ -37,7 +37,8 @@ describe("token contrast (WCAG 2.1 AA)", () => {
     expect(contrast("border-strong", bg)).toBeGreaterThanOrEqual(3);
   });
 
-  it.each(["accent-gold", "danger", "accent-coral", "accent-sage"])("text on a %s fill ≥ 4.5", (fill) => {
+  // Fills with dark text on them: tier chips, danger buttons, photo placeholders on a group colour.
+  it.each(["accent-gold", "accent-coral", "accent-sage", "accent-sky", "neutral-taupe", "danger", ...brands])("text on a %s fill ≥ 4.5", (fill) => {
     expect(contrast("on-fill", fill)).toBeGreaterThanOrEqual(4.5);
   });
 });

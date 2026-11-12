@@ -16,16 +16,21 @@
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/geist-mono": "^5.3.0",
+    "@sabung/engine": "workspace:*",
+    "@sabung/shared": "workspace:*",
+    "lucide-react": "^1.72.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@storybook/react-vite": "^10.6.7",
     "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "jsdom": "^31.0.0",
     "storybook": "^10.6.7",
     "tailwindcss": "^4.3.5",
     "vite": "^8.3.8"
