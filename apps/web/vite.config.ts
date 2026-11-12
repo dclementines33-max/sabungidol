@@ -10,4 +10,7 @@ export default defineConfig({
     tanstackStart({ spa: { enabled: true }, router: { routesDirectory: "pages" } }),
     viteReact(),
   ],
+  // PGlite ships its own WebAssembly and data files; Vite must not pre-bundle it.
+  optimizeDeps: { exclude: ["@electric-sql/pglite"] },
+  worker: { format: "es" },
 });

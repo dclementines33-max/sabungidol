@@ -6,6 +6,7 @@ import { createSeason } from "./createSeason";
 import { gamesFromMask } from "./gamesMask";
 import { type Db, openDb } from "./openDb";
 import { saveMatches } from "./saveMatches";
+import { countMatches } from "./countMatches";
 import { groups, idols, matches } from "./schema";
 
 const input = testSeason();
@@ -60,5 +61,11 @@ describe("saving a season (PRD §12, §13)", () => {
     await db.insert(idols).values({ id: "x3", name: "Mina", groupId: "g1", rating: 70 });
     await expect(db.insert(idols).values({ id: "x4", name: "mina", groupId: "g1", rating: 70 })).rejects.toThrow();
     await db.insert(idols).values({ id: "x5", name: "Mina", groupId: "g2", rating: 70 }); // same name, other group = allowed
+  });
+});
+
+describe("countMatches", () => {
+  it("counts the saved matches", async () => {
+    expect(await countMatches(db)).toBe(5590);
   });
 });

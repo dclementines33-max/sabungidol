@@ -4,3 +4,4 @@ export * from "./gamesMask";
 export * from "./createSeason";
 export * from "./saveMatches";
 export * from "./leagueTable";
+export * from "./countMatches";
