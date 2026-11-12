@@ -1,4 +1,5 @@
-// Shown under the E-DB-001 error when the database has never opened (data/resetOffer.ts):
+// Shown under the E-DB-001 error when the database has no "opened" mark (data/resetOffer.ts) — it never
+// finished, or the browser emptied it (seen in the in-app browser, whose storage is not permanent):
 // the way out of a fresh install that was interrupted, only after the user types HAPUS.
 import { Button, ConfirmDialog } from "@sabung/ui";
 import { useState } from "react";
@@ -10,7 +11,7 @@ export function DatabaseResetOffer() {
   if (!database) return null;
   return (
     <div className="mb-4 rounded-card border border-border-strong bg-surface p-4">
-      <p className="m-0 text-sm">Database ini belum pernah berhasil dibuka, jadi belum ada data yang tersimpan di dalamnya. Kalau memuat ulang tidak membantu, mulai lagi dengan database kosong.</p>
+      <p className="m-0 text-sm">Database di browser ini tidak bisa dibuka, dan tidak ada tanda bahwa data pernah tersimpan di sini (belum pernah selesai dibuat, atau isinya dihapus oleh browser). Kalau memuat ulang tidak membantu, mulai lagi dengan database kosong; punya backup .sabung? Impor sesudahnya.</p>
       <Button variant="danger" className="mt-3" onClick={() => setOpen(true)}>Mulai ulang database…</Button>
       <ConfirmDialog
         open={open}
