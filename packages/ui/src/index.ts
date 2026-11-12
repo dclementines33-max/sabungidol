@@ -24,3 +24,7 @@ export * from "./components/LiveMatchVisualizer";
 export * from "./components/WheelPicker";
 export * from "./components/MatchHeader";
 export * from "./components/MatchModal";
+export * from "./components/TournamentBracketTree";
+export * from "./components/SwissPlayInBracket";
+export * from "./components/WildcardPlayInBracket";
+export * from "./components/KahootPodium";

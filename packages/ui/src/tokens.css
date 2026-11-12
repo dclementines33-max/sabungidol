@@ -57,6 +57,16 @@
   --breakpoint-lg: 1440px;
 
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Entrances (PRD §10.5): transform + opacity only. "both" keeps the start state during a delay. */
+  --animate-rise: rise var(--duration-slow) var(--ease-spring) both;
+  --animate-fade-in: fade-in var(--duration-fast) ease-out both;
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(48px); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
 }
 
 :root {
