@@ -1,0 +1,132 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`headless season (PRD §4) > golden: a fixed seed always gives this season (an unintended engine change shows up here) 1`] = `
+{
+  "checksum": 379747991,
+  "notices": [
+    "Music Bank Cup D1F: idol176 won both sides, so the runner-up plays instead",
+  ],
+  "titles": {
+    "BSA": {
+      "champion": "idol097",
+      "runnerUp": "idol090",
+    },
+    "BSB": {
+      "champion": "idol064",
+      "runnerUp": "idol107",
+    },
+    "BSC": {
+      "champion": "idol110",
+      "runnerUp": "idol126",
+    },
+    "BSD": {
+      "champion": "idol046",
+      "runnerUp": "idol022",
+    },
+    "BSE": {
+      "champion": "idol017",
+      "runnerUp": "idol178",
+    },
+    "BSF": {
+      "champion": "idol176",
+      "runnerUp": "idol226",
+    },
+    "D1A": {
+      "champion": "idol054",
+      "runnerUp": "idol097",
+    },
+    "D1B": {
+      "champion": "idol107",
+      "runnerUp": "idol064",
+    },
+    "D1C": {
+      "champion": "idol126",
+      "runnerUp": "idol110",
+    },
+    "D1D": {
+      "champion": "idol022",
+      "runnerUp": "idol046",
+    },
+    "D1E": {
+      "champion": "idol114",
+      "runnerUp": "idol087",
+    },
+    "D1F": {
+      "champion": "idol176",
+      "runnerUp": "idol226",
+    },
+    "D2A": {
+      "champion": "idol062",
+      "runnerUp": "idol001",
+    },
+    "D2B": {
+      "champion": "idol077",
+      "runnerUp": "idol041",
+    },
+    "D2C": {
+      "champion": "idol198",
+      "runnerUp": "idol144",
+    },
+    "D2D": {
+      "champion": "idol014",
+      "runnerUp": "idol118",
+    },
+    "D2E": {
+      "champion": "idol029",
+      "runnerUp": "idol201",
+    },
+    "D2F": {
+      "champion": "idol125",
+      "runnerUp": "idol159",
+    },
+    "DSG": {
+      "champion": "idol064",
+      "runnerUp": "idol077",
+    },
+    "IDL": {
+      "champion": "idol077",
+      "runnerUp": "idol164",
+    },
+    "IDL-PO": {
+      "champion": "idol077",
+      "runnerUp": "idol126",
+    },
+    "INK": {
+      "champion": "idol176",
+      "runnerUp": "idol107",
+    },
+    "MBK-D1A": {
+      "champion": "idol054",
+      "runnerUp": "idol097",
+    },
+    "MBK-D1B": {
+      "champion": "idol064",
+      "runnerUp": "idol107",
+    },
+    "MBK-D1C": {
+      "champion": "idol126",
+      "runnerUp": "idol110",
+    },
+    "MBK-D1D": {
+      "champion": "idol046",
+      "runnerUp": "idol022",
+    },
+    "MBK-D1E": {
+      "champion": "idol114",
+      "runnerUp": "idol017",
+    },
+    "MBK-D1F": {
+      "champion": "idol176",
+      "runnerUp": "idol226",
+    },
+    "NUG": {
+      "champion": "idol029",
+      "runnerUp": "idol030",
+    },
+    "UZC": {
+      "champion": "idol064",
+      "runnerUp": "idol106",
+    },
+  },
+}
+`;
