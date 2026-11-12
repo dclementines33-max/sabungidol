@@ -11,3 +11,10 @@ export const useCurrentSeason = () => useQuery({
   queryFn: async () => (await engine().currentSeason()) ?? null, // the query cache refuses undefined
   enabled: typeof Worker !== "undefined",
 }, queryClient).data;
+
+// League code → idol ids for a season (empty until there is one).
+export const useLeagueRosters = (seasonId: string | undefined) => useQuery({
+  queryKey: [...SEASON_QUERY, "rosters", seasonId],
+  queryFn: () => engine().leagueRosters(seasonId!),
+  enabled: !!seasonId,
+}, queryClient).data;

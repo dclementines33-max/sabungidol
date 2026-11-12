@@ -64,6 +64,11 @@ describe("IdolCard", () => {
     render(<SampleIdols><IdolCard idolId="jiwoo" /></SampleIdols>);
     expect(screen.getByText("Soloist")).toBeTruthy();
     expect(screen.queryByLabelText(/titles/)).toBeNull();
+    expect(screen.queryByText("Nonaktif")).toBeNull();
+  });
+  it("marks an inactive idol", () => {
+    render(<SampleIdols><IdolCard idolId="rina" /></SampleIdols>);
+    expect(screen.getByText("Nonaktif")).toBeTruthy();
   });
 });
 

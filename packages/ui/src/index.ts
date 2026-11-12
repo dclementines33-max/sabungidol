@@ -28,3 +28,4 @@ export * from "./components/TournamentBracketTree";
 export * from "./components/SwissPlayInBracket";
 export * from "./components/WildcardPlayInBracket";
 export * from "./components/KahootPodium";
+export * from "./components/VirtualTable";

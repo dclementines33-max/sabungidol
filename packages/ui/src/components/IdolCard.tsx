@@ -14,6 +14,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
       <p className="m-0 truncate text-sm text-text-secondary">{idol.groupName ?? "Soloist"}</p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <RatingBadge rating={idol.rating} />
+        {idol.active === false && <span className="rounded-control border border-border-strong px-2 py-0.5 text-xs text-text-secondary">Nonaktif</span>}
         {idol.form && <FormBadge form={idol.form} recent={idol.recent} />}
         {!!idol.titles && (
           <span role="img" className="inline-flex items-center gap-1 text-xs text-accent-gold" aria-label={`${idol.titles} titles`}>

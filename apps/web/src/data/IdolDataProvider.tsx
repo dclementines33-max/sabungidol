@@ -29,7 +29,7 @@ export function IdolDataProvider({ children }: { children: ReactNode }) {
     return {
       idol: (id) => {
         const i = byId.get(id);
-        return i && { id: i.id, name: i.name, groupName: i.groupName, groupColor: groupColour(i.groupId), rating: i.rating };
+        return i && { id: i.id, name: i.name, groupName: i.groupName, groupColor: groupColour(i.groupId), rating: i.rating, active: i.active };
       },
       photo: (id, size) => {
         const photoId = byId.get(id)?.photoId;

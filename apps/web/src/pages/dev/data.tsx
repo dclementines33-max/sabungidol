@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
-import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
+import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
 
 export const Route = createFileRoute("/dev/data")({ component: DataCheck });
 
@@ -32,7 +32,7 @@ function DataCheck() {
 // Season 1's league rosters and the idols left out of them (reserves).
 function Rosters({ names }: { names: Map<string, string> }) {
   const season = useCurrentSeason();
-  const { data: rosters } = useQuery({ queryKey: [...SEASON_QUERY, "rosters", season?.id], queryFn: () => engine().leagueRosters(season!.id), enabled: !!season });
+  const rosters = useLeagueRosters(season?.id);
   if (!season || !rosters) return <p className="text-text-secondary">Belum ada season.</p>;
   const placed = new Set(Object.values(rosters).flat());
   const reserves = [...names.keys()].filter((id) => !placed.has(id));

@@ -14,6 +14,7 @@ export type IdolInfo = {
   form?: Form["name"];
   recent?: Result[]; // last results, oldest first
   titles?: number;
+  active?: boolean; // false = inactive (PRD §15: shown with a badge in the Idol Database)
 };
 
 export type IdolSource = {
