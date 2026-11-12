@@ -9,6 +9,7 @@ import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
+import { openFirstTimeSafely } from "./firstOpen";
 import { loadDefaultData } from "./loadDefaultData";
 import { readPhotoFile, storePhotoFiles } from "./photoFiles";
 import { type PhotoSizes, bestStored } from "./photoSizes";
@@ -23,7 +24,9 @@ const DATABASE = (self as unknown as { name: string }).name;
 let database: Promise<Db> | undefined;
 const open = () => (database ??= (async () => {
   if (!(await holdDatabaseLock(DATABASE))) throw new Error(`${DB_IN_OTHER_TAB}: ${DATABASE} is open in another tab`);
-  return openDb(storageFor(DATABASE).dataDir);
+  const { dataDir, storage } = storageFor(DATABASE);
+  if (storage !== "opfs") return openDb(dataDir);
+  return openFirstTimeSafely(await navigator.storage.getDirectory(), DATABASE, () => openDb(dataDir));
 })());
 
 let defaultDataRun: ReturnType<typeof loadDefaultData> | undefined;
