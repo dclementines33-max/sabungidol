@@ -17,7 +17,7 @@ export function Header({ onSearch }: { onSearch?: () => void }) {
       <button
         type="button"
         onClick={onSearch}
-        disabled={!onSearch} // the command palette arrives in Fase 1 step 11
+        disabled={!onSearch}
         className="hidden items-center gap-2 rounded-control border border-border-strong px-3 py-1.5 text-sm text-text-secondary hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold disabled:opacity-50 sm:flex"
       >
         <Search aria-hidden="true" size={16} strokeWidth={1.5} />

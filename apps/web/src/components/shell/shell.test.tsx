@@ -72,6 +72,31 @@ describe("AppShell (agreed shell)", () => {
     expect(screen.getByRole("button", { name: "Ciutkan menu" }).getAttribute("aria-pressed")).toBe("true");
   });
 
+  it("Ctrl+K opens the palette; Enter on a result goes to that panel", async () => {
+    await showShellAt("/");
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    const input = screen.getByRole("combobox", { name: "Cari panel atau perintah" });
+    fireEvent.change(input, { target: { value: "nugu" } });
+    expect(screen.getAllByRole("option")[0].textContent).toContain("Nugu Cup");
+    await act(async () => { fireEvent.keyDown(input, { key: "Enter" }); });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Nugu Cup");
+  });
+
+  it("palette commands run, and the header and mobile Search buttons open it", async () => {
+    await showShellAt("/");
+    fireEvent.click(screen.getByRole("button", { name: /Cari…/ }));
+    const input = screen.getByRole("combobox", { name: "Cari panel atau perintah" });
+    fireEvent.change(input, { target: { value: "ciutkan" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(localStorage.getItem("sabung.railCollapsed")).toBe("1");
+    const bar = screen.getAllByRole("navigation", { name: "Navigasi utama" })[1];
+    fireEvent.click(within(bar).getByRole("button", { name: "Search" }));
+    expect(screen.getByRole("dialog", { name: "Cari panel atau perintah" })).toBeTruthy();
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "zzz" } });
+    expect(screen.getByText("Tidak ada hasil untuk “zzz”.")).toBeTruthy();
+  });
+
   it("the mobile Play button opens a sheet with the competitions, and a link closes it", async () => {
     await showShellAt("/");
     const bar = screen.getAllByRole("navigation", { name: "Navigasi utama" })[1];
