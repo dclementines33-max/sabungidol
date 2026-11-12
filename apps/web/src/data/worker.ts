@@ -1,12 +1,14 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, addIdols, countMatches, deleteIdol, getPhoto, idols, insertPhoto, listEvents, listGroups, listIdols,
+  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents,
+  listGroups, listIdols,
   logEvent, openDb, saveMatches, seasons, setActive, updateIdol,
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
+import { ensureFirstSeason } from "./firstSeason";
 import { loadDefaultData } from "./loadDefaultData";
 import { readPhotoFile, storePhotoFiles } from "./photoFiles";
 import { type PhotoSizes, bestStored } from "./photoSizes";
@@ -25,6 +27,7 @@ const open = () => (database ??= (async () => {
 })());
 
 let defaultDataRun: ReturnType<typeof loadDefaultData> | undefined;
+let firstSeasonRun: ReturnType<typeof ensureFirstSeason> | undefined;
 
 const api = {
   storage: (): StorageKind => storageFor(DATABASE).storage,
@@ -45,6 +48,11 @@ const api = {
 
   // The default idol data, once per database (shared promise: a double start loads it only once).
   loadDefaultData: async () => (defaultDataRun ??= open().then((db) => loadDefaultData(db, DATABASE))),
+
+  // Seasons (PRD §12.1).
+  ensureFirstSeason: async () => (firstSeasonRun ??= open().then(ensureFirstSeason)),
+  currentSeason: async () => currentSeason(await open()),
+  leagueRosters: async (seasonId: string) => leagueRosters(await open(), seasonId),
 
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
   savePhoto: async (image: Blob): Promise<string> => {

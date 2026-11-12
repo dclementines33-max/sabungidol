@@ -3,6 +3,7 @@ import { NotificationCenter } from "@sabung/ui";
 import { useLocation } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { exportNotices, useNotices } from "../../data/notices";
+import { useCurrentSeason } from "../../data/seasonQuery";
 import { panelFor } from "./nav";
 
 export function Header({ onSearch }: { onSearch?: () => void }) {
@@ -10,10 +11,13 @@ export function Header({ onSearch }: { onSearch?: () => void }) {
   const notices = useNotices((s) => s.notices);
   const unread = useNotices((s) => s.unread);
   const markRead = useNotices((s) => s.markRead);
+  const season = useCurrentSeason();
   return (
     <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-bg-base px-4 py-3 md:px-8">
       <h1 className="m-0 min-w-0 flex-1 truncate font-display text-xl md:text-2xl">{panelFor(pathname)?.label ?? "Tidak ditemukan"}</h1>
-      <span className="hidden rounded-control border border-border-strong px-2 py-0.5 text-xs text-text-secondary sm:inline">Belum ada season</span>
+      <span className="hidden rounded-control border border-border-strong px-2 py-0.5 text-xs text-text-secondary sm:inline" data-testid="season-chip">
+        {season ? `${season.name} · ${season.status === "draft" ? "Draft" : season.status}` : "Belum ada season"}
+      </span>
       <button
         type="button"
         onClick={onSearch}

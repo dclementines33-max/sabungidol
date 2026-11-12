@@ -9,3 +9,4 @@ export * from "./eventLog";
 export * from "./groups";
 export * from "./idols";
 export * from "./photos";
+export * from "./seasons";
