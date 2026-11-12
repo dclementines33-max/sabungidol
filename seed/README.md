@@ -1,10 +1,11 @@
 # Default idol data
 
-Every fresh install of Sabung Idol starts with the idols in this folder (user decision 2026-11-13;
+Every fresh install of Sabung Idol starts with the idols in `idols.json` (user decision 2026-11-13;
 this changes PRD §1, which had no built-in idol data).
 
-- `idols.json` — the idol list.
-- `photos/` — one photo per idol; file names are matched to idols when the data is loaded.
+- One JSON file; each idol carries its own photo inside the file, so no photo ever has to be
+  matched to an idol by file name.
+- Only three fields are used: **photo, name and group**. Everything else in the file is ignored.
 
-Loaded automatically on first open (built in Fase 2). Photos are stored once in the browser (OPFS)
-and resized to 64 / 256 / 1024 px, so the originals here can be any reasonable size.
+Loaded automatically on first open (built in Fase 2). Each photo is stored once in the browser (OPFS)
+and resized to 64 / 256 / 1024 px.
