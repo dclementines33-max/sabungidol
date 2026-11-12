@@ -53,7 +53,7 @@ export async function updateIdol(db: Db, id: string, input: IdolInput & { photoI
   return { ok: true as const };
 }
 
-export async function setActive(db: Db, ids: string[], active: boolean) {
+export async function setActive(db: Db | Tx, ids: string[], active: boolean) {
   if (ids.length > 0) await db.update(idols).set({ active }).where(inArray(idols.id, ids));
 }
 

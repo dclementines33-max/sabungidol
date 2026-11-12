@@ -1,0 +1,26 @@
+// Fase 2 step 7: Inactive Manager — deactivating a roster idol asks for a reserve as replacement.
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+
+test("Inactive Manager: deactivate with a replacement, activate again", async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.goto("/");
+  await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
+  await page.goto("/studio/inactive");
+  const active = page.getByRole("region", { name: "Aktif", exact: true });
+  await active.getByRole("searchbox").fill("Winter");
+  await active.getByRole("checkbox", { name: "Pilih Winter" }).check();
+  await active.getByRole("button", { name: "Nonaktifkan (1)" }).click();
+  const dialog = page.getByRole("dialog", { name: "Pilih pengganti di roster" });
+  await expect(dialog.getByRole("combobox", { name: "Pengganti untuk Winter" })).toHaveValue(/Gaeul|Jeong Saebi/); // best reserve
+  const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => v.id);
+  expect(violations).toEqual([]);
+  await dialog.getByRole("button", { name: "Nonaktifkan" }).click();
+  await expect(page.getByText("1 idol dinonaktifkan, 1 tempat liga diganti")).toBeVisible();
+
+  const inactive = page.getByRole("region", { name: "Nonaktif", exact: true });
+  await inactive.getByRole("checkbox", { name: "Pilih Winter" }).check();
+  await inactive.getByRole("button", { name: "Aktifkan (1)" }).click();
+  await expect(page.getByText("1 idol diaktifkan")).toBeVisible();
+  await expect(inactive.getByRole("heading")).toContainText("(0)");
+});

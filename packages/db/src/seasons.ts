@@ -29,3 +29,13 @@ export async function leagueRosters(db: Db | Tx, seasonId: string): Promise<Reco
   for (const r of rows) (rosters[r.comp] ??= []).push(r.idolId);
   return rosters;
 }
+
+// Swaps one idol for another in a season's league roster, keeping the place (Inactive Manager,
+// PRD §8). Refused when the newcomer already has a league place that season.
+export async function replaceInRoster(db: Db | Tx, seasonId: string, outId: string, inId: string) {
+  const taken = await db.select({ comp: entries.comp }).from(entries)
+    .where(and(eq(entries.seasonId, seasonId), eq(entries.stage, "LG"), eq(entries.idolId, inId)));
+  if (taken.length) throw new Error(`Pengganti sudah ada di roster ${taken[0]!.comp}`);
+  await db.update(entries).set({ idolId: inId, source: "replacement" })
+    .where(and(eq(entries.seasonId, seasonId), eq(entries.stage, "LG"), eq(entries.idolId, outId)));
+}

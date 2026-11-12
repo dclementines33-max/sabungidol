@@ -1,7 +1,7 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents,
+  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents, replaceInRoster,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
@@ -51,6 +51,15 @@ const api = {
   addIdols: async (batch: Parameters<typeof addIdols>[1]) => addIdols(await open(), batch),
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
+  // Inactive Manager: deactivate, and give their league places to the chosen replacements, in one go.
+  deactivate: async (ids: string[], replacements: Record<string, string>) => {
+    const db = await open();
+    const season = await currentSeason(db);
+    await db.transaction(async (tx) => {
+      await setActive(tx, ids, false);
+      for (const [outId, inId] of Object.entries(replacements)) await replaceInRoster(tx, season!.id, outId, inId);
+    });
+  },
   // Why an idol cannot be deleted (matches, or a league roster), asked before the confirmation.
   deleteBlocker: async (id: string) => deleteBlocker(await open(), id),
   // Deleting also removes the idol's photo (its record and files).
