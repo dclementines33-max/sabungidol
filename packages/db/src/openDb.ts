@@ -15,3 +15,4 @@ export async function openDb(dataDir?: string) {
 }
 
 export type Db = Awaited<ReturnType<typeof openDb>>;
+export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0]; // inside db.transaction(...)

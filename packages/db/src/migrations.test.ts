@@ -14,6 +14,6 @@ describe("bundled migrations", () => {
     const { dialect, session } = db as unknown as { dialect: { migrate: (m: unknown, s: unknown, c: unknown) => Promise<void> }; session: unknown };
     await dialect.migrate(await bundledMigrations(), session, { migrationsFolder: "" });
     const { rows } = await db.execute<{ n: number }>("select count(*)::int as n from drizzle.__drizzle_migrations");
-    expect(rows[0].n).toBe(1);
+    expect(rows[0].n).toBe((await bundledMigrations()).length);
   });
 });

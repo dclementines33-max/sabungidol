@@ -281,7 +281,11 @@ importers:
         specifier: ^4.10.2
         version: 4.10.2
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
 
   packages/ui:
     dependencies:

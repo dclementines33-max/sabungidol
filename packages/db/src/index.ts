@@ -6,3 +6,5 @@ export * from "./saveMatches";
 export * from "./leagueTable";
 export * from "./countMatches";
 export * from "./eventLog";
+export * from "./groups";
+export * from "./idols";

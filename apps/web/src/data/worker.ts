@@ -1,7 +1,8 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, countMatches, idols, listEvents, logEvent, openDb, saveMatches, seasons,
+  type Db, type NewEvent, addIdols, countMatches, deleteIdol, idols, listEvents, listGroups, listIdols, logEvent, openDb,
+  saveMatches, seasons, setActive, updateIdol,
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
@@ -28,6 +29,14 @@ const api = {
   listEvents: async (limit?: number) => listEvents(await open(), limit),
 
   matchCount: async (): Promise<number> => countMatches(await open()),
+
+  // Idols and groups (PRD §3, §8).
+  listIdols: async () => listIdols(await open()),
+  listGroups: async () => listGroups(await open()),
+  addIdols: async (batch: Parameters<typeof addIdols>[1]) => addIdols(await open(), batch),
+  updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
+  setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
+  deleteIdol: async (id: string) => deleteIdol(await open(), id),
 
   // Fase 1 check: simulate the sample season and save it, one round per transaction (PRD §13).
   async simulateSampleSeason(onProgress: (p: Progress) => void): Promise<SampleRun> {

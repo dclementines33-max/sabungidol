@@ -9,7 +9,7 @@ export const groups = pgTable("groups", {
   id: text().primaryKey(),
   name: text().notNull(),
   logoId: text(),
-});
+}, (t) => [uniqueIndex("groups_name").on(sql`lower(${t.name})`)]); // "IVE" and "ive" are one group
 
 export const idols = pgTable("idols", {
   id: text().primaryKey(),
