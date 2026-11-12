@@ -20,6 +20,7 @@ type State = {
   blocker: Notice | null;
   persister: Persister | null;
   notify: (notice: NewNotice, options?: { oncePerDay?: boolean }) => void;
+  record: (notice: NewNotice) => void;
   loadHistory: () => Promise<void>;
   dismissToast: (id: string) => void;
   unpin: (id: string) => void;
@@ -32,25 +33,16 @@ const fromLog = (e: LoggedEvent): Notice =>
 
 let counter = 0;
 
-export const useNotices = create<State>()((set, get) => ({
-  notices: [],
-  unread: 0,
-  toasts: [],
-  pinned: [],
-  blocker: null,
-  persister: null,
-
-  notify: (input, options) => {
+export const useNotices = create<State>()((set, get) => {
+  // Into the history, counted as unread.
+  const add = (input: NewNotice): Notice => {
     const notice: Notice = { ...input, id: `local-${++counter}`, at: new Date().toISOString() };
-    set((s) => ({
-      notices: [notice, ...s.notices],
-      unread: s.unread + 1,
-      toasts: notice.level === "info" || notice.level === "success" ? [...s.toasts, notice] : s.toasts,
-      // A coded warning/error that is already pinned is not pinned twice.
-      pinned: (notice.level === "warning" || notice.level === "error") && !s.pinned.some((p) => p.code && p.code === notice.code)
-        ? [...s.pinned, notice] : s.pinned,
-      blocker: notice.level === "blocker" ? notice : s.blocker,
-    }));
+    set((s) => ({ notices: [notice, ...s.notices], unread: s.unread + 1 }));
+    return notice;
+  };
+
+  // Into event_log, in the background; the history entry then takes the log's id.
+  const persist = (notice: Notice, options?: { oncePerDay?: boolean }) => {
     const { persister } = get();
     if (!persister) return;
     const { undo: _undo, id: _id, at: _at, ...event } = notice; // functions cannot be stored
@@ -63,27 +55,51 @@ export const useNotices = create<State>()((set, get) => ({
       const swap = (n: Notice) => (n.id === notice.id ? { ...n, id: `log-${logged.id}` } : n);
       set((s) => ({ notices: s.notices.map(swap) }));
     }, (error) => {
-      // shortcut: a failed write keeps the notice on screen only; Fase 1 step 12 reports Worker failures to the user.
+      // The notice stays on screen. A database that cannot open is reported once at start (startNotifications).
       console.error("Notification not written to event_log", error);
     });
-  },
+  };
 
-  // Earlier visits' history, merged under anything already shown this visit.
-  loadHistory: async () => {
-    const { persister } = get();
-    if (!persister) return;
-    const history = (await persister.list()).map(fromLog);
-    set((s) => {
-      const shown = new Set(s.notices.map((n) => n.id));
-      return { notices: [...s.notices, ...history.filter((n) => !shown.has(n.id))] };
-    });
-  },
+  return {
+    notices: [],
+    unread: 0,
+    toasts: [],
+    pinned: [],
+    blocker: null,
+    persister: null,
 
-  dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
-  unpin: (id) => set((s) => ({ pinned: s.pinned.filter((p) => p.id !== id) })),
-  closeBlocker: () => set({ blocker: null }),
-  markRead: () => set({ unread: 0 }),
-}));
+    notify: (input, options) => {
+      const notice = add(input);
+      set((s) => ({
+        toasts: notice.level === "info" || notice.level === "success" ? [...s.toasts, notice] : s.toasts,
+        // A coded warning/error that is already pinned is not pinned twice.
+        pinned: (notice.level === "warning" || notice.level === "error") && !s.pinned.some((p) => p.code && p.code === notice.code)
+          ? [...s.pinned, notice] : s.pinned,
+        blocker: notice.level === "blocker" ? notice : s.blocker,
+      }));
+      persist(notice, options);
+    },
+
+    // History and event_log only, for something already shown in its own place (e.g. a panel's error card).
+    record: (input) => persist(add(input)),
+
+    // Earlier visits' history, merged under anything already shown this visit.
+    loadHistory: async () => {
+      const { persister } = get();
+      if (!persister) return;
+      const history = (await persister.list()).map(fromLog);
+      set((s) => {
+        const shown = new Set(s.notices.map((n) => n.id));
+        return { notices: [...s.notices, ...history.filter((n) => !shown.has(n.id))] };
+      });
+    },
+
+    dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+    unpin: (id) => set((s) => ({ pinned: s.pinned.filter((p) => p.id !== id) })),
+    closeBlocker: () => set({ blocker: null }),
+    markRead: () => set({ unread: 0 }),
+  };
+});
 
 export const notify = (notice: NewNotice, options?: { oncePerDay?: boolean }) => useNotices.getState().notify(notice, options);
 

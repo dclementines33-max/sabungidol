@@ -2,8 +2,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(pkg.version) }, // for error reports (PRD §14.2)
   plugins: [
     tailwindcss(),
     // SPA: the app runs fully in the browser (local-first, PRD §11). Screens live in src/pages.

@@ -2,6 +2,7 @@
 // plus the notification layers (PRD §14.1): pinned warnings/errors, toasts, blocker dialog.
 import { BlockerDialog, Toasts } from "@sabung/ui";
 import { type ReactNode, useEffect, useState } from "react";
+import { trackLastAction } from "../../data/errorReport";
 import { useNotices } from "../../data/notices";
 import { useRememberedFlag } from "../../data/rememberedFlag";
 import { startNotifications } from "../../data/startNotifications";
@@ -20,6 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const markRead = useNotices((s) => s.markRead);
   const [paletteOpen, setPaletteOpen] = useState(false);
   useEffect(startNotifications, []);
+  useEffect(trackLastAction, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {

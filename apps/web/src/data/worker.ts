@@ -5,6 +5,7 @@ import {
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
+import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { type StorageKind, storageFor } from "./storageChoice";
 
 export type Progress = { phase: "simulating" | "saving"; done: number; total: number };
@@ -14,7 +15,10 @@ const PROGRESS_EVERY_MS = 100; // PRD §13: progress updates every 100 ms
 // One database per Worker: its name is the Worker's name (engineClient.ts), and it is opened once.
 const DATABASE = (self as unknown as { name: string }).name;
 let database: Promise<Db> | undefined;
-const open = () => (database ??= openDb(storageFor(DATABASE).dataDir));
+const open = () => (database ??= (async () => {
+  if (!(await holdDatabaseLock(DATABASE))) throw new Error(`${DB_IN_OTHER_TAB}: ${DATABASE} is open in another tab`);
+  return openDb(storageFor(DATABASE).dataDir);
+})());
 
 const api = {
   storage: (): StorageKind => storageFor(DATABASE).storage,

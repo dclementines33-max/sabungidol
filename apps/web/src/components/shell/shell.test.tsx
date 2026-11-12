@@ -3,7 +3,9 @@ import {
   Outlet, RouterProvider, createMemoryHistory, createRootRoute, createRoute, createRouter,
 } from "@tanstack/react-router";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { useNotices } from "../../data/notices";
+import { PANEL_ERROR_CODE, PanelError } from "../PanelError";
 import { PanelPlaceholder } from "../PanelPlaceholder";
 import { AppShell } from "./AppShell";
 import { COMPETITIONS, SPACES, panelFor } from "./nav";
@@ -42,6 +44,49 @@ async function showShellAt(path: string) {
   await act(async () => { render(<RouterProvider router={router} />); });
   return router;
 }
+
+describe("a crashing panel (PRD §14.2)", () => {
+  it("shows the error card inside the shell, logs it, and reports route and last action", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    const root = createRootRoute({ component: () => <AppShell><Outlet /></AppShell> });
+    const boom = createRoute({ getParentRoute: () => root, path: "/boom", component: () => { throw new Error("tabel klasemen kosong"); } });
+    const router = createRouter({ routeTree: root.addChildren([boom]), history: createMemoryHistory({ initialEntries: ["/boom"] }), defaultErrorComponent: PanelError });
+    vi.spyOn(console, "error").mockImplementation(() => {}); // React logs the thrown error
+    await act(async () => { render(<RouterProvider router={router} />); });
+
+    expect(screen.getAllByRole("navigation", { name: "Navigasi utama" })).toHaveLength(2); // the shell still stands
+    const card = screen.getByRole("alert");
+    expect(card.textContent).toContain(PANEL_ERROR_CODE);
+    expect(card.textContent).toContain("Panel ini gagal dimuat");
+    expect(screen.getByRole("button", { name: "Reload panel" })).toBeTruthy();
+    expect(useNotices.getState().notices.some((n) => n.code === PANEL_ERROR_CODE)).toBe(true);
+
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin laporan" })); });
+    const report = writeText.mock.calls[0][0] as string;
+    expect(report).toContain("Rute: /boom");
+    // The report is made when the panel fails: its last action is what led there, not the copy click.
+    expect(report).toMatch(/^Aksi terakhir: /m);
+    expect(report).not.toContain("Salin laporan");
+    expect(report).toMatch(/^Versi: /m);
+    expect(report).toContain("tabel klasemen kosong");
+    vi.restoreAllMocks();
+  });
+
+  it("leaving the crashed panel does not log a second, false failure", async () => {
+    useNotices.setState({ notices: [], unread: 0, toasts: [], pinned: [], blocker: null, persister: null });
+    const root = createRootRoute({ component: () => <AppShell><Outlet /></AppShell> });
+    const boom = createRoute({ getParentRoute: () => root, path: "/boom", component: () => { throw new Error("x"); } });
+    const fine = createRoute({ getParentRoute: () => root, path: "/studio/settings", component: PanelPlaceholder });
+    const router = createRouter({ routeTree: root.addChildren([boom, fine]), history: createMemoryHistory({ initialEntries: ["/boom"] }), defaultErrorComponent: PanelError });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    await act(async () => { render(<RouterProvider router={router} />); });
+    await act(async () => { await router.navigate({ to: "/studio/settings" }); });
+    const failures = useNotices.getState().notices.filter((n) => n.code === PANEL_ERROR_CODE).map((n) => n.message);
+    expect(failures).toEqual(["Panel /boom gagal dimuat"]);
+    vi.restoreAllMocks();
+  });
+});
 
 describe("AppShell (agreed shell)", () => {
   it("titles the page and marks the active link", async () => {

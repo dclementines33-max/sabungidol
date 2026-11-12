@@ -1,5 +1,6 @@
 // Run once when the app opens: connect the notification store to event_log (through the Worker),
 // load earlier history, and warn if the browser refuses persistent storage (PRD §12, §14.3).
+import { DB_IN_OTHER_TAB } from "./dbLock";
 import { engine } from "./engineClient";
 import { notify, useNotices } from "./notices";
 import { askPersistentStorage } from "./persistentStorage";
@@ -7,13 +8,24 @@ import { askPersistentStorage } from "./persistentStorage";
 export const STORAGE_REFUSED =
   "Browser belum mengizinkan penyimpanan permanen, jadi data bisa terhapus saat ruang penyimpanan penuh. Buat backup secara rutin.";
 
+export const OTHER_TAB_MESSAGE = "Sabung Idol sudah terbuka di tab lain. Tutup tab itu, lalu muat ulang halaman ini.";
+
+// What the user is told when the database cannot be opened (PRD §14.1: what failed, where, what next).
+export function databaseErrorNotice(error: unknown) {
+  const detail = error instanceof Error ? error.message : String(error);
+  return detail.startsWith(DB_IN_OTHER_TAB)
+    ? { level: "error" as const, code: DB_IN_OTHER_TAB, message: OTHER_TAB_MESSAGE }
+    : { level: "error" as const, code: "E-DB-001", message: "Database tidak bisa dibuka. Data yang sudah tersimpan tidak disentuh; coba muat ulang halaman.", context: detail };
+}
+
 export function startNotifications(): void {
   if (useNotices.getState().persister) return; // already started
   if (typeof Worker !== "undefined") {
     useNotices.setState({ persister: { log: (event, options) => engine().logEvent(event, options), list: () => engine().listEvents() } });
+    // Loading the history is the first database use, so a database that cannot open shows up here, once.
     useNotices.getState().loadHistory().catch((error) => {
-      // shortcut: history stays empty if the database cannot open; Fase 1 step 12 reports Worker failures to the user.
       console.error("Notification history not loaded from event_log", error, error?.cause);
+      notify(databaseErrorNotice(error));
     });
   }
   askPersistentStorage().then((granted) => {
