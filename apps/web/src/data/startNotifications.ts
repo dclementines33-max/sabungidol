@@ -4,6 +4,8 @@ import { DB_IN_OTHER_TAB } from "./dbLock";
 import { engine } from "./engineClient";
 import { notify, useNotices } from "./notices";
 import { askPersistentStorage } from "./persistentStorage";
+import { offerResetIfNeverOpened } from "./resetOffer";
+import { MAIN_DATABASE } from "./storageChoice";
 
 export const STORAGE_REFUSED =
   "Browser belum mengizinkan penyimpanan permanen, jadi data bisa terhapus saat ruang penyimpanan penuh. Buat backup secara rutin.";
@@ -25,7 +27,9 @@ export function startNotifications(): void {
     // Loading the history is the first database use, so a database that cannot open shows up here, once.
     useNotices.getState().loadHistory().catch((error) => {
       console.error("Notification history not loaded from event_log", error, error?.cause);
-      notify(databaseErrorNotice(error));
+      const notice = databaseErrorNotice(error);
+      notify(notice);
+      if (notice.code === "E-DB-001") offerResetIfNeverOpened(MAIN_DATABASE).catch(() => {});
     });
   }
   askPersistentStorage().then((granted) => {

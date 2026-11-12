@@ -11,6 +11,7 @@ import { BottomBar } from "./BottomBar";
 import { CommandPalette } from "./CommandPalette";
 import { Header } from "./Header";
 import { NavRail } from "./NavRail";
+import { DatabaseResetOffer } from "./DatabaseResetOffer";
 import { PinnedNotices } from "./PinnedNotices";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -53,6 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Header onSearch={openPalette} />
           <main id="konten" tabIndex={-1} className="flex-1 px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
             <PinnedNotices />
+            <DatabaseResetOffer />
             {children}
           </main>
         </div>

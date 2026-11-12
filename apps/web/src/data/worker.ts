@@ -7,6 +7,7 @@ import {
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
+import { markOpened, resetIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
 import { loadDefaultData } from "./loadDefaultData";
@@ -23,7 +24,13 @@ const DATABASE = (self as unknown as { name: string }).name;
 let database: Promise<Db> | undefined;
 const open = () => (database ??= (async () => {
   if (!(await holdDatabaseLock(DATABASE))) throw new Error(`${DB_IN_OTHER_TAB}: ${DATABASE} is open in another tab`);
-  return openDb(storageFor(DATABASE).dataDir);
+  const { dataDir, storage } = storageFor(DATABASE);
+  if (storage !== "opfs") return openDb(dataDir);
+  const root = await navigator.storage.getDirectory();
+  await resetIfRequested(root, DATABASE); // only after the user confirmed it (databaseReset.ts)
+  const db = await openDb(dataDir);
+  await markOpened(root, DATABASE);
+  return db;
 })());
 
 let defaultDataRun: ReturnType<typeof loadDefaultData> | undefined;
