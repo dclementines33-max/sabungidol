@@ -13,7 +13,7 @@ import { StatTile } from "./StatTile";
 afterEach(cleanup);
 
 describe("RatingBadge", () => {
-  it.each([[95, "S", "bg-accent-gold"], [80, "A", "bg-accent-coral"], [79, "B", "bg-accent-sage"], [60, "C", "bg-accent-sky"], [59, "D", "bg-neutral-taupe"]])(
+  it.each([[95, "S", "bg-tier-s"], [80, "A", "bg-tier-a"], [79, "B", "bg-tier-b"], [60, "C", "bg-tier-c"], [59, "D", "bg-tier-d"]])(
     "rating %i is tier %s in its tier colour", (rating, tier, fill) => {
       render(<RatingBadge rating={rating} />);
       const badge = screen.getByLabelText(`Rating ${rating}, tier ${tier}`);
@@ -53,11 +53,12 @@ describe("IdolPhoto", () => {
 });
 
 describe("IdolCard", () => {
-  it("shows name, group, rating, form and titles", () => {
+  it("shows name, group, rating in its tier colour and titles, but not form", () => {
     render(<SampleIdols><IdolCard idolId="mina" /></SampleIdols>);
+    expect(screen.getByText("Mina Kim")).toBeTruthy();
     expect(screen.getByText("Aurora")).toBeTruthy();
-    expect(screen.getByLabelText("Rating 92, tier S")).toBeTruthy();
-    expect(screen.getByLabelText("On Fire, last 5: W W W W W")).toBeTruthy();
+    expect(screen.getByLabelText("Rating 92, tier S").className).toContain("bg-tier-s");
+    expect(screen.queryByLabelText(/On Fire/)).toBeNull();
     expect(screen.getByLabelText("7 titles")).toBeTruthy();
   });
   it("says Soloist without a group and hides zero titles", () => {
@@ -73,7 +74,7 @@ describe("IdolCard", () => {
 });
 
 describe("StatTile", () => {
-  it.each([[3, "+3", "text-accent-sage"], [-2, "−2", "text-danger"], [0, "±0", "text-neutral-taupe"]])(
+  it.each([[3, "+3", "text-cool"], [-2, "−2", "text-danger"], [0, "±0", "text-muted"]])(
     "delta %i reads %s", (delta, text, color) => {
       render(<StatTile label="Rating" value={88} delta={delta} />);
       expect(screen.getByText(text).className).toContain(color);

@@ -22,8 +22,8 @@ function Step({ idolId, place, height, delay, still }: { idolId: string; place: 
     >
       <IdolPhoto idolId={idolId} size={256} className="w-full" />
       <p className="m-0 mt-2 w-full truncate text-center font-display text-sm">{idol.name}</p>
-      <div className={`${height} ${place === 1 ? "bg-accent-gold" : "bg-surface-hover"} mt-2 flex w-full items-start justify-center rounded-t-card pt-2`}>
-        <span className={`${place === 1 ? "text-on-fill" : "text-text-primary"} font-display text-xl`} aria-hidden="true">{place}</span>
+      <div className={`${height} ${place === 1 ? "bg-accent" : "bg-surface-hover"} mt-2 flex w-full items-start justify-center rounded-t-card pt-2`}>
+        <span className={`${place === 1 ? "text-on-accent" : "text-text-primary"} font-display text-xl`} aria-hidden="true">{place}</span>
       </div>
     </li>
   );

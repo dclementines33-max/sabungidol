@@ -18,7 +18,7 @@ export function WildcardPlayInBracket({ rounds }: { rounds: WildcardRound[] }) {
               {round.matches.map((m) => (
                 <li key={`${m.a}-${m.b}`} className="rounded-control border border-border bg-surface px-2 py-1 text-xs">
                   {[m.a, m.b].map((id) => (
-                    <span key={id} className={`${id === m.winner ? "font-semibold text-accent-gold" : "text-text-secondary"} block truncate`}>{name(id)}</span>
+                    <span key={id} className={`${id === m.winner ? "font-semibold text-accent-bright" : "text-text-secondary"} block truncate`}>{name(id)}</span>
                   ))}
                   {m.score && <span className="font-mono text-text-secondary tabular-nums">{m.score}</span>}
                 </li>

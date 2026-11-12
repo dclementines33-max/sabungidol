@@ -93,7 +93,7 @@ export function ImportDialog({ open, onOpenChange, title, accept, readFile, onAp
             <legend className="text-sm text-text-secondary">Mode</legend>
             {(["merge", "replace"] as const).map((m) => (
               <label key={m} className="mr-4 inline-flex items-center gap-2 text-sm">
-                <input type="radio" name="import-mode" checked={mode === m} onChange={() => setMode(m)} className="accent-accent-gold" />
+                <input type="radio" name="import-mode" checked={mode === m} onChange={() => setMode(m)} className="accent-accent-bright" />
                 {m === "merge" ? "Merge" : "Replace (data lama ditimpa)"}
               </label>
             ))}

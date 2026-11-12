@@ -50,7 +50,7 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
       <div className="flex items-center gap-4">
         <figure className="m-0 text-center">
           <IdolPhoto idolId={idolA} size={256} className="w-20" />
-          <figcaption className="mt-1 text-sm text-accent-coral">{a.name}</figcaption>
+          <figcaption className="mt-1 text-sm text-accent-bright">{a.name}</figcaption>
         </figure>
         <div className="relative size-40">
           <div aria-hidden="true" className="absolute -top-1 left-1/2 z-10 h-0 w-0 -translate-x-1/2 border-x-8 border-t-[12px] border-x-transparent border-t-text-primary" />
@@ -58,7 +58,7 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
             aria-hidden="true"
             className="size-full rounded-full border-2 border-border-strong"
             style={{
-              background: "conic-gradient(var(--color-accent-coral) 0 180deg, var(--color-accent-sky) 180deg 360deg)",
+              background: "conic-gradient(var(--color-accent-bright) 0 180deg, var(--color-cool) 180deg 360deg)",
               transform: `rotate(${rotation}deg)`,
               transition: reducedMotion() ? "none" : `transform ${SPIN_MS}ms var(--ease-spring)`,
             }}
@@ -66,7 +66,7 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
         </div>
         <figure className="m-0 text-center">
           <IdolPhoto idolId={idolB} size={256} className="w-20" />
-          <figcaption className="mt-1 text-sm text-accent-sky">{b.name}</figcaption>
+          <figcaption className="mt-1 text-sm text-cool">{b.name}</figcaption>
         </figure>
       </div>
       <p className="m-0 font-mono text-2xl tabular-nums" aria-live="polite">

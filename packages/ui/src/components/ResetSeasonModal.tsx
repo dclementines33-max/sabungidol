@@ -23,7 +23,7 @@ export function ResetSeasonModal({ open, onOpenChange, seasonName, matchCount, c
       onConfirm={() => onReset({ redraw })}
     >
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={redraw} onChange={(e) => setRedraw(e.target.checked)} className="size-4 accent-accent-gold" />
+        <input type="checkbox" checked={redraw} onChange={(e) => setRedraw(e.target.checked)} className="size-4 accent-accent-bright" />
         Undi ulang grup dan bracket
       </label>
     </ConfirmDialog>

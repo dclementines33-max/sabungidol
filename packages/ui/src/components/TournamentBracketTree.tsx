@@ -14,7 +14,7 @@ function Row({ idolId, won, highlight }: { idolId?: string; won: boolean; highli
   const lookup = useIdolLookup();
   const name = idolId ? (lookup(idolId)?.name ?? idolId) : "TBD";
   return (
-    <span className={`${won ? "font-semibold text-accent-gold" : idolId ? "" : "text-text-secondary"} ${highlight ? "underline" : ""} block truncate`}>
+    <span className={`${won ? "font-semibold text-accent-bright" : idolId ? "" : "text-text-secondary"} ${highlight ? "underline" : ""} block truncate`}>
       {name}
     </span>
   );
@@ -30,10 +30,10 @@ function MatchCard({ cell, highlightIdol, onClick }: { cell: BracketCell; highli
       {cell.score && <span className="font-mono text-xs text-text-secondary tabular-nums">{cell.score}</span>}
     </>
   );
-  const className = `${involved ? "border-accent-gold" : "border-border"} ${dimmed ? "opacity-40" : ""} block w-44 rounded-control border bg-surface px-2 py-1 text-left text-xs`;
+  const className = `${involved ? "border-accent-bright" : "border-border"} ${dimmed ? "opacity-40" : ""} block w-44 rounded-control border bg-surface px-2 py-1 text-left text-xs`;
   const style = { contentVisibility: "auto", containIntrinsicSize: `176px ${CARD_PX - 8}px` } as const;
   return onClick
-    ? <button type="button" data-involved={involved} onClick={() => onClick(cell)} className={`${className} hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold`} style={style}>{body}</button>
+    ? <button type="button" data-involved={involved} onClick={() => onClick(cell)} className={`${className} hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright`} style={style}>{body}</button>
     : <div data-involved={involved} className={className} style={style}>{body}</div>;
 }
 
@@ -68,7 +68,7 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
         ref={area}
         tabIndex={0}
         aria-label="Bracket, geser untuk melihat semua ronde"
-        className="max-h-[70vh] cursor-grab overflow-auto rounded-card border border-border bg-bg-raised p-4 focus-visible:outline-2 focus-visible:outline-accent-gold"
+        className="max-h-[70vh] cursor-grab overflow-auto rounded-card border border-border bg-bg-raised p-4 focus-visible:outline-2 focus-visible:outline-accent-bright"
         onPointerDown={(e) => { if (e.pointerType === "mouse" && e.target === e.currentTarget) drag.current = { x: e.clientX, y: e.clientY }; }}
         onPointerMove={(e) => {
           if (!drag.current || !area.current) return;

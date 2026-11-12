@@ -54,7 +54,7 @@ export function ConfirmDialog({ open, onOpenChange, title, message, confirmLabel
           <input
             value={typed}
             onChange={(e) => setTyped(e.target.value)}
-            className="mt-2 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 font-mono focus-visible:outline-2 focus-visible:outline-accent-gold"
+            className="mt-2 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 font-mono focus-visible:outline-2 focus-visible:outline-accent-bright"
           />
         </label>
       )}

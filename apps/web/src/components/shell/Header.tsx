@@ -22,7 +22,7 @@ export function Header({ onSearch }: { onSearch?: () => void }) {
         type="button"
         onClick={onSearch}
         disabled={!onSearch}
-        className="hidden items-center gap-2 rounded-control border border-border-strong px-3 py-1.5 text-sm text-text-secondary hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold disabled:opacity-50 sm:flex"
+        className="hidden items-center gap-2 rounded-control border border-border-strong px-3 py-1.5 text-sm text-text-secondary hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright disabled:opacity-50 sm:flex"
       >
         <Search aria-hidden="true" size={16} strokeWidth={1.5} />
         Cari…

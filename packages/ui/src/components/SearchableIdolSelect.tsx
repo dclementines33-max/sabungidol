@@ -67,7 +67,7 @@ export function SearchableIdolSelect({ label, idolIds, value, onChange, placehol
             setOpen(false);
           }
         }}
-        className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 placeholder:text-text-secondary focus-visible:outline-2 focus-visible:outline-accent-gold"
+        className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 placeholder:text-text-secondary focus-visible:outline-2 focus-visible:outline-accent-bright"
       />
       {open && (
         <ul id={`${id}-list`} role="listbox" aria-label={label} className="absolute z-30 mt-1 max-h-72 w-full list-none overflow-auto rounded-card border border-border bg-bg-raised p-1">

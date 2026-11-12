@@ -43,7 +43,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <>
       <a
         href="#konten"
-        className="sr-only rounded-control bg-accent-gold px-4 py-2 text-on-fill focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50"
+        className="sr-only rounded-control bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50"
       >
         Langsung ke konten
       </a>

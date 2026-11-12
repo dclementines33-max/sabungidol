@@ -68,7 +68,7 @@ function WorkerCheck() {
         <div>
           <p className="m-0 mb-2 text-sm">{progress.phase === "simulating" ? "Mensimulasikan…" : `Menyimpan ${progress.done.toLocaleString("id-ID")} / ${progress.total.toLocaleString("id-ID")} match`}</p>
           <div role="progressbar" aria-label="Progres" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} className="h-2 overflow-hidden rounded-full bg-surface">
-            <div className="h-full origin-left bg-accent-gold transition-transform" style={{ transform: `scaleX(${percent / 100})` }} />
+            <div className="h-full origin-left bg-accent-bright transition-transform" style={{ transform: `scaleX(${percent / 100})` }} />
           </div>
         </div>
       )}

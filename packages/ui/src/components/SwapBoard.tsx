@@ -51,7 +51,7 @@ export function SwapBoard({ labels, columns, onChange }: {
                   if (!same(from, spot)) onChange(swap(columns, from, spot));
                   setPicked(null);
                 }}
-                className={`${same(picked, spot) ? "bg-surface-hover outline-2 outline-accent-gold" : ""} flex w-full cursor-grab items-center gap-2 rounded-control px-1 py-1 text-left text-sm hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold`}
+                className={`${same(picked, spot) ? "bg-surface-hover outline-2 outline-accent-bright" : ""} flex w-full cursor-grab items-center gap-2 rounded-control px-1 py-1 text-left text-sm hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright`}
               >
                 <IdolPhoto idolId={id} size={64} className="w-6" />
                 <span className="truncate">{name}</span>

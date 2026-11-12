@@ -34,9 +34,9 @@ function ManualDrawModal({ open, onOpenChange, title, labels, initial, check, on
     >
       <SwapBoard labels={labels} columns={columns} onChange={setColumns} />
       <div role="status" className="mt-4 text-sm">
-        {problems.length === 0 && warnings.length === 0 && <p className="m-0 text-accent-sage">Semua aturan terpenuhi.</p>}
+        {problems.length === 0 && warnings.length === 0 && <p className="m-0 text-cool">Semua aturan terpenuhi.</p>}
         {problems.length > 0 && <ul className="m-0 pl-5 text-danger">{problems.map((p) => <li key={p}>{p}</li>)}</ul>}
-        {warnings.length > 0 && <ul className="m-0 pl-5 text-accent-gold">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
+        {warnings.length > 0 && <ul className="m-0 pl-5 text-accent-bright">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
       </div>
     </Modal>
   );

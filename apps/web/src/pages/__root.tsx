@@ -49,7 +49,7 @@ function NotFound() {
       icon={SearchX}
       title="Halaman tidak ditemukan"
       description="Alamat ini tidak ada di Sabung Idol."
-      action={<Link to="/" className="text-sm text-accent-gold underline underline-offset-4">Kembali ke Home</Link>}
+      action={<Link to="/" className="text-sm text-accent-bright underline underline-offset-4">Kembali ke Home</Link>}
     />
   );
 }

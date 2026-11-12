@@ -25,11 +25,11 @@ export function NotificationCenter({ notices, unread, onOpen, onExport }: {
           setOpen(!open);
           if (!open) onOpen?.();
         }}
-        className="relative rounded-control p-2 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-gold"
+        className="relative rounded-control p-2 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright"
       >
         <Bell aria-hidden="true" size={20} strokeWidth={1.5} />
         {unread > 0 && (
-          <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 min-w-4 rounded-full bg-accent-coral px-1 font-mono text-xs text-on-fill tabular-nums">
+          <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 min-w-4 rounded-full bg-accent-bright px-1 font-mono text-xs text-on-fill tabular-nums">
             {unread}
           </span>
         )}

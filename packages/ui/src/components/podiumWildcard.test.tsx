@@ -41,7 +41,7 @@ describe("WildcardPlayInBracket", () => {
   it("shows old rounds read-only, with the winner marked", () => {
     render(<SampleIdols><WildcardPlayInBracket rounds={[{ label: "WC1", matches: [{ a: "mina", b: "rina", winner: "rina", score: "2–1" }] }]} /></SampleIdols>);
     expect(screen.getByRole("region", { name: "Wildcard play-in (arsip lama)" })).toBeTruthy();
-    expect(screen.getByText("Rina").className).toContain("text-accent-gold");
+    expect(screen.getByText("Rina").className).toContain("text-accent-bright");
     expect(screen.getByText("2–1")).toBeTruthy();
   });
 });

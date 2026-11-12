@@ -1,22 +1,29 @@
-/* Design tokens (PRD §10). The only place colours, type, radius, breakpoints and motion are set.
+/* Design tokens (PRD §10; palette from design/refs/Color pallete.jpg, user decision 2026-11-13). The only place colours, type, radius, breakpoints and motion are set.
    Tailwind's own palettes are switched off so every screen uses these. Contrast: tokens.test.ts. */
 @theme static { /* static: every token is a CSS variable, even if no class uses it yet */
   --color-*: initial;
-  --color-bg-base: #15100d;
-  --color-bg-raised: #1e1612;
-  --color-surface: #261c17;
-  --color-surface-hover: #30241d;
-  --color-border: #3e3028; /* decorative lines only */
-  --color-border-strong: #786e69; /* control outlines and focus: 3:1 on every surface */
-  --color-text-primary: #f4ebe1;
-  --color-text-secondary: #bdaa98;
-  --color-accent-gold: #e9b44c;
-  --color-accent-coral: #f07a5a;
-  --color-accent-sage: #8ec39a;
-  --color-accent-sky: #7fb0d9;
-  --color-neutral-taupe: #9c8b7c;
-  --color-danger: #e6645d; /* PRD #E5615A, lifted to pass 4.5:1 on surface-hover */
-  --color-on-fill: #15100d; /* text on gold/danger fills; cream on danger fails (2.9:1) */
+  --color-bg-base: #010003;
+  --color-bg-raised: #0b0306;
+  --color-surface: #1a0609;
+  --color-surface-hover: #340a13;
+  --color-border: #4a1420; /* decorative lines only */
+  --color-border-strong: #4c6c81; /* control outlines: 3:1 on every surface */
+  --color-text-primary: #b9d3e2;
+  --color-text-secondary: #87a4b5;
+  --color-accent: #7d0018; /* crimson fill: main buttons, champions; too dark for text or outlines */
+  --color-on-accent: #b9d3e2; /* text on an accent fill */
+  --color-accent-bright: #ff4d63; /* the accent as text, icons, focus rings, side A, live */
+  --color-cool: #b9d3e2; /* info, success, wins, side B */
+  --color-muted: #6b8a9e; /* draws, "Steady", no change */
+  --color-danger: #ff4d63; /* destructive actions: outlined buttons, error text */
+  --color-on-fill: #010003; /* text on light fills (tiers S–C, branding colours, the bright accent) */
+
+  /* Rating tiers (PRD §3): S red, A–C light to dark steel, D navy (light text on it). */
+  --color-tier-s: #ff4d63;
+  --color-tier-a: #b9d3e2;
+  --color-tier-b: #87a4b5;
+  --color-tier-c: #6b8a9e;
+  --color-tier-d: #25435d;
 
   /* Competition branding: the 12 curated colours users pick from (PRD §10.1). */
   --color-brand-gold: #e9b44c;

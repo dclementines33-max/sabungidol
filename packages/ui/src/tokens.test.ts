@@ -21,7 +21,7 @@ const contrast = (a: string, b: string) => {
 };
 
 const backgrounds = ["bg-base", "bg-raised", "surface", "surface-hover"];
-const textColors = ["text-primary", "text-secondary", "accent-gold", "accent-coral", "accent-sage", "accent-sky", "neutral-taupe", "danger"];
+const textColors = ["text-primary", "text-secondary", "accent-bright", "cool", "muted", "danger"];
 const brands = ["gold", "amber", "coral", "rose", "orchid", "violet", "indigo", "sky", "teal", "sage", "lime", "sand"].map((b) => `brand-${b}`);
 
 describe("token contrast (WCAG 2.1 AA)", () => {
@@ -37,8 +37,17 @@ describe("token contrast (WCAG 2.1 AA)", () => {
     expect(contrast("border-strong", bg)).toBeGreaterThanOrEqual(3);
   });
 
-  // Fills with dark text on them: tier chips, danger buttons, photo placeholders on a group colour.
-  it.each(["accent-gold", "accent-coral", "accent-sage", "accent-sky", "neutral-taupe", "danger", ...brands])("text on a %s fill ≥ 4.5", (fill) => {
+  // Fills with dark text on them: tier chips S–C, the bright accent (badges), photo placeholders on a group colour.
+  it.each(["tier-s", "tier-a", "tier-b", "tier-c", "accent-bright", ...brands])("text on a %s fill ≥ 4.5", (fill) => {
     expect(contrast("on-fill", fill)).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe("fills with light text (WCAG 2.1 AA)", () => {
+  it.each([["on-accent", "accent"], ["text-primary", "tier-d"]])("%s on %s ≥ 4.5", (fg, fill) => {
+    expect(contrast(fg, fill)).toBeGreaterThanOrEqual(4.5);
+  });
+  it.each(backgrounds)("the bright accent as a focus ring or bar on %s ≥ 3", (bg) => {
+    expect(contrast("accent-bright", bg)).toBeGreaterThanOrEqual(3);
   });
 });

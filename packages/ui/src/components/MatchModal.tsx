@@ -30,7 +30,7 @@ function ScoreInput({ label, value, onChange }: { label: string; value: string; 
         min={0}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 block w-20 rounded-control border border-border-strong bg-surface px-3 py-2 font-mono text-lg text-text-primary tabular-nums focus-visible:outline-2 focus-visible:outline-accent-gold"
+        className="mt-1 block w-20 rounded-control border border-border-strong bg-surface px-3 py-2 font-mono text-lg text-text-primary tabular-nums focus-visible:outline-2 focus-visible:outline-accent-bright"
       />
     </label>
   );
@@ -99,7 +99,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
             role="radio"
             aria-checked={method === m.method}
             onClick={() => switchTo(m.method)}
-            className={`${method === m.method ? "bg-surface-hover text-text-primary" : "text-text-secondary"} rounded-control border border-border-strong px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-gold`}
+            className={`${method === m.method ? "bg-surface-hover text-text-primary" : "text-text-secondary"} rounded-control border border-border-strong px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright`}
           >
             {m.label}
           </button>

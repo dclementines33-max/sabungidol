@@ -13,7 +13,7 @@ export function PanelPlaceholder() {
       title={panel.label}
       description={`Panel ini dibangun di Fase ${panel.phase}.`}
       action={pathname !== "/studio/input" && panel.phase > 2
-        ? <Link to="/studio/input" className="text-sm text-accent-gold underline underline-offset-4">Mulai dari Input Data</Link>
+        ? <Link to="/studio/input" className="text-sm text-accent-bright underline underline-offset-4">Mulai dari Input Data</Link>
         : undefined}
     />
   );

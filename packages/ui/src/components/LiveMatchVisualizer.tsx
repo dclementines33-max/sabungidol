@@ -51,21 +51,21 @@ export function LiveMatchVisualizer({ games, nameA, nameB, stepMs = 700, onDone 
         <span className="text-sm text-text-secondary">Game {Math.min(shown, games.length)} / {games.length}</span>
         <span><span className="sr-only">{nameB} </span>{scoreB}</span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-accent-sky" aria-hidden="true">
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-cool" aria-hidden="true">
         <div
-          className="h-full origin-left bg-accent-coral transition-transform duration-[var(--duration-slow)] ease-spring"
+          className="h-full origin-left bg-accent-bright transition-transform duration-[var(--duration-slow)] ease-spring"
           style={{ transform: `scaleX(${shareA})` }}
         />
       </div>
       <ol className="m-0 mt-3 flex list-none flex-wrap gap-2 p-0" aria-label="Pemenang tiap game">
         {played.map((g, i) => (
-          <li key={i} className={`${g === "A" ? "text-accent-coral" : "text-accent-sky"} rounded-control border border-border-strong px-2 py-0.5 text-xs`}>
+          <li key={i} className={`${g === "A" ? "text-accent-bright" : "text-cool"} rounded-control border border-border-strong px-2 py-0.5 text-xs`}>
             G{i + 1} · {g === "A" ? nameA : nameB}
           </li>
         ))}
       </ol>
       <div className="mt-3 flex items-center gap-2">
-        {done && isComeback(games) && <span className="rounded-control bg-accent-gold px-2 py-0.5 text-xs font-semibold text-on-fill">Comeback!</span>}
+        {done && isComeback(games) && <span className="rounded-control bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">Comeback!</span>}
         {!done && <Button className="px-2 py-1" onClick={() => setShown(games.length)}>Lewati</Button>}
       </div>
     </div>

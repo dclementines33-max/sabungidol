@@ -14,9 +14,9 @@ export type Notice = {
 };
 
 export const LEVEL = {
-  info: { label: "Info", color: "text-accent-sky", icon: Info },
-  success: { label: "Success", color: "text-accent-sage", icon: CircleCheck },
-  warning: { label: "Warning", color: "text-accent-gold", icon: TriangleAlert },
-  blocker: { label: "Blocker", color: "text-accent-coral", icon: Ban },
+  info: { label: "Info", color: "text-cool", icon: Info },
+  success: { label: "Success", color: "text-cool", icon: CircleCheck },
+  warning: { label: "Warning", color: "text-accent-bright", icon: TriangleAlert },
+  blocker: { label: "Blocker", color: "text-accent-bright", icon: Ban },
   error: { label: "Error", color: "text-danger", icon: CircleX },
 } as const;

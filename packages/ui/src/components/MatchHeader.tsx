@@ -44,14 +44,14 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h }: { idolA: string; idol
           Peluang menang: {a.name} {pct(odds.A)}{bestOf === 4 ? `, seri ${pct(odds.D)}` : ""}, {b.name} {pct(odds.B)}
         </p>
         <div aria-hidden="true" className="flex h-2 overflow-hidden rounded-full">
-          <div className="bg-accent-coral" style={{ width: pct(odds.A) }} />
-          <div className="bg-neutral-taupe" style={{ width: pct(odds.D) }} />
-          <div className="bg-accent-sky" style={{ width: pct(odds.B) }} />
+          <div className="bg-accent-bright" style={{ width: pct(odds.A) }} />
+          <div className="bg-muted" style={{ width: pct(odds.D) }} />
+          <div className="bg-cool" style={{ width: pct(odds.B) }} />
         </div>
         <div aria-hidden="true" className="mt-1 flex justify-between font-mono text-xs tabular-nums">
-          <span className="text-accent-coral">{pct(odds.A)}</span>
-          {bestOf === 4 && <span className="text-neutral-taupe">seri {pct(odds.D)}</span>}
-          <span className="text-accent-sky">{pct(odds.B)}</span>
+          <span className="text-accent-bright">{pct(odds.A)}</span>
+          {bestOf === 4 && <span className="text-muted">seri {pct(odds.D)}</span>}
+          <span className="text-cool">{pct(odds.B)}</span>
         </div>
         {h2h && (
           <p className="m-0 mt-2 text-center text-sm text-text-secondary">

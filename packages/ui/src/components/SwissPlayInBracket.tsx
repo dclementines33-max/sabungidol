@@ -4,8 +4,8 @@ import { type SwissMatch, swissRecords } from "@sabung/engine";
 import { useIdolLookup } from "./idolSource";
 
 const OUTCOME = (wins: number, losses: number) =>
-  wins === 3 && losses <= 1 ? { label: "Lolos", color: "text-accent-sage border-accent-sage" }
-    : wins === 3 ? { label: "LCQ", color: "text-accent-gold border-accent-gold" }
+  wins === 3 && losses <= 1 ? { label: "Lolos", color: "text-cool border-cool" }
+    : wins === 3 ? { label: "LCQ", color: "text-accent-bright border-accent-bright" }
       : { label: "Gugur", color: "text-danger border-danger" };
 
 export function SwissPlayInBracket({ group, seededIds, rounds }: { group: string; seededIds: string[]; rounds: SwissMatch[][] }) {
@@ -35,7 +35,7 @@ export function SwissPlayInBracket({ group, seededIds, rounds }: { group: string
                     {list.map((m) => (
                       <li key={`${m.a}-${m.b}`} className="rounded-control border border-border bg-surface px-2 py-1 text-xs">
                         {[m.a, m.b].map((id) => (
-                          <span key={id} className={`${id === m.winner ? "font-semibold text-accent-gold" : "text-text-secondary"} block truncate`}>{name(id)}</span>
+                          <span key={id} className={`${id === m.winner ? "font-semibold text-accent-bright" : "text-text-secondary"} block truncate`}>{name(id)}</span>
                         ))}
                       </li>
                     ))}

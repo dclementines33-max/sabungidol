@@ -15,7 +15,7 @@ export function IdolPhoto({ idolId, size, className = "w-16" }: { idolId: string
       role="img"
       aria-label={idol.name}
       className={`${frame} flex items-center justify-center font-display text-on-fill`}
-      style={{ background: `var(--color-${idol.groupColor ?? "neutral-taupe"})`, containerType: "inline-size" }}
+      style={{ background: `var(--color-${idol.groupColor ?? "muted"})`, containerType: "inline-size" }}
     >
       <span aria-hidden="true" style={{ fontSize: "40cqi" }}>{initials(idol.name)}</span>
     </div>

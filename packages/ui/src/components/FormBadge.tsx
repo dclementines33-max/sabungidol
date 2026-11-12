@@ -3,11 +3,11 @@ import type { Form, Result } from "@sabung/engine";
 import { Flame, Snowflake } from "lucide-react";
 
 const STYLE: Record<Form["name"], { color: string; icon?: typeof Flame }> = {
-  "On Fire": { color: "text-accent-coral", icon: Flame },
-  "Hot Streak": { color: "text-accent-gold", icon: Flame },
-  Confident: { color: "text-accent-sage" },
-  Steady: { color: "text-neutral-taupe" },
-  "Cold Slump": { color: "text-accent-sky", icon: Snowflake },
+  "On Fire": { color: "text-accent-bright", icon: Flame },
+  "Hot Streak": { color: "text-accent-bright", icon: Flame },
+  Confident: { color: "text-cool" },
+  Steady: { color: "text-muted" },
+  "Cold Slump": { color: "text-cool", icon: Snowflake },
 };
 
 export function FormBadge({ form, recent = [] }: { form: Form["name"]; recent?: Result[] }) {
