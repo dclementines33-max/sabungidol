@@ -1,9 +1,9 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents,
+  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents,
   listGroups, listIdols,
-  logEvent, openDb, saveMatches, seasons, setActive, updateIdol,
+  deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
@@ -11,7 +11,7 @@ import { markOpened, resetIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
 import { loadDefaultData } from "./loadDefaultData";
-import { readPhotoFile, storePhotoFiles } from "./photoFiles";
+import { readPhotoFile, removePhotoFiles, storePhotoFiles } from "./photoFiles";
 import { type PhotoSizes, bestStored } from "./photoSizes";
 import { type StorageKind, storageFor } from "./storageChoice";
 
@@ -51,7 +51,25 @@ const api = {
   addIdols: async (batch: Parameters<typeof addIdols>[1]) => addIdols(await open(), batch),
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
-  deleteIdol: async (id: string) => deleteIdol(await open(), id),
+  // Why an idol cannot be deleted (matches, or a league roster), asked before the confirmation.
+  deleteBlocker: async (id: string) => deleteBlocker(await open(), id),
+  // Deleting also removes the idol's photo (its record and files).
+  deleteIdol: async (id: string) => {
+    const db = await open();
+    const photoId = (await listIdols(db)).find((i) => i.id === id)?.photoId;
+    const result = await deleteIdol(db, id);
+    if (result.deleted && photoId) await dropPhoto(db, photoId);
+    return result;
+  },
+  // A new photo for an idol; the old one is removed. Returns both ids (the page forgets the old one's cached URLs).
+  replacePhoto: async (idolId: string, image: Blob) => {
+    const db = await open();
+    const stored = await storePhotoFiles(DATABASE, image);
+    await insertPhoto(db, stored);
+    const old = await setIdolPhoto(db, idolId, stored.id);
+    if (old) await dropPhoto(db, old);
+    return { photoId: stored.id, old };
+  },
 
   // The default idol data, once per database (shared promise: a double start loads it only once).
   loadDefaultData: async () => (defaultDataRun ??= open().then((db) => loadDefaultData(db, DATABASE))),
@@ -111,3 +129,9 @@ const api = {
 
 export type WorkerApi = typeof api;
 Comlink.expose(api);
+
+// A photo nobody uses any more: its record, then its files (a leftover file is harmless, a missing one is not).
+async function dropPhoto(db: Db, photoId: string) {
+  await deletePhoto(db, photoId);
+  await removePhotoFiles(DATABASE, photoId).catch(() => {}); // cleaned later by the integrity check
+}

@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createSeason } from "./createSeason";
 import { listGroups } from "./groups";
-import { addIdols, deleteIdol, listIdols, setActive, updateIdol } from "./idols";
+import { addIdols, deleteIdol, listIdols, setActive, setIdolPhoto, updateIdol } from "./idols";
+import { insertPhoto } from "./photos";
 import { type Db, openDb } from "./openDb";
 import { saveMatches } from "./saveMatches";
+import { createDraftSeason } from "./seasons";
 
 let db: Db;
 beforeEach(async () => {
@@ -61,6 +63,21 @@ describe("idols and groups (PRD §3, §8)", () => {
     expect(await deleteIdol(db, a)).toEqual({ deleted: false, matches: 1 });
     expect(await deleteIdol(db, c)).toEqual({ deleted: true, matches: 0 });
     expect((await listIdols(db)).map((r) => r.name)).toEqual(["A", "B"]);
+  });
+
+  it("refuses to delete an idol in a league roster, and says where", async () => {
+    const { added: [a, b] } = await addIdols(db, [idol("A", null), idol("B", null)]);
+    await createDraftSeason(db, { id: "S01", number: 1, name: "Season 1", seed: "x", leagues: { D1A: [a!] } });
+    expect(await deleteIdol(db, a!)).toEqual({ deleted: false, matches: 0, roster: "D1A Season 1" });
+    expect(await deleteIdol(db, b!)).toEqual({ deleted: true, matches: 0 });
+  });
+
+  it("sets a photo and hands back the old one", async () => {
+    const { added: [a] } = await addIdols(db, [idol("A", null)]);
+    for (const id of ["p1", "p2"]) await insertPhoto(db, { id, sizes: {}, bytes: 1 });
+    expect(await setIdolPhoto(db, a!, "p1")).toBeNull();
+    expect(await setIdolPhoto(db, a!, "p2")).toBe("p1");
+    expect((await listIdols(db))[0]!.photoId).toBe("p2");
   });
 });
 

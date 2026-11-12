@@ -4,7 +4,7 @@ import { type IdolInput, idolInputSchema, judgeBatch, judgeIdol, ulid } from "@s
 import { asc, eq, inArray, or, sql } from "drizzle-orm";
 import { ensureGroups } from "./groups";
 import type { Db, Tx } from "./openDb";
-import { groups, idols, matches } from "./schema";
+import { entries, groups, idols, matches, seasons } from "./schema";
 
 export type IdolRow = {
   id: string; name: string; groupId: string | null; groupName: string | null; rating: number;
@@ -57,10 +57,29 @@ export async function setActive(db: Db, ids: string[], active: boolean) {
   if (ids.length > 0) await db.update(idols).set({ active }).where(inArray(idols.id, ids));
 }
 
-// An idol with matches is part of history and cannot be deleted (deactivate it instead).
-export async function deleteIdol(db: Db, id: string): Promise<{ deleted: boolean; matches: number }> {
+// An idol with matches is part of history and cannot be deleted (deactivate it instead); one in a
+// league roster cannot either, so no league loses a place (user decision 2026-11-13).
+export async function deleteBlocker(db: Db | Tx, id: string): Promise<{ matches: number; roster?: string } | null> {
   const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(matches).where(or(eq(matches.idolA, id), eq(matches.idolB, id)));
-  if (n > 0) return { deleted: false, matches: n };
+  if (n > 0) return { matches: n };
+  const [entry] = await db.select({ comp: entries.comp, season: seasons.name }).from(entries)
+    .innerJoin(seasons, eq(entries.seasonId, seasons.id)).where(eq(entries.idolId, id)).limit(1);
+  return entry ? { matches: 0, roster: `${entry.comp} ${entry.season}` } : null;
+}
+
+export async function deleteIdol(db: Db, id: string): Promise<{ deleted: boolean; matches: number; roster?: string }> {
+  const blocker = await deleteBlocker(db, id);
+  if (blocker) return { deleted: false, ...blocker };
   await db.delete(idols).where(eq(idols.id, id));
   return { deleted: true, matches: 0 };
+}
+
+// Gives an idol a new photo; returns the photo it had before (null if none), for clean-up.
+export async function setIdolPhoto(db: Db, id: string, photoId: string): Promise<string | null> {
+  return db.transaction(async (tx) => {
+    const [row] = await tx.select({ photoId: idols.photoId }).from(idols).where(eq(idols.id, id));
+    if (!row) throw new Error(`Idol ${id} tidak ditemukan`);
+    await tx.update(idols).set({ photoId }).where(eq(idols.id, id));
+    return row.photoId;
+  });
 }
