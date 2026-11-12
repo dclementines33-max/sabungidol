@@ -1,12 +1,13 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Branding, type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
+  type BackupSection, type Branding, type Db, type ImportMode, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
+import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
@@ -95,9 +96,18 @@ const api = {
   saveCompetition: async (seasonId: string, code: string, name: string, branding: Branding) => saveCompetition(await open(), seasonId, code, name, branding),
   // Data Maker: how the active idols would be split now (nothing saved).
   previewSplit: async () => splitLeagues((await listIdols(await open())).filter((i) => i.active)),
+  // Backup & restore (PRD §12.3).
+  exportBackup: async (section: BackupSection, seasonId?: string) => exportBackup(await open(), DATABASE, section, seasonId),
+  previewImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, true),
+  applyImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, false),
+  saveSnapshot: async (reason: string) => saveSnapshot(await open(), DATABASE, reason),
+  listSnapshots: async () => listSnapshots(DATABASE),
+  readSnapshot: async (name: string) => readSnapshot(DATABASE, name),
+  backupDue: async () => backupDue(await open()),
   // Danger Zone: the season back to a draft; with redraw the 12 leagues are split again too.
   resetSeason: async (seasonId: string, redraw: boolean) => {
     const db = await open();
+    await saveSnapshot(db, DATABASE, "reset season"); // PRD §12.3: a snapshot before every dangerous action
     await resetSeason(db, seasonId);
     if (redraw) await setLeagueRosters(db, seasonId, splitLeagues((await listIdols(db)).filter((i) => i.active)).leagues);
   },

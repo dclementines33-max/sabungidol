@@ -18,6 +18,7 @@ export function startDefaultData(): void {
       queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     }
     startFirstSeason();
+    remindBackup();
   }, (error) => {
     console.error("Default idol data not loaded", error);
     notify({ level: "error", code: "E-SEED-001", message: "Data idol bawaan gagal dimuat. Muat ulang halaman untuk mencoba lagi.", context: error instanceof Error ? error.message : String(error) });
@@ -33,4 +34,12 @@ function startFirstSeason(): void {
     console.error("Season 1 not created", error);
     notify({ level: "error", code: "E-SEASON-001", message: "Season 1 gagal dibuat. Muat ulang halaman untuk mencoba lagi.", context: error instanceof Error ? error.message : String(error) });
   });
+}
+
+// PRD §12.3: a reminder when there has been no backup for over 7 days (once a day at most).
+export function remindBackup(): void {
+  if (typeof Worker === "undefined") return;
+  engine().backupDue().then((due) => {
+    if (due) notify({ level: "warning", code: "W-BACKUP-001", message: "Sudah lebih dari 7 hari tanpa backup. Buat backup di Settings → Backup." }, { oncePerDay: true });
+  }, () => {}); // the database error is reported elsewhere
 }

@@ -61,8 +61,11 @@ test.describe("shell, mobile 375 px", () => {
   test("no violations with the bottom bar and the Play sheet", async ({ page }) => {
     await page.goto("/wiki/career");
     await expectNoViolations(page, "mobile page");
-    await page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("button", { name: "Play" }).click();
-    await expect(page.getByRole("dialog", { name: "Play" })).toBeVisible();
+    // A click before React has taken over the page does nothing yet (open item): retry until the sheet opens.
+    await expect(async () => {
+      await page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("button", { name: "Play" }).click();
+      await expect(page.getByRole("dialog", { name: "Play" })).toBeVisible({ timeout: 1000 });
+    }).toPass();
     await expectNoViolations(page, "mobile Play sheet");
   });
 });

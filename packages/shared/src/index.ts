@@ -9,3 +9,4 @@ export * from "./idolSchema";
 export * from "./idolRules";
 export * from "./idolBatch";
 export * from "./seasonConfig";
+export * from "./backupSections";

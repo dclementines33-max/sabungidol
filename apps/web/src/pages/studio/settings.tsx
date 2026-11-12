@@ -1,6 +1,7 @@
 // Settings (PRD §8): Season, Branding, Roster liga, Data Maker, Engine Tuning, Data, Danger Zone.
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { BackupSettings } from "../../components/settings/BackupSettings";
 import { BrandingSettings } from "../../components/settings/BrandingSettings";
 import { DangerZone } from "../../components/settings/DangerZone";
 import { DataMaker } from "../../components/settings/DataMaker";
@@ -28,6 +29,7 @@ function Settings() {
       <DataMaker seasonId={season.id} draft={draft} idols={idols} />
       <EngineTuning key={`t-${season.id}`} season={season} />
       <DataSettings />
+      <BackupSettings seasonId={season.id} />
       <DangerZone season={season} />
     </div>
   );

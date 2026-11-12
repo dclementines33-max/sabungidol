@@ -13,7 +13,7 @@ const folder = async (database: string, photoId: string, create: boolean) => {
 // The DOM type library leaves this Worker-only API out; only the parts used here.
 type SyncAccess = { truncate(size: number): void; write(data: Uint8Array, options: { at: number }): number; flush(): void; close(): void };
 
-async function writeFile(dir: FileSystemDirectoryHandle, name: string, blob: Blob) {
+export async function writeFile(dir: FileSystemDirectoryHandle, name: string, blob: Blob) {
   const handle = await dir.getFileHandle(name, { create: true });
   const access = await (handle as unknown as { createSyncAccessHandle(): Promise<SyncAccess> }).createSyncAccessHandle();
   try {

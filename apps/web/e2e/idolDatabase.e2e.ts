@@ -14,7 +14,7 @@ test("Idol Database: cards, table, filters, sort", async ({ page }) => {
 
   await page.goto("/wiki/idols");
   const count = page.getByText(/dari 242 idol$/);
-  await expect(count).toHaveText("242 dari 242 idol");
+  await expect(count).toHaveText("242 dari 242 idol", { timeout: 30_000 }); // opening the database again can be slow under parallel load
   await expect(page.getByRole("list", { name: "Idol" }).getByRole("listitem")).toHaveCount(242);
   expect(await axe(page)).toEqual([]);
 

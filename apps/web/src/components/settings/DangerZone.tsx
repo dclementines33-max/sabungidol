@@ -21,6 +21,7 @@ export function DangerZone({ season }: { season: SeasonRow }) {
     await refreshSeason();
   };
   const wipe = async () => {
+    await engine().saveSnapshot("hapus semua data"); // kept: snapshots live outside the database folder
     await requestWipe(await navigator.storage.getDirectory(), MAIN_DATABASE);
     location.reload();
   };

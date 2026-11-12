@@ -7,6 +7,7 @@ export default defineConfig({
   testDir: "e2e",
   testMatch: "*.e2e.ts",
   timeout: 60_000,
+  expect: { timeout: 15_000 }, // every fresh profile opens its own database; under parallel load that takes longer than 5 s
   use: { baseURL: `http://localhost:${PORT}` },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: [

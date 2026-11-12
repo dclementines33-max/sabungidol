@@ -10,3 +10,6 @@ export * from "./groups";
 export * from "./idols";
 export * from "./photos";
 export * from "./seasons";
+export * from "./backupRead";
+export * from "./backupWrite";
+export { bundledMigrations } from "./migrations";

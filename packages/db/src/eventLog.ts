@@ -26,3 +26,9 @@ export async function logEvent(db: Db, event: NewEvent, { oncePerDay = false } =
 export async function listEvents(db: Db, limit = 200): Promise<LoggedEvent[]> {
   return (await db.select().from(eventLog).orderBy(desc(eventLog.id)).limit(limit)).map(toLogged);
 }
+
+// When an event with this code last happened (null = never), e.g. the last backup.
+export async function lastEventAt(db: Db, code: string): Promise<string | null> {
+  const [row] = await db.select({ at: eventLog.at }).from(eventLog).where(eq(eventLog.code, code)).orderBy(desc(eventLog.at)).limit(1);
+  return row ? row.at.toISOString() : null;
+}
