@@ -33,7 +33,7 @@ function WorkerCheck() {
     }
     const started = performance.now();
     try {
-      const run = await engine().simulateSampleSeason(DATABASE, onProgress(setProgress));
+      const run = await engine(DATABASE).simulateSampleSeason(onProgress(setProgress));
       setResult({ ...run, totalMs: performance.now() - started, longestTaskMs: Math.max(0, ...longTasks), longTasks: longTasks.length });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

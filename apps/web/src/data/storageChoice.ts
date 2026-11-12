@@ -3,6 +3,8 @@
 // never by "try OPFS, else IndexedDB": a passing OPFS hiccup would then open an empty database.
 export type StorageKind = "opfs" | "indexeddb";
 
+export const MAIN_DATABASE = "sabung-idol"; // the app's own data; Fase 1 checks use separate names
+
 // OPFS with synchronous access handles, which PGlite needs; only available inside a Worker.
 export function supportsOpfs(): boolean {
   return typeof FileSystemFileHandle !== "undefined"

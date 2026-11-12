@@ -5,3 +5,4 @@ export * from "./createSeason";
 export * from "./saveMatches";
 export * from "./leagueTable";
 export * from "./countMatches";
+export * from "./eventLog";

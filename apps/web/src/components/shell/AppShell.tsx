@@ -1,18 +1,22 @@
-// The frame around every screen (agreed shell, Fase 1 step 7): skip link, rail, header, content, bottom bar.
-import { Banner } from "@sabung/ui";
-import { type ReactNode, useEffect, useState } from "react";
-import { askPersistentStorage } from "../../data/persistentStorage";
+// The frame around every screen (agreed shell, Fase 1 step 7): skip link, rail, header, content, bottom bar,
+// plus the notification layers (PRD §14.1): pinned warnings/errors, toasts, blocker dialog.
+import { BlockerDialog, Toasts } from "@sabung/ui";
+import { type ReactNode, useEffect } from "react";
+import { useNotices } from "../../data/notices";
 import { useRememberedFlag } from "../../data/rememberedFlag";
+import { startNotifications } from "../../data/startNotifications";
 import { BottomBar } from "./BottomBar";
 import { Header } from "./Header";
 import { NavRail } from "./NavRail";
+import { PinnedNotices } from "./PinnedNotices";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useRememberedFlag("sabung.railCollapsed");
-  const [persisted, setPersisted] = useState<boolean | null>(null);
-  useEffect(() => {
-    askPersistentStorage().then(setPersisted);
-  }, []);
+  const toasts = useNotices((s) => s.toasts);
+  const dismissToast = useNotices((s) => s.dismissToast);
+  const blocker = useNotices((s) => s.blocker);
+  const closeBlocker = useNotices((s) => s.closeBlocker);
+  useEffect(startNotifications, []);
   return (
     <>
       <a
@@ -26,21 +30,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <Header />
           <main id="konten" tabIndex={-1} className="flex-1 px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
-            {persisted === false && (
-              <div className="mb-4">
-                <Banner notice={{
-                  id: "storage-not-persisted",
-                  level: "warning",
-                  at: "",
-                  message: "Browser belum mengizinkan penyimpanan permanen, jadi data bisa terhapus saat ruang penyimpanan penuh. Buat backup secara rutin.",
-                }} />
-              </div>
-            )}
+            <PinnedNotices />
             {children}
           </main>
         </div>
       </div>
       <BottomBar />
+      <Toasts notices={toasts} onDismiss={dismissToast} />
+      <BlockerDialog notice={blocker} onClose={closeBlocker} />
     </>
   );
 }
