@@ -1,6 +1,11 @@
 # Memory
-- Before starting work, read `C:\Users\danim\Documents\Second Brain\Memory\Claude.md` (the main memory note).
-- Before stopping, update it: decisions, open items, and a one-line session log entry.
+- Start every session by reading `docs/PROGRESS.md`: status, the next step, a map of where every part
+  of the code lives, and the rules that are easy to break. Don't read the code file by file; open a file
+  only when the task touches it.
+- Then read `C:\Users\danim\Documents\Second Brain\Memory\Claude.md` (the main memory note) for the
+  running log and the user's decisions.
+- Before stopping (and after every finished step), update both: `docs/PROGRESS.md` (status, map, new
+  rules) and the memory note (decisions, open items, a one-line session log entry).
 
 # Project
 - Spec: `PRD_1.md` (Sabung Idol PRD). Build phase by phase per §15; never start the next phase before its gate passes and the user approves.
