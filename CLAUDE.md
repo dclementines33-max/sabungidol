@@ -4,6 +4,7 @@
 
 # Project
 - Spec: `PRD_1.md` (Sabung Idol PRD). Build phase by phase per §15; never start the next phase before its gate passes and the user approves.
+- UI references: pictures in `design/refs/`, explained in `design/NOTES.md`. Read both before building or changing any page or component the user sees; a reference says what a page shows, while colours and sizes come from `packages/ui/src/tokens.css`.
 
 # Project rules
 
