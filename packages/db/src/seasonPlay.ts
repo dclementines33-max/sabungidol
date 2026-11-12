@@ -4,7 +4,7 @@ import { D1_LEAGUES, D2_LEAGUES, type CompetitionCode, type StageCode, classifyM
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { gamesFromMask } from "./gamesMask";
 import type { Db } from "./openDb";
-import { idols, matches, seasons } from "./schema";
+import { entries, idols, matches, seasons } from "./schema";
 import { leagueRosters } from "./seasons";
 
 export type SavedMatch = {
@@ -40,9 +40,15 @@ export async function startProblems(db: Db, seasonId: string): Promise<string[]>
   return problems;
 }
 
-export async function startSeason(db: Db, seasonId: string): Promise<{ ok: true } | { ok: false; problems: string[] }> {
+// Starting fixes The Idols roster (the 20 highest-rated active idols now), so a rating changed during
+// the season cannot change who plays in it. One transaction with the status change.
+export async function startSeason(db: Db, seasonId: string, theIdols: string[]): Promise<{ ok: true } | { ok: false; problems: string[] }> {
   const problems = await startProblems(db, seasonId);
+  if (theIdols.length !== 20) problems.push(`The Idols butuh 20 idol aktif, ada ${theIdols.length}`);
   if (problems.length) return { ok: false, problems };
-  await db.update(seasons).set({ status: "live" }).where(and(eq(seasons.id, seasonId), eq(seasons.status, "draft")));
+  await db.transaction(async (tx) => {
+    await tx.insert(entries).values(theIdols.map((idolId, i) => ({ seasonId, comp: "IDL", stage: "LG", idolId, slot: i + 1, source: "rating" }))).onConflictDoNothing();
+    await tx.update(seasons).set({ status: "live" }).where(and(eq(seasons.id, seasonId), eq(seasons.status, "draft")));
+  });
   return { ok: true };
 }

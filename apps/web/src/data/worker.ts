@@ -5,7 +5,7 @@ import {
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
-import { runSeason, splitLeagues, testSeason } from "@sabung/engine";
+import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
 import { fixIntegrity, integrityCheck } from "./integrityWorker";
@@ -99,7 +99,11 @@ const api = {
   // Data Maker: how the active idols would be split now (nothing saved).
   previewSplit: async () => splitLeagues((await listIdols(await open())).filter((i) => i.active)),
   // Playing the season (Fase 3).
-  startSeason: async () => { const db = await open(); return startSeason(db, (await currentSeason(db))!.id); },
+  startSeason: async () => {
+    const db = await open();
+    const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: i.rating, active: i.active }));
+    return startSeason(db, (await currentSeason(db))!.id, pickTheIdols({ idols } as Parameters<typeof pickTheIdols>[0]));
+  },
   seasonOverview: async () => seasonOverview(await open()),
   playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),
   pauseSeason: () => requestPause(),

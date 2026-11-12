@@ -10,6 +10,7 @@ export type SeasonInput = {
   seed: string;
   idols: SeasonIdol[];
   leagues: Record<LeagueCode, string[]>; // 20 idol ids per league
+  theIdols?: string[]; // The Idols roster fixed when the season started; without it, picked by rating now
   tuning?: Tuning;
   config?: SeasonConfig; // Settings: BoN per stage, competitions switched off (tuning goes in tuning)
   // Replay (Fase 3): saved results are reused, not played again; a match that is not saved is only

@@ -5,7 +5,7 @@ import { checkIntegrity, removeOrphanMatches } from "./integrity";
 import { type Db, openDb } from "./openDb";
 import { saveMatches } from "./saveMatches";
 import { deleteMatches, listSeasonMatches, startSeason } from "./seasonPlay";
-import { createDraftSeason, currentSeason } from "./seasons";
+import { createDraftSeason, currentSeason, leagueRosters } from "./seasons";
 
 let db: Db;
 let ids: string[];
@@ -22,11 +22,12 @@ beforeEach(async () => {
 describe("playing a season in the database", () => {
   it("starts only with complete leagues and nobody inactive, saying why not", async () => {
     await setActive(db, [ids[0]!], false);
-    expect(await startSeason(db, "S01")).toEqual({ ok: false, problems: ["D1A berisi idol nonaktif: I0"] });
+    expect(await startSeason(db, "S01", ids.slice(0, 20))).toEqual({ ok: false, problems: ["D1A berisi idol nonaktif: I0"] });
     expect((await checkIntegrity(db)).map((i) => i.code)).toEqual(["E-INT-002", "W-INT-004"]);
     await setActive(db, [ids[0]!], true);
-    expect(await startSeason(db, "S01")).toEqual({ ok: true });
+    expect(await startSeason(db, "S01", ids.slice(0, 20))).toEqual({ ok: true });
     expect((await currentSeason(db))!.status).toBe("live");
+    expect((await leagueRosters(db, "S01")).IDL).toEqual(ids.slice(0, 20)); // The Idols fixed at the start
   });
 
   it("reads matches back in the engine's shape, deletes stale ones, and finds orphan league matches", async () => {

@@ -12,9 +12,10 @@ export const useCurrentSeason = () => useQuery({
   enabled: typeof Worker !== "undefined",
 }, queryClient).data;
 
-// League code → idol ids for a season (empty until there is one).
+// The 12 league rosters of a season (D1A … D2F; empty until there is one). The Idols roster, stored
+// once the season starts, is left out: screens that say "league" mean these twelve.
 export const useLeagueRosters = (seasonId: string | undefined) => useQuery({
   queryKey: [...SEASON_QUERY, "rosters", seasonId],
-  queryFn: () => engine().leagueRosters(seasonId!),
+  queryFn: async () => { const { IDL: _theIdols, ...leagues } = await engine().leagueRosters(seasonId!); return leagues; },
   enabled: !!seasonId,
 }, queryClient).data;

@@ -4,7 +4,7 @@
 // changed after a manual result are removed.
 import { type Db, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, runSeason } from "@sabung/engine";
-import { readSeasonConfig } from "@sabung/shared";
+import { SEASON_COMPETITIONS, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
@@ -24,14 +24,30 @@ async function seasonInput(db: Db): Promise<SeasonInput & { seasonId: string }> 
   if (!season || season.status !== "live") throw new Error("Belum ada season yang berjalan. Mulai season dulu.");
   const config = readSeasonConfig(season.config);
   const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: i.rating, active: i.active }));
-  return { seasonId: season.id, season: season.number, seed: season.seed, idols, leagues: (await leagueRosters(db, season.id)) as SeasonInput["leagues"], config, tuning: config.tuning };
+  const { IDL: theIdols, ...leagues } = await leagueRosters(db, season.id); // The Idols was fixed when the season started
+  return { seasonId: season.id, season: season.number, seed: season.seed, idols, leagues: leagues as SeasonInput["leagues"], theIdols, config, tuning: config.tuning };
 }
 
-// Where the season stands, nothing played: titles so far, what can be played next, done or not.
+// Where the season stands, nothing played: titles so far, what can be played next, and per
+// competition off / not started / running / finished (a running competition always has its next
+// match in the frontier; a finished one never does).
 export async function seasonOverview(db: Db) {
   const input = await seasonInput(db);
   const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
-  return { titles: result.titles, pending: result.pending, done: result.done, played: result.matches.length, notices: result.notices };
+  const off = new Set(input.config?.off ?? []);
+  const played = new Map<string, number>();
+  for (const m of result.matches) played.set(competitionKeyOf(m.comp), (played.get(competitionKeyOf(m.comp)) ?? 0) + 1);
+  const waiting = new Set(result.pending.map((m) => competitionKeyOf(m.comp)));
+  const competitions = SEASON_COMPETITIONS.map((c) => {
+    const n = played.get(c.key) ?? 0;
+    const status = off.has(c.key) ? "off" : waiting.has(c.key) ? (n ? "running" : "next") : n ? "finished" : "waiting";
+    return { key: c.key, name: c.name, played: n, status } as const;
+  });
+  const third = result.matches.find((m) => m.comp === "UZC" && m.round === "3RD");
+  return {
+    titles: result.titles, pending: result.pending, done: result.done, played: result.matches.length, notices: result.notices, competitions,
+    uzcThird: third ? (third.result === "A" ? third.idolA : third.idolB) : null,
+  };
 }
 
 function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) => boolean {
