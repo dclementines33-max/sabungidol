@@ -19,6 +19,7 @@ export function startDefaultData(): void {
     }
     startFirstSeason();
     remindBackup();
+    checkIntegrityOnStart();
   }, (error) => {
     console.error("Default idol data not loaded", error);
     notify({ level: "error", code: "E-SEED-001", message: "Data idol bawaan gagal dimuat. Muat ulang halaman untuk mencoba lagi.", context: error instanceof Error ? error.message : String(error) });
@@ -42,4 +43,13 @@ export function remindBackup(): void {
   engine().backupDue().then((due) => {
     if (due) notify({ level: "warning", code: "W-BACKUP-001", message: "Sudah lebih dari 7 hari tanpa backup. Buat backup di Settings → Backup." }, { oncePerDay: true });
   }, () => {}); // the database error is reported elsewhere
+}
+
+// PRD §14.2: the integrity check at start-up; problems are listed in Settings → Data (once a day).
+export function checkIntegrityOnStart(): void {
+  if (typeof Worker === "undefined") return;
+  engine().integrityCheck().then((issues) => {
+    const errors = issues.filter((i) => i.level === "error");
+    if (errors.length) notify({ level: "warning", code: "W-INT-000", message: `Cek integritas menemukan ${errors.length} masalah. Lihat Settings → Data.`, context: errors.map((e) => `${e.code}: ${e.message}`).join("\n") }, { oncePerDay: true });
+  }, () => {}); // a database that cannot open is reported elsewhere
 }

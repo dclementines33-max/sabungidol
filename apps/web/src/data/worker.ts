@@ -1,13 +1,15 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type BackupSection, type Branding, type Db, type ImportMode, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
+  type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
+import { fixIntegrity, integrityCheck } from "./integrityWorker";
+import { type PlayProgress, type PlayTarget, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
@@ -96,6 +98,14 @@ const api = {
   saveCompetition: async (seasonId: string, code: string, name: string, branding: Branding) => saveCompetition(await open(), seasonId, code, name, branding),
   // Data Maker: how the active idols would be split now (nothing saved).
   previewSplit: async () => splitLeagues((await listIdols(await open())).filter((i) => i.active)),
+  // Playing the season (Fase 3).
+  startSeason: async () => { const db = await open(); return startSeason(db, (await currentSeason(db))!.id); },
+  seasonOverview: async () => seasonOverview(await open()),
+  playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),
+  pauseSeason: () => requestPause(),
+  // Integrity check (PRD §14.2).
+  integrityCheck: async () => integrityCheck(await open(), DATABASE),
+  fixIntegrity: async (fix: IssueFix) => fixIntegrity(await open(), DATABASE, fix),
   // Backup & restore (PRD §12.3).
   exportBackup: async (section: BackupSection, seasonId?: string) => exportBackup(await open(), DATABASE, section, seasonId),
   previewImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, true),

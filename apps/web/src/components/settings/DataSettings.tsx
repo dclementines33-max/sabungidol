@@ -2,6 +2,7 @@
 // restore join this section in step 10; Rebuild Stats comes with the stats themselves (Fase 3–4).
 import { useQuery } from "@tanstack/react-query";
 import { engine } from "../../data/engineClient";
+import { IntegrityList } from "./IntegrityList";
 import { SECTION } from "./settingsShared";
 
 const mb = (bytes = 0) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
@@ -30,6 +31,7 @@ export function DataSettings() {
           <dt className="text-text-secondary">Match tersimpan</dt><dd className="m-0 font-mono">{data.matches}</dd>
         </dl>
       )}
+      <IntegrityList />
     </section>
   );
 }

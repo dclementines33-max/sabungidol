@@ -1,7 +1,7 @@
 // The record of a photo (PRD §12.1). The image files live in OPFS; records only point at a photo id.
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import type { Db, Tx } from "./openDb";
-import { photos } from "./schema";
+import { idols, photos } from "./schema";
 
 export type PhotoRecord = { id: string; sizes: Record<string, { w: number; h: number }>; bytes: number; focalX: number; focalY: number };
 
@@ -16,4 +16,13 @@ export async function getPhoto(db: Db | Tx, id: string): Promise<PhotoRecord | u
 
 export async function deletePhoto(db: Db | Tx, id: string) {
   await db.delete(photos).where(eq(photos.id, id));
+}
+
+// Photo records whose files are gone (integrity "Perbaiki"): the idols show their initials again.
+export async function forgetPhotos(db: Db, ids: string[]) {
+  if (!ids.length) return;
+  await db.transaction(async (tx) => {
+    await tx.update(idols).set({ photoId: null }).where(inArray(idols.photoId, ids));
+    await tx.delete(photos).where(inArray(photos.id, ids));
+  });
 }

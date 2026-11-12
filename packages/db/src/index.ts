@@ -13,3 +13,5 @@ export * from "./seasons";
 export * from "./backupRead";
 export * from "./backupWrite";
 export { bundledMigrations } from "./migrations";
+export * from "./seasonPlay";
+export * from "./integrity";

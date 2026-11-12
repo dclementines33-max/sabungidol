@@ -16,6 +16,7 @@ test("Settings B: tuning, data, reset season, delete everything", async ({ page 
   await page.getByRole("button", { name: "Simpan Engine Tuning" }).click();
   await expect(page.getByText("Engine Tuning disimpan")).toBeVisible();
   await expect(page.getByText(/Match tersimpan/)).toBeVisible();
+  await expect(page.getByText("Tidak ada masalah.")).toBeVisible(); // integrity check on a fresh install
   const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
   expect(violations).toEqual([]);
   await page.reload();
