@@ -1,11 +1,11 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listEvents, replaceInRoster,
+  type Branding, type Db, type NewEvent, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
-import { runSeason, testSeason } from "@sabung/engine";
+import { runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { markOpened, resetIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -87,6 +87,13 @@ const api = {
   ensureFirstSeason: async () => (firstSeasonRun ??= open().then(ensureFirstSeason)),
   currentSeason: async () => currentSeason(await open()),
   leagueRosters: async (seasonId: string) => leagueRosters(await open(), seasonId),
+  // Settings (PRD §8).
+  updateSeason: async (id: string, change: { name?: string; config?: unknown }) => updateSeason(await open(), id, change),
+  setLeagueRosters: async (seasonId: string, leagues: Record<string, string[]>) => setLeagueRosters(await open(), seasonId, leagues),
+  listCompetitions: async (seasonId: string) => listCompetitions(await open(), seasonId),
+  saveCompetition: async (seasonId: string, code: string, name: string, branding: Branding) => saveCompetition(await open(), seasonId, code, name, branding),
+  // Data Maker: how the active idols would be split now (nothing saved).
+  previewSplit: async () => splitLeagues((await listIdols(await open())).filter((i) => i.active)),
 
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
   savePhoto: async (image: Blob): Promise<string> => {

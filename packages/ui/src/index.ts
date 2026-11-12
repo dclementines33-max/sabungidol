@@ -30,3 +30,4 @@ export * from "./components/WildcardPlayInBracket";
 export * from "./components/KahootPodium";
 export * from "./components/VirtualTable";
 export * from "./components/PhotoDropZone";
+export * from "./components/ColorSwatchPicker";

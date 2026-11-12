@@ -40,3 +40,12 @@ describe("league split (Data Maker, approved rule)", () => {
     expect(() => splitLeagues(idols.slice(0, 239))).toThrow("minimal 240 idol aktif, sekarang ada 239");
   });
 });
+
+describe("seeds in the league split", () => {
+  it("spreads the seeded idols of a division evenly over its leagues", () => {
+    const seeded = idols.map((i, n) => ({ ...i, seed: n % 10 === 0 && n < 120 ? 1 : null })); // 12 seed-1 idols in D1
+    const { leagues } = splitLeagues(seeded);
+    const seedOne = new Set(seeded.filter((i) => i.seed === 1).map((i) => i.id));
+    expect(["D1A", "D1B", "D1C", "D1D", "D1E", "D1F"].map((c) => leagues[c as "D1A"].filter((id) => seedOne.has(id)).length)).toEqual([2, 2, 2, 2, 2, 2]);
+  });
+});
