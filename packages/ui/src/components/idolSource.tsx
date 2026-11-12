@@ -39,6 +39,11 @@ export function useIdol(id: string): IdolInfo {
   return idol;
 }
 
+// For components that look through many idols at once (search, paste resolve).
+export function useIdolLookup(): IdolSource["idol"] {
+  return useSource().idol;
+}
+
 export function useIdolPhoto(id: string, size: PhotoSize): string | undefined {
   return useSource().photo(id, size);
 }
