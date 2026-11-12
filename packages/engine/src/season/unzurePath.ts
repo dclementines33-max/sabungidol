@@ -26,6 +26,7 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
   // Swiss: ranks 7–16 of every league + the 4 best 17ths, snake-dealt into 4 groups of 16.
   const swissEntrants = ranked([...[7, 8, 9, 10, 11, 12, 13, 14, 15, 16].flatMap(atRank), ...ranked(atRank(17)).slice(0, 4)]);
   const swissGroups = snake(swissEntrants, 4);
+  player.draws.swiss = swissGroups;
   const history: SwissMatch[][] = swissGroups.map(() => []);
   for (let round = 1; ; round++) {
     const live = swissGroups.map((ids, g) => [...swissRecords(ids, history[g]).values()].some((r) => r.wins < 3 && r.losses < 3));
@@ -44,6 +45,7 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
 
   // LCQ: the 12 idols on 3–2, 2 snake groups of 6, single round robin, top 4 of each go through.
   const lcqGroups = snake(ranked(finished(3, 2)), 2);
+  player.draws.lcq = lcqGroups;
   const lcq = yield* roundRobinGroups(player, "LCQ", "LQ", lcqGroups);
   const lcqQualified = lcq.flatMap((table) => table.slice(0, 4).map((r) => r.idolId));
 
@@ -56,7 +58,9 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
     [...sixths.slice(2), ...swiss30, ...swiss31.slice(0, 4)],
     [...swiss31.slice(4), ...lcqQualified],
   ].map((pot) => pot.map((id) => ({ id, groupId: groupIdOf.get(id) ?? null, league: leagueOf.get(id)! })));
+  player.draws.pots = pots.map((pot) => pot.map((x) => x.id));
   const draw = drawGroups(pots, matchRng(input.seed, "UZC-DRAW"));
+  player.draws.groups = draw.groups.map((g) => g.map((x) => x.id));
   if (draw.relaxed) notices.push("Unzure Cup draw: league mates had to share a group");
 
   const groupTables = yield* roundRobinGroups(player, "UZC", "GS", draw.groups.map((g) => g.map((x) => x.id)));

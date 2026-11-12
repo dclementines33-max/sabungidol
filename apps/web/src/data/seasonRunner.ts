@@ -4,14 +4,15 @@
 // changed after a manual result are removed.
 import { type Db, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
-import { SEASON_COMPETITIONS, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
+import { SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
   | { kind: "phase" } // until the current phase (leagues → cups → gala) is finished
   | { kind: "stage"; comp: string; stage: string }
   | { kind: "round"; comp: string; stage: string; round: string } // a matchday or a cup round
-  | { kind: "ids"; ids: string[] }; // single matches
+  | { kind: "ids"; ids: string[] } // single matches
+  | { kind: "comps"; comps: string[] }; // everything left in these competitions (a cup to its end)
 export type PlayProgress = { done: number; total: number };
 
 const CHUNK = 1000;
@@ -56,6 +57,7 @@ function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) => bool
     case "stage": return (m) => m.comp === target.comp && m.stage === target.stage;
     case "round": return (m) => m.comp === target.comp && m.stage === target.stage && m.round === target.round;
     case "ids": { const ids = new Set(target.ids); return (m) => ids.has(m.id); }
+    case "comps": return (m) => target.comps.includes(m.comp);
     case "phase": {
       if (frontier.some((m) => m.stage === "LG")) return (m) => m.stage === "LG";
       if (frontier.some((m) => !GALA.has(m.comp))) return (m) => !GALA.has(m.comp);
@@ -121,5 +123,34 @@ export async function leagueView(db: Db, comp: string) {
     positions,
     form: Object.fromEntries(Object.entries(form).map(([id, f]) => [id, f.slice(-5)])),
     fixtures: [...fixtures.entries()].sort(([a], [b]) => md(a) - md(b)).map(([round, matches]) => ({ round, matches: matches.sort((x, y) => x.id.localeCompare(y.id)) })),
+  };
+}
+
+export type CupCell = { key: string; id: string; comp: string; stage: StageCode; round: string; slot: number; a: string; b: string; winner?: string; score?: string };
+
+// Cups (Fase 3 panels): their matches outside the league stage — played, or ready to play next — as
+// bracket cells, the draws (Swiss groups, pots, groups) and the group-stage tables.
+export async function cupView(db: Db, comps: string[]) {
+  const input = await seasonInput(db);
+  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const mine = (m: { comp: string; stage: string }) => comps.includes(m.comp) && m.stage !== "LG";
+  const played: CupCell[] = result.matches.filter(mine).map((m) => ({
+    key: `${m.comp}-${m.stage}-${m.round}-${m.slot}`, id: m.id, comp: m.comp, stage: m.stage, round: m.round, slot: m.slot, a: m.idolA, b: m.idolB,
+    winner: m.result === "A" ? m.idolA : m.result === "B" ? m.idolB : undefined, score: `${m.scoreA}–${m.scoreB}`,
+  }));
+  const open: CupCell[] = result.pending.filter(mine).map((m) => {
+    const slot = Number(m.id.split("-M").at(-1));
+    return { key: `${m.comp}-${m.stage}-${m.round}-${slot}`, id: m.id, comp: m.comp, stage: m.stage, round: m.round, slot, a: m.idolA, b: m.idolB };
+  });
+  const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
+  const table = (ids: string[], stage: string, prefix: string) => computeStandings(ids.map((id) => ({ id, startRating: rating.get(id) ?? 0 })),
+    result.matches.filter((m) => m.stage === stage && m.round.startsWith(`${prefix}-`)));
+  const letter = (g: number) => "ABCDEFGHIJKLMNOP"[g]!;
+  return {
+    cells: [...played, ...open],
+    titles: Object.fromEntries(Object.entries(result.titles).filter(([key]) => comps.some((c) => key === c || key.startsWith(`${c}-`) || key === `MBK-${c}`))),
+    draws: result.draws,
+    lcqTables: (result.draws.lcq ?? []).map((ids, g) => table(ids, "LQ", letter(g))),
+    groupTables: (result.draws.groups ?? []).map((ids, g) => table(ids, "GS", letter(g))),
   };
 }

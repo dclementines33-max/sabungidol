@@ -1,9 +1,10 @@
-// One competition panel (PRD §8); an unknown slug is a "not found". Leagues are built (Fase 3 step 4);
-// the cups follow in step 5.
-import { D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
+// One competition panel (PRD §8); an unknown slug is a "not found". Leagues, The Idols (+ playoff),
+// the road to the Unzure Cup, and every other cup.
+import { B_SIDE_CUPS, D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { CupPanel } from "../../components/competition/CupPanel";
 import { LeaguePanel } from "../../components/competition/LeaguePanel";
-import { PanelPlaceholder } from "../../components/PanelPlaceholder";
+import { UnzurePanel } from "../../components/competition/UnzurePanel";
 import { COMPETITIONS } from "../../components/shell/nav";
 
 export const Route = createFileRoute("/play/$comp")({
@@ -17,6 +18,8 @@ function Competition() {
   const { comp } = Route.useParams();
   if (comp === "d1") return <LeaguePanel key={comp} codes={[...D1_LEAGUES]} zoneKey="D1" />;
   if (comp === "d2") return <LeaguePanel key={comp} codes={[...D2_LEAGUES]} zoneKey="D2" />;
-  if (comp === "the-idols") return <LeaguePanel key={comp} codes={["IDL"]} zoneKey="IDL" />;
-  return <PanelPlaceholder />;
+  if (comp === "the-idols") return <div className="space-y-10"><LeaguePanel key={comp} codes={["IDL"]} zoneKey="IDL" /><CupPanel codes={["IDL"]} title="Playoff (double elimination)" /></div>;
+  if (comp === "unzure") return <UnzurePanel />;
+  const cup = { inkigayo: ["INK"], nugu: ["NUG"], "b-side": [...B_SIDE_CUPS], daesang: ["DSG"], "music-bank": ["MBK"] }[comp];
+  return cup ? <CupPanel key={comp} codes={cup} /> : null;
 }

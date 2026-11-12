@@ -15,7 +15,7 @@ export function runSeason(input: SeasonInput): SeasonResult {
   const player = createMatchPlayer(input);
   const notices: string[] = [];
   const titles: SeasonResult["titles"] = {};
-  const result = (done: boolean): SeasonResult => ({ matches: player.matches, titles, notices, pending: player.pending, stale: player.stale, done });
+  const result = (done: boolean): SeasonResult => ({ matches: player.matches, titles, notices, pending: player.pending, stale: player.stale, draws: player.draws, done });
 
   const tables = playLeaguePhase(input, player, !off.has("IDL"));
   player.endLeaguePhase();
@@ -31,14 +31,15 @@ export function runSeason(input: SeasonInput): SeasonResult {
     ["IDL-PO", !off.has("IDL") ? idolsPlayoff(player, tables) : null],
   ] as const;
   const running = tracks.filter(([, track]) => track);
-  const won = finish(interleave<Title | Title[]>(running.map(([, track]) => track!), { partial: true }));
-  const cup = Object.fromEntries(running.map(([key], i) => [key, won[i]])) as Record<string, Title | Title[] | undefined>;
+  const won = finish(interleave<Title | (Title | undefined)[]>(running.map(([, track]) => track!), { partial: true }));
+  const cup = Object.fromEntries(running.map(([key], i) => [key, won[i]])) as Record<string, Title | (Title | undefined)[] | undefined>;
   for (const key of ["UZC", "NUG", "INK", "IDL-PO"]) if (cup[key]) titles[key] = cup[key] as Title;
-  (cup.BS as Title[] | undefined)?.forEach((title, i) => { titles[B_SIDE_CUPS[i]!] = title; });
-  if (running.some(([key]) => !cup[key])) return result(false); // a cup is still waiting for a match
+  const bSide = cup.BS as (Title | undefined)[] | undefined;
+  bSide?.forEach((title, i) => { if (title) titles[B_SIDE_CUPS[i]!] = title; });
+  if (running.some(([key]) => !cup[key]) || bSide?.includes(undefined)) return result(false); // a cup is still waiting for a match
 
   try {
-    const gala = playGala(player, tables, off.has("DSG") ? undefined : (cup.UZC as Title | undefined), off.has("MBK") ? undefined : (cup.BS as Title[] | undefined), notices);
+    const gala = playGala(player, tables, off.has("DSG") ? undefined : (cup.UZC as Title | undefined), off.has("MBK") ? undefined : (bSide as Title[] | undefined), notices);
     if (gala.daesang) titles.DSG = gala.daesang;
     gala.musicBank?.forEach((title, i) => { titles[`MBK-${D1_LEAGUES[i]}`] = title; });
   } catch (error) {

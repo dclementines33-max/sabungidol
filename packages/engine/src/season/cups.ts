@@ -26,9 +26,11 @@ function byRank(player: MatchPlayer, rows: StandingRow[]): string[] {
 }
 
 // B-Side: top 16 of each D1 league, 1 v 16, 8 v 9 ... All six cups advance together.
-export function* bSideCups(player: MatchPlayer, tables: LeagueTables): Generator<void, Title[]> {
-  return (yield* interleave(D1_LEAGUES.map((code, i) =>
-    cup(player, B_SIDE_CUPS[i], knockoutTemplate([16], { pairing: "seed" }), tables[code]!.slice(0, 16).map((r) => r.idolId))))) as Title[]; // all six finished, or PENDING was thrown
+// Each cup reports its own result (undefined while it waits), so a finished cup has a champion even
+// when the others are still being played.
+export function* bSideCups(player: MatchPlayer, tables: LeagueTables): Generator<void, (Title | undefined)[]> {
+  return yield* interleave(D1_LEAGUES.map((code, i) =>
+    cup(player, B_SIDE_CUPS[i], knockoutTemplate([16], { pairing: "seed" }), tables[code]!.slice(0, 16).map((r) => r.idolId))), { partial: true });
 }
 
 // Nugu: all D2 idols in round 1; D1 idols enter in round 2 or 3, the best ones latest.

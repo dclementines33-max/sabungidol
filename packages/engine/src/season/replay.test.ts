@@ -64,3 +64,14 @@ describe("season replay", () => {
     expect(d1.every((m) => m.result !== "D" && Math.max(m.scoreA, m.scoreB) === 3)).toBe(true); // Bo5: first to 3, no draws
   });
 });
+
+describe("one cup of several played to its end", () => {
+  it("has its champion while the other B-Side cups wait; the gala waits for all six", () => {
+    const leagues = whole.matches.filter((m) => m.stage === "LG");
+    const bsc = runSeason({ ...input, saved: leagues, target: (m) => m.comp === "BSC" });
+    expect(bsc.titles.BSC).toEqual(whole.titles.BSC);
+    expect(bsc.titles.BSA).toBeUndefined();
+    expect(bsc.done).toBe(false);
+    expect(bsc.matches.some((m) => m.comp === "MBK")).toBe(false);
+  });
+});

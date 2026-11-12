@@ -33,6 +33,7 @@ export type SeasonResult = {
   notices: string[]; // things the user must be told (fallbacks, clashes)
   pending: MatchRef[]; // reached but not played: what can be played next
   stale: string[]; // saved matches whose pairing no longer happens (an earlier result changed): to delete
+  draws: Partial<Record<"swiss" | "lcq" | "pots" | "groups", string[][]>>; // what the Unzure path drew so far
   done: boolean; // every competition finished
 };
 

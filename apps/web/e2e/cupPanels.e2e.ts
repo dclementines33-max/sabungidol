@@ -1,0 +1,43 @@
+// Fase 3 step 5: cup panels — the road to the Unzure Cup (Swiss, LCQ, pots, groups, knockout) and a
+// knockout cup played from its own panel. WCAG AA.
+import AxeBuilder from "@axe-core/playwright";
+import { expect, type Page, test } from "@playwright/test";
+
+const axe = async (page: Page) =>
+  (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
+
+test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
+  test.setTimeout(300_000);
+  await page.goto("/");
+  await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
+  await page.goto("/play");
+  await page.getByRole("button", { name: "Mulai Season 1" }).click();
+  await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
+  await expect(page.getByText(/4\.940 match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
+
+  await page.goto("/play/unzure");
+  await page.getByRole("button", { name: "Main ronde berikutnya" }).click();
+  await expect(page.getByText("8 match dimainkan")).toBeVisible({ timeout: 60_000 }); // Swiss group A, round 1 (rounds are per group)
+  await expect(page.getByRole("region", { name: "Swiss grup A" })).toBeVisible(); // 4 Swiss groups
+  expect(await axe(page)).toEqual([]);
+  await page.getByRole("button", { name: "Main sampai juara" }).click();
+  await expect(page.getByText(/^\d{3,}[\d.]* match dimainkan$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
+  await page.getByRole("tab", { name: "Pot & undian" }).click();
+  await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
+  await page.getByRole("tab", { name: "Grup" }).click();
+  await expect(page.getByRole("tabpanel").getByRole("table")).toHaveCount(16);
+  await page.getByRole("tab", { name: "Knockout" }).click();
+  await expect(page.getByRole("tabpanel").getByText(/–/).first()).toBeVisible();
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/unzure-panel.png" }); // for a human look
+
+  await page.goto("/play/nugu");
+  await page.getByRole("button", { name: "Main sampai selesai" }).click();
+  await expect(page.getByText(/Juara Nugu Cup/i)).toBeVisible({ timeout: 120_000 });
+  expect(await axe(page)).toEqual([]);
+
+  await page.goto("/play/b-side");
+  await page.getByRole("button", { name: "BSC" }).click();
+  await page.getByRole("button", { name: "Main sampai selesai" }).click();
+  await expect(page.getByText(/Juara B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
+});
