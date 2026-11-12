@@ -72,6 +72,14 @@ describe("notification store (PRD §14.1)", () => {
     expect(state().unread).toBe(0);
   });
 
+  it("log: false shows a notice without writing it to event_log again", async () => {
+    notify({ level: "success", message: "242 idol dari data bawaan dimuat" }, { log: false });
+    await flush();
+    expect(state().toasts).toHaveLength(1);
+    expect(state().notices[0].message).toContain("242 idol");
+    expect(persister.log).not.toHaveBeenCalled();
+  });
+
   it("closing a pinned notice and the blocker", () => {
     notify({ level: "warning", message: "x" });
     notify({ level: "blocker", message: "y" });

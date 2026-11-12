@@ -11,6 +11,7 @@ export type Persister = {
   list: () => Promise<LoggedEvent[]>;
 };
 type NewNotice = Omit<Notice, "id" | "at">;
+export type NotifyOptions = { oncePerDay?: boolean; log?: boolean };
 
 type State = {
   notices: Notice[]; // history, newest first
@@ -19,7 +20,7 @@ type State = {
   pinned: Notice[];
   blocker: Notice | null;
   persister: Persister | null;
-  notify: (notice: NewNotice, options?: { oncePerDay?: boolean }) => void;
+  notify: (notice: NewNotice, options?: NotifyOptions) => void;
   record: (notice: NewNotice) => void;
   loadHistory: () => Promise<void>;
   dismissToast: (id: string) => void;
@@ -77,7 +78,7 @@ export const useNotices = create<State>()((set, get) => {
           ? [...s.pinned, notice] : s.pinned,
         blocker: notice.level === "blocker" ? notice : s.blocker,
       }));
-      persist(notice, options);
+      if (options?.log !== false) persist(notice, options); // log: false = already in event_log (written by the Worker)
     },
 
     // History and event_log only, for something already shown in its own place (e.g. a panel's error card).
@@ -101,7 +102,7 @@ export const useNotices = create<State>()((set, get) => {
   };
 });
 
-export const notify = (notice: NewNotice, options?: { oncePerDay?: boolean }) => useNotices.getState().notify(notice, options);
+export const notify = (notice: NewNotice, options?: NotifyOptions) => useNotices.getState().notify(notice, options);
 
 // "Ekspor" in the NotificationCenter: the notices shown, as a JSON file.
 export function exportNotices(shown: Notice[]): void {

@@ -7,6 +7,7 @@ import {
 import { runSeason, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
+import { loadDefaultData } from "./loadDefaultData";
 import { readPhotoFile, storePhotoFiles } from "./photoFiles";
 import { type PhotoSizes, bestStored } from "./photoSizes";
 import { type StorageKind, storageFor } from "./storageChoice";
@@ -22,6 +23,8 @@ const open = () => (database ??= (async () => {
   if (!(await holdDatabaseLock(DATABASE))) throw new Error(`${DB_IN_OTHER_TAB}: ${DATABASE} is open in another tab`);
   return openDb(storageFor(DATABASE).dataDir);
 })());
+
+let defaultDataRun: ReturnType<typeof loadDefaultData> | undefined;
 
 const api = {
   storage: (): StorageKind => storageFor(DATABASE).storage,
@@ -39,6 +42,9 @@ const api = {
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
   deleteIdol: async (id: string) => deleteIdol(await open(), id),
+
+  // The default idol data, once per database (shared promise: a double start loads it only once).
+  loadDefaultData: async () => (defaultDataRun ??= open().then((db) => loadDefaultData(db, DATABASE))),
 
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
   savePhoto: async (image: Blob): Promise<string> => {

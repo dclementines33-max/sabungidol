@@ -18,8 +18,9 @@ export async function listIdols(db: Db | Tx): Promise<IdolRow[]> {
   }).from(idols).leftJoin(groups, eq(idols.groupId, groups.id)).orderBy(asc(sql`lower(${idols.name})`));
 }
 
-// Adds a batch in one transaction. Exact duplicates are refused and reported; everything else is saved.
-export async function addIdols(db: Db, batch: (IdolInput & { photoId?: string | null })[]) {
+// Adds a batch in one transaction (inside a caller's transaction it becomes a savepoint).
+// Exact duplicates are refused and reported; everything else is saved.
+export async function addIdols(db: Db | Tx, batch: (IdolInput & { photoId?: string | null })[]) {
   const valid = batch.map((input) => ({ ...idolInputSchema.parse(input), photoId: input.photoId ?? null }));
   return db.transaction(async (tx) => {
     const existing = (await listIdols(tx)).map((i) => ({ name: i.name, groupName: i.groupName }));

@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { trackLastAction } from "../../data/errorReport";
 import { useNotices } from "../../data/notices";
 import { useRememberedFlag } from "../../data/rememberedFlag";
+import { startDefaultData } from "../../data/startDefaultData";
 import { startNotifications } from "../../data/startNotifications";
 import { BottomBar } from "./BottomBar";
 import { CommandPalette } from "./CommandPalette";
@@ -22,6 +23,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   useEffect(startNotifications, []);
   useEffect(trackLastAction, []);
+  useEffect(startDefaultData, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {

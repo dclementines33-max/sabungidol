@@ -63,3 +63,20 @@ describe("idols and groups (PRD §3, §8)", () => {
     expect((await listIdols(db)).map((r) => r.name)).toEqual(["A", "B"]);
   });
 });
+
+describe("adding idols inside a larger transaction", () => {
+  it("is all or nothing with the caller's other writes", async () => {
+    const { insertPhoto } = await import("./photos");
+    await expect(db.transaction(async (tx) => {
+      await insertPhoto(tx, { id: "p1", sizes: { orig: { w: 1, h: 1 } }, bytes: 1 });
+      await addIdols(tx, [{ ...idol("A", "G"), photoId: "p1" }]);
+      throw new Error("tab closed halfway");
+    })).rejects.toThrow("tab closed halfway");
+    expect(await listIdols(db)).toEqual([]); // nothing half-written
+    await db.transaction(async (tx) => {
+      await insertPhoto(tx, { id: "p1", sizes: { orig: { w: 1, h: 1 } }, bytes: 1 });
+      await addIdols(tx, [{ ...idol("A", "G"), photoId: "p1" }]);
+    });
+    expect((await listIdols(db)).map((r) => [r.name, r.photoId])).toEqual([["A", "p1"]]);
+  });
+});

@@ -61,6 +61,7 @@ export function panelFor(pathname: string): NavItem | undefined {
   if (path === "/dev/notices") return { label: "Uji Notifikasi", to: path, icon: Gauge, phase: 1 };
   if (path === "/dev/crash") return { label: "Uji Error", to: path, icon: Gauge, phase: 1 };
   if (path === "/dev/photos") return { label: "Uji Foto", to: path, icon: Gauge, phase: 2 };
+  if (path === "/dev/data") return { label: "Isi Database", to: path, icon: Gauge, phase: 2 };
   return ALL.find((item) => item.to === path);
 }
 
