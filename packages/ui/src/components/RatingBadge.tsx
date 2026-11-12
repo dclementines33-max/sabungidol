@@ -14,6 +14,7 @@ export function RatingBadge({ rating }: { rating: number }) {
   return (
     <span
       className={`${TIER_FILL[tier]} inline-flex items-center gap-1 rounded-control px-2 py-0.5 font-mono text-xs font-semibold text-on-fill tabular-nums`}
+      role="img" // a span may not carry a label; as an image the label is read out
       aria-label={`Rating ${rating}, tier ${tier}`}
     >
       <span aria-hidden="true">{tier}</span>

@@ -9,10 +9,19 @@ export default defineConfig({
   timeout: 60_000,
   use: { baseURL: `http://localhost:${PORT}` },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: `pnpm exec vite dev --port ${PORT} --strictPort`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: `pnpm exec vite dev --port ${PORT} --strictPort`,
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
+      // The design system's stories, built and served statically for the accessibility check.
+      command: "pnpm --filter @sabung/ui build-storybook --quiet && pnpm --filter @sabung/ui exec vite preview --outDir storybook-static --port 6007 --strictPort",
+      url: "http://localhost:6007/index.json",
+      reuseExistingServer: true,
+      timeout: 180_000,
+    },
+  ],
 });

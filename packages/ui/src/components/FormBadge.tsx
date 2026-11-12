@@ -18,6 +18,7 @@ export function FormBadge({ form, recent = [] }: { form: Form["name"]; recent?: 
     <span
       className={`${color} inline-flex items-center gap-1 rounded-control border border-border-strong px-2 py-0.5 text-xs`}
       title={label}
+      role="img" // a span may not carry a label; as an image the label is read out
       aria-label={label}
     >
       {Icon && <Icon aria-hidden="true" size={14} strokeWidth={1.5} />}

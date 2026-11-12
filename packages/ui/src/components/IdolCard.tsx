@@ -16,7 +16,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
         <RatingBadge rating={idol.rating} />
         {idol.form && <FormBadge form={idol.form} recent={idol.recent} />}
         {!!idol.titles && (
-          <span className="inline-flex items-center gap-1 text-xs text-accent-gold" aria-label={`${idol.titles} titles`}>
+          <span role="img" className="inline-flex items-center gap-1 text-xs text-accent-gold" aria-label={`${idol.titles} titles`}>
             <Trophy aria-hidden="true" size={14} strokeWidth={1.5} />
             <span aria-hidden="true" className="font-mono tabular-nums">{idol.titles}</span>
           </span>
