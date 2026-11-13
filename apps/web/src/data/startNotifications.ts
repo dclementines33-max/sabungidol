@@ -1,11 +1,12 @@
 // Run once when the app opens: connect the notification store to event_log (through the Worker),
-// load earlier history, and warn if the browser refuses persistent storage (PRD §12, §14.3).
+// load earlier history, and warn if the browser refuses persistent storage or has only the slow
+// IndexedDB storage (PRD §12, §14.3).
 import { DB_IN_OTHER_TAB } from "./dbLock";
 import { engine } from "./engineClient";
 import { notify, useNotices } from "./notices";
 import { askPersistentStorage } from "./persistentStorage";
 import { offerResetIfNeverOpened } from "./resetOffer";
-import { MAIN_DATABASE } from "./storageChoice";
+import { MAIN_DATABASE, SLOW_STORAGE_NOTICE } from "./storageChoice";
 
 export const STORAGE_REFUSED =
   "Browser belum mengizinkan penyimpanan permanen, jadi data bisa terhapus saat ruang penyimpanan penuh. Buat backup secara rutin.";
@@ -31,6 +32,9 @@ export function startNotifications(): void {
       notify(notice);
       if (notice.code === "E-DB-001") offerResetIfNeverOpened(MAIN_DATABASE).catch(() => {});
     });
+    engine().storage().then((kind) => {
+      if (kind === "indexeddb") notify({ level: "warning", code: "W-STORAGE-002", message: SLOW_STORAGE_NOTICE }, { oncePerDay: true });
+    }).catch(() => {});
   }
   askPersistentStorage().then((granted) => {
     if (granted === false) notify({ level: "warning", code: "W-STORAGE-001", message: STORAGE_REFUSED }, { oncePerDay: true });

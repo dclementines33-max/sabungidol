@@ -5,6 +5,7 @@ import { SearchX } from "lucide-react";
 import type { ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "../components/shell/AppShell";
+import { EARLY_INPUT_SCRIPT } from "../components/shell/earlyInput";
 import { IdolDataProvider } from "../data/IdolDataProvider";
 import { queryClient } from "../data/queryClient";
 import appCss from "../styles.css?url";
@@ -34,6 +35,7 @@ function RootDocument({ children }: { children: ReactNode }) {
     <html lang="id">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: EARLY_INPUT_SCRIPT }} />
       </head>
       <body>
         {children}

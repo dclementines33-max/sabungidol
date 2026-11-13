@@ -12,6 +12,7 @@ import { CommandPalette } from "./CommandPalette";
 import { Header } from "./Header";
 import { NavRail } from "./NavRail";
 import { DatabaseResetOffer } from "./DatabaseResetOffer";
+import { replayEarlyInput } from "./earlyInput";
 import { PinnedNotices } from "./PinnedNotices";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -35,6 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+  useEffect(() => replayEarlyInput(() => setPaletteOpen(true)), []);
   const openPalette = () => setPaletteOpen(true);
   const runCommand = (command: string) => {
     if (command === "toggle-rail") setCollapsed(!collapsed);

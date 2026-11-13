@@ -16,7 +16,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 0 Engine & data core | done, gate passed |
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
-| **Fase 3 Play** | **in progress: steps 1–8 done, next is step 9** |
+| **Fase 3 Play** | **done, GATE PASSED (3 seasons in a row, integrity clean) — awaiting user approval** |
 | Fase 4 Wiki, Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -46,9 +46,13 @@ file only when the task touches it. Keep this file current: update it at the end
    saves through db applyRatings source "manager".
    FIX found by its e2e: saving ratings reseeded finished cups in the replay → `seasonInput` now gives an
    idol who already played this season the rating stored with those matches (ratings fixed within a season).
-9. ⏭ Carry-overs: clicks before hydration do nothing (Ctrl+K, mobile Play sheet — the e2e retries), slow
-   storage banner in the main app, WebKit/Safari e2e, mobile LCP 2.4 s, CLS 0.083.
-10. Gate e2e: 3 seasons in a row through the app; integrity clean; all match ids unique.
+9. ✅ Carry-overs: early clicks/Ctrl+K are queued by an inline script and replayed after hydration
+   (`components/shell/earlyInput.ts`, `<html data-hydrated>`; e2e earlyInput holds the JS back to prove it;
+   the e2e retry loops are gone); slow IndexedDB storage → pinned warning W-STORAGE-002 at start-up
+   (startNotifications; Playwright Chromium always has OPFS, so not e2e'd). NOT done: WebKit/Safari e2e
+   (needs a Playwright WebKit download — ask the user), mobile LCP 2.4 s / CLS 0.083 (not re-measured).
+10. ✅ GATE e2e `fase3Gate`: 3 seasons in a row through the app (start, whole season, save progression,
+   Start New Season), each exactly 5,590 matches, integrity clean — 31.8 s. Full e2e 34/34.
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
@@ -167,10 +171,10 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 
 ## Open items
 
-- Fase 3 steps 7–10 (above). MatchModal is taller than a 720 px screen (title/Accept need a scroll).
+- FASE 3 GATE PASSED 2026-11-13 — waiting for the user's approval before Fase 4. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
 - E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
   fresh profiles. (Fixed: db tests have `--hookTimeout=30000`; opening two PGlite dbs takes ~10 s.)
-- Hydration dead clicks. WebKit e2e. Mobile LCP/CLS.
+- WebKit e2e (needs download OK). Mobile LCP/CLS not re-measured since Fase 1.
 - Gala notices show raw idol ids ("01M7… won both sides") — engine notice text, should use names.
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
 - `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.
