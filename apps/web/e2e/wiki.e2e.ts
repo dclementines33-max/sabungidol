@@ -55,6 +55,9 @@ test("Career Stats: Combined and per competition, columns, scope, CSV", async ()
   const count = page.getByText(/^\d+ idol$/);
   await expect(count).toHaveText("240 idol", { timeout: 60_000 }); // the 2 reserves never played
   expect(await axe(page)).toEqual([]);
+  await page.getByRole("tab", { name: "Swiss Play-in" }).click(); // Swiss / LCQ: through and out, no titles
+  await expect(page.getByRole("columnheader", { name: "Lolos" })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Gelar" })).toHaveCount(0);
   await page.getByRole("tab", { name: "Liga Divisi 1" }).click();
   await expect(count).toHaveText("120 idol");
   await page.getByRole("combobox", { name: /^Liga/ }).selectOption("D1A");

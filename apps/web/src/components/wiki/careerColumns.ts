@@ -9,8 +9,8 @@ export const CAREER_COLUMNS: CareerColumn[] = [
   { id: "runnerUp", header: "Runner-up", value: (r) => r.runnerUp },
   { id: "third", header: "Ke-3", value: (r) => r.third },
   { id: "fourth", header: "Ke-4", value: (r) => r.fourth },
-  { id: "groupExit", header: "Gugur grup", value: (r) => r.groupExit },
-  { id: "groupAdvance", header: "Lolos grup", value: (r) => r.groupAdvance },
+  { id: "groupExit", header: "Gugur", value: (r) => r.groupExit },
+  { id: "groupAdvance", header: "Lolos", value: (r) => r.groupAdvance },
   { id: "matches", header: "Match", value: (r) => r.matches },
   { id: "wdl", header: "M-S-K", value: (r) => `${r.wins}-${r.draws}-${r.losses}` },
   { id: "winRate", header: "Win rate", value: (r) => pct(r.winRate) },
@@ -36,7 +36,7 @@ export function columnsFor(comp: string): string[] {
   if (comp === "ALL") return ["titles", "runnerUp", ...RECORD, "bestWinStreak", "seasons"];
   if (comp === "D1" || comp === "D2") return ["titles", ...RECORD, "leaguePoints", "avgPlacement", "bestPlacement", "seasons"];
   if (comp === "IDL") return ["titles", "runnerUp", ...RECORD, "leaguePoints", "bestPlacement", "seasons"];
-  if (comp === "SWS" || comp === "LCQ") return [...RECORD, "gamesFor", "gamesAgainst", "bestWinStreak", "seasons"];
+  if (comp === "SWS" || comp === "LCQ") return ["groupAdvance", "groupExit", ...RECORD, "bestWinStreak", "seasons"];
   if (comp === "UZC") return ["titles", "runnerUp", "third", "groupAdvance", "groupExit", ...RECORD, "bestPlacement"];
   if (comp === "DSG" || comp === "MBK") return ["titles", "runnerUp", ...RECORD];
   return ["titles", "runnerUp", "bestPlacement", "avgPlacement", ...RECORD]; // INK, NUG, BS

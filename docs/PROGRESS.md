@@ -184,6 +184,7 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
     panel, 12× on Season Progression). Fix: data/seasonMatches = cached read keyed by db seasonMatchStamp (count + latest
     played_at), max 2 seasons kept; every reader uses it except playSeason (extends its own copy). Bundle: 23 MB = PGlite wasm 9 MB +
     data 6 MB (needed) + default idols.json 4 MB (kept: offline first install); app JS 360 KB + worker 810 KB — left as is.
+    Swiss / LCQ through-out ✅ (engine foldSeason, own line only; career cache key career-v2). Season range DROPPED by the user.
     Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
 User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.
 
@@ -364,16 +365,11 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   pnpm is running.
 
 ## Open items
-- Settings at 375 px scrolls sideways: the Engine Tuning probability table ("Peluang favorit menang") is 404 px wide
-  (Fase 3, not fixed).
-
 - FASE 4 GATE PASSED 2026-11-13 — waiting for approval before Fase 5. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
 - E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
   fresh profiles. (Fixed: db tests have `--hookTimeout=30000`; opening two PGlite dbs takes ~10 s.)
 - Real Safari (Mac/iPhone) untested: IndexedDB database + OPFS photo files. CLS 0.083 from the late
   storage warning could be removed by reserving its space (optional).
-- Gala notices show raw idol ids ("01M7… won both sides") — engine notice text, should use names.
-- Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
-- `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.
+- `design/refs/overall vibe layout & ui.mp4` not reviewed.
 - A one-off E-DB-001 on an existing database after rapid reloads (unreproduced; a reload fixes it).
 - Reload with 2 seasons (10,530 matches, Playwright Chromium, dev server): the database is ready after ~6.6 s on EVERY page (season chip); the Fase 4 pages themselves then take ~0.1–0.8 s. CAUSE (measured): PGlite `opfs-ahp` opens one sync access handle per file on every open (1,043 Postgres files, mostly the empty system catalog, + 100 spare pool files) at ~5 ms each = ~5.5 s; lock 14 ms, migrations ~30 ms. It does not grow with matches (an empty database also takes 5.2 s). Option: PGlite `memfs2opfs` reopens in 1.2 s but keeps the whole database in memory (58 MB at 2 seasons) and needs the stored data converted. Tried a smaller pool (maintainedPoolSize 50): REVERTED. A new database refills its pool only to that size before the first migration, and 0000_init needs 57 new files: opfs-ahp then hangs with no error (worker e2e). A safe size (~70+) would save only ~0.15 s. Left as is; memfs2opfs is the only real fix (whole database in memory + data conversion), not done.

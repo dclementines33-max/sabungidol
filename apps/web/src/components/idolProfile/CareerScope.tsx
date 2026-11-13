@@ -30,7 +30,7 @@ export function CareerScope({ rows }: { rows: CareerRow[] }) {
   const format: [string, string][] = r.comp === "D1" || r.comp === "D2" || r.comp === "IDL"
     ? [["Poin liga", String(r.leaguePoints)], ["Poin terbaik semusim", String(r.bestLeagueSeasonPoints)], ["Posisi terbaik", String(r.bestPlacement ?? "–")], ["Season tak terkalahkan", String(r.invincibleSeasons)]]
     : r.comp === "UZC" ? [["Lolos grup", String(r.groupAdvance)], ["Gugur di grup", String(r.groupExit)], ["Final", String(r.finals)], ["Posisi terbaik", String(r.bestPlacement ?? "–")]]
-      : cupOnly ? [["Season ikut", String(r.seasons)], ["Game menang", String(r.gamesFor)], ["Game kalah", String(r.gamesAgainst)]]
+      : cupOnly ? [["Lolos", String(r.groupAdvance)], ["Gugur", String(r.groupExit)], ["Season ikut", String(r.seasons)]]
         : [["Final", String(r.finals)], ["Runner-up", String(r.runnerUp)], ["Posisi terbaik", String(r.bestPlacement ?? "–")], ["Season ikut", String(r.seasons)]];
   return (
     <div className="space-y-8">

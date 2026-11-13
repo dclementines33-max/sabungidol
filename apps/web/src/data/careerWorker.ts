@@ -11,7 +11,7 @@ import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
 type Cache = { seasons: string[]; state: CareerState; records: MatchRecords; achievements: AchievementState };
-const KEY = "career";
+const KEY = "career-v2"; // v2: Swiss / LCQ through and out (a new key folds every season again once)
 
 async function replay(db: Db, season: SeasonRow) {
   const input = await seasonInput(db, season);

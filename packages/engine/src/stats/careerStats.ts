@@ -66,6 +66,25 @@ export function foldSeason(previous: CareerState, season: number, matches: SimMa
   for (const [key, r] of leagueSeason) { // The Invincible: a whole league season (38 matches) without a loss
     if (r.matches === 38 && r.losses === 0) for (const l of lines(...(key.split("|") as [string, string]))) l.invincibleSeasons++;
   }
+  // Swiss and LCQ have no placements (nobody wins them): through / out is counted from the matches, on their own line only.
+  // Swiss: 3 wins = through (to the Unzure Cup or the LCQ), 3 losses = out. LCQ: through = plays the Unzure groups that
+  // season (counted once those groups exist, so a running season does not count everybody out).
+  const swiss = new Map<string, { w: number; l: number }>();
+  const lcq = new Set<string>();
+  const unzure = new Set<string>();
+  for (const m of matches) {
+    if (m.comp === "SWS") for (const [idol, side] of [[m.idolA, "A"], [m.idolB, "B"]] as const) {
+      const r = swiss.get(idol) ?? { w: 0, l: 0 };
+      if (m.result === side) r.w++; else if (m.result !== "D") r.l++;
+      swiss.set(idol, r);
+    }
+    if (m.comp === "LCQ") { lcq.add(m.idolA); lcq.add(m.idolB); }
+    if (m.comp === "UZC" && m.stage === "GS") { unzure.add(m.idolA); unzure.add(m.idolB); }
+  }
+  const own = (idol: string, comp: string) => (state[`${idol}|${comp}`] ??= empty());
+  for (const [idol, r] of swiss) { if (r.w === 3) own(idol, "SWS").groupAdvance++; else if (r.l === 3) own(idol, "SWS").groupExit++; }
+  if (unzure.size) for (const idol of lcq) { if (unzure.has(idol)) own(idol, "LCQ").groupAdvance++; else own(idol, "LCQ").groupExit++; }
+
   for (const p of placements) {
     for (const l of lines(p.idolId, compOf(p.comp))) {
       if (p.finalRank === 1) l.titles++;
