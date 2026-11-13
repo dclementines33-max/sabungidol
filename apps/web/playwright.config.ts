@@ -9,7 +9,11 @@ export default defineConfig({
   timeout: 60_000,
   expect: { timeout: 15_000 }, // every fresh profile opens its own database; under parallel load that takes longer than 5 s
   use: { baseURL: `http://localhost:${PORT}` },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // No WebKit project: Playwright's WebKit on Windows has an OPFS backend without file operations
+    // (NotSupportedError), so it cannot run this app like real Safari does. Test Safari on a Mac/iPhone.
+  ],
   webServer: [
     {
       command: `pnpm exec vite dev --port ${PORT} --strictPort`,

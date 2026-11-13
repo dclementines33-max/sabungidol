@@ -49,8 +49,13 @@ file only when the task touches it. Keep this file current: update it at the end
 9. ✅ Carry-overs: early clicks/Ctrl+K are queued by an inline script and replayed after hydration
    (`components/shell/earlyInput.ts`, `<html data-hydrated>`; e2e earlyInput holds the JS back to prove it;
    the e2e retry loops are gone); slow IndexedDB storage → pinned warning W-STORAGE-002 at start-up
-   (startNotifications; Playwright Chromium always has OPFS, so not e2e'd). NOT done: WebKit/Safari e2e
-   (needs a Playwright WebKit download — ask the user), mobile LCP 2.4 s / CLS 0.083 (not re-measured).
+   (startNotifications; Playwright Chromium always has OPFS, so not e2e'd). Measured (Lighthouse,
+   prod build): mobile slow-4G perf 95–98, LCP 2.5–2.7 s; PRD's own mid-4G profile LCP 1.7–1.9 s (< 2.0, now
+   checked by scripts/lighthouse.mjs 'mid4g'); CLS 0.083 on / and /wiki/career = the late 'penyimpanan permanen'
+   warning (< 0.1 'good', PRD sets no CLS target). Safari: storageChoice sends Safari/WebKit to IndexedDB
+   (PGlite opfs-ahp needs more sync handles than Safari allows; first query failed). Playwright WebKit on
+   Windows can't run the app (its OPFS has no file operations → photos fail), so no WebKit project: test
+   real Safari on a Mac/iPhone. React hydration mismatch only on /dev/worker in WebKit (check page).
 10. ✅ GATE e2e `fase3Gate`: 3 seasons in a row through the app (start, whole season, save progression,
    Start New Season), each exactly 5,590 matches, integrity clean — 31.8 s. Full e2e 34/34.
 
@@ -174,7 +179,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - FASE 3 GATE PASSED 2026-11-13 — waiting for the user's approval before Fase 4. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
 - E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
   fresh profiles. (Fixed: db tests have `--hookTimeout=30000`; opening two PGlite dbs takes ~10 s.)
-- WebKit e2e (needs download OK). Mobile LCP/CLS not re-measured since Fase 1.
+- Real Safari (Mac/iPhone) untested: IndexedDB database + OPFS photo files. CLS 0.083 from the late
+  storage warning could be removed by reserving its space (optional).
 - Gala notices show raw idol ids ("01M7… won both sides") — engine notice text, should use names.
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
 - `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.

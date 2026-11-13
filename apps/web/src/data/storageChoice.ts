@@ -5,9 +5,15 @@ export type StorageKind = "opfs" | "indexeddb";
 
 export const MAIN_DATABASE = "sabung-idol"; // the app's own data; Fase 1 checks use separate names
 
+// Safari / WebKit: has OPFS sync handles but caps how many can be open (~252), fewer than PGlite's
+// opfs-ahp pool needs, so the first query fails (seen in the WebKit e2e, Fase 3 step 9). Chrome, Edge
+// and other Chromium browsers say "Chrome"/"Chromium"/"Edg" in their user agent; Safari does not.
+export const isSafari = (ua = typeof navigator === "undefined" ? "" : navigator.userAgent) =>
+  /AppleWebKit/.test(ua) && !/Chrome|Chromium|CriOS|Edg|Android/.test(ua);
+
 // OPFS with synchronous access handles, which PGlite needs; only available inside a Worker.
 export function supportsOpfs(): boolean {
-  return typeof FileSystemFileHandle !== "undefined"
+  return !isSafari() && typeof FileSystemFileHandle !== "undefined"
     && "createSyncAccessHandle" in FileSystemFileHandle.prototype
     && typeof navigator !== "undefined" && typeof navigator.storage?.getDirectory === "function";
 }
