@@ -168,9 +168,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 ## Open items
 
 - Fase 3 steps 7–10 (above). MatchModal is taller than a 720 px screen (title/Accept need a scroll).
-- Flakes under load: db `backup.test` setup hook > 10 s (default hookTimeout) in most full runs (passes
-  alone at ~9.8 s) — fix: raise the hook timeout in the db test script;
-  full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on fresh profiles.
+- E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
+  fresh profiles. (Fixed: db tests have `--hookTimeout=30000`; opening two PGlite dbs takes ~10 s.)
 - Hydration dead clicks. WebKit e2e. Mobile LCP/CLS.
 - Gala notices show raw idol ids ("01M7… won both sides") — engine notice text, should use names.
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
