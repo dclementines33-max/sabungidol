@@ -86,3 +86,8 @@ export async function resetSeason(db: Db, seasonId: string) {
     await tx.update(seasons).set({ status: "draft" }).where(eq(seasons.id, seasonId));
   });
 }
+
+// Closing a season (PRD §4): it stays in the database, read-only, as an archive.
+export async function archiveSeason(db: Db, seasonId: string) {
+  await db.update(seasons).set({ status: "archived" }).where(eq(seasons.id, seasonId));
+}

@@ -10,6 +10,7 @@ import * as Comlink from "comlink";
 import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
 import { fixIntegrity, integrityCheck } from "./integrityWorker";
 import { acceptMatch, matchPreview } from "./singleMatch";
+import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -123,6 +124,16 @@ const api = {
   listSnapshots: async () => listSnapshots(DATABASE),
   readSnapshot: async (name: string) => readSnapshot(DATABASE, name),
   backupDue: async () => backupDue(await open()),
+  // Closing the season (PRD §4, §6.3).
+  closePreview: async () => closePreview(await open()),
+  saveProgression: async () => saveProgression(await open()),
+  startNewSeason: async () => {
+    const db = await open();
+    const state = await closePreview(db);
+    if (state.blockers.length) return { ok: false as const, blockers: state.blockers };
+    await saveSnapshot(db, DATABASE, "start new season");
+    return startNewSeason(db);
+  },
   // Danger Zone: the season back to a draft; with redraw the 12 leagues are split again too.
   resetSeason: async (seasonId: string, redraw: boolean) => {
     const db = await open();

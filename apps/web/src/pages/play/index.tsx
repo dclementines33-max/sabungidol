@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Pause, Play, SkipForward } from "lucide-react";
 import { useState } from "react";
+import { SeasonClose } from "../../components/play/SeasonClose";
 import { SeasonHonours } from "../../components/play/SeasonHonours";
 import { SeasonTimeline } from "../../components/play/SeasonTimeline";
 import { usePlaySeason } from "../../components/play/usePlaySeason";
@@ -63,6 +64,7 @@ function SabungIdol() {
       )}
       <SeasonTimeline competitions={overview.competitions} />
       {overview.done && <SeasonHonours titles={overview.titles} uzcThird={overview.uzcThird} />}
+      <SeasonClose done={overview.done} />
     </div>
   );
 }

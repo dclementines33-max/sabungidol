@@ -20,3 +20,4 @@ export * from "./seriesRules";
 export * from "./season/testRoster";
 export * from "./season/splitLeagues";
 export { pickTheIdols } from "./season/leaguePhase";
+export * from "./season/seasonClose";

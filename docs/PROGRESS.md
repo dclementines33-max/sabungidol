@@ -16,7 +16,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 0 Engine & data core | done, gate passed |
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
-| **Fase 3 Play** | **in progress: steps 1–6 done, next is step 7** |
+| **Fase 3 Play** | **in progress: steps 1–7 done, next is step 8** |
 | Fase 4 Wiki, Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -31,10 +31,14 @@ file only when the task touches it. Keep this file current: update it at the end
    Manual = click the winner of each game in order / Wheel) → "Accept Result" → Worker `acceptMatch`
    checks the games end the series exactly, saves with its method; the replay reuses it. Only open
    (pending) matches; editing an already played result is not built (`playSeason` stale clean-up is ready).
-7. ⏭ Season close: archive guard (Blocker naming unfinished competitions), Rating Progression PRD §6.2–6.3
+7. ✅ Season close (user 2026-11-13: cup points by round out, ties share the average; draws = half a win;
+   progression OPTIONAL, not required before a new season): engine season/seasonClose.ts (PRESTIGE, seasonPoints,
+   promotionPlan, seasonProgression from the ratings stored in the matches = rerun gives the same), db ratings.ts
+   applyRatings (1 tx + rating_history) + archiveSeason, web data/seasonClose.ts, components/play/SeasonClose.
+   Was: Season close: archive guard (Blocker naming unfinished competitions), Rating Progression PRD §6.2–6.3
    (preview → save into rating_history), promotion/relegation (D1 18–20 ↔ D2 1–3, preview), "Start New
    Season" (new draft season N+1), auto-snapshot before.
-8. Rating Manager + Engine Lab (`/studio/ratings`, PRD §6.4–6.6): bulk edit, presets, Sync from Career
+8. ⏭ Rating Manager + Engine Lab (`/studio/ratings`, PRD §6.4–6.6): bulk edit, presets, Sync from Career
    Stats, odds lab with 100/1,000 simulations + histogram.
 9. Carry-overs: clicks before hydration do nothing (Ctrl+K, mobile Play sheet — the e2e retries), slow
    storage banner in the main app, WebKit/Safari e2e, mobile LCP 2.4 s, CLS 0.083.
