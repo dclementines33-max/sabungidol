@@ -38,13 +38,14 @@ export async function saveProgression(db: Db) {
 
 // The caller takes a snapshot first (worker.ts). The new season opens with Daesang + Music Bank between
 // this season's champions (config.opener).
-export async function startNewSeason(db: Db): Promise<{ ok: true; name: string } | { ok: false; blockers: string[] }> {
+export async function startNewSeason(db: Db): Promise<{ ok: true; name: string; notices: string[] } | { ok: false; blockers: string[] }> {
   const { input, result, plan, blockers } = await closeState(db);
   if (blockers.length) return { ok: false, blockers };
   const old = (await currentSeason(db))!;
+  const notices: string[] = [];
   const number = old.number + 1;
   const name = `Season ${number}`;
-  await createDraftSeason(db, { id: `S${String(number).padStart(2, "0")}`, number, name, seed: ulid(), leagues: plan.leagues, config: { ...readSeasonConfig(old.config), opener: openerPairs(result.titles, readSeasonConfig(old.config).off, []) } });
+  await createDraftSeason(db, { id: `S${String(number).padStart(2, "0")}`, number, name, seed: ulid(), leagues: plan.leagues, config: { ...readSeasonConfig(old.config), opener: openerPairs(result.titles, readSeasonConfig(old.config).off, notices) } });
   await archiveSeason(db, input.seasonId);
-  return { ok: true, name };
+  return { ok: true, name, notices };
 }

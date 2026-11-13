@@ -9,6 +9,7 @@ import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
+import { withNames } from "./usePlaySeason";
 
 export function SeasonClose({ done }: { done: boolean }) {
   const lookup = useIdolLookup();
@@ -34,7 +35,10 @@ export function SeasonClose({ done }: { done: boolean }) {
   });
   const startNew = () => run(async () => {
     const result = await engine().startNewSeason();
-    if (result.ok) notify({ level: "success", message: `${result.name} dibuat sebagai draft` });
+    if (result.ok) {
+      notify({ level: "success", message: `${result.name} dibuat sebagai draft` });
+      result.notices.forEach((message) => notify({ level: "info", message: withNames(message, (id) => lookup(id)?.name) }));
+    }
     else block(result.blockers);
   });
 

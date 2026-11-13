@@ -14,7 +14,7 @@ export async function overview(db: Db) {
   const next = live?.pending[0] ?? null;
   const earlier = next?.stage === "LG" ? (await queryMatches(db, { round: next.round, stage: "LG" }, { limit: 5000 })).rows.filter((m) => m.seasonId !== season.id) : [];
   const gap = (m: (typeof earlier)[number]) => (m.result === "A" ? m.ratingB - m.ratingA : m.result === "B" ? m.ratingA - m.ratingB : -99);
-  const active = live?.competitions.filter((c) => c.status !== "off") ?? [];
+  const active = live?.competitions.filter((c) => c.status !== "off" && c.status !== "none") ?? [];
   return {
     season: { name: season.name, number: season.number, status: season.status },
     competitions: live?.competitions ?? [],

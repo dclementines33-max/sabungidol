@@ -35,7 +35,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
         ))}
       </div>
       <div className="flex flex-wrap gap-4">{field("scale", "Konstanta odds (PRD: 40)", 10, 100)}{field("sigma", "Variance σ per match (PRD: 4)", 0, 15)}</div>
-      <table className="border-collapse text-sm tabular-nums">
+      <div className="overflow-x-auto"><table className="border-collapse text-sm tabular-nums">
         <caption className="pb-2 text-left text-text-secondary">Peluang favorit menang, sebelum variance dan form</caption>
         <thead><tr className="text-left text-text-secondary">{["Selisih rating", "Per game", "Bo3", "Bo5", "Bo7", "Bo4 M/S/K"].map((h) => <th key={h} scope="col" className="px-3 py-1 font-medium">{h}</th>)}</tr></thead>
         <tbody>
@@ -54,7 +54,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
             );
           })}
         </tbody>
-      </table>
+      </table></div>
       <Button variant="primary" onClick={save}>Simpan Engine Tuning</Button>
     </section>
   );
