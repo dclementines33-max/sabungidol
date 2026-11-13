@@ -180,7 +180,11 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
     data/predictionsWorker (event_log code PREDICTION, latest pick per match; hidden from notices) + play/FinalPredictions on cup
     panels + Dashboard accuracy.) PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
     transfer window (propose rules first) + Trophy cabinet on the idol profile.
-11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
+11. ✅ (2026-11-14) Measured: engine replay of a full season 15–25 ms; db listSeasonMatches ~145 ms (the biggest cost, 2× per
+    panel, 12× on Season Progression). Fix: data/seasonMatches = cached read keyed by db seasonMatchStamp (count + latest
+    played_at), max 2 seasons kept; every reader uses it except playSeason (extends its own copy). Bundle: 23 MB = PGlite wasm 9 MB +
+    data 6 MB (needed) + default idols.json 4 MB (kept: offline first install); app JS 360 KB + worker 810 KB — left as is.
+    Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
 User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.
 
 ### Redesign plan (APPROVED 2026-11-13) — brief: design/NOTES.md "penjelasan…" row

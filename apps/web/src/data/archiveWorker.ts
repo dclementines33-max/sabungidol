@@ -1,15 +1,16 @@
 // Season Archive in the Worker (PRD §8): one finished season read back — its titles, the final tables of the
 // 13 leagues, every cup's final places, promotion/relegation, saved rating changes and a few season numbers.
 // The season is replayed from its saved matches (nothing is played).
-import { type Db, listPlacements, listSeasonMatches, listSeasonRatingChanges, listSeasons } from "@sabung/db";
+import { type Db, listPlacements, listSeasonRatingChanges, listSeasons } from "@sabung/db";
 import { computeStandings, promotionPlan, runSeason } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
+import { seasonMatches } from "./seasonMatches";
 
 export async function seasonArchive(db: Db, seasonId: string) {
   const season = (await listSeasons(db)).find((s) => s.id === seasonId);
   if (!season || season.status === "draft") return null;
   const input = await seasonInput(db, season);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, season.id), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, season.id), target: () => false });
   if (!result.done) return { season, done: false as const };
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const leagues = { ...input.leagues, IDL: input.theIdols ?? [] } as Record<string, string[]>;

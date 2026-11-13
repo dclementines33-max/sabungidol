@@ -5,12 +5,13 @@ import { openerPairs, promotionPlan, runSeason, seasonProgression } from "@sabun
 import { readSeasonConfig, ulid } from "@sabung/shared";
 import { updateCareerCache } from "./careerWorker";
 import { seasonInput, seasonOverview } from "./seasonRunner";
+import { seasonMatches } from "./seasonMatches";
 
 async function closeState(db: Db) {
   const overview = await seasonOverview(db);
   const blockers = overview.competitions.filter((c) => c.status !== "off" && c.status !== "none" && c.status !== "finished").map((c) => c.name);
   const input = await seasonInput(db);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, input.seasonId), target: () => false });
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const plan = promotionPlan(result.matches, input.leagues, (id) => rating.get(id) ?? 0);
   return { input, result, plan, blockers, rating };

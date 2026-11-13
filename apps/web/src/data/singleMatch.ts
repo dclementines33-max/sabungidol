@@ -1,14 +1,15 @@
 // One match through the MatchModal (Fase 3 step 6, PRD §9): what the engine would play for it, and
 // writing the result the user accepted (simulated, clicked game by game, or spun). The replay then
 // reuses that saved result and every later match follows from it.
-import { type Db, listSeasonMatches, saveMatches } from "@sabung/db";
+import { type Db, saveMatches } from "@sabung/db";
 import { type Side, runSeason, seriesState } from "@sabung/engine";
 import { seasonBestOf } from "@sabung/shared";
 import { seasonInput } from "./seasonRunner";
+import { seasonMatches } from "./seasonMatches";
 
 async function playable(db: Db, id: string) {
   const input = await seasonInput(db);
-  const saved = await listSeasonMatches(db, input.seasonId);
+  const saved = await seasonMatches(db, input.seasonId);
   if (saved.some((m) => m.id === id)) throw new Error(`Match ${id} sudah dimainkan.`);
   const match = runSeason({ ...input, saved, target: (m) => m.id === id }).matches.find((m) => m.id === id);
   if (!match) throw new Error(`Match ${id} belum bisa dimainkan.`);

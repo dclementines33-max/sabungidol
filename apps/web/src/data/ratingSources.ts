@@ -1,8 +1,9 @@
 // Rating Manager sources that need played seasons (PRD §6.4, §6.5), computed in the Worker. They only
 // propose new ratings; the Rating Manager draft is saved by the user.
-import { type Db, type SeasonRow, listSeasonMatches, listSeasons } from "@sabung/db";
+import { type Db, type SeasonRow, listSeasons } from "@sabung/db";
 import { promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
+import { seasonMatches } from "./seasonMatches";
 
 export type Proposal = { idolId: string; new: number; reason: string };
 
@@ -12,7 +13,7 @@ async function finishedSeasons(db: Db) {
   for (const season of await listSeasons(db)) {
     if (season.status !== "live" && season.status !== "archived") continue;
     const input = await seasonInput(db, season);
-    const result = runSeason({ ...input, saved: await listSeasonMatches(db, season.id), target: () => false });
+    const result = runSeason({ ...input, saved: await seasonMatches(db, season.id), target: () => false });
     if (!result.done) continue;
     const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
     const plan = promotionPlan(result.matches, input.leagues, (id) => rating.get(id) ?? 0);

@@ -1,7 +1,7 @@
 // Playing a season (Fase 3): its saved matches in the engine's shape (for the replay), removing
 // matches that no longer happen, and starting a draft season once its leagues are complete.
 import { D1_LEAGUES, D2_LEAGUES, type CompetitionCode, type StageCode, classifyMatch } from "@sabung/shared";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { gamesFromMask } from "./gamesMask";
 import type { Db } from "./openDb";
 import { entries, idols, matches, seasons } from "./schema";
@@ -11,6 +11,12 @@ export type SavedMatch = {
   id: string; comp: CompetitionCode; stage: StageCode; round: string; slot: number; idolA: string; idolB: string;
   games: ("A" | "B")[]; scoreA: number; scoreB: number; result: "A" | "B" | "D"; ratingA: number; ratingB: number; formA: string; formB: string;
 };
+
+// A cheap fingerprint of a season's saved matches (count + latest save): it changes on any save, replacement or delete.
+export async function seasonMatchStamp(db: Db, seasonId: string): Promise<string> {
+  const [row] = await db.select({ n: sql<number>`count(*)::int`, at: sql<string | null>`max(${matches.playedAt})::text` }).from(matches).where(eq(matches.seasonId, seasonId));
+  return `${row?.n}|${row?.at}`;
+}
 
 export async function listSeasonMatches(db: Db, seasonId: string): Promise<SavedMatch[]> {
   const rows = await db.select().from(matches).where(eq(matches.seasonId, seasonId)).orderBy(asc(matches.playedAt), asc(matches.id));

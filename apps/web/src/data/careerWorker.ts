@@ -2,19 +2,20 @@
 // folded once, in season order, into the stats cache and gets its placements written. Reading adds the
 // live season's matches on top (its placements come when it finishes). "Rebuild Stats" folds everything
 // again from zero; the Fase 4 gate checks both give the same.
-import { type Db, type SeasonRow, listSeasonMatches, listSeasons, readCache, replaceAchievements, replacePlacements, writeCache } from "@sabung/db";
+import { type Db, type SeasonRow, listSeasons, readCache, replaceAchievements, replacePlacements, writeCache } from "@sabung/db";
 import {
   type AchievementState, type CareerState, type MatchRecords, careerRows, emptyAchievements, foldMatchRecords, foldSeason, promotionPlan, runSeason,
   seasonAchievements, seasonPlacements, seasonProgression,
 } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
+import { seasonMatches } from "./seasonMatches";
 
 type Cache = { seasons: string[]; state: CareerState; records: MatchRecords; achievements: AchievementState };
 const KEY = "career";
 
 async function replay(db: Db, season: SeasonRow) {
   const input = await seasonInput(db, season);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, season.id), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, season.id), target: () => false });
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) } as Record<string, string[]>;
   if (!result.done) return { result, placements: [], scores: new Map<string, number>() };

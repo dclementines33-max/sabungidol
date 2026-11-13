@@ -6,6 +6,7 @@ import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, lea
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
 import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
+import { seasonMatches } from "./seasonMatches";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
@@ -30,7 +31,7 @@ export async function seasonInput(db: Db, given?: SeasonRow): Promise<SeasonInpu
   // Ratings are fixed within a season: an idol who already played keeps the rating stored with those
   // matches, so a later rating change (progression, Rating Manager) never reseeds what was played.
   const played = new Map<string, number>();
-  for (const m of await listSeasonMatches(db, season.id)) played.set(m.idolA, m.ratingA).set(m.idolB, m.ratingB);
+  for (const m of await seasonMatches(db, season.id)) played.set(m.idolA, m.ratingA).set(m.idolB, m.ratingB);
   const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: played.get(i.id) ?? i.rating, active: i.active }));
   const { IDL: theIdols, ...leagues } = await leagueRosters(db, season.id); // The Idols was fixed when the season started
   return { seasonId: season.id, season: season.number, seed: season.seed, idols, leagues: leagues as SeasonInput["leagues"], theIdols, config, tuning: config.tuning };
@@ -41,7 +42,7 @@ export async function seasonInput(db: Db, given?: SeasonRow): Promise<SeasonInpu
 // match in the frontier; a finished one never does).
 export async function seasonOverview(db: Db) {
   const input = await seasonInput(db);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, input.seasonId), target: () => false });
   const off = new Set(input.config?.off ?? []);
   const played = new Map<string, number>();
   for (const m of result.matches) played.set(competitionKeyOf(m.comp), (played.get(competitionKeyOf(m.comp)) ?? 0) + 1);
@@ -78,7 +79,7 @@ export function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) 
 export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: PlayProgress) => void) {
   pauseRequested = false;
   const input = await seasonInput(db);
-  let saved: SimMatch[] = await listSeasonMatches(db, input.seasonId);
+  let saved: SimMatch[] = await listSeasonMatches(db, input.seasonId); // fresh: playSeason extends it as it saves
   const frontier = runSeason({ ...input, saved, target: () => false }).pending;
   const allowed = allows(target, frontier);
   const estimate = target.kind === "all" ? 5600 : target.kind === "ids" ? target.ids.length : frontier.filter(allowed).length;
@@ -106,7 +107,7 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
 // matchday (for the sparkline), and all 38 matchdays — played or still open. Nothing is played.
 export async function leagueView(db: Db, comp: string) {
   const input = await seasonInput(db);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, input.seasonId), target: () => false });
   const roster = comp === "IDL" ? (input.theIdols ?? []) : (input.leagues as Record<string, string[]>)[comp] ?? [];
   const played = result.matches.filter((m) => m.comp === comp && m.stage === "LG");
   const start = roster.map((id) => ({ id, startRating: input.idols.find((i) => i.id === id)?.rating ?? 0 }));
@@ -143,7 +144,7 @@ export type CupCell = { key: string; id: string; comp: string; stage: StageCode;
 export async function cupView(db: Db, comps: string[], seasonId?: string) {
   const given = seasonId ? (await listSeasons(db)).find((x) => x.id === seasonId) : undefined; // an archived season (Season Archive)
   const input = await seasonInput(db, given);
-  const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
+  const result = runSeason({ ...input, saved: await seasonMatches(db, input.seasonId), target: () => false });
   const mine = (m: { comp: string; stage: string }) => comps.includes(m.comp) && m.stage !== "LG";
   const played: CupCell[] = result.matches.filter(mine).map((m) => ({
     key: `${m.comp}-${m.stage}-${m.round}-${m.slot}`, id: m.id, comp: m.comp, stage: m.stage, round: m.round, slot: m.slot, a: m.idolA, b: m.idolB,
