@@ -279,6 +279,11 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - Cloud API: `pnpm --filter @sabung/api test` (PGlite) · `pnpm --filter @sabung/api dev` (wrangler, :8787, serves
   `apps/web/dist/client` — build web first) · `pnpm --filter @sabung/api setup` (Supabase migrations + bucket).
   Offline e2e builds the app and serves it on 5181; cloud gate e2e needs `CLOUD_URL`.
+- DEPLOY FLOW (user 2026-11-13): after EVERY change, build and upload a PREVIEW (never straight to production):
+  `pnpm --filter @sabung/web build && pnpm --filter @sabung/api exec wrangler versions upload --preview-alias test --message "…"`
+  → https://test-sabung-idol.sabung-api.workers.dev. The user tests, says "deploy", then
+  `pnpm --filter @sabung/api exec wrangler versions deploy <version-id>@100% -y`. Login/cloud backup may not work on the
+  preview host (Better Auth knows the main URL only). Tell the user: close ALL tabs of the site to get the new version (PWA).
 - Deploy: `pnpm --filter @sabung/web build && pnpm --filter @sabung/api exec wrangler deploy`. Gate e2e online:
   `CLOUD_URL=https://sabung-idol.sabung-api.workers.dev pnpm --filter @sabung/web e2e cloud.e2e.ts` and
   `OFFLINE_URL=… e2e offline.e2e.ts`. In the user's PowerShell `npx` is blocked (execution policy): use `npx.cmd`.
