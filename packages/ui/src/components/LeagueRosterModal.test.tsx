@@ -51,7 +51,7 @@ describe("LeagueRosterModal (PRD §9)", () => {
     const problems = screen.getByRole("alert").textContent;
     expect(problems).toContain("Nobody — tidak dikenal");
     expect(problems).toContain("Mina — 2 idol bernama sama");
-    expect(screen.getByText(/Juga di liga lain: Rina \(D2C\)/)).toBeTruthy();
+    expect(screen.getByLabelText("juga di D2C")).toBeTruthy(); // the icon; the full list lives outside the popup
     expect(apply().disabled).toBe(false); // another league is a warning, not a block
   });
 

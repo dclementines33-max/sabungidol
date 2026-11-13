@@ -2,17 +2,19 @@
 // Paste names to add many at once, or to replace the whole roster; unknown or ambiguous names are listed, never guessed.
 import { LEAGUE_SIZE, checkRoster } from "@sabung/shared";
 import { TriangleAlert, X } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Button } from "./Button";
 import { IdolPhoto } from "./IdolPhoto";
 import { Modal } from "./Modal";
 import { SearchableIdolSelect } from "./SearchableIdolSelect";
 import { useIdolLookup } from "./idolSource";
 
-export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds, leagueOf, onApply }: {
+export function LeagueRosterModal({ open, onOpenChange, league, title, logo, roster, idolIds, leagueOf, onApply }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   league: string;
+  title?: string; // the league's branded name
+  logo?: ReactNode;
   roster: string[];
   idolIds: string[]; // every idol that may be added
   leagueOf: (idolId: string) => string | null;
@@ -45,7 +47,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title={`Roster ${league}`}
+      title={`Roster ${title ?? league}`}
       className="max-w-2xl"
       footer={
         <>
@@ -54,9 +56,12 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
         </>
       }
     >
-      <p className={`m-0 font-mono text-sm tabular-nums ${check.count === LEAGUE_SIZE ? "text-cool" : "text-danger"}`} role="status">
-        {check.count} / {LEAGUE_SIZE} idol{check.duplicates.length > 0 && ` · ${check.duplicates.length} ganda`}
-      </p>
+      <div className="flex items-center gap-3">
+        {logo}
+        <p className={`m-0 font-mono text-sm tabular-nums ${check.count === LEAGUE_SIZE ? "text-cool" : "text-danger"}`} role="status">
+          {check.count} / {LEAGUE_SIZE} idol{check.duplicates.length > 0 && ` · ${check.duplicates.length} ganda`}
+        </p>
+      </div>
       <ul className="m-0 mt-2 grid max-h-64 list-none grid-cols-1 gap-1 overflow-auto p-0 sm:grid-cols-2">
         {draft.map((id, i) => (
           <li key={`${id}-${i}`} className="flex items-center gap-2 rounded-control bg-surface px-2 py-1 text-sm">
@@ -76,11 +81,6 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
           </li>
         ))}
       </ul>
-      {check.elsewhere.length > 0 && (
-        <p className="m-0 mt-2 text-sm text-accent-bright">
-          Juga di liga lain: {check.elsewhere.map((e) => `${name(e.idolId)} (${e.league})`).join(", ")}
-        </p>
-      )}
       <div className="mt-4 flex items-end gap-2">
         <div className="flex-1">
           <SearchableIdolSelect label="Tambah idol" idolIds={idolIds.filter((id) => !draft.includes(id))} value={pick} onChange={setPick} />
