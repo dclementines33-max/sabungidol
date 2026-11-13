@@ -91,3 +91,7 @@ export async function resetSeason(db: Db, seasonId: string) {
 export async function archiveSeason(db: Db, seasonId: string) {
   await db.update(seasons).set({ status: "archived" }).where(eq(seasons.id, seasonId));
 }
+
+export async function listSeasons(db: Db | Tx): Promise<SeasonRow[]> {
+  return db.select().from(seasons).orderBy(desc(seasons.number));
+}

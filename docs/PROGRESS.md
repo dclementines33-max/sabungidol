@@ -16,7 +16,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 0 Engine & data core | done, gate passed |
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
-| **Fase 3 Play** | **in progress: steps 1–7 done, next is step 8** |
+| **Fase 3 Play** | **in progress: steps 1–8 done, next is step 9** |
 | Fase 4 Wiki, Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -38,9 +38,15 @@ file only when the task touches it. Keep this file current: update it at the end
    Was: Season close: archive guard (Blocker naming unfinished competitions), Rating Progression PRD §6.2–6.3
    (preview → save into rating_history), promotion/relegation (D1 18–20 ↔ D2 1–3, preview), "Start New
    Season" (new draft season N+1), auto-snapshot before.
-8. ⏭ Rating Manager + Engine Lab (`/studio/ratings`, PRD §6.4–6.6): bulk edit, presets, Sync from Career
-   Stats, odds lab with 100/1,000 simulations + histogram.
-9. Carry-overs: clicks before hydration do nothing (Ctrl+K, mobile Play sheet — the e2e retries), slow
+8. ✅ Rating Manager + Engine Lab (`/studio/ratings`): draft (nothing saved before Save Now), steps for
+   Revert, Discard, diff old → new, confirm on all three; `components/ratingManager/` ratingPresets (Seed,
+   Realistic Variety μ72 σ9 in rating order, Reset 75), RatingTable (scope, search, select, Set/Add bulk),
+   RatingActions, EngineLab (per game + per BoN odds, 100/1,000 sims, score histogram); Worker
+   `data/ratingSources.ts` lastSeasonProgression (§6.4) + careerSync Replace/Blend (§6.5, 0.85^age, → 45–98);
+   saves through db applyRatings source "manager".
+   FIX found by its e2e: saving ratings reseeded finished cups in the replay → `seasonInput` now gives an
+   idol who already played this season the rating stored with those matches (ratings fixed within a season).
+9. ⏭ Carry-overs: clicks before hydration do nothing (Ctrl+K, mobile Play sheet — the e2e retries), slow
    storage banner in the main app, WebKit/Safari e2e, mobile LCP 2.4 s, CLS 0.083.
 10. Gate e2e: 3 seasons in a row through the app; integrity clean; all match ids unique.
 
@@ -137,7 +143,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   are fills only. Contrast is tested (`tokens.test.ts`).
 - Settings sections save only their own config fields over the latest saved config.
 - Empty rating in input = 75 (yellow). Deleting an idol in a roster is refused (offer deactivate).
-- The Idols roster is fixed at season start (else rating changes would rewrite the season).
+- The Idols roster is fixed at season start (else rating changes would rewrite the season); likewise an
+  idol's rating is fixed within a season once played ( reads it from the saved matches).
 - Engine Tuning preset numbers are ours (PRD gives none): Realistic 40/σ4, Chaotic 60/σ8, Dominant 28/σ2.
 - Project rules (CLAUDE.md): screens in `pages/`, pieces in `components/`, saving/loading in `data/`,
   one job per file, ≤ 300 lines, minimal code, ask instead of guessing, test every change, report real
@@ -161,9 +168,11 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 ## Open items
 
 - Fase 3 steps 7–10 (above). MatchModal is taller than a 720 px screen (title/Accept need a scroll).
-- Flakes under load: db `backup.test` setup hook > 10 s when all packages test at once (passes alone);
+- Flakes under load: db `backup.test` setup hook > 10 s (default hookTimeout) in most full runs (passes
+  alone at ~9.8 s) — fix: raise the hook timeout in the db test script;
   full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on fresh profiles.
 - Hydration dead clicks. WebKit e2e. Mobile LCP/CLS.
+- Gala notices show raw idol ids ("01M7… won both sides") — engine notice text, should use names.
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
 - `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.
 - A one-off E-DB-001 on an existing database after rapid reloads (unreproduced; a reload fixes it).

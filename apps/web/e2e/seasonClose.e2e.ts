@@ -35,4 +35,13 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await expect(page.getByTestId("season-chip")).toHaveText(/Season 2 · live/);
   await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
   await expect(page.getByText(/4\.940 match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
+
+  // Step 8: Season 1's progression was saved, so applying it again changes nothing (idempotent, §6.4);
+  // Sync from Career Stats proposes new ratings from the archived season (§6.5).
+  await page.goto("/studio/ratings");
+  await page.getByRole("button", { name: "Apply Season Progression" }).click();
+  await expect(page.getByRole("button", { name: "Revert (Season Progression)" })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: "Draft: 0 perubahan" })).toBeVisible();
+  await page.getByRole("button", { name: "Sync from Career Stats · Replace" }).click();
+  await expect(page.getByRole("heading", { name: /^Draft: \d{2,} perubahan$/ })).toBeVisible({ timeout: 30_000 });
 });

@@ -2,7 +2,7 @@
 // the season from the saved results and plays only what the target allows, in chunks so progress
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
-import { type Db, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
+import { type Db, type SeasonRow, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
 import { SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 
@@ -20,11 +20,16 @@ const GALA = new Set(["DSG", "MBK"]);
 let pauseRequested = false;
 export const requestPause = () => { pauseRequested = true; };
 
-export async function seasonInput(db: Db): Promise<SeasonInput & { seasonId: string }> {
-  const season = await currentSeason(db);
-  if (!season || season.status !== "live") throw new Error("Belum ada season yang berjalan. Mulai season dulu.");
+// The current live season, or a given (archived) one for rating sources.
+export async function seasonInput(db: Db, given?: SeasonRow): Promise<SeasonInput & { seasonId: string }> {
+  const season = given ?? await currentSeason(db);
+  if (!season || (!given && season.status !== "live")) throw new Error("Belum ada season yang berjalan. Mulai season dulu.");
   const config = readSeasonConfig(season.config);
-  const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: i.rating, active: i.active }));
+  // Ratings are fixed within a season: an idol who already played keeps the rating stored with those
+  // matches, so a later rating change (progression, Rating Manager) never reseeds what was played.
+  const played = new Map<string, number>();
+  for (const m of await listSeasonMatches(db, season.id)) played.set(m.idolA, m.ratingA).set(m.idolB, m.ratingB);
+  const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: played.get(i.id) ?? i.rating, active: i.active }));
   const { IDL: theIdols, ...leagues } = await leagueRosters(db, season.id); // The Idols was fixed when the season started
   return { seasonId: season.id, season: season.number, seed: season.seed, idols, leagues: leagues as SeasonInput["leagues"], theIdols, config, tuning: config.tuning };
 }

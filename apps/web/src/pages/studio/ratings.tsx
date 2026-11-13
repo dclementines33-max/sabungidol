@@ -1,4 +1,93 @@
+// Rating Manager (PRD §6.4–6.6, §8): a draft of new ratings filled by edits and actions, a diff
+// (old → new), and Revert / Discard / Save Now behind a confirmation. Nothing is written before Save;
+// a save goes into rating_history. Engine Lab below.
+import { readSeasonConfig } from "@sabung/shared";
+import { Button, ConfirmDialog, useIdolLookup } from "@sabung/ui";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { PanelPlaceholder } from "../../components/PanelPlaceholder";
+import { useState } from "react";
+import { EngineLab } from "../../components/ratingManager/EngineLab";
+import { RatingActions } from "../../components/ratingManager/RatingActions";
+import { RatingTable } from "../../components/ratingManager/RatingTable";
+import { IDOLS_QUERY } from "../../data/IdolDataProvider";
+import { engine } from "../../data/engineClient";
+import { notify } from "../../data/notices";
+import { queryClient } from "../../data/queryClient";
+import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
 
-export const Route = createFileRoute("/studio/ratings")({ component: PanelPlaceholder });
+export const Route = createFileRoute("/studio/ratings")({ component: RatingManager });
+
+type Step = { draft: Map<string, number>; label: string };
+const CONFIRM = {
+  revert: { title: "Revert", message: "Batalkan aksi terakhir di draft?", label: "Revert" },
+  discard: { title: "Discard", message: "Buang semua perubahan di draft? Rating tersimpan tidak berubah.", label: "Discard" },
+  save: { title: "Save Now", message: "Simpan rating baru? Setiap perubahan dicatat di riwayat rating.", label: "Save Now" },
+} as const;
+
+function RatingManager() {
+  const { data: idols = [], isPending } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
+  const season = useCurrentSeason();
+  const rosters = useLeagueRosters(season?.id) ?? {};
+  const lookup = useIdolLookup();
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [confirm, setConfirm] = useState<keyof typeof CONFIRM | null>(null);
+  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
+
+  const current = new Map(idols.map((i) => [i.id, i.rating]));
+  const draft = steps.at(-1)?.draft ?? new Map<string, number>();
+  const change = (changes: Map<string, number>, label: string) => {
+    const next = new Map(draft);
+    for (const [id, r] of changes) { if (current.get(id) === r) next.delete(id); else next.set(id, r); }
+    setSteps([...steps, { draft: next, label }]);
+  };
+  const leagueOf = new Map(Object.entries(rosters).flatMap(([comp, ids]) => ids.map((id) => [id, comp] as const)));
+  const diff = [...draft.entries()].sort((x, y) => y[1] - current.get(y[0])! - (x[1] - current.get(x[0])!));
+  const act = async () => {
+    if (confirm === "revert") setSteps(steps.slice(0, -1));
+    if (confirm === "discard") setSteps([]);
+    if (confirm === "save") {
+      const reason = [...new Set(steps.map((s) => s.label))].join(", ");
+      const { changed } = await engine().applyRatings(diff.map(([idolId, r]) => ({ idolId, new: r, reason })), "manager");
+      setSteps([]);
+      notify({ level: "success", message: `Rating ${changed} idol disimpan` });
+      await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <section aria-labelledby="draft" className="space-y-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 id="draft" className="m-0 font-display text-xl">Draft: {diff.length} perubahan</h2>
+          <Button disabled={!steps.length} onClick={() => setConfirm("revert")}>Revert{steps.length ? ` (${steps.at(-1)!.label})` : ""}</Button>
+          <Button disabled={!steps.length} onClick={() => setConfirm("discard")}>Discard</Button>
+          <Button variant="primary" disabled={!diff.length} onClick={() => setConfirm("save")}>Save Now</Button>
+        </div>
+        {diff.length > 0 && (
+          <details className="rounded-card border border-border bg-bg-raised">
+            <summary className="cursor-pointer px-3 py-2">Preview diff (lama → baru)</summary>
+            <ul tabIndex={0} aria-label="Perubahan rating" className="m-0 max-h-64 list-none overflow-auto px-3 pb-3 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright">
+              {diff.map(([id, r]) => <li key={id}>{lookup(id)?.name} <span className="font-mono tabular-nums">{current.get(id)} → {r}</span></li>)}
+            </ul>
+          </details>
+        )}
+      </section>
+      <section aria-labelledby="actions" className="space-y-3">
+        <h2 id="actions" className="m-0 font-display text-xl">Aksi</h2>
+        <RatingActions idols={idols} onChange={change} />
+      </section>
+      <section aria-labelledby="table" className="space-y-3">
+        <h2 id="table" className="m-0 font-display text-xl">Rating</h2>
+        <RatingTable idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
+      </section>
+      <section aria-labelledby="lab" className="space-y-3">
+        <h2 id="lab" className="m-0 font-display text-xl">Engine Lab</h2>
+        <EngineLab idolIds={idols.filter((i) => i.active).map((i) => i.id)} ratingOf={(id) => draft.get(id) ?? current.get(id) ?? 75} tuning={readSeasonConfig(season?.config).tuning} />
+      </section>
+      {confirm && (
+        <ConfirmDialog open onOpenChange={(open) => { if (!open) setConfirm(null); }} title={CONFIRM[confirm].title} message={CONFIRM[confirm].message}
+          confirmLabel={CONFIRM[confirm].label} danger={confirm === "discard"} onConfirm={act} />
+      )}
+    </div>
+  );
+}

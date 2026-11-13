@@ -1,7 +1,7 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
+  type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
@@ -11,6 +11,7 @@ import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, sav
 import { fixIntegrity, integrityCheck } from "./integrityWorker";
 import { acceptMatch, matchPreview } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
+import { careerSync, lastSeasonProgression } from "./ratingSources";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -124,6 +125,10 @@ const api = {
   listSnapshots: async () => listSnapshots(DATABASE),
   readSnapshot: async (name: string) => readSnapshot(DATABASE, name),
   backupDue: async () => backupDue(await open()),
+  // Rating Manager (PRD §6.4–6.6): proposals for the draft, then one save with rating_history.
+  lastSeasonProgression: async () => lastSeasonProgression(await open()),
+  careerSync: async (current: Record<string, number>, mode: "replace" | "blend") => careerSync(await open(), current, mode),
+  applyRatings: async (changes: RatingChange[], source: string) => applyRatings(await open(), changes, source),
   // Closing the season (PRD §4, §6.3).
   closePreview: async () => closePreview(await open()),
   saveProgression: async () => saveProgression(await open()),
