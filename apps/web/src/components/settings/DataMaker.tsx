@@ -37,7 +37,7 @@ export function DataMaker({ seasonId, draft, idols }: { seasonId: string; draft:
         <>
           <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0 text-sm sm:grid-cols-3 lg:grid-cols-6" aria-label="Pratinjau liga">
             {Object.entries(split.leagues).map(([code, ids]) => (
-              <li key={code} className="rounded-control border border-border p-2"><span className="font-mono">{code}</span><span className="block text-text-secondary">{ids.length} idol · rata-rata {avg(ids)}</span></li>
+              <li key={code} className="rounded-control bg-surface/40 p-2"><span className="font-mono">{code}</span><span className="block text-text-secondary">{ids.length} idol · rata-rata {avg(ids)}</span></li>
             ))}
           </ul>
           <p className="m-0 text-sm text-text-secondary">{split.reserves.length} cadangan</p>

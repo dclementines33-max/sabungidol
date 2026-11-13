@@ -18,7 +18,7 @@ export function MatchRow({ a, b, score, busy, onOpen }: { a: string; b: string; 
   if (score !== undefined || !onOpen) return <div className={ROW}>{body}</div>;
   return (
     <button type="button" disabled={busy} onClick={onOpen}
-      className={`${ROW} cursor-pointer border border-border-strong hover:border-accent-bright hover:bg-surface-hover disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright`}>
+      className={`${ROW} cursor-pointer bg-surface-hover/60 hover:border-accent-bright hover:bg-surface-hover disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright`}>
       <span className="sr-only">Main </span>{body}
     </button>
   );

@@ -30,7 +30,7 @@ export function Welcome({ seasonName, idols, leagues, reserves }: { seasonName: 
       <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">
         {STEPS.map(({ to, icon: Icon, title, text }) => (
           <li key={title}>
-            <Link to={to} className="group flex h-full items-start gap-4 rounded-card border border-border bg-surface p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <Link to={to} className="group flex h-full items-start gap-4 panel bg-surface p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
               <Icon aria-hidden="true" size={24} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent-bright" />
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-lg">{title}</span>

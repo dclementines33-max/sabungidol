@@ -4,7 +4,7 @@ import type { IdolRow } from "@sabung/db";
 import { Button, RatingBadge, VirtualTable } from "@sabung/ui";
 import { useState } from "react";
 
-const input = "w-20 rounded-control border border-border-strong bg-surface px-2 py-1 font-mono tabular-nums text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright";
+const input = "w-20 rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 font-mono tabular-nums text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 export function RatingTable({ idols, leagueOf, draft, onChange }: {
   idols: IdolRow[];

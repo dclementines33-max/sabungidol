@@ -58,7 +58,7 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
         <label className="block text-sm text-text-secondary">
           Satu idol per baris: <span className="font-mono">Nama | Group | Rating | Seed | Nationality | YYYY-MM-DD</span>
           <textarea value={text} rows={6} onChange={(e) => { setText(e.target.value); setFields(pasteToFields(e.target.value)); }}
-            className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 font-mono text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
+            className="mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 font-mono text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
         </label>
       )}
       {source === "file" && (

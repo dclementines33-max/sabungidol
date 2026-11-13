@@ -49,7 +49,7 @@ export function PhotoImport({ idols }: { idols: IdolRow[] }) {
           </p>
           <ul className="m-0 grid list-none gap-3 p-0 md:grid-cols-2">
             {matches.map((m, i) => (
-              <li key={`${m.file.name}-${i}`} className="flex items-start gap-3 rounded-card border border-border bg-surface p-3">
+              <li key={`${m.file.name}-${i}`} className="flex items-start gap-3 panel bg-surface p-3">
                 <img src={previews[i]} alt="" className="aspect-[4/5] w-16 rounded-control object-cover" />
                 <div className="min-w-0 flex-1">
                   <p className="m-0 truncate font-mono text-xs text-text-secondary">{m.file.name}</p>

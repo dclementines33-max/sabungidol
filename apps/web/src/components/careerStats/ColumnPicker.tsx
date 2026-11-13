@@ -3,7 +3,7 @@ import { CAREER_COLUMNS } from "../wiki/careerColumns";
 
 export function ColumnPicker({ shown, onChange }: { shown: string[]; onChange: (ids: string[]) => void }) {
   return (
-    <details className="rounded-card border border-border bg-bg-raised px-3 py-2 text-sm">
+    <details className="panel px-3 py-2 text-sm">
       <summary className="cursor-pointer">Kolom ({shown.length} dari {CAREER_COLUMNS.length})</summary>
       <fieldset className="m-0 mt-2 grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-1 border-0 p-0">
         <legend className="sr-only">Kolom yang ditampilkan</legend>

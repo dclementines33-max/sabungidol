@@ -104,7 +104,7 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
       </div>
       {games.length > 0 && (
         <ol aria-label="Hasil tiap spin" className="m-0 flex list-none flex-wrap justify-center gap-1 p-0 font-mono text-xs">
-          {games.map((g, i) => <li key={i} className={`rounded-control border border-border-strong px-2 py-0.5 ${g === "A" ? "text-accent-bright" : "text-cool"}`}>G{i + 1} {g === "A" ? a.name : b.name}</li>)}
+          {games.map((g, i) => <li key={i} className={`rounded-control bg-surface-hover/60 px-2 py-0.5 ${g === "A" ? "text-accent-bright" : "text-cool"}`}>G{i + 1} {g === "A" ? a.name : b.name}</li>)}
         </ol>
       )}
       <p className="m-0 font-mono text-2xl tabular-nums" aria-live="polite">

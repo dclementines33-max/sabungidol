@@ -52,7 +52,7 @@ export function SeasonClose({ done }: { done: boolean }) {
             <div>
               <h3 className="m-0 mb-2 text-sm font-medium">Badge baru season ini</h3>
               <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-                {close.badges.map((b) => <li key={`${b.idolId}-${b.badge}`} className="rounded-control border border-accent-bright px-2 py-1 text-sm"><span className="text-accent-bright">{BADGES[b.badge]}</span> · {name(b.idolId)}</li>)}
+                {close.badges.map((b) => <li key={`${b.idolId}-${b.badge}`} className="rounded-control bg-accent/40 px-2 py-1 text-sm"><span className="text-accent-bright">{BADGES[b.badge]}</span> · {name(b.idolId)}</li>)}
               </ul>
             </div>
           )}
@@ -61,7 +61,7 @@ export function SeasonClose({ done }: { done: boolean }) {
               <div key={title}><h3 className="m-0 mb-1 text-sm font-medium">{title}</h3><p className="m-0 text-sm text-text-secondary">{ids.map(name).join(", ")}</p></div>
             ))}
           </div>
-          <details className="rounded-card border border-border bg-bg-raised">
+          <details className="panel">
             <summary className="cursor-pointer px-3 py-2">Rating Progression: {close.progression.length} idol berubah (opsional)</summary>
             <div tabIndex={0} role="region" aria-label="Perubahan rating" className="max-h-96 overflow-auto px-3 pb-3 focus-visible:outline-2 focus-visible:outline-accent-bright">
               <table className="w-full text-sm">

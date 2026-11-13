@@ -19,7 +19,7 @@ export function PhotoDropZone({ onFiles, label = "Seret foto ke sini" }: { onFil
       onDragOver={(e) => { e.preventDefault(); setOver(true); }}
       onDragLeave={() => setOver(false)}
       onDrop={drop}
-      className={`${over ? "border-accent-bright bg-surface-hover" : "border-border-strong bg-surface"} flex flex-col items-center gap-3 rounded-card border-2 border-dashed p-8 text-center`}
+      className={`${over ? "bg-surface-hover" : "bg-surface"} corner-marks flex flex-col items-center gap-3 rounded-card p-8 text-center`}
     >
       <ImagePlus aria-hidden="true" size={32} strokeWidth={1.5} className="text-text-secondary" />
       <p className="m-0 text-sm text-text-secondary">{label}, atau</p>

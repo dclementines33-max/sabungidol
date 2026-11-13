@@ -59,7 +59,7 @@ export function LiveMatchVisualizer({ games, nameA, nameB, stepMs = 700, onDone 
       </div>
       <ol className="m-0 mt-3 flex list-none flex-wrap gap-2 p-0" aria-label="Pemenang tiap game">
         {played.map((g, i) => (
-          <li key={i} className={`${g === "A" ? "text-accent-bright" : "text-cool"} rounded-control border border-border-strong px-2 py-0.5 text-xs`}>
+          <li key={i} className={`${g === "A" ? "text-accent-bright" : "text-cool"} rounded-control bg-surface-hover/60 px-2 py-0.5 text-xs`}>
             G{i + 1} · {g === "A" ? nameA : nameB}
           </li>
         ))}

@@ -4,7 +4,7 @@ import { IdolPhoto, useIdol } from "@sabung/ui";
 
 export function HomeHero({ seasonName, champion, championSeason }: { seasonName: string; champion: string | null; championSeason?: number }) {
   return (
-    <section aria-label="Sorotan" className="relative flex min-h-64 flex-col justify-end overflow-hidden rounded-card border border-border bg-accent p-6 text-on-accent sm:flex-row sm:items-end sm:justify-between">
+    <section aria-label="Sorotan" className="relative flex min-h-64 flex-col justify-end overflow-hidden panel bg-accent p-6 text-on-accent sm:flex-row sm:items-end sm:justify-between">
       <div className="relative z-[1] space-y-2">
         <p className="m-0 text-xs tracking-widest uppercase">{champion ? `Juara Unzure Cup · Season ${championSeason}` : "Sabung Idol"}</p>
         {champion && <ChampionName id={champion} />}

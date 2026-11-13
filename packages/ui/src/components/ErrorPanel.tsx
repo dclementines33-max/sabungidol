@@ -14,7 +14,7 @@ export function ErrorPanel({ code, message, context, report, onRetry, retryLabel
   const [copied, setCopied] = useState(false);
   const Icon = LEVEL.error.icon;
   return (
-    <div role="alert" className="rounded-card border border-danger bg-surface p-4">
+    <div role="alert" className="rounded-card bg-danger/10 bg-surface p-4">
       <p className="m-0 flex items-center gap-2 font-mono text-sm text-danger">
         <Icon aria-hidden="true" size={18} strokeWidth={1.5} />
         {code}

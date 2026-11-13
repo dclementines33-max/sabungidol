@@ -21,7 +21,7 @@ export function PasteBatchPreview({ rows }: { rows: PreviewRow[] }) {
         {rows.map((r) => {
           const { icon: Icon, color, label } = LOOK[r.status];
           return (
-            <li key={r.line} className="flex gap-3 rounded-control border border-border bg-surface px-3 py-2 text-sm">
+            <li key={r.line} className="flex gap-3 rounded-control bg-surface/40 bg-surface px-3 py-2 text-sm">
               <span className={`${color} inline-flex w-28 shrink-0 items-center gap-1`}>
                 <Icon aria-hidden="true" size={16} strokeWidth={1.5} /> {label}
               </span>

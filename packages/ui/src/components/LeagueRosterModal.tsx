@@ -93,7 +93,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
           value={pasted}
           onChange={(e) => setPasted(e.target.value)}
           rows={3}
-          className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright"
+          className="mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright"
         />
       </label>
       <div className="mt-2 flex gap-2">

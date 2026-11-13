@@ -11,7 +11,7 @@ export function Select({ label, value, onChange, options }: { label: string; val
   return (
     <label className="text-sm text-text-secondary">
       {label}
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 block rounded-control border border-border-strong bg-surface px-2 py-1 text-text-primary">
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 block rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary">
         {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
       </select>
     </label>

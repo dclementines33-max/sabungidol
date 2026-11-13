@@ -26,7 +26,7 @@ describe("ConfirmDialog (PRD §9)", () => {
     render(<ConfirmDialog open onOpenChange={() => {}} title="Hapus semua?" message="Semua data hilang." confirmLabel="Hapus semua" danger typeToConfirm="HAPUS" onConfirm={() => {}} />);
     const confirm = screen.getByRole("button", { name: "Hapus semua" }) as HTMLButtonElement;
     expect(confirm.disabled).toBe(true);
-    expect(confirm.className).toContain("border-danger");
+    expect(confirm.className).toContain("bg-danger/15");
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "hapus" } });
     expect(confirm.disabled).toBe(true);
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "HAPUS" } });

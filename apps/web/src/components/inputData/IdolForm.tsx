@@ -3,7 +3,7 @@ import type { Fields } from "@sabung/shared";
 import { Button } from "@sabung/ui";
 import type { FormEvent } from "react";
 
-const FIELD = "mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright";
+const FIELD = "mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 export function IdolForm({ groups, onFields }: { groups: string[]; onFields: (fields: Fields[]) => void }) {
   const submit = (event: FormEvent<HTMLFormElement>) => {

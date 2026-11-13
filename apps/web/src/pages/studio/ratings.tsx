@@ -64,7 +64,7 @@ function RatingManager() {
           <Button variant="primary" disabled={!diff.length} onClick={() => setConfirm("save")}>Save Now</Button>
         </div>
         {diff.length > 0 && (
-          <details className="rounded-card border border-border bg-bg-raised">
+          <details className="panel">
             <summary className="cursor-pointer px-3 py-2">Preview diff (lama → baru)</summary>
             <ul tabIndex={0} aria-label="Perubahan rating" className="m-0 max-h-64 list-none overflow-auto px-3 pb-3 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright">
               {diff.map(([id, r]) => <li key={id}>{lookup(id)?.name} <span className="font-mono tabular-nums">{current.get(id)} → {r}</span></li>)}

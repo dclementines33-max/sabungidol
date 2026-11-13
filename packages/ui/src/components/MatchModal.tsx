@@ -23,7 +23,7 @@ const MODES: { mode: Mode; label: string }[] = [
   { mode: "manual", label: "Manual" },
   { mode: "wheel", label: "Wheel Picker" },
 ];
-const CHIP = "rounded-control border border-border-strong px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright";
+const CHIP = "rounded-control bg-surface-hover/60 px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 function Stepper({ name, value, max, onChange }: { name: string; value: number; max: number; onChange: (v: number) => void }) {
   return (

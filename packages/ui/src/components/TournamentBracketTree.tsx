@@ -68,7 +68,7 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
         ref={area}
         tabIndex={0}
         aria-label="Bracket, geser untuk melihat semua ronde"
-        className="max-h-[70vh] cursor-grab overflow-auto rounded-card border border-border bg-bg-raised p-4 focus-visible:outline-2 focus-visible:outline-accent-bright"
+        className="max-h-[70vh] cursor-grab overflow-auto panel p-4 focus-visible:outline-2 focus-visible:outline-accent-bright"
         onPointerDown={(e) => { if (e.pointerType === "mouse" && e.target === e.currentTarget) drag.current = { x: e.clientX, y: e.clientY }; }}
         onPointerMove={(e) => {
           if (!drag.current || !area.current) return;

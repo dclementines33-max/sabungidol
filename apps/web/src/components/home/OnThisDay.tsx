@@ -11,7 +11,7 @@ export function OnThisDay({ matches }: { matches: Match[] }) {
       {matches.length === 0 ? <p className="m-0 text-sm text-text-secondary">Belum ada season sebelumnya di matchday ini.</p> : (
         <ul className="m-0 flex list-none gap-3 overflow-x-auto p-0 pb-2" aria-label="Match di hari yang sama">
           {matches.map((m) => (
-            <li key={m.id} className="w-56 shrink-0 rounded-card border border-border bg-bg-raised p-3 text-sm">
+            <li key={m.id} className="w-56 shrink-0 panel p-3 text-sm">
               <p className="m-0 font-mono text-xs text-text-secondary">{m.id.split("-").slice(0, 4).join(" · ")}</p>
               <p className="m-0 mt-1"><IdolLink id={m.idolA} /> <span className="font-mono">{m.scoreA}–{m.scoreB}</span> <IdolLink id={m.idolB} /></p>
             </li>

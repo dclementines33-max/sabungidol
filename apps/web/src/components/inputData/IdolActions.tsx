@@ -48,7 +48,7 @@ export function IdolActions({ idols }: { idols: IdolRow[] }) {
       <label className="block max-w-sm text-sm text-text-secondary">
         Cari
         <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nama atau group…"
-          className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
+          className="mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
       </label>
       <VirtualTable
         rows={shown}

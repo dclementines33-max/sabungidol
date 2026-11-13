@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { StoryCard } from "../story/StoryCard";
 
-const CARD = "flex h-full flex-col gap-3 rounded-card border border-border bg-bg-raised p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright";
+const CARD = "flex h-full flex-col gap-3 panel p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 function Card({ to, kicker, children }: { to: "/play" | "/story"; kicker: string; children: ReactNode }) {
   return <Link to={to} className={CARD}><span className="text-xs tracking-widest text-text-secondary uppercase">{kicker}</span>{children}</Link>;

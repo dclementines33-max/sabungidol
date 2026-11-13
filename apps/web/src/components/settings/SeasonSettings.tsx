@@ -42,7 +42,7 @@ export function SeasonSettings({ season }: { season: SeasonRow }) {
                   {c.stages.map((stage) => (
                     <label key={stage} className="text-text-secondary">
                       {STAGE_CODES[stage]}{" "}
-                      <select disabled={!on} value={bestOfFor(config, c.key, stage)} className="rounded-control border border-border-strong bg-surface px-2 py-1 text-text-primary"
+                      <select disabled={!on} value={bestOfFor(config, c.key, stage)} className="rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary"
                         onChange={(e) => setConfig({ ...config, bestOf: { ...config.bestOf, [`${c.key}:${stage}`]: Number(e.target.value) as BestOf } })}>
                         {BEST_OF_CHOICES.map((n) => <option key={n} value={n}>Bo{n}</option>)}
                       </select>

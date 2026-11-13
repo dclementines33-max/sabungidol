@@ -19,7 +19,7 @@ export function VirtualTable<Row>({ rows, columns, rowKey, label, rowHeight = 48
   const top = items[0]?.start ?? 0;
   const bottom = virtual.getTotalSize() - (items.at(-1)?.end ?? 0);
   return (
-    <div ref={scroller} style={{ maxHeight: height }} className="overflow-auto rounded-card border border-border" tabIndex={0} role="region" aria-label={label}>
+    <div ref={scroller} style={{ maxHeight: height }} className="overflow-auto panel" tabIndex={0} role="region" aria-label={label}>
       <table className="w-full border-collapse text-sm" aria-rowcount={rows.length + 1}>
         <thead className="sticky top-0 z-10 bg-bg-raised">
           <tr>{columns.map((c) => <th key={c.header} scope="col" className={`px-3 py-2 text-left font-medium text-text-secondary ${c.className ?? ""}`}>{c.header}</th>)}</tr>

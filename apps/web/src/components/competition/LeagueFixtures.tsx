@@ -16,7 +16,7 @@ export function LeagueFixtures({ fixtures, busy, onPlay }: {
       {fixtures.map(({ round, matches }) => {
         const open = matches.filter((m) => m.scoreA === undefined).length;
         return (
-          <details key={round} open={round === firstOpen} className="rounded-card border border-border bg-bg-raised">
+          <details key={round} open={round === firstOpen} className="panel">
             <summary className="flex cursor-pointer items-center gap-3 px-3 py-2">
               <span className="font-mono">Matchday {Number(round.slice(2))}</span>
               <span className="text-sm text-text-secondary">{open ? `${open} belum dimainkan` : "selesai"}</span>

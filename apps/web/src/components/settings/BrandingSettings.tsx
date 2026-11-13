@@ -48,7 +48,7 @@ export function BrandingSettings({ seasonId }: { seasonId: string }) {
           const row = rowFor(c.key, c.name);
           const d2 = c.key.startsWith("D1") ? ` (juga D2${c.key[2]})` : "";
           return (
-            <li key={c.key} className="space-y-2 rounded-card border border-border border-l-4 p-3" style={{ borderLeftColor: row.branding.color ? `var(--color-${row.branding.color})` : undefined }}>
+            <li key={c.key} className="space-y-2 panel border-l-4 p-3" style={{ borderLeftColor: row.branding.color ? `var(--color-${row.branding.color})` : undefined }}>
               <label className="block text-sm text-text-secondary">Nama tampilan ({c.key}{d2})<input value={row.name} maxLength={40} onChange={(e) => edit(c.key, c.name, { name: e.target.value })} className={FIELD} /></label>
               <ColorSwatchPicker label={`Warna aksen ${c.key}`} value={row.branding.color} onChange={(color) => edit(c.key, c.name, { branding: { ...row.branding, color } })} />
               <div className="flex items-center gap-3">

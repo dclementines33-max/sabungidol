@@ -16,7 +16,7 @@ export function FormBadge({ form, recent = [] }: { form: Form["name"]; recent?: 
   const label = last.length ? `${form}, last ${last.length}: ${last.join(" ")}` : form;
   return (
     <span
-      className={`${color} inline-flex items-center gap-1 rounded-control border border-border-strong px-2 py-0.5 text-xs`}
+      className={`${color} inline-flex items-center gap-1 rounded-control bg-surface-hover/60 px-2 py-0.5 text-xs`}
       title={label}
       role="img" // a span may not carry a label; as an image the label is read out
       aria-label={label}

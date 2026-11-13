@@ -16,7 +16,7 @@ export function WildcardPlayInBracket({ rounds }: { rounds: WildcardRound[] }) {
             <h3 className="m-0 mb-2 font-mono text-xs text-text-secondary">{round.label}</h3>
             <ul className="m-0 list-none space-y-1 p-0">
               {round.matches.map((m) => (
-                <li key={`${m.a}-${m.b}`} className="rounded-control border border-border bg-surface px-2 py-1 text-xs">
+                <li key={`${m.a}-${m.b}`} className="rounded-control bg-surface/40 bg-surface px-2 py-1 text-xs">
                   {[m.a, m.b].map((id) => (
                     <span key={id} className={`${id === m.winner ? "font-semibold text-accent-bright" : "text-text-secondary"} block truncate`}>{name(id)}</span>
                   ))}

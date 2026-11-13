@@ -23,7 +23,7 @@ export function SeasonTimeline({ competitions }: { competitions: readonly Compet
   return (
     <ol className="m-0 grid list-none gap-4 p-0 lg:grid-cols-3" aria-label="Fase season">
       {PHASES.map(([phase, keys]) => (
-        <li key={phase} className="rounded-card border border-border bg-bg-raised p-4">
+        <li key={phase} className="panel p-4">
           <h2 className="m-0 mb-3 font-display text-lg">{phase}</h2>
           <ul className="m-0 list-none space-y-2 p-0">
             {keys.map((key) => {

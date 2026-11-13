@@ -176,10 +176,15 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
 11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
 User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.
 
-### Redesign plan (PROPOSED 2026-11-13, waiting for approval) — brief: design/NOTES.md "penjelasan…" row
-R1 Foundation: strong sans (proposal: Archivo variable = body + wide/condensed headlines from one file; a
+### Redesign plan (APPROVED 2026-11-13) — brief: design/NOTES.md "penjelasan…" row
+R1 ✅ Foundation: strong sans (proposal: Archivo variable = body + wide/condensed headlines from one file; a
    blackletter accent only for ornamental numbers), no outlines/boxes (fills, glow, single lines), freer use of the
    palette on dark, inline-SVG grain/halftone/torn edges + gothic ornaments, shared components restyled.
+   Built: theme.css = Archivo variable (wdth) + UnifrakturMaguntia (`font-gothic`, ornaments only) + Geist Mono; tokens.css base =
+   crimson/navy glows on black, fixed SVG grain overlay, h1/h2/.font-display wide 800 caps; components = `.tag` `.kicker`
+   `.outline-text` `.corner-marks` `.torn` `.panel`. Button = fills (no outline), caps. Modal = top crimson line + shadow.
+   IdolCard = frameless, torn photo, blackletter rating + tier chip, group-colour glow. Script removed every boxed
+   outline (58 files): fields = underline on a fill, cards = `.panel`, chips = fills. Only text sizes xs…3xl exist.
 R2 Home, Sabung Idol, competition panels (each competition a "cover": its colour, logo, huge outlined name).
 R3 Wiki pages. R4 Studio pages. Then steps 9–11 in the new style (light theme dropped: the brief keeps it dark).
 

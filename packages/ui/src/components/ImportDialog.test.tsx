@@ -26,7 +26,7 @@ describe("ImportDialog (PRD §9, §12.3)", () => {
     expect(screen.getByText("Tidak dikenal (1)")).toBeTruthy();
     fireEvent.click(screen.getByRole("radio", { name: /Replace/ }));
     const apply = screen.getByRole("button", { name: "Confirm & Apply" });
-    expect(apply.className).toContain("border-danger");
+    expect(apply.className).toContain("bg-danger/15");
     fireEvent.click(apply);
     expect(onApply).toHaveBeenCalledWith("replace");
   });

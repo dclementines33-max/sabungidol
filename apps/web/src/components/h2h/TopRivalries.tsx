@@ -9,7 +9,7 @@ export function TopRivalries({ top }: { top: Rivalry[] }) {
     <section aria-labelledby="rivalries" className="space-y-2">
       <h2 id="rivalries" className="m-0 font-display text-xl uppercase">Heated Rivalries: Top 10 Most Matchups</h2>
       {top.length === 0 ? <p className="text-sm text-text-secondary">Belum ada match.</p> : (
-        <ol className="m-0 list-none divide-y divide-border rounded-card border border-border p-0 text-sm">
+        <ol className="m-0 list-none divide-y divide-border panel p-0 text-sm">
           {top.map((r, i) => (
             <li key={`${r.a}|${r.b}`} className="grid grid-cols-[2rem_minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-center gap-2 px-3 py-2">
               <span className="font-mono text-text-secondary">{i + 1}</span>

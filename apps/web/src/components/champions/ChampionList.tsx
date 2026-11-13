@@ -8,7 +8,7 @@ export type Champion = { season: number; key: string; champion: string; runnerUp
 export function ChampionList({ titles }: { titles: Champion[] }) {
   const { label } = useBranding();
   return (
-    <ol className="m-0 list-none divide-y divide-border rounded-card border border-border p-0 text-sm" aria-label="Juara per season">
+    <ol className="m-0 list-none divide-y divide-border panel p-0 text-sm" aria-label="Juara per season">
       {titles.map((t) => (
         <li key={`${t.season}-${t.key}`} className="flex items-center gap-3 px-3 py-2">
           <span className="w-10 font-mono text-text-secondary">S{t.season}</span>

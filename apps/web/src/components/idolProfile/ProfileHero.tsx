@@ -28,7 +28,7 @@ export function ProfileHero({ idol, league, titles, matches, winRate }: { idol: 
           <StatTile label="Match" value={matches} />
           <StatTile label="Win rate" value={`${Math.round(winRate * 100)}%`} />
         </div>
-        <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 rounded-control border border-border-strong px-3 py-2 text-sm hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+        <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 rounded-control bg-surface-hover/60 px-3 py-2 text-sm hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
           <GitCompareArrows aria-hidden="true" size={16} /> Bandingkan (Head to Head)
         </Link>
       </div>

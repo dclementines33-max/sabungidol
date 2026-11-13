@@ -39,8 +39,9 @@
   --color-brand-lime: #b8d46a;
   --color-brand-sand: #d9c29a;
 
-  --font-display: "Fraunces Variable", Georgia, serif;
-  --font-sans: "Geist Variable", system-ui, sans-serif;
+  --font-display: "Archivo Variable", system-ui, sans-serif; /* headlines: wide, heavy, capitals (base layer) */
+  --font-sans: "Archivo Variable", system-ui, sans-serif;
+  --font-gothic: "UnifrakturMaguntia", serif; /* ornaments only */
   --font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
   --text-*: initial;
@@ -90,11 +91,57 @@
   }
 }
 
+/* Redesign brief (design/NOTES.md): dark and rich, no outlined boxes, grunge texture, strong sans. */
 @layer base {
   html {
     color-scheme: dark;
-    background: var(--color-bg-base);
+    background:
+      radial-gradient(70rem 40rem at 0% -10%, rgb(125 0 24 / 0.35), transparent 60%),
+      radial-gradient(60rem 50rem at 110% 110%, rgb(37 67 93 / 0.45), transparent 60%),
+      var(--color-bg-base);
+    background-attachment: fixed;
     color: var(--color-text-primary);
     font-family: var(--font-sans);
   }
+  /* Film grain over everything (an inline SVG, no image file); never catches clicks. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27160%27 height=%27160%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E");
+  }
+  h1, h2, .font-display {
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  h3 { font-stretch: 105%; font-weight: 700; letter-spacing: 0.02em; }
+}
+
+@layer components {
+  /* Swiss-punk tag: light text block on the dark page, capitals. */
+  .tag { display: inline-block; background: var(--color-text-primary); color: var(--color-on-fill); padding: 2px 8px; font-size: var(--text-xs); font-weight: 800; font-stretch: 120%; letter-spacing: 0.08em; text-transform: uppercase; }
+  /* Small uppercase kicker above a headline. */
+  .kicker { font-size: var(--text-xs); font-weight: 700; font-stretch: 120%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-bright); }
+  /* Huge words drawn as outlines only, behind photos (editorial). */
+  .outline-text { color: transparent; -webkit-text-stroke: 1.5px var(--color-text-secondary); }
+  /* Thin marks in the four corners instead of a frame. */
+  .corner-marks {
+    background:
+      linear-gradient(var(--color-text-secondary) 0 0) top left / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) top left / 1px 14px no-repeat,
+      linear-gradient(var(--color-text-secondary) 0 0) top right / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) top right / 1px 14px no-repeat,
+      linear-gradient(var(--color-text-secondary) 0 0) bottom left / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) bottom left / 1px 14px no-repeat,
+      linear-gradient(var(--color-text-secondary) 0 0) bottom right / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) bottom right / 1px 14px no-repeat;
+  }
+  /* A ragged, torn bottom edge (cards, heroes). */
+  .torn { mask: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 6%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 0H100V3L96 5 91 2.5 86 5.5 80 3 74 5 69 2 63 5.5 57 3.5 51 5 45 2.5 39 5.5 33 3 27 5 21 2.5 15 5.5 9 3 4 5 0 3Z%27/%3E%3C/svg%3E") bottom / 100% 10px no-repeat, linear-gradient(#000 0 0) top / 100% calc(100% - 9px) no-repeat; }
+  /* A soft panel: a fill and a little light from the top, never an outline. */
+  .panel { background: linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65)); border-radius: var(--radius-card); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(185 211 226 / 0.06); }
 }

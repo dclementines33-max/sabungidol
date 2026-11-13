@@ -42,7 +42,7 @@ function AllTimeRecords() {
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
           Cari nama
-          <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className="mt-1 block rounded-control border border-border-strong bg-surface px-2 py-1 text-text-primary" />
+          <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className="mt-1 block rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary" />
         </label>
         <Select label="Minimal match (rekor %)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
       </div>

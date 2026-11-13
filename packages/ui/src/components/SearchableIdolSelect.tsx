@@ -67,10 +67,10 @@ export function SearchableIdolSelect({ label, idolIds, value, onChange, placehol
             setOpen(false);
           }
         }}
-        className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 placeholder:text-text-secondary focus-visible:outline-2 focus-visible:outline-accent-bright"
+        className="mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 placeholder:text-text-secondary focus-visible:outline-2 focus-visible:outline-accent-bright"
       />
       {open && (
-        <ul id={`${id}-list`} role="listbox" aria-label={label} className="absolute z-30 mt-1 max-h-72 w-full list-none overflow-auto rounded-card border border-border bg-bg-raised p-1">
+        <ul id={`${id}-list`} role="listbox" aria-label={label} className="absolute z-30 mt-1 max-h-72 w-full list-none overflow-auto panel p-1">
           {matches.length === 0 && <li className="px-3 py-2 text-sm text-text-secondary">Tidak ada idol yang cocok</li>}
           {matches.map((idolId, i) => {
             const idol = lookup(idolId)!;

@@ -39,7 +39,7 @@ function SabungIdol() {
         <p className="m-0 text-text-secondary">Periksa roster dan pengaturan di Settings, lalu mulai. Setelah dimulai, roster liga dikunci.</p>
         <Button variant="primary" onClick={start}><Play aria-hidden="true" size={16} strokeWidth={1.5} /> Mulai {season.name}</Button>
         {problems.length > 0 && (
-          <div role="alert" className="rounded-card border border-danger p-3 text-sm">
+          <div role="alert" className="rounded-card bg-danger/10 p-3 text-sm">
             <p className="m-0 font-medium">Belum bisa dimulai:</p>
             <ul className="m-0 mt-1 pl-5">{problems.map((p) => <li key={p}>{p}</li>)}</ul>
           </div>

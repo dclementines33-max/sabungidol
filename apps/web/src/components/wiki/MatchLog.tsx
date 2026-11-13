@@ -21,7 +21,7 @@ export function MatchLog({ filter, newest = true, label = "Match" }: { filter: M
     <div className="space-y-3">
       <p className="m-0 text-sm text-text-secondary" aria-live="polite">{label}: {total ?? 0} match</p>
       {rows.length > 0 && (
-        <ul className="m-0 list-none divide-y divide-border rounded-card border border-border p-0 text-sm" aria-label={label}>
+        <ul className="m-0 list-none divide-y divide-border panel p-0 text-sm" aria-label={label}>
           {rows.map((m) => (
             <li key={m.id} className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 py-2 sm:grid-cols-[11rem_minmax(0,1fr)_auto_minmax(0,1fr)]">
               <span className="col-span-3 font-mono text-xs text-text-secondary sm:col-span-1">{m.id.split("-").slice(0, 4).join(" · ")}</span>

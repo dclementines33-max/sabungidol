@@ -37,7 +37,7 @@ export function EngineLab({ idolIds, ratingOf, tuning }: { idolIds: string[]; ra
         <SearchableIdolSelect label="Idol B" idolIds={idolIds} value={b} onChange={(v) => { setB(v); setScores(null); }} />
         <label className="text-sm text-text-secondary">Format
           <select value={bestOf} onChange={(e) => { setBestOf(Number(e.target.value) as BestOf); setScores(null); }}
-            className="mt-1 block w-28 rounded-control border border-border-strong bg-surface px-2 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright">
+            className="mt-1 block w-28 rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright">
             {[3, 4, 5, 7].map((n) => <option key={n} value={n}>Bo{n}</option>)}
           </select>
         </label>

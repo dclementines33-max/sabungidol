@@ -20,7 +20,7 @@ export function ProfileOverview({ badges, titles, history, rating }: Props) {
         <h3 id="badges" className={H3}>Badge</h3>
         {badges.length ? (
           <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-            {badges.map((b) => <li key={`${b.badge}-${b.season}`} className="rounded-control border border-border-strong px-2 py-1 text-sm">{BADGES[b.badge] ?? b.badge} <span className="text-text-secondary">S{b.season}</span></li>)}
+            {badges.map((b) => <li key={`${b.badge}-${b.season}`} className="rounded-control bg-surface-hover/60 px-2 py-1 text-sm">{BADGES[b.badge] ?? b.badge} <span className="text-text-secondary">S{b.season}</span></li>)}
           </ul>
         ) : <p className="m-0 text-sm text-text-secondary">Belum ada badge.</p>}
       </section>

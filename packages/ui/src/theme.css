@@ -1,5 +1,7 @@
-/* Everything an app needs from the design system: self-hosted fonts (work offline) + tokens. */
-@import "@fontsource-variable/fraunces";
-@import "@fontsource-variable/geist";
+/* Everything an app needs from the design system: self-hosted fonts (work offline) + tokens. Archivo is one
+   variable file for body text and for wide or condensed headlines (font-stretch 62–125%); the blackletter is
+   only for ornaments (big numbers, stamps), never for running text. */
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/unifrakturmaguntia";
 @import "@fontsource-variable/geist-mono";
 @import "./tokens.css";

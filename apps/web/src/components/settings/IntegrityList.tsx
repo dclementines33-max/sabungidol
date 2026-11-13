@@ -26,7 +26,7 @@ export function IntegrityList() {
       {issues && issues.length === 0 && <p className="m-0 text-sm text-cool">Tidak ada masalah.</p>}
       <ul className="m-0 list-none space-y-2 p-0">
         {issues?.map((issue) => (
-          <li key={issue.code} className="flex flex-wrap items-center gap-3 rounded-control border border-border p-2 text-sm">
+          <li key={issue.code} className="flex flex-wrap items-center gap-3 rounded-control bg-surface/40 p-2 text-sm">
             <span className={`font-mono ${issue.level === "error" ? "text-danger" : "text-accent-bright"}`}>{issue.code}</span>
             <span className="min-w-0 flex-1">{issue.message}</span>
             {issue.fix === "inactive-manager" && <Link to="/studio/inactive" className={LINK}>Buka Inactive Manager</Link>}

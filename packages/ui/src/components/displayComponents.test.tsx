@@ -57,7 +57,7 @@ describe("IdolCard", () => {
     render(<SampleIdols><IdolCard idolId="mina" /></SampleIdols>);
     expect(screen.getByText("Mina Kim")).toBeTruthy();
     expect(screen.getByText("Aurora")).toBeTruthy();
-    expect(screen.getByLabelText("Rating 92, tier S").className).toContain("bg-tier-s");
+    expect(screen.getByLabelText("Rating 92, tier S").innerHTML).toContain("bg-tier-s");
     expect(screen.queryByLabelText(/On Fire/)).toBeNull();
     expect(screen.getByLabelText("7 titles")).toBeTruthy();
   });

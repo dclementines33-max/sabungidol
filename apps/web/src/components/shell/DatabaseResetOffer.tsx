@@ -10,7 +10,7 @@ export function DatabaseResetOffer() {
   const [open, setOpen] = useState(false);
   if (!database) return null;
   return (
-    <div className="mb-4 rounded-card border border-border-strong bg-surface p-4">
+    <div className="mb-4 rounded-card bg-surface-hover/60 bg-surface p-4">
       <p className="m-0 text-sm">Database di browser ini tidak bisa dibuka, dan tidak ada tanda bahwa data pernah tersimpan di sini (belum pernah selesai dibuat, atau isinya dihapus oleh browser). Kalau memuat ulang tidak membantu, mulai lagi dengan database kosong; punya backup .sabung? Impor sesudahnya.</p>
       <Button variant="danger" className="mt-3" onClick={() => setOpen(true)}>Mulai ulang database…</Button>
       <ConfirmDialog

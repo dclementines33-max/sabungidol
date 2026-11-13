@@ -36,7 +36,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
           const bad = problems.some((p) => p.league === code);
           return (
             <button key={code} type="button" disabled={!draft} onClick={() => setLeague(code)}
-              className="flex items-center gap-3 rounded-card border border-border border-l-4 bg-surface p-3 text-left hover:bg-surface-hover disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright"
+              className="flex items-center gap-3 panel border-l-4 bg-surface p-3 text-left hover:bg-surface-hover disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright"
               style={{ borderLeftColor: b.color ? `var(--color-${b.color})` : undefined }}>
               <CompetitionLogo logoId={b.logoId} className="size-10" />
               <span className="min-w-0 flex-1">
@@ -50,7 +50,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
       </div>
       {problems.length > 0
         ? (
-          <div role="alert" className="rounded-card border border-danger p-3">
+          <div role="alert" className="rounded-card bg-danger/10 p-3">
             <h3 className="m-0 mb-1 text-sm font-medium text-danger">{problems.length} masalah roster</h3>
             <ul className="m-0 space-y-1 pl-5 text-sm">{problems.map((p) => <li key={`${p.league}-${p.text}`}><span className="font-mono">{p.league}</span> {brand(p.league).name}: {p.text}</li>)}</ul>
           </div>

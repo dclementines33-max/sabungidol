@@ -37,7 +37,7 @@ function Home() {
       <section aria-labelledby="on-fire" className="space-y-2">
         <h2 id="on-fire" className="m-0 font-display text-xl uppercase">On Fire</h2>
         {o.onFire.length === 0 ? <p className="m-0 text-sm text-text-secondary">Tidak ada idol dengan 5+ kemenangan beruntun.</p>
-          : <ul className="m-0 flex list-none flex-wrap gap-3 p-0 text-sm">{o.onFire.map((f) => <li key={f.idolId} className="rounded-control border border-border-strong px-2 py-1"><IdolLink id={f.idolId} /> <span className="font-mono">{f.streak}×</span></li>)}</ul>}
+          : <ul className="m-0 flex list-none flex-wrap gap-3 p-0 text-sm">{o.onFire.map((f) => <li key={f.idolId} className="rounded-control bg-surface-hover/60 px-2 py-1"><IdolLink id={f.idolId} /> <span className="font-mono">{f.streak}×</span></li>)}</ul>}
       </section>
       <p className="m-0 text-sm text-text-secondary">
         {o.lastBackup ? `Backup terakhir ${daysAgo(o.lastBackup)} hari lalu.` : "Belum pernah backup."}{" "}

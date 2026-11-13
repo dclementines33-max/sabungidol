@@ -52,7 +52,7 @@ export function BackupSettings({ seasonId }: { seasonId: string }) {
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
           Bagian
-          <select value={section} onChange={(e) => setSection(e.target.value as BackupSection)} className="mt-1 block rounded-control border border-border-strong bg-surface px-2 py-2 text-text-primary">
+          <select value={section} onChange={(e) => setSection(e.target.value as BackupSection)} className="mt-1 block rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-2 text-text-primary">
             {Object.entries(SECTION_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
           </select>
         </label>

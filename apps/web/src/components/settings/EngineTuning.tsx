@@ -23,11 +23,11 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
     <label className="text-sm text-text-secondary">
       {label}
       <input type="number" min={min} max={max} value={tuning[key]} onChange={(e) => setTuning({ ...tuning, [key]: Number(e.target.value) })}
-        className="mt-1 block w-28 rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary" />
+        className="mt-1 block w-28 rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 text-text-primary" />
     </label>
   );
   return (
-    <section className="space-y-4 rounded-card border border-border bg-bg-raised p-4 md:p-6" aria-labelledby="set-engine">
+    <section className="space-y-4 panel p-4 md:p-6" aria-labelledby="set-engine">
       <h2 id="set-engine" className="m-0 font-display text-lg">Engine Tuning</h2>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Preset">
         {Object.entries(TUNING_PRESETS).map(([name, preset]) => (

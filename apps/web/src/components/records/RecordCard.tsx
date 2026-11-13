@@ -9,7 +9,7 @@ export function RecordCard({ title, rows }: { title: string; rows: RecordRow[] }
   const [all, setAll] = useState(false);
   const shown = all ? rows : rows.slice(0, 10);
   return (
-    <section className="flex flex-col rounded-card border border-border bg-bg-raised p-4" aria-label={title}>
+    <section className="flex flex-col panel p-4" aria-label={title}>
       <h3 className="m-0 mb-3 text-xs tracking-widest text-text-secondary uppercase">{title}</h3>
       {rows.length === 0 ? <p className="m-0 text-sm text-text-secondary">Belum ada.</p> : (
         <ol className="m-0 max-h-[32rem] list-none space-y-1 overflow-auto p-0 text-sm">

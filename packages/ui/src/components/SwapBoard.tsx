@@ -30,7 +30,7 @@ export function SwapBoard({ labels, columns, onChange }: {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {columns.map((ids, column) => (
-        <section key={labels[column]} aria-label={labels[column]} className="rounded-card border border-border bg-surface p-2">
+        <section key={labels[column]} aria-label={labels[column]} className="panel bg-surface p-2">
           <h3 className="m-0 mb-1 text-sm text-text-secondary">{labels[column]}</h3>
           {ids.map((id, row) => {
             const spot = { column, row };
