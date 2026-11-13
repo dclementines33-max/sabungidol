@@ -2,7 +2,7 @@
 // offline with no login — a deep link loads from the service worker cache and the database answers.
 import { expect, test } from "@playwright/test";
 
-const PREVIEW = "http://localhost:5181"; // the built app with its service worker (playwright.config.ts)
+const PREVIEW = process.env.OFFLINE_URL ?? "http://localhost:5181"; // the built app with its service worker (playwright.config.ts), or a deployed URL
 
 test("after one online visit the installed app opens and works offline", async ({ page, context }) => {
   test.setTimeout(240_000);

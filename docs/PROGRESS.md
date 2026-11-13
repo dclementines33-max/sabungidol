@@ -18,7 +18,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
 | Fase 4 Wiki | done, gate passed, approved 2026-11-13 |
-| **Fase 5 Backend** | **in progress: steps 1–3 done; steps 4–6 wait for the user's Supabase keys + `wrangler login`** |
+| **Fase 5 Backend** | **done, gate passed 2026-11-13 (local + online) — waiting for the user's approval** |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
 
@@ -137,13 +137,18 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    "Backup ke cloud" (full .sabung), list, "Pulihkan…" opens the usual ImportDialog with the downloaded file (new
    `file` prop: no picker), "Hapus" with ConfirmDialog. Offline/no API: "Cloud tidak bisa dihubungi", nothing else
    breaks. Dev: vite proxies `/api` → `wrangler dev` on 8787.
-4. ⏳ `be24d0a` prepared: `pnpm --filter @sabung/api setup` (migrations + private bucket, reads `apps/api/.dev.vars`,
-   example in `.dev.vars.example`). WAITING for the user to fill `.dev.vars` and run `npx wrangler login`. Then: run
-   setup, `wrangler dev` locally, sign up + backup by hand.
-5. Deploy: `wrangler secret put` ×4, `pnpm --filter @sabung/web build && pnpm --filter @sabung/api deploy`; check the
-   free plan's 10 ms CPU limit with Better Auth's password hashing (may need the paid plan or a lighter hash).
-6. Gate: `CLOUD_URL=http://localhost:8787 pnpm --filter @sabung/web e2e cloud.e2e.ts` (device A sign up → backup → device
-   B log in → restore Replace → identical table checksums → delete) + `offline.e2e.ts`; then on the deployed URL.
+4. ✅ `be24d0a` Supabase project `sabung-idol` (ref `wulhgztfikmtzlfiuxpf`, region ap-south-1 Mumbai, free plan). Pooler
+   host is `aws-1-ap-south-1.pooler.supabase.com:6543`, user `postgres.wulhgztfikmtzlfiuxpf`. `pnpm --filter @sabung/api setup`
+   applied both migrations (5 tables, RLS on) and created the private bucket `backups`; anonymous REST → 401.
+   `apps/api/.dev.vars` holds DB_HOST/DB_USER/DB_PASSWORD (helpers, user-friendly) + SUPABASE_DB_URL (built from them,
+   password URL-encoded) + SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (legacy JWT) + BETTER_AUTH_SECRET.
+5. ✅ Deployed: **https://sabung-idol.sabung-api.workers.dev** (`pnpm --filter @sabung/web build` then
+   `pnpm --filter @sabung/api exec wrangler deploy`). Secrets: `npx.cmd wrangler secret bulk .dev.vars` in apps/api (run by
+   the user; the auto-mode check refuses Claude moving keys). Free plan: sign-up was NOT blocked by the CPU limit.
+6. ✅ GATE PASSED 2026-11-13: `cloud.e2e.ts` (device A sign up → "Backup ke cloud" → device B log in → "Pulihkan…" →
+   Replace → identical table checksums → delete) on wrangler dev (1.2 min) AND on the deployed URL (4.3 min);
+   `offline.e2e.ts` on the preview build AND on the deployed URL (`OFFLINE_URL=…`). Each run leaves one
+   `gate-<time>@example.com` user in Supabase (backup deleted, user not).
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
@@ -273,6 +278,9 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - Cloud API: `pnpm --filter @sabung/api test` (PGlite) · `pnpm --filter @sabung/api dev` (wrangler, :8787, serves
   `apps/web/dist/client` — build web first) · `pnpm --filter @sabung/api setup` (Supabase migrations + bucket).
   Offline e2e builds the app and serves it on 5181; cloud gate e2e needs `CLOUD_URL`.
+- Deploy: `pnpm --filter @sabung/web build && pnpm --filter @sabung/api exec wrangler deploy`. Gate e2e online:
+  `CLOUD_URL=https://sabung-idol.sabung-api.workers.dev pnpm --filter @sabung/web e2e cloud.e2e.ts` and
+  `OFFLINE_URL=… e2e offline.e2e.ts`. In the user's PowerShell `npx` is blocked (execution policy): use `npx.cmd`.
 - Shell pitfalls: no Python on this machine; sed eats `\d` (use the Edit tool for regex text); a heredoc
   with tricky quoting can fail silently — check the file was written; never edit package.json while
   pnpm is running.
