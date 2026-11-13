@@ -9,7 +9,7 @@ import { StoryCard } from "../story/StoryCard";
 const CARD = "flex h-full flex-col gap-3 panel p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 function Card({ to, kicker, children }: { to: "/play" | "/story"; kicker: string; children: ReactNode }) {
-  return <Link to={to} className={CARD}><span className="text-xs tracking-widest text-text-secondary uppercase">{kicker}</span>{children}</Link>;
+  return <Link to={to} className={CARD}><span className="kicker">{kicker}</span>{children}</Link>;
 }
 
 function Name({ id }: { id: string }) {
@@ -18,10 +18,10 @@ function Name({ id }: { id: string }) {
 
 export function HomeActions({ progress, status, next, story }: { progress: number; status: string; next: { a: string; b: string; comp: string; round: string } | null; story?: Story }) {
   return (
-    <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-3">
+    <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-[1fr_1.3fr_1fr]">
       <li>
         <Card to="/play" kicker={status === "draft" ? "Mulai season" : "Lanjutkan season"}>
-          <span className="font-mono text-3xl">{Math.round(progress * 100)}%</span>
+          <span className="font-display text-[clamp(3.5rem,7vw,5.5rem)] leading-none">{Math.round(progress * 100)}<span className="text-2xl">%</span></span>
           <span className="h-2 overflow-hidden rounded-full bg-surface" aria-hidden="true"><span className="block h-full bg-accent-bright" style={{ width: `${progress * 100}%` }} /></span>
           <span className="text-sm text-text-secondary">kompetisi selesai</span>
         </Card>
@@ -30,9 +30,9 @@ export function HomeActions({ progress, status, next, story }: { progress: numbe
         <Card to="/play" kicker="Match berikutnya">
           {next ? (
             <span className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
-              <span className="flex flex-col items-center gap-1"><IdolPhoto idolId={next.a} size={256} className="w-16" /><Name id={next.a} /></span>
-              <span className="font-display text-text-secondary">vs</span>
-              <span className="flex flex-col items-center gap-1"><IdolPhoto idolId={next.b} size={256} className="w-16" /><Name id={next.b} /></span>
+              <span className="flex min-w-0 flex-col items-center gap-1"><IdolPhoto idolId={next.a} size={256} className="torn w-24" /><Name id={next.a} /></span>
+              <span className="font-gothic text-2xl text-accent-bright">vs</span>
+              <span className="flex min-w-0 flex-col items-center gap-1"><IdolPhoto idolId={next.b} size={256} className="torn w-24" /><Name id={next.b} /></span>
               <span className="col-span-3 text-center font-mono text-xs text-text-secondary">{next.comp} · {next.round}</span>
             </span>
           ) : <span className="text-sm text-text-secondary">Tidak ada match yang menunggu.</span>}

@@ -1,5 +1,6 @@
 // Home (PRD §8). The first season's draft: the onboarding welcome. Otherwise the cinematic Home: hero with
 // the last Unzure champion, three action cards, On This Day, idols On Fire and the last backup.
+import { IdolPhoto } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { HomeActions } from "../components/home/HomeActions";
@@ -35,9 +36,16 @@ function Home() {
       <HomeActions progress={o.progress} status={o.season.status} next={o.next} story={stories?.find((s) => s.kind === "upset") ?? stories?.[0]} />
       <OnThisDay matches={o.onThisDay} />
       <section aria-labelledby="on-fire" className="space-y-2">
-        <h2 id="on-fire" className="m-0 font-display text-xl uppercase">On Fire</h2>
+        <p className="kicker m-0">Menang beruntun 5+</p>
+        <h2 id="on-fire" className="m-0 text-[clamp(2rem,4vw,3rem)]">On Fire</h2>
         {o.onFire.length === 0 ? <p className="m-0 text-sm text-text-secondary">Tidak ada idol dengan 5+ kemenangan beruntun.</p>
-          : <ul className="m-0 flex list-none flex-wrap gap-3 p-0 text-sm">{o.onFire.map((f) => <li key={f.idolId} className="rounded-control bg-surface-hover/60 px-2 py-1"><IdolLink id={f.idolId} /> <span className="font-mono">{f.streak}×</span></li>)}</ul>}
+          : <ul className="m-0 flex list-none gap-5 overflow-x-auto p-0 pb-2 text-sm">{o.onFire.map((f) => (
+              <li key={f.idolId} className="relative w-24 shrink-0 text-center">
+                <IdolPhoto idolId={f.idolId} size={256} className="torn w-24" />
+                <span className="absolute top-0 right-1 font-gothic text-2xl text-accent-bright drop-shadow-[0_2px_6px_rgb(0_0_0/0.9)]">{f.streak}</span>
+                <IdolLink id={f.idolId} className="mt-1 block truncate" />
+              </li>
+            ))}</ul>}
       </section>
       <p className="m-0 text-sm text-text-secondary">
         {o.lastBackup ? `Backup terakhir ${daysAgo(o.lastBackup)} hari lalu.` : "Belum pernah backup."}{" "}

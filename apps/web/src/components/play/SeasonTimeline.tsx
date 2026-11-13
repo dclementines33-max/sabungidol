@@ -21,16 +21,17 @@ const STATUS = {
 export function SeasonTimeline({ competitions }: { competitions: readonly Competition[] }) {
   const byKey = new Map(competitions.map((c) => [c.key, c]));
   return (
-    <ol className="m-0 grid list-none gap-4 p-0 lg:grid-cols-3" aria-label="Fase season">
-      {PHASES.map(([phase, keys]) => (
-        <li key={phase} className="panel p-4">
-          <h2 className="m-0 mb-3 font-display text-lg">{phase}</h2>
+    <ol className="m-0 grid list-none gap-8 p-0 lg:grid-cols-3" aria-label="Fase season">
+      {PHASES.map(([phase, keys], i) => (
+        <li key={phase} className="relative pt-14">
+          <span aria-hidden="true" className="absolute top-0 left-0 font-display text-[3.5rem] leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
+          <h2 className="relative m-0 mb-3 border-b-2 border-accent-bright pb-2 font-display text-lg">{phase}</h2>
           <ul className="m-0 list-none space-y-2 p-0">
             {keys.map((key) => {
               const c = byKey.get(key)!;
               return (
                 <li key={key}>
-                  <Link to="/play/$comp" params={{ comp: PANEL_OF[key] }} className="flex items-center gap-3 rounded-control px-2 py-1 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+                  <Link to="/play/$comp" params={{ comp: PANEL_OF[key] }} className="flex items-center gap-3 border-b border-border px-1 py-2 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
                     <span className="min-w-0 flex-1">{c.name}</span>
                     <span className="font-mono text-xs text-text-secondary tabular-nums">{c.played}</span>
                     <span className={`w-28 text-right text-xs ${STATUS[c.status].className}`}>{STATUS[c.status].label}</span>

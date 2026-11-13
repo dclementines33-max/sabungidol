@@ -1,20 +1,31 @@
-// Home hero (PRD §8; design/refs "another ref": a big photo, huge capital headline): the last Unzure Cup
-// champion with the season name. Before any Unzure final, the season name alone.
+// Home hero (PRD §8; redesign brief: editorial cover + swiss punk): the last Unzure Cup champion huge, the
+// word UNZURE as a giant outline behind the torn photo, an issue tag, a vertical label on the right.
+// Before any Unzure final: the season name alone on the same cover.
 import { IdolPhoto, useIdol } from "@sabung/ui";
 
 export function HomeHero({ seasonName, champion, championSeason }: { seasonName: string; champion: string | null; championSeason?: number }) {
   return (
-    <section aria-label="Sorotan" className="relative flex min-h-64 flex-col justify-end overflow-hidden panel bg-accent p-6 text-on-accent sm:flex-row sm:items-end sm:justify-between">
-      <div className="relative z-[1] space-y-2">
-        <p className="m-0 text-xs tracking-widest uppercase">{champion ? `Juara Unzure Cup · Season ${championSeason}` : "Sabung Idol"}</p>
-        {champion && <ChampionName id={champion} />}
-        <p className="m-0 font-display text-xl uppercase">{seasonName}</p>
+    <section aria-label="Sorotan" className="relative isolate min-h-[26rem] overflow-hidden rounded-card px-5 pt-5 sm:px-10 sm:pt-8"
+      style={{ background: "radial-gradient(50rem 30rem at 75% 110%, rgb(255 77 99 / 0.35), transparent 65%), linear-gradient(120deg, var(--color-accent), var(--color-surface-hover) 45%, var(--color-bg-base))" }}>
+      <p aria-hidden="true" className="outline-text pointer-events-none absolute inset-x-0 bottom-2 -z-10 m-0 text-center font-display text-[clamp(5rem,19vw,16rem)] leading-none whitespace-nowrap opacity-70">
+        {champion ? "UNZURE" : "SABUNG"}
+      </p>
+      <span aria-hidden="true" className="kicker absolute top-1/2 right-3 hidden -translate-y-1/2 text-text-secondary [writing-mode:vertical-rl] sm:block">Sabung Idol · {seasonName}</span>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="tag">Issue Nº {seasonName.replace(/\D/g, "") || "1"}</span>
+        <span className="kicker text-on-accent">{champion ? `Juara Unzure Cup · Season ${championSeason}` : "Sabung Idol"}</span>
       </div>
-      {champion && <IdolPhoto idolId={champion} size={1024} className="mt-4 w-40 shrink-0 sm:mt-0 sm:w-56" />}
+      <div className="mt-6 grid items-end gap-6 md:grid-cols-[1fr_auto]">
+        <div className="space-y-3 pb-10">
+          {champion ? <ChampionName id={champion} /> : <p className="m-0 font-display text-[clamp(2.5rem,7vw,5.5rem)]">{seasonName}</p>}
+          <p className="m-0 font-gothic text-2xl text-on-accent">{seasonName}</p>
+        </div>
+        {champion && <IdolPhoto idolId={champion} size={1024} className="torn w-52 justify-self-center sm:w-72 md:mr-8" />}
+      </div>
     </section>
   );
 }
 
 function ChampionName({ id }: { id: string }) {
-  return <p className="m-0 font-display text-2xl leading-none font-bold break-words uppercase sm:text-3xl">{useIdol(id).name}</p>;
+  return <p className="m-0 max-w-[12ch] font-display text-[clamp(2.75rem,8vw,6.5rem)] break-words">{useIdol(id).name}</p>;
 }

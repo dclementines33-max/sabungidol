@@ -1,6 +1,6 @@
 // A league panel (PRD §8): pick the league (A–F), then Overview / Klasemen / Fixtures / Roster, with
 // play controls for the next matchday or the rest of the league.
-import { Button, IdolCard, StatTile, useIdolLookup } from "@sabung/ui";
+import { Button, IdolCard } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useBranding } from "../../data/branding";
@@ -9,6 +9,7 @@ import { CompetitionLogo } from "../CompetitionLogo";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
+import { CompetitionCover } from "./CompetitionCover";
 import { LeagueFixtures } from "./LeagueFixtures";
 import { LeagueStandings } from "./LeagueStandings";
 import { Tabs } from "./Tabs";
@@ -18,7 +19,6 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
   const [comp, setComp] = useState(codes[0]!);
   const [matchId, setMatchId] = useState<string | null>(null);
   const { progress, running, play } = usePlaySeason();
-  const lookup = useIdolLookup();
   const { brand } = useBranding();
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "league", comp, season?.status], queryFn: () => engine().leagueView(comp), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan liga ini.</p>;
@@ -38,7 +38,13 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
           ))}
         </div>
       )}
-      <h2 className="m-0 flex items-center gap-3 font-display text-2xl"><CompetitionLogo logoId={brand(comp).logoId} />{brand(comp).name}</h2>
+      <CompetitionCover name={brand(comp).name} code={comp} color={brand(comp).color} logoId={brand(comp).logoId}
+        issue={`${season.name} · Fase liga`} hero={leader?.played ? leader.idolId : null}
+        stats={[
+          { label: "Matchday", value: `${playedMds}/38` },
+          { label: "Poin pemimpin", value: leader?.points ?? 0 },
+          { label: "Berikutnya", value: next ? `MD ${Number(next.slice(2))}` : "Selesai" },
+        ]} />
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp, stage: "LG", round: next! })}>Main matchday berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp, stage: "LG" })}>Main sampai akhir liga</Button>
@@ -46,14 +52,11 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
       </div>
       <Tabs label={`Panel ${comp}`} tabs={[
         { id: "overview", label: "Overview", content: () => (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <StatTile label="Matchday" value={`${playedMds}/38`} />
-              <StatTile label="Pemimpin" value={leader && leader.played ? lookup(leader.idolId)?.name ?? "–" : "–"} />
-              <StatTile label="Poin pemimpin" value={leader?.points ?? 0} />
-              <StatTile label="Berikutnya" value={next ? `MD ${Number(next.slice(2))}` : "Selesai"} />
-            </div>
-          </div>
+          <ol className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0" aria-label="Lima teratas">
+            {view.standings.slice(0, 5).map((r, i) => (
+              <li key={r.idolId} className="relative"><span aria-hidden="true" className="absolute -top-3 -left-1 z-[1] font-gothic text-2xl text-accent-bright">{i + 1}</span><IdolCard idolId={r.idolId} /></li>
+            ))}
+          </ol>
         ) },
         { id: "table", label: "Klasemen", content: () => <LeagueStandings zoneKey={zoneKey} rows={view.standings} form={view.form} positions={view.positions} /> },
         { id: "fixtures", label: "Fixtures", content: () => (

@@ -7,10 +7,11 @@ import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
+import { CompetitionCover } from "./CompetitionCover";
 import { usePlaySeason } from "../play/usePlaySeason";
 
 export function CupPanel({ codes, title }: { codes: string[]; title?: string }) {
-  const { label } = useBranding();
+  const { label, brand } = useBranding();
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
   const [matchId, setMatchId] = useState<string | null>(null);
@@ -19,14 +20,18 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan cup ini.</p>;
   if (!view) return <p className="text-text-secondary">Membaca cup…</p>;
   const next = view.cells.find((c) => !c.winner);
+  const played = view.cells.filter((c) => c.score).length;
+  const champion = Object.values(view.titles)[0]?.champion;
   return (
     <section className="space-y-6" aria-label={title ?? comp}>
-      {title && <h2 className="m-0 font-display text-xl">{title}</h2>}
       {codes.length > 1 && (
         <div className="flex flex-wrap gap-1" role="group" aria-label="Cup">
           {codes.map((c) => <Button key={c} aria-pressed={c === comp} className={`px-3 font-mono ${c === comp ? "bg-surface-hover" : ""}`} onClick={() => setComp(c)}>{c}</Button>)}
         </div>
       )}
+      <CompetitionCover name={title ?? label(comp)} code={comp} issue={`${season.name} · ${played}/${view.cells.length} match`}
+        color={comp.startsWith("BS") ? brand(`D1${comp[2]}`).color : undefined} logoId={comp.startsWith("BS") ? brand(`D1${comp[2]}`).logoId : undefined}
+        hero={champion ?? null} heroRole="Juara" stats={[{ label: "Dimainkan", value: played }, { label: "Menunggu", value: view.cells.length - played }]} />
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: [comp] })}>Main sampai selesai</Button>

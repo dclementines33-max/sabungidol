@@ -185,7 +185,11 @@ R1 ✅ Foundation: strong sans (proposal: Archivo variable = body + wide/condens
    `.outline-text` `.corner-marks` `.torn` `.panel`. Button = fills (no outline), caps. Modal = top crimson line + shadow.
    IdolCard = frameless, torn photo, blackletter rating + tier chip, group-colour glow. Script removed every boxed
    outline (58 files): fields = underline on a fill, cards = `.panel`, chips = fills. Only text sizes xs…3xl exist.
-R2 Home, Sabung Idol, competition panels (each competition a "cover": its colour, logo, huge outlined name).
+R2 ✅ Home, Sabung Idol, competition panels: `components/competition/CompetitionCover` (tag, issue line, huge name + giant
+   outline word, stats with colour lines, leader/champion torn photo) on every league and cup panel + Unzure; league Overview =
+   top-5 IdolCards with blackletter ranks. HomeHero = cover with giant UNZURE outline, vertical label, Issue Nº tag; Home
+   progress number huge; On Fire = torn photo strip. /play header with giant blackletter season number; timeline phases 01–03
+   with lines, no panels.
 R3 Wiki pages. R4 Studio pages. Then steps 9–11 in the new style (light theme dropped: the brief keeps it dark).
 
 ## Architecture in one picture

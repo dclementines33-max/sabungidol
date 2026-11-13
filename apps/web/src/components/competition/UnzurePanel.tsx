@@ -7,6 +7,8 @@ import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
+import { useBranding } from "../../data/branding";
+import { CompetitionCover } from "./CompetitionCover";
 import { GroupTable } from "./GroupTable";
 import { MatchList } from "./MatchList";
 import { Tabs } from "./Tabs";
@@ -17,6 +19,7 @@ const COMPS = ["SWS", "LCQ", "UZC"];
 export function UnzurePanel() {
   const season = useCurrentSeason();
   const lookup = useIdolLookup();
+  const { label } = useBranding();
   const { progress, running, play } = usePlaySeason();
   const [matchId, setMatchId] = useState<string | null>(null);
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "cup", "unzure", season?.status], queryFn: () => engine().cupView(COMPS), enabled: season?.status === "live" });
@@ -33,6 +36,9 @@ export function UnzurePanel() {
   const ko = view.cells.filter((c) => c.comp === "UZC" && c.stage !== "GS");
   return (
     <div className="space-y-6">
+      <CompetitionCover name={label("UZC")} code="UZC" issue={`${season.name} · Swiss → LCQ → Grup → Knockout`}
+        hero={view.titles.UZC?.champion ?? null} heroRole="Juara"
+        stats={[{ label: "Dimainkan", value: view.cells.filter((c) => c.score).length }, { label: "Menunggu", value: view.cells.filter((c) => !c.score).length }]} />
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: COMPS })}>Main sampai juara</Button>
