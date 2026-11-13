@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MatchModal } from "./MatchModal";
+import { PAUSE_MS, SPIN_MS } from "./WheelPicker";
 import { SampleIdols } from "./sampleIdols";
 
 afterEach(cleanup);
@@ -62,7 +63,10 @@ describe("MatchModal (PRD §9)", () => {
   it("wheel results are accepted as method wheel", () => {
     const onAccept = open();
     fireEvent.click(screen.getByRole("radio", { name: "Wheel Picker" }));
+    vi.useFakeTimers();
     fireEvent.click(screen.getByRole("button", { name: "Spin all" }));
+    for (let i = 0; i < 3; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));
+    vi.useRealTimers();
     fireEvent.click(accept());
     expect(onAccept).toHaveBeenCalledWith({ method: "wheel", scoreA: 3, scoreB: 0, result: "A", games: ["A", "A", "A"] });
   });
