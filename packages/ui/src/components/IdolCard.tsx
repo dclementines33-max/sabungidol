@@ -12,7 +12,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
   const tier = tierOf(idol.rating);
   const glow = `var(--color-${idol.groupColor ?? "accent"})`;
   return (
-    <article className="relative w-48 overflow-hidden rounded-card bg-bg-raised shadow-[0_28px_40px_-24px_var(--glow)] transition-transform duration-(--duration-base) hover:-translate-y-1"
+    <article className="relative w-48 overflow-hidden rounded-card bg-bg-raised shadow-[0_14px_24px_-18px_var(--glow)] transition-transform duration-(--duration-base) hover:-translate-y-1"
       style={{ "--glow": glow } as React.CSSProperties}>
       <div className="relative">
         <IdolPhoto idolId={idolId} size={256} className="torn w-full rounded-none! contrast-110 saturate-90" />

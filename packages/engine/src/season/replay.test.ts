@@ -75,3 +75,15 @@ describe("one cup of several played to its end", () => {
     expect(bsc.matches.some((m) => m.comp === "MBK")).toBe(false);
   });
 });
+
+describe("a whole round waits at once (Update 3)", () => {
+  it("lists every first-round match of every cup and group as pending, and the seeds of each cup", () => {
+    const leagues = whole.matches.filter((m) => m.stage === "LG");
+    const step = runSeason({ ...input, saved: leagues, target: () => false });
+    const count = (comp: string, round: string) => step.pending.filter((m) => m.comp === comp && m.round === round).length;
+    for (const bs of ["BSA", "BSB", "BSC", "BSD", "BSE", "BSF"]) expect(count(bs, "R1")).toBe(8);
+    expect(step.pending.filter((m) => m.comp === "SWS").length).toBe(32); // round 1 of all four Swiss groups
+    expect(step.entrants.BSA).toHaveLength(16);
+    expect(step.entrants.NUG!.length).toBeGreaterThan(100);
+  });
+});

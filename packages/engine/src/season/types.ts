@@ -34,6 +34,7 @@ export type SeasonResult = {
   pending: MatchRef[]; // reached but not played: what can be played next
   stale: string[]; // saved matches whose pairing no longer happens (an earlier result changed): to delete
   draws: Partial<Record<"swiss" | "lcq" | "pots" | "groups", string[][]>>; // what the Unzure path drew so far
+  entrants: Record<string, string[]>; // seeds of each bracket cup reached so far (key = competition code)
   done: boolean; // every competition finished
 };
 
@@ -42,3 +43,15 @@ export type MatchRef = { id: string; comp: CompetitionCode; stage: StageCode; ro
 
 // Thrown by the match player when a cup reaches a match it may not play; stops that track only.
 export const PENDING = new Error("pending match");
+
+// Plays every match of a batch (a round, a matchday) that may be played and lists the rest as pending,
+// so a panel shows all of them at once; done() then stops the track if anything waits (Update 3).
+export function pendingBatch() {
+  let blocked = false;
+  return {
+    run<T>(play: () => T): T | undefined {
+      try { return play(); } catch (error) { if (error !== PENDING) throw error; blocked = true; return undefined; }
+    },
+    done() { if (blocked) throw PENDING; },
+  };
+}

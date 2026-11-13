@@ -14,6 +14,7 @@ import type { Title } from "./types";
 type Comp = Parameters<MatchPlayer["playKo"]>[0];
 
 function* cup(player: MatchPlayer, comp: Comp, template: BracketMatch[], entrants: string[]): Generator<void, Title> {
+  player.entrants[comp] = entrants;
   const results = yield* bracketRounds(template, entrants, (m, a, b) => player.playKo(comp, m.stage, m.round, m.slot, a, b));
   const final = results.at(-1)!;
   return { champion: final.winner, runnerUp: final.loser };

@@ -18,7 +18,7 @@ function Competition() {
   const { comp } = Route.useParams();
   if (comp === "d1") return <LeaguePanel key={comp} codes={[...D1_LEAGUES]} zoneKey="D1" />;
   if (comp === "d2") return <LeaguePanel key={comp} codes={[...D2_LEAGUES]} zoneKey="D2" />;
-  if (comp === "the-idols") return <div className="space-y-10"><LeaguePanel key={comp} codes={["IDL"]} zoneKey="IDL" /><CupPanel codes={["IDL"]} title="Playoff (double elimination)" /></div>;
+  if (comp === "the-idols") return <LeaguePanel key={comp} codes={["IDL"]} zoneKey="IDL" playoff={() => <CupPanel codes={["IDL"]} title="Playoff (double elimination)" />} />;
   if (comp === "unzure") return <UnzurePanel />;
   const cup = { inkigayo: ["INK"], nugu: ["NUG"], "b-side": [...B_SIDE_CUPS], daesang: ["DSG"], "music-bank": ["MBK"] }[comp];
   return cup ? <CupPanel key={comp} codes={cup} /> : null;

@@ -1,6 +1,7 @@
 // A bracket is a list of matches whose sides come from a seed or from an earlier match.
 // Templates are plain data; runBracket plays them in order.
 import type { StageCode } from "@sabung/shared";
+import { PENDING, pendingBatch } from "./season/types";
 
 export type Source = { seed: number } | { winner: string } | { loser: string };
 export type BracketMatch = { key: string; stage: StageCode; round: string; slot: number; a: Source; b: Source };
@@ -36,6 +37,7 @@ export function runBracket(template: BracketMatch[], entrants: string[], play: P
 // Same, but pauses after each round so a season can interleave several cups.
 export function* bracketRounds(template: BracketMatch[], entrants: string[], play: Play): Generator<void, BracketResult[]> {
   const done = new Map<string, BracketResult>();
+  const waiting = new Set<string>();
   const resolve = (s: Source): string => {
     if ("seed" in s) {
       const id = entrants[s.seed - 1];
@@ -44,16 +46,23 @@ export function* bracketRounds(template: BracketMatch[], entrants: string[], pla
     }
     const key = "winner" in s ? s.winner : s.loser;
     const earlier = done.get(key);
+    if (!earlier && waiting.has(key)) throw PENDING; // same round, waits for a match still pending
     if (!earlier) throw new Error(`Bracket match ${key} is used before it is played`);
     return "winner" in s ? earlier.winner : earlier.loser;
   };
+  let batch = pendingBatch(); // one round: every match that can be reached is played or listed pending
   for (const [i, match] of template.entries()) {
     const previous = template[i - 1];
-    if (previous && (previous.stage !== match.stage || previous.round !== match.round)) yield;
-    const a = resolve(match.a);
-    const b = resolve(match.b);
-    const aWon = play(match, a, b) === "A";
+    if (previous && (previous.stage !== match.stage || previous.round !== match.round)) { batch.done(); yield; batch = pendingBatch(); }
+    const played = batch.run(() => {
+      const a = resolve(match.a);
+      const b = resolve(match.b);
+      return { a, b, aWon: play(match, a, b) === "A" };
+    });
+    if (!played) { waiting.add(match.key); continue; }
+    const { a, b, aWon } = played;
     done.set(match.key, { ...match, a, b, winner: aWon ? a : b, loser: aWon ? b : a });
   }
+  batch.done();
   return [...done.values()];
 }

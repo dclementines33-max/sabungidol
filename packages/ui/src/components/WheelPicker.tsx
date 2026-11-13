@@ -39,15 +39,16 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [auto, setAuto] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined); // the pause before the next "Spin all" spin
+  const stop = useRef<ReturnType<typeof setTimeout>>(undefined); // the wheel stopping; its own timer, or the pause clean-up cancels it
+  useEffect(() => () => { clearTimeout(timer.current); clearTimeout(stop.current); }, []);
   const { scoreA, scoreB, result } = seriesState(bestOf, games);
 
   const spin = () => {
     const { winner, angle } = landing(random());
     setRotation((r) => Math.ceil(r / 360) * 360 + 5 * 360 + (360 - angle)); // the pointer (top) reads wheel angle -rotation
     setSpinning(true);
-    timer.current = setTimeout(() => {
+    stop.current = setTimeout(() => {
       setSpinning(false);
       onChange([...games, winner]);
     }, reducedMotion() ? 0 : SPIN_MS);

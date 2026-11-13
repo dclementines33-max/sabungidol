@@ -12,7 +12,7 @@ import { type SwissMatch, swissPairings, swissRecords } from "../swissPairing";
 import { type RankedIdol, crossLeague, snake } from "./crossLeague";
 import type { LeagueTables } from "./leaguePhase";
 import type { MatchPlayer } from "./matchPlayer";
-import type { SeasonInput, Title } from "./types";
+import { type SeasonInput, type Title, pendingBatch } from "./types";
 
 const LETTERS = "ABCDEFGHIJKLMNOP";
 
@@ -31,12 +31,17 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
   for (let round = 1; ; round++) {
     const live = swissGroups.map((ids, g) => [...swissRecords(ids, history[g]).values()].some((r) => r.wins < 3 && r.losses < 3));
     if (!live.includes(true)) break;
+    const batch = pendingBatch(); // all four groups list their round at once
     swissGroups.forEach((ids, g) => {
       if (!live[g]) return;
       const { pairs, fallback } = swissPairings(ids, history[g], matchRng(input.seed, `SWS-${LETTERS[g]}-R${round}`));
       if (fallback) notices.push(`Swiss group ${LETTERS[g]} round ${round}: no equal-record pairing, nearest record used`);
-      pairs.forEach(([a, b], i) => history[g].push({ a, b, winner: player.playKo("SWS", "SW", `${LETTERS[g]}-R${round}`, i + 1, a, b) === "A" ? a : b }));
+      pairs.forEach(([a, b], i) => {
+        const won = batch.run(() => player.playKo("SWS", "SW", `${LETTERS[g]}-R${round}`, i + 1, a, b));
+        if (won) history[g].push({ a, b, winner: won === "A" ? a : b });
+      });
     });
+    batch.done();
     yield;
   }
   const finished = (w: number, l: number) => swissGroups.flatMap((ids, g) => [...swissRecords(ids, history[g])].filter(([, r]) => r.wins === w && r.losses === l).map(([id]) => id));
@@ -71,6 +76,7 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
   const ko = seedKnockout(finishes, matchRng(input.seed, "UZC-KO-DRAW"));
   if (ko.relaxed) notices.push("Unzure Cup round of 32: league mates had to meet");
 
+  player.entrants.UZC = ko.pairs.flat();
   const results = yield* bracketRounds(knockoutTemplate([32], { thirdPlace: true }), ko.pairs.flat(),
     (m, a, b) => player.playKo("UZC", m.stage, m.round, m.slot, a, b));
   const final = results.at(-1)!;
@@ -81,9 +87,14 @@ export function* unzurePath(input: SeasonInput, player: MatchPlayer, tables: Lea
 function* roundRobinGroups(player: MatchPlayer, comp: "LCQ" | "UZC", stage: "LQ" | "GS", groups: string[][]): Generator<void, StandingRow[][]> {
   const schedules = groups.map((ids) => roundRobin(ids, { double: false }));
   const played = groups.map(() => [] as NonNullable<ReturnType<MatchPlayer["play"]>>[]);
+  const batch = pendingBatch(); // fixtures do not depend on results: every matchday is listed at once
   for (let md = 0; md < schedules[0].length; md++) {
-    schedules.forEach((rounds, g) => rounds[md].forEach(([a, b], i) => played[g].push(player.play(comp, stage, `${LETTERS[g]}-MD${md + 1}`, i + 1, a, b)!)));
+    schedules.forEach((rounds, g) => rounds[md].forEach(([a, b], i) => {
+      const m = batch.run(() => player.play(comp, stage, `${LETTERS[g]}-MD${md + 1}`, i + 1, a, b));
+      if (m) played[g].push(m);
+    }));
     yield;
   }
+  batch.done();
   return groups.map((ids, g) => computeStandings(ids.map((id) => ({ id, startRating: player.rating(id) })), played[g]));
 }

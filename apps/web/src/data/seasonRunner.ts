@@ -161,7 +161,7 @@ export async function cupView(db: Db, comps: string[], seasonId?: string) {
   const leagues = input.leagues as Record<string, string[]>;
   const size = (codes: readonly string[]) => codes.reduce((n, c) => n + (leagues[c]?.length ?? 0), 0);
   const off = new Set(input.config?.off ?? []);
-  const skeletons = comps.filter((c) => !off.has(competitionKeyOf(c))).map((c) => bracketSkeleton(c, [...played, ...open], size(D2_LEAGUES), size(D1_LEAGUES)));
+  const skeletons = comps.filter((c) => !off.has(competitionKeyOf(c))).map((c) => bracketSkeleton(c, [...played, ...open], size(D2_LEAGUES), size(D1_LEAGUES), result.entrants[c]));
   const order = new Map(skeletons.flatMap((s) => s.order).map((key, i) => [key, i]));
   const at = (c: CupCell) => order.get(c.key) ?? -1; // group / Swiss cells (no template) stay first, in play order
   return {

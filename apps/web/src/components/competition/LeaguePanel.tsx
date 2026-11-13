@@ -2,7 +2,7 @@
 // play controls for the next matchday or the rest of the league.
 import { Button, IdolCard } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useBranding } from "../../data/branding";
 import { engine } from "../../data/engineClient";
 import { CompetitionLogo } from "../CompetitionLogo";
@@ -14,7 +14,9 @@ import { LeagueFixtures } from "./LeagueFixtures";
 import { LeagueStandings } from "./LeagueStandings";
 import { Tabs } from "./Tabs";
 
-export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: string }) {
+
+// playoff: an extra tab after Roster (The Idols' double elimination playoff, Update 3)
+export function LeaguePanel({ codes, zoneKey, playoff }: { codes: string[]; zoneKey: string; playoff?: () => ReactNode }) {
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
   const [matchId, setMatchId] = useState<string | null>(null);
@@ -48,6 +50,7 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp, stage: "LG", round: next! })}>Main matchday berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp, stage: "LG" })}>Main sampai akhir liga</Button>
+        {codes.length > 1 && <Button disabled={running} onClick={() => play({ kind: "comps", comps: codes })}>Simulate semua liga</Button>}
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
       </div>
       <Tabs label={`Panel ${comp}`} tabs={[
@@ -65,6 +68,7 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
         { id: "roster", label: "Roster", content: () => (
           <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">{view.roster.map((id) => <li key={id}><IdolCard idolId={id} /></li>)}</ul>
         ) },
+        ...(playoff ? [{ id: "playoff", label: "Playoff", content: playoff }] : []),
       ]} />
       <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </div>

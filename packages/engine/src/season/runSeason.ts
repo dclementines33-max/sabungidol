@@ -15,7 +15,7 @@ export function runSeason(input: SeasonInput): SeasonResult {
   const player = createMatchPlayer(input);
   const notices: string[] = [];
   const titles: SeasonResult["titles"] = {};
-  const result = (done: boolean): SeasonResult => ({ matches: player.matches, titles, notices, pending: player.pending, stale: player.stale, draws: player.draws, done });
+  const result = (done: boolean): SeasonResult => ({ matches: player.matches, titles, notices, pending: player.pending, stale: player.stale, draws: player.draws, entrants: player.entrants, done });
 
   const ids = new Set(input.idols.map((i) => i.id));
   Object.assign(titles, playOpener(player, input.config?.opener, (id) => ids.has(id)));

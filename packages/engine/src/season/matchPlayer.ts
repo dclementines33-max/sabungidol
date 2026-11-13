@@ -58,5 +58,6 @@ export function createMatchPlayer(input: SeasonInput) {
 
   // What the cups drew, for the panels: Swiss groups, LCQ groups, the 4 Unzure pots, the 16 Unzure groups.
   const draws: Partial<Record<"swiss" | "lcq" | "pots" | "groups", string[][]>> = {};
-  return { play, playKo, matches, pending, stale, draws, endLeaguePhase: () => { inLeaguePhase = false; }, rating: (id: string) => rating.get(id)! };
+  const entrants: Record<string, string[]> = {}; // each bracket cup's seeds, best first (panels show them before they play)
+  return { play, playKo, matches, pending, stale, draws, entrants, endLeaguePhase: () => { inLeaguePhase = false; }, rating: (id: string) => rating.get(id)! };
 }

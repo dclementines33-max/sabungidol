@@ -226,6 +226,25 @@ U5 ✅ Groups: groupStats(+byComp, record) + GroupEntry list; worker titlesByCom
 U6 ✅ components/PageHeader on Studio + remaining wiki pages + Story. R4 ✅ (2026-11-14): tokens.css .studio-flow/.studio-section
    (numbered chapter: crimson rule, blackletter 01…, big h2) = settings SECTION + Input Data + Rating Manager sections. Nav: Idol Profile, Season Progression.
 
+### Update 3 plan (APPROVED 2026-11-14) — doc "Beberapa update dan perubahan 2.docx" (12 pictures, not in git)
+V1 ✅ engine season/types pendingBatch: a round (bracket), a Swiss round of all groups, and EVERY group matchday are played or
+   listed pending together (was: the first pending match stopped the track, so panels showed 1 match at a time). SeasonResult
+   .entrants = each bracket cup's seeds → bracketSkeleton fills seeded slots early. WheelPicker spin has its own timer (the
+   "Spin all" pause clean-up cancelled it: stuck after one spin). Bracket: final/GF in its own column at the right (big,
+   gold), 3RD under it; double-elim round names (Ronde 1, Final upper, Lower ronde N, Final lower). CupPanel champions above
+   the play buttons; IdolCard glow smaller. The Idols playoff = "Playoff" tab of LeaguePanel; D1/D2 "Simulate semua liga".
+V2 MatchModal redesign (per-competition look, grand final special), live sim without the "Game x / N" spoiler, wheel look.
+V3 Visuals: photo frame instead of torn edge, tier colours S/A/B/C/D distinct, "1×" badge, Season Story colours/layout,
+   the "T1/T2" column, Dashboard "Seberapa jauh" → The Idols position movement, honours podium = season top 3 (all comps),
+   tier distribution strip, Rating Manager as cards (slider, ±5, quick values, record, cups).
+V4 Panels: Girl Groups as a panel (all groups + add a group; logo missing in group stats), H2H rival area clickable,
+   partial backup download (idols, ratings, groups, branding, rosters).
+V5 Engine: every Simulate = new roll (PRD §5.4 re-roll salt), small tweak, Nugu/B-Side upsets (fatigue), new rating
+   progression (harder growth when high, faster when low; W-D-L, titles, upsets) with prestige order UZC > IDL > D1 >
+   INK ("Crown Cup" = Inkigayo, user 2026-11-14) > NUG > BS > DSG > MBK > D2.
+V6 (asked 2026-11-14) idol data from the web: birthday, nationality, role in group (new field), new idols + groups, photos
+   (user: any free source is fine, non-commercial fun app).
+
 ## Architecture in one picture
 
 ```

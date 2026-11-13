@@ -35,6 +35,7 @@ describe("WheelPicker (PRD §9)", () => {
     vi.useFakeTimers();
     render(<Harness bestOf={5} sequence={[0.7, 0.2]} />); // B, A, B, A, B
     fireEvent.click(screen.getByRole("button", { name: "Spin all" }));
+    act(() => vi.advanceTimersByTime(1)); // the wheel starts and React renders before it stops (Update 3 bug: it never stopped)
     act(() => vi.advanceTimersByTime(SPIN_MS));
     expect(screen.getByText("0–1")).toBeTruthy(); // one game per spin, not all at once
     for (let i = 0; i < 4; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));
