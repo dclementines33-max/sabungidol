@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: step 1 done, next step 2** |
+| **Fase 4 Wiki** | **in progress: steps 1–2 done, next step 3** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -71,7 +71,11 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    Was: Stats foundation: `placements` written per finished competition (§7.2, reuses seasonClose bracket places),
    career stats §7.1 per idol × competition + Combined into `stats_cache`, "Rebuild Stats" in Settings → Data,
    a headless 20-season synthetic generator (promotion + progression) for tests; the GATE test built here first.
-2. Records engine §7.3 (pure): competition ranking 1, 2, T3, T3, 5; fixed global rank; min matches 50; scope
+2. ✅ Records engine: engine stats/records.ts (RECORD_CATEGORIES, rankRecords competition ranking, allTimeRecords
+   minMatches + include scope, rankLabel), stats/matchRecords.ts (pairs = H2H per pair, top-100 upsets), fold got
+   reverseSweeps/finals/invincibleSeasons/bestLeagueSeasonPoints; cache {seasons, state, records}; careerStats returns
+   {rows, pairs, upsets}. Not tracked: "first season reached" tie step, season-range scope.
+   Was: Records engine §7.3 (pure): competition ranking 1, 2, T3, T3, 5; fixed global rank; min matches 50; scope
    filters; deterministic tie-breaks; all categories.
 3. Achievements §7.4: badges computed when a competition finishes, stored with proof match, celebration popup.
 4. Idol Profile `/wiki/idols/$id`: hero, tabs Overview (badges, titles, rating history chart), Career, Seasons,

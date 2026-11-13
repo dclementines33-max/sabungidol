@@ -24,3 +24,5 @@ export * from "./season/seasonClose";
 export * from "./season/placements";
 export * from "./season/synthetic";
 export * from "./stats/careerStats";
+export * from "./stats/matchRecords";
+export * from "./stats/records";
