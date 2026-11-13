@@ -14,6 +14,7 @@ import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
+import { PageHeader } from "../../components/PageHeader";
 
 export const Route = createFileRoute("/studio/ratings")({ component: RatingManager });
 
@@ -56,6 +57,7 @@ function RatingManager() {
 
   return (
     <div className="space-y-8">
+      <PageHeader tag="Rating Manager" title="Atur kekuatan setiap idol" note="Usulan rating untuk season berikutnya, preset, dan Engine Lab." />
       <section aria-labelledby="draft" className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           <h2 id="draft" className="m-0 font-display text-xl">Draft: {diff.length} perubahan</h2>

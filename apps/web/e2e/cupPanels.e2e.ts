@@ -13,7 +13,7 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.goto("/play");
   await page.getByRole("button", { name: "Mulai Season 1" }).click();
   await page.getByRole("button", { name: "Main matchday 1 semua liga" }).click(); // U1: one matchday in every league
-  await expect(page.getByText(/^1\d\d match dimainkan$/)).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText(/^1\d\d match dimainkan$/).first()).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
   await expect(page.getByText(/4\.8\d\d match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
 

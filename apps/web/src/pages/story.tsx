@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Select } from "../components/idolDatabase/IdolFilters";
 import { StoryCard } from "../components/story/StoryCard";
 import { engine } from "../data/engineClient";
+import { PageHeader } from "../components/PageHeader";
 
 export const Route = createFileRoute("/story")({ component: SeasonStory });
 
@@ -21,6 +22,7 @@ function SeasonStory() {
   if (!played.length) return <EmptyState icon={Newspaper} title="Belum ada berita" description="Season Story terisi begitu season dimainkan." />;
   return (
     <div className="space-y-6">
+      <PageHeader tag="Season Story" title="Berita dari setiap season" note="Kejutan, rekor dan drama yang tercatat otomatis." />
       <Select label="Season" value={seasonId!} onChange={setPicked} options={played.map((s): [string, string] => [s.id, s.name])} />
       {!stories ? <p className="text-text-secondary">Menulis berita…</p> : stories.length === 0 ? <p className="text-text-secondary">Belum ada match di season ini.</p> : (
         <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3" aria-label="Berita season">

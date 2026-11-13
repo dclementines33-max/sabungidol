@@ -196,14 +196,22 @@ R3 Wiki pages. R4 Studio pages. Then steps 9–11 in the new style (light theme 
 U1 ✅ Sim controls: PlayTarget `comps` takes an optional `round` ("R1" = every group's "A-R1"…; data/seasonRunner `allows` + test).
    /play "Main matchday N semua liga"; Unzure "Main Swiss R1" (all groups) / "Main sampai akhir {fase}" / juara; B-Side
    "Ronde X di semua cup" + "Semua cup sampai selesai". League panels already had matchday / end of league.
-U2 Brackets + stages: full bracket from the start (empty slots blank) for IDL playoff, UZC KO, Inkigayo (double elim),
-   B-Side, Nugu (fixtures until R16, bracket from R16); Swiss as a record-grid bracket; LCQ + UZC groups = standings beside
-   schedule with group tabs; Daesang + Music Bank grand and epic.
-U3 Home (drop next match + On Fire; random facts, totals, all-time leaders) + Dashboard (drop defending champ, most titles,
-   On Fire; tournament order/format map, D1 standings, D1 title race chart).
-U4 New page Season Progression (wiki): D1 title race + more charts.
-U5 Wiki: Girl group stats, Career stats per format, H2H tale of the tape, Idol profile with picker, Hall of Champions.
-U6 Polish pass on every page + R4 Studio.
+U2 ✅ data/bracketSkeleton (engine templates → every slot from the start, id "" = blank, cells sorted in template order;
+   a match is OPEN when it has no score: group draws have no winner). TournamentBracketTree = photos, score per side,
+   connectors, round names. SwissPlayInBracket = 5 rounds × record buckets with blanks + clickable open (prop open[round]).
+   components/competition GroupStage (group tabs, table beside schedule), GroupTable with photos, GalaStage (DSG/MBK),
+   Nugu rounds with more than 8 matches = MatchList, bracket from R16.
+U3 ✅ data/homeFacts (leaders + facts, pure + test) via overview (leaders, facts, totals; next/reigning/onFire removed).
+   Home = HomeNumbers / HomeFact / HomeLeaders. Dashboard = header, dashboard/D1Board (6 D1 tabs, LineRace title race +
+   zone table), dashboard/TournamentMap (static order + formats), loose CSS columns of DashboardCard (no box).
+U4 ✅ /wiki/progression: progression/RaceGrid (6 races), Bump (positions), progress bars, TitleShare. charts/LineRace +
+   charts/titleRace (pointsByMatchday + test) are shared.
+U5 ✅ Groups: groupStats(+byComp, record) + GroupEntry list; worker titlesByComp. Career: careerColumns columnsFor(comp)
+   (no titles for SWS/LCQ; UZC group exit/advance), ColumnPicker per tab, Podium. Profile: ProfileHero dossier with picker,
+   CareerScope; /wiki/profile = top-rated idol. H2H: tale of the tape (games, last 5 from headToHead). Champions: per
+   season, many-champion comps grouped; champions() returns third. NOT done: Swiss/LCQ "lolos/gugur" career counts
+   (no placements for SWS/LCQ; would change the engine stats + golden snapshots).
+U6 ✅ components/PageHeader on Studio + remaining wiki pages + Story. Nav: Idol Profile, Season Progression.
 
 ## Architecture in one picture
 

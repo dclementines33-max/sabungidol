@@ -12,6 +12,7 @@ import { NO_FILTER, filterIdols } from "../../../components/idolDatabase/filterI
 import { engine } from "../../../data/engineClient";
 import { IDOLS_QUERY } from "../../../data/IdolDataProvider";
 import { useCurrentSeason, useLeagueRosters } from "../../../data/seasonQuery";
+import { PageHeader } from "../../../components/PageHeader";
 
 export const Route = createFileRoute("/wiki/idols/")({ component: IdolDatabase });
 
@@ -27,6 +28,7 @@ function IdolDatabase() {
   if (idols.length === 0) return <EmptyState icon={Users} title="Belum ada idol" description="Tambahkan idol lewat Input Data." />;
   return (
     <div className="space-y-6">
+      <PageHeader tag="Idol Database" title="Semua idol dalam satu tempat" note="Saring, urutkan, lalu buka profil." />
       <IdolFilters idols={idols} filter={filter} onFilter={setFilter} view={view} onView={setView} />
       <p className="m-0 text-sm text-text-secondary" aria-live="polite">{shown.length} dari {idols.length} idol</p>
       {shown.length === 0

@@ -9,6 +9,7 @@ import { Select } from "../../components/idolDatabase/IdolFilters";
 import { RecordCard, type RecordRow } from "../../components/records/RecordCard";
 import { IdolLink } from "../../components/wiki/IdolLink";
 import { engine } from "../../data/engineClient";
+import { PageHeader } from "../../components/PageHeader";
 
 export const Route = createFileRoute("/wiki/records")({ component: AllTimeRecords });
 
@@ -39,6 +40,7 @@ function AllTimeRecords() {
   ];
   return (
     <div className="space-y-6">
+      <PageHeader tag="Records" title="Rekor sepanjang masa" note="Setiap kategori diperingkat; cari nama tanpa mengubah peringkat." />
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
           Cari nama

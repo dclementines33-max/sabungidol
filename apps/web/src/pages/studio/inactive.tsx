@@ -11,6 +11,7 @@ import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY, useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
+import { PageHeader } from "../../components/PageHeader";
 
 export const Route = createFileRoute("/studio/inactive")({ component: InactiveManager });
 
@@ -45,7 +46,9 @@ function InactiveManager() {
   const reserves = idols.filter((i) => i.active && !placed.has(i.id) && !pending?.ids.includes(i.id)).sort((a, b) => b.rating - a.rating).map((i) => i.id);
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row">
+    <div className="space-y-8">
+      <PageHeader tag="Inactive Manager" title="Siapa main, siapa istirahat" note="Pindahkan idol antara aktif dan nonaktif; pengganti di liga diusulkan otomatis." />
+      <div className="flex flex-col gap-4 lg:flex-row">
       <IdolColumn title="Aktif" idols={idols.filter((i) => i.active)} selected={selected} onToggle={toggle} actionLabel="Nonaktifkan"
         onMove={(ids) => (idols.find((i) => i.id === ids[0])?.active ? askDeactivate(ids) : activate(ids))} />
       <IdolColumn title="Nonaktif" idols={idols.filter((i) => !i.active)} selected={selected} onToggle={toggle} actionLabel="Aktifkan"
@@ -55,6 +58,7 @@ function InactiveManager() {
           onChange={(id, replacement) => setPending({ ...pending, rows: pending.rows.map((r) => (r.id === id ? { ...r, suggestion: replacement } : r)) })}
           onCancel={() => setPending(null)} onConfirm={() => deactivate(pending.ids, pending.rows)} />
       )}
+      </div>
     </div>
   );
 }

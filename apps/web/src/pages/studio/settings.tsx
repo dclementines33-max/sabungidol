@@ -12,6 +12,7 @@ import { SeasonSettings } from "../../components/settings/SeasonSettings";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
+import { PageHeader } from "../../components/PageHeader";
 
 export const Route = createFileRoute("/studio/settings")({ component: Settings });
 
@@ -23,6 +24,7 @@ function Settings() {
   const draft = season.status === "draft";
   return (
     <div className="space-y-8">
+      <PageHeader tag="Settings" title="Pengaturan season dan data" note="Season, roster liga, branding, aturan, backup dan data." />
       <SeasonSettings key={season.id} season={season} />
       <BrandingSettings seasonId={season.id} />
       <RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} />

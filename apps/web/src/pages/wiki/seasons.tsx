@@ -12,6 +12,7 @@ import { Select } from "../../components/idolDatabase/IdolFilters";
 import { SeasonHonours } from "../../components/play/SeasonHonours";
 import { engine } from "../../data/engineClient";
 import type { seasonArchive } from "../../data/archiveWorker";
+import { PageHeader } from "../../components/PageHeader";
 
 type ArchiveData = Awaited<ReturnType<typeof seasonArchive>>; // Comlink splits a union of promises
 
@@ -31,6 +32,7 @@ function SeasonArchive() {
   if (!played.length) return <EmptyState icon={Archive} title="Belum ada season" description="Season muncul di arsip setelah dimulai." />;
   return (
     <div className="space-y-10">
+      <PageHeader tag="Archive" title="Arsip setiap season" note="Pilih season untuk membaca kembali juara, klasemen akhir dan perubahan rating." />
       <Select label="Season" value={seasonId!} onChange={setPicked} options={played.map((s): [string, string] => [s.id, `${s.name}${s.status === "live" ? " (berjalan)" : ""}`])} />
       {isPending || !archive ? <p className="text-text-secondary">Membaca season…</p>
         : !archive.done ? <p className="text-text-secondary">{archive.season.name} belum selesai — arsipnya lengkap setelah semua kompetisi selesai.</p>

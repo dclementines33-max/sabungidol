@@ -10,6 +10,7 @@ import { Select } from "../../components/idolDatabase/IdolFilters";
 import { MatchLog } from "../../components/wiki/MatchLog";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
+import { PageHeader } from "../../components/PageHeader";
 
 export const Route = createFileRoute("/wiki/matches")({ component: MatchDatabase });
 
@@ -23,6 +24,7 @@ function MatchDatabase() {
   const results: [string, string][] = [["", "Semua"], ["D", "Seri"], ...(f.idol ? [["W", "Menang"], ["L", "Kalah"]] as [string, string][] : [])];
   return (
     <div className="space-y-4">
+      <PageHeader tag="Match Database" title="Semua match yang pernah dimainkan" note="Saring per kompetisi, season, idol dan hasil." />
       <div role="group" aria-label="Filter match" className="flex flex-wrap items-end gap-3">
         <Select label="Season" value={f.season} onChange={set("season")} options={[["", "Semua"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />
         <Select label="Kompetisi" value={f.comp} onChange={set("comp")} options={[["", "Semua"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
