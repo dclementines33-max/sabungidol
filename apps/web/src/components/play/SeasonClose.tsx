@@ -1,5 +1,6 @@
 // Closing the season (PRD §4, §6.3) on the simulator page: Rating Progression (preview → save,
 // optional), promotion/relegation preview, and "Start New Season" behind the archive guard.
+import { BADGES } from "@sabung/shared";
 import { Button, ConfirmDialog, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -43,6 +44,14 @@ export function SeasonClose({ done }: { done: boolean }) {
       {!done && <Button onClick={() => engine().closePreview().then((c) => block(c.blockers))}>Start New Season</Button>}
       {done && close && (
         <>
+          {close.badges.length > 0 && (
+            <div>
+              <h3 className="m-0 mb-2 text-sm font-medium">Badge baru season ini</h3>
+              <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+                {close.badges.map((b) => <li key={`${b.idolId}-${b.badge}`} className="rounded-control border border-accent-bright px-2 py-1 text-sm"><span className="text-accent-bright">{BADGES[b.badge]}</span> · {name(b.idolId)}</li>)}
+              </ul>
+            </div>
+          )}
           <div className="grid gap-4 md:grid-cols-2">
             {([["Promosi ke D1 (+2)", close.promoted], ["Degradasi ke D2 (−2)", close.relegated]] as const).map(([title, ids]) => (
               <div key={title}><h3 className="m-0 mb-1 text-sm font-medium">{title}</h3><p className="m-0 text-sm text-text-secondary">{ids.map(name).join(", ")}</p></div>

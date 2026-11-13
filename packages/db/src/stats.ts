@@ -2,7 +2,7 @@
 // from matches; backups leave it out).
 import { eq } from "drizzle-orm";
 import type { Db } from "./openDb";
-import { placements, statsCache } from "./schema";
+import { achievements, placements, statsCache } from "./schema";
 
 export type PlacementRow = { comp: string; idolId: string; finalRank: number; stageReached: string };
 
@@ -27,4 +27,16 @@ export async function readCache<T>(db: Db, key: string): Promise<T | undefined> 
 export async function writeCache(db: Db, key: string, scope: string, payload: unknown, rev: number) {
   await db.insert(statsCache).values({ key, scope, payload, builtFromRev: rev })
     .onConflictDoUpdate({ target: statsCache.key, set: { scope, payload, builtFromRev: rev } });
+}
+
+// Badges of one finished season (PRD §7.4), replaced as a whole (a rebuild gives the same rows).
+export async function replaceAchievements(db: Db, seasonId: string, rows: { idolId: string; badge: string }[]) {
+  await db.transaction(async (tx) => {
+    await tx.delete(achievements).where(eq(achievements.seasonId, seasonId));
+    if (rows.length) await tx.insert(achievements).values(rows.map((r) => ({ idolId: r.idolId, badge: r.badge, seasonId })));
+  });
+}
+
+export async function listAchievements(db: Db) {
+  return db.select().from(achievements);
 }

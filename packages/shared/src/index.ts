@@ -10,3 +10,4 @@ export * from "./idolRules";
 export * from "./idolBatch";
 export * from "./seasonConfig";
 export * from "./backupSections";
+export * from "./badges";

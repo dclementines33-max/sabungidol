@@ -39,7 +39,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "e2e": "playwright test",
-    "budget": "node scripts/checkBundle.mjs",
+    "budget": "vite build && node scripts/checkBundle.mjs",
     "lighthouse": "node scripts/lighthouse.mjs"
   }
 }

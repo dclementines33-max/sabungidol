@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–2 done, next step 3** |
+| **Fase 4 Wiki** | **in progress: steps 1–3 done, next step 4 (Idol Profile)** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -77,7 +77,12 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    {rows, pairs, upsets}. Not tracked: "first season reached" tie step, season-range scope.
    Was: Records engine §7.3 (pure): competition ranking 1, 2, T3, T3, 5; fixed global rank; min matches 50; scope
    filters; deterministic tie-breaks; all categories.
-3. Achievements §7.4: badges computed when a competition finishes, stored with proof match, celebration popup.
+3. ✅ Achievements: engine stats/achievements.ts seasonAchievements (title runs, Invincible, Grand Slam, Dual
+   Crown, Idol of The Season by §6.2 score, milestones once, Rookie, Trainee to Star, Giant Killer = careerLine
+   giantKills); names in shared/badges.ts BADGES; db replaceAchievements/listAchievements; folded per finished
+   season in careerWorker (cache has achievements state); /play close section shows "Badge baru season ini"
+   (no popup); no evidence match id stored. Gate test also checks badges = rebuild.
+   Was: Achievements §7.4: badges computed when a competition finishes, stored with proof match, celebration popup.
 4. Idol Profile `/wiki/idols/$id`: hero, tabs Overview (badges, titles, rating history chart), Career, Seasons,
    Matches (paged), Rivals, Records; IdolCard → profile link.
 5. Career Stats: virtual table, chosen columns, sticky photo+name, Combined + per competition, scope, CSV.
@@ -202,6 +207,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   15 s because every fresh profile opens its own database under parallel load. Screenshots for a human
   look go to `apps/web/test-results/` (git-ignored). Bundle: `pnpm --filter @sabung/web budget` (148 KB
   of 180 KB). Lighthouse: `pnpm --filter @sabung/web lighthouse`.
+- `pnpm --filter @sabung/web budget` now builds first (before 2026-11-13 it measured whatever dist/ held, so the
+  148.3 KB reported in Fase 3 steps 6–10 was a stale build; real: 154.2 KB at Fase 4 step 3).
 - Shell pitfalls: no Python on this machine; sed eats `\d` (use the Edit tool for regex text); a heredoc
   with tricky quoting can fail silently — check the file was written; never edit package.json while
   pnpm is running.

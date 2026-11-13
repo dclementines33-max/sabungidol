@@ -12,6 +12,7 @@ export type CareerLine = {
   placements: number; placementSum: number; bestPlacement: number | null; worstPlacement: number | null;
   leaguePoints: number; highestRating: number; seasons: number; lastSeason: number;
   reverseSweeps: number; finals: number; invincibleSeasons: number; bestLeagueSeasonPoints: number;
+  giantKills: number; // wins over an opponent rated 15 or more higher
 };
 export type CareerState = Record<string, CareerLine>; // key: `${idolId}|${competition key or ALL}`
 
@@ -21,7 +22,7 @@ const empty = (): CareerLine => ({
   titles: 0, runnerUp: 0, third: 0, fourth: 0, groupExit: 0, groupAdvance: 0,
   placements: 0, placementSum: 0, bestPlacement: null, worstPlacement: null,
   leaguePoints: 0, highestRating: 0, seasons: 0, lastSeason: 0,
-  reverseSweeps: 0, finals: 0, invincibleSeasons: 0, bestLeagueSeasonPoints: 0,
+  reverseSweeps: 0, finals: 0, invincibleSeasons: 0, bestLeagueSeasonPoints: 0, giantKills: 0,
 });
 
 // Won after trailing 0–2 in a Bo5 or 0–3 in a Bo7 (only possible when the series goes the distance).
@@ -50,6 +51,7 @@ export function foldSeason(previous: CareerState, season: number, matches: SimMa
         else if (outcome === "L") { l.losses++; l.loseStreak++; l.winStreak = 0; l.unbeatenStreak = 0; }
         else { l.draws++; l.winStreak = 0; l.loseStreak = 0; l.unbeatenStreak++; }
         if (outcome === "W" && isReverseSweep(m)) l.reverseSweeps++;
+        if (outcome === "W" && (side === "A" ? m.ratingB - m.ratingA : m.ratingA - m.ratingB) >= 15) l.giantKills++;
         l.bestWinStreak = Math.max(l.bestWinStreak, l.winStreak);
         l.bestLoseStreak = Math.max(l.bestLoseStreak, l.loseStreak);
         l.bestUnbeatenStreak = Math.max(l.bestUnbeatenStreak, l.unbeatenStreak);

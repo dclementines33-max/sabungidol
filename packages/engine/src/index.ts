@@ -26,3 +26,4 @@ export * from "./season/synthetic";
 export * from "./stats/careerStats";
 export * from "./stats/matchRecords";
 export * from "./stats/records";
+export * from "./stats/achievements";

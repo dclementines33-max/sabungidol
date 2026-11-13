@@ -19,6 +19,8 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
   await expect(page.getByText(/Season selesai!/)).toBeVisible({ timeout: 200_000 });
   await expect(page.getByRole("heading", { name: "Promosi ke D1 (+2)" })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: "Badge baru season ini" })).toBeVisible(); // Fase 4 step 3
+  await expect(page.getByText(/^Idol of The Season$/)).toBeVisible();
   await page.getByText(/Rating Progression: \d+ idol berubah/).click();
   await expect(page.getByRole("cell", { name: /^\d+ → \d+$/ }).first()).toBeVisible();
   const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);

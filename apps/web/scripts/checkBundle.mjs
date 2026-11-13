@@ -1,6 +1,6 @@
 // Performance budget (PRD §13): the JavaScript the first page loads must stay under 180 KB gzip.
 // Counts every script the built shell page references (entry + preloads), not the lazy Worker.
-// Run after `vite build`: node scripts/checkBundle.mjs
+// `pnpm budget` builds first, so it never measures an old build.
 import { readFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 
