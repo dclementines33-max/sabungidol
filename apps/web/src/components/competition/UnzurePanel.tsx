@@ -2,8 +2,10 @@
 // the 16 drawn groups (the pot preview promised in Fase 2: from real standings), then the knockout.
 import { Button, SwissPlayInBracket, TournamentBracketTree, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
+import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { GroupTable } from "./GroupTable";
 import { Tabs } from "./Tabs";
@@ -15,6 +17,7 @@ export function UnzurePanel() {
   const season = useCurrentSeason();
   const lookup = useIdolLookup();
   const { progress, running, play } = usePlaySeason();
+  const [matchId, setMatchId] = useState<string | null>(null);
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "cup", "unzure", season?.status], queryFn: () => engine().cupView(COMPS), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan Unzure Cup.</p>;
   if (!view) return <p className="text-text-secondary">Membaca Unzure Cup…</p>;
@@ -53,8 +56,9 @@ export function UnzurePanel() {
         { id: "groups", label: "Grup", content: () => (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">{view.groupTables.map((rows, g) => <GroupTable key={g} name={`Grup ${LETTERS[g]}`} rows={rows} through={2} />)}</div>
         ) },
-        { id: "ko", label: "Knockout", content: () => (ko.length ? <TournamentBracketTree cells={ko} /> : <p className="m-0 text-sm text-text-secondary">Babak 32 besar dimulai setelah fase grup.</p>) },
+        { id: "ko", label: "Knockout", content: () => (ko.length ? <TournamentBracketTree cells={ko} onMatchClick={(cell) => { const match = ko.find((c) => c.key === cell.key); if (match && !match.winner && !running) setMatchId(match.id); }} /> : <p className="m-0 text-sm text-text-secondary">Babak 32 besar dimulai setelah fase grup.</p>) },
       ]} />
+      <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </div>
   );
 }

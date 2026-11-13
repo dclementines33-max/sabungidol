@@ -32,6 +32,12 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.screenshot({ path: "test-results/unzure-panel.png" }); // for a human look
 
   await page.goto("/play/nugu");
+  // Step 6: click an open bracket match → MatchModal → Simulate → Accept; the cup then goes on from it.
+  await page.locator('ol[aria-label^="Ronde"]').first().getByRole("button").first().click();
+  const modal = page.getByRole("dialog");
+  await modal.getByRole("button", { name: "Simulate", exact: true }).click();
+  await modal.getByRole("button", { name: "Accept Result" }).click();
+  await expect(page.getByText(/^Hasil disimpan: \d–\d$/)).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Main sampai selesai" }).click();
   await expect(page.getByText(/Juara Nugu Cup/i)).toBeVisible({ timeout: 120_000 });
   expect(await axe(page)).toEqual([]);

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
+import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { LeagueFixtures } from "./LeagueFixtures";
 import { LeagueStandings } from "./LeagueStandings";
@@ -13,6 +14,7 @@ import { Tabs } from "./Tabs";
 export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: string }) {
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
+  const [matchId, setMatchId] = useState<string | null>(null);
   const { progress, running, play } = usePlaySeason();
   const lookup = useIdolLookup();
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "league", comp, season?.status], queryFn: () => engine().leagueView(comp), enabled: season?.status === "live" });
@@ -47,12 +49,13 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
         ) },
         { id: "table", label: "Klasemen", content: () => <LeagueStandings zoneKey={zoneKey} rows={view.standings} form={view.form} positions={view.positions} /> },
         { id: "fixtures", label: "Fixtures", content: () => (
-          <LeagueFixtures fixtures={view.fixtures} busy={running} onPlay={(what) => play("id" in what ? { kind: "ids", ids: [what.id] } : { kind: "round", comp, stage: "LG", round: what.round })} />
+          <LeagueFixtures fixtures={view.fixtures} busy={running} onPlay={(what) => ("id" in what ? setMatchId(what.id) : play({ kind: "round", comp, stage: "LG", round: what.round }))} />
         ) },
         { id: "roster", label: "Roster", content: () => (
           <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">{view.roster.map((id) => <li key={id}><IdolCard idolId={id} /></li>)}</ul>
         ) },
       ]} />
+      <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </div>
   );
 }

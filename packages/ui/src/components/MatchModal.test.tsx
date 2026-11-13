@@ -35,17 +35,21 @@ describe("MatchModal (PRD §9)", () => {
     expect(onAccept).toHaveBeenCalledWith({ method: "sim", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
   });
 
-  it("manual score is checked against the format", () => {
+  it("manual = the winner of each game in order, so a reverse sweep stays true", () => {
     const onAccept = open();
-    fireEvent.click(screen.getByRole("radio", { name: "Manual score" }));
-    const [scoreA, scoreB] = screen.getAllByRole("spinbutton");
-    fireEvent.change(scoreA, { target: { value: "2" } });
-    fireEvent.change(scoreB, { target: { value: "2" } });
-    expect(screen.getByRole("alert").textContent).toContain("bukan skor akhir yang mungkin untuk Bo5");
-    expect(accept().disabled).toBe(true);
-    fireEvent.change(scoreB, { target: { value: "3" } });
+    fireEvent.click(screen.getByRole("radio", { name: "Manual" }));
+    const win = (name: RegExp) => fireEvent.click(screen.getByRole("button", { name }));
+    win(/^Mina Kim menang game 1/);
+    win(/^Mina Kim menang game 2/);
+    win(/^Yuna menang game 3/);
+    expect(accept().disabled).toBe(true); // 2–1 is not over in Bo5
+    win(/^Yuna menang game 4/);
+    win(/^Mina Kim menang game 5/);
+    fireEvent.click(screen.getByRole("button", { name: "Batalkan game terakhir" }));
+    win(/^Yuna menang game 5/);
+    expect(screen.getAllByRole("button", { name: /menang game 6/ }).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
     fireEvent.click(accept());
-    expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 2, scoreB: 3, result: "B" });
+    expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 2, scoreB: 3, result: "B", games: ["A", "A", "B", "B", "B"] });
   });
 
   it("wheel results are accepted as method wheel", () => {

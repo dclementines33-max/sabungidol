@@ -6,11 +6,13 @@ import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { titleLabel } from "../play/competitionLinks";
+import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 
 export function CupPanel({ codes, title }: { codes: string[]; title?: string }) {
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
+  const [matchId, setMatchId] = useState<string | null>(null);
   const { progress, running, play } = usePlaySeason();
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "cup", comp, season?.status], queryFn: () => engine().cupView([comp]), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan cup ini.</p>;
@@ -37,7 +39,8 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
           ))}
         </ul>
       )}
-      {view.cells.length > 0 && <TournamentBracketTree cells={view.cells} onMatchClick={(cell) => { const match = view.cells.find((c) => c.key === cell.key); if (match && !match.winner) play({ kind: "ids", ids: [match.id] }); }} />}
+      {view.cells.length > 0 && <TournamentBracketTree cells={view.cells} onMatchClick={(cell) => { const match = view.cells.find((c) => c.key === cell.key); if (match && !match.winner && !running) setMatchId(match.id); }} />}
+      <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </section>
   );
 }

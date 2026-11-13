@@ -16,7 +16,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 0 Engine & data core | done, gate passed |
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
-| **Fase 3 Play** | **in progress: steps 1–5 done, next is step 6** |
+| **Fase 3 Play** | **in progress: steps 1–6 done, next is step 7** |
 | Fase 4 Wiki, Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -26,13 +26,12 @@ file only when the task touches it. Keep this file current: update it at the end
 3. ✅ `c3ac2cf` Sabung Idol simulator page (`/play`) — The Idols roster fixed at season start
 4. ✅ `d9e74b9` League panels (`/play/d1`, `/play/d2`, `/play/the-idols`)
 5. ✅ `2c162d5` Cup panels (Unzure road, Inkigayo, Nugu, B-Side, Daesang, Music Bank)
-6. ⏭ **MatchModal live**: click a match → MatchModal (Simulate / Manual / Wheel) → "Accept Result" writes it
-   (`saveMatches(..., "manual" | "wheel")`); the replay then reuses it and later matches follow from it;
-   stale matches are deleted by `playSeason`. **Manual = click the winner of each game in order**
-   (recommended in the plan, approved with it) so comebacks/reverse sweeps stay true. Existing UI:
-   `packages/ui` MatchModal (onAccept({method, scoreA, scoreB, result, games?})), WheelPicker,
-   LiveMatchVisualizer, MatchHeader. Hook it into LeagueFixtures "Main" and CupPanel/bracket clicks.
-7. Season close: archive guard (Blocker naming unfinished competitions), Rating Progression PRD §6.2–6.3
+6. ✅ MatchModal live: league fixture "Main", cup bracket and Unzure knockout clicks open
+   `components/play/PlayMatchDialog` → MatchModal (Simulate = the engine's own games for that match /
+   Manual = click the winner of each game in order / Wheel) → "Accept Result" → Worker `acceptMatch`
+   checks the games end the series exactly, saves with its method; the replay reuses it. Only open
+   (pending) matches; editing an already played result is not built (`playSeason` stale clean-up is ready).
+7. ⏭ Season close: archive guard (Blocker naming unfinished competitions), Rating Progression PRD §6.2–6.3
    (preview → save into rating_history), promotion/relegation (D1 18–20 ↔ D2 1–3, preview), "Start New
    Season" (new draft season N+1), auto-snapshot before.
 8. Rating Manager + Engine Lab (`/studio/ratings`, PRD §6.4–6.6): bulk edit, presets, Sync from Career
@@ -100,7 +99,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 ### apps/web/src/data (saving and loading; Worker side and its clients)
 - `worker.ts` the Worker API · `engineClient.ts` `engine()` · `seasonRunner.ts` **season play**:
   `playSeason(target)` (targets: all / phase / stage / round / ids / comps; chunks of 1,000, pause,
-  one transaction per round, stale removed), `seasonOverview`, `leagueView`, `cupView`.
+  one transaction per round, stale removed), `seasonOverview`, `leagueView`, `cupView`, `seasonInput` · `singleMatch.ts` `matchPreview(id)` /
+  `acceptMatch(id, games, method)` (one match through the MatchModal).
 - `loadDefaultData.ts`/`seedData.ts` default idols from `seed/idols.json` (marker I-SEED-001) ·
   `firstSeason.ts` Season 1 draft · `startDefaultData.ts` start-up chain (+ backup reminder, integrity).
 - `photoFiles.ts`/`photoSizes.ts`/`photoCache.ts` photos in OPFS `<db>-photos/<id>/` (64/256/1024, never
@@ -156,7 +156,10 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 
 ## Open items
 
-- Fase 3 steps 6–10 (above). Hydration dead clicks. WebKit e2e. Mobile LCP/CLS.
+- Fase 3 steps 7–10 (above). MatchModal is taller than a 720 px screen (title/Accept need a scroll).
+- Flakes under load: db `backup.test` setup hook > 10 s when all packages test at once (passes alone);
+  full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on fresh profiles.
+- Hydration dead clicks. WebKit e2e. Mobile LCP/CLS.
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
 - `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.
 - A one-off E-DB-001 on an existing database after rapid reloads (unreproduced; a reload fixes it).

@@ -20,7 +20,7 @@ const GALA = new Set(["DSG", "MBK"]);
 let pauseRequested = false;
 export const requestPause = () => { pauseRequested = true; };
 
-async function seasonInput(db: Db): Promise<SeasonInput & { seasonId: string }> {
+export async function seasonInput(db: Db): Promise<SeasonInput & { seasonId: string }> {
   const season = await currentSeason(db);
   if (!season || season.status !== "live") throw new Error("Belum ada season yang berjalan. Mulai season dulu.");
   const config = readSeasonConfig(season.config);

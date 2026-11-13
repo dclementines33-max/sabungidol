@@ -1,0 +1,33 @@
+// One match through the MatchModal (Fase 3 step 6, PRD §9): what the engine would play for it, and
+// writing the result the user accepted (simulated, clicked game by game, or spun). The replay then
+// reuses that saved result and every later match follows from it.
+import { type Db, listSeasonMatches, saveMatches } from "@sabung/db";
+import { type Side, runSeason, seriesState } from "@sabung/engine";
+import { seasonBestOf } from "@sabung/shared";
+import { seasonInput } from "./seasonRunner";
+
+async function playable(db: Db, id: string) {
+  const input = await seasonInput(db);
+  const saved = await listSeasonMatches(db, input.seasonId);
+  if (saved.some((m) => m.id === id)) throw new Error(`Match ${id} sudah dimainkan.`);
+  const match = runSeason({ ...input, saved, target: (m) => m.id === id }).matches.find((m) => m.id === id);
+  if (!match) throw new Error(`Match ${id} belum bisa dimainkan.`);
+  return { seasonId: input.seasonId, match, bestOf: seasonBestOf(input.config, match.comp, match.stage, match.round) };
+}
+
+// Nothing is saved: the modal shows these idols and the engine's games under "Simulate".
+export async function matchPreview(db: Db, id: string) {
+  const { match, bestOf } = await playable(db, id);
+  return { id, comp: match.comp, stage: match.stage, round: match.round, slot: match.slot, idolA: match.idolA, idolB: match.idolB, bestOf, games: match.games };
+}
+
+export async function acceptMatch(db: Db, id: string, games: Side[], method: "sim" | "manual" | "wheel") {
+  const { seasonId, match, bestOf } = await playable(db, id);
+  const state = seriesState(bestOf, games);
+  // The series must end exactly on the last game, with only A/B games.
+  if (!state.result || seriesState(bestOf, games.slice(0, -1)).result || games.some((g) => g !== "A" && g !== "B")) {
+    throw new Error(`Hasil game tidak sah untuk Bo${bestOf}.`);
+  }
+  await saveMatches(db, seasonId, [{ ...match, games, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result }], method);
+  return { scoreA: state.scoreA, scoreB: state.scoreB, result: state.result };
+}
