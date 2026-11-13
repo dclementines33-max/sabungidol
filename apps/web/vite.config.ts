@@ -15,4 +15,5 @@ export default defineConfig({
   // PGlite ships its own WebAssembly and data files; Vite must not pre-bundle it.
   optimizeDeps: { exclude: ["@electric-sql/pglite"] },
   worker: { format: "es" },
+  server: { proxy: { "/api": "http://localhost:8787" } }, // the cloud API (apps/api, wrangler dev)
 });

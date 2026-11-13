@@ -1,6 +1,6 @@
 // Import in two steps (PRD §9, §12.3): pick a file → preview what changes → "Confirm & Apply".
 // Nothing is written before Apply. Replace overwrites, so it is the red, dangerous button.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { Modal } from "./Modal";
 
@@ -24,13 +24,14 @@ function List({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export function ImportDialog({ open, onOpenChange, title, accept, readFile, onApply }: {
+export function ImportDialog({ open, onOpenChange, title, accept, readFile, onApply, file }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   accept: string; // e.g. ".sabung,.csv,.json"
   readFile: (file: File) => Promise<ImportPreview>; // throws with a clear message, e.g. a backup from a newer version
   onApply: (mode: ImportMode) => void;
+  file?: File; // already chosen (e.g. downloaded from the cloud): no picker, the preview starts at once
 }) {
   const [state, setState] = useState<State>({ step: "pick" });
   const [mode, setMode] = useState<ImportMode>("merge");
@@ -38,6 +39,17 @@ export function ImportDialog({ open, onOpenChange, title, accept, readFile, onAp
     if (!next) setState({ step: "pick" });
     onOpenChange(next);
   };
+  const read = async (picked: File) => {
+    setState({ step: "reading" });
+    try {
+      setState({ step: "preview", preview: await readFile(picked) });
+    } catch (error) {
+      setState({ step: "failed", message: error instanceof Error ? error.message : String(error) });
+    }
+  };
+  useEffect(() => {
+    if (open && file) void read(file);
+  }, [open, file]); // only when a new file arrives, not on every render's new `read`
 
   return (
     <Modal
@@ -60,24 +72,18 @@ export function ImportDialog({ open, onOpenChange, title, accept, readFile, onAp
         </>
       }
     >
-      <label className="block text-sm">
+      {file ? <p className="m-0 font-mono text-sm text-text-secondary">{file.name}</p> : <label className="block text-sm">
         File
         <input
           type="file"
           accept={accept}
           className="mt-1 block w-full text-sm file:mr-3 file:rounded-control file:border file:border-border-strong file:bg-surface file:px-3 file:py-1 file:text-text-primary"
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            setState({ step: "reading" });
-            try {
-              setState({ step: "preview", preview: await readFile(file) });
-            } catch (error) {
-              setState({ step: "failed", message: error instanceof Error ? error.message : String(error) });
-            }
+          onChange={(e) => {
+            const picked = e.target.files?.[0];
+            if (picked) void read(picked);
           }}
         />
-      </label>
+      </label>}
 
       {state.step === "reading" && <p role="status" className="mt-4 text-sm text-text-secondary">Membaca file…</p>}
       {state.step === "failed" && <p role="alert" className="mt-4 text-sm text-danger">{state.message}</p>}

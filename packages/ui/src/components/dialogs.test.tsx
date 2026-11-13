@@ -2,6 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { ImportDialog } from "./ImportDialog";
 import { ResetSeasonModal } from "./ResetSeasonModal";
 
 afterEach(cleanup);
@@ -42,5 +43,16 @@ describe("ResetSeasonModal (PRD §9)", () => {
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "Season 3" } });
     fireEvent.click(screen.getByRole("button", { name: "Reset season" }));
     expect(onReset).toHaveBeenCalledWith({ redraw: true });
+  });
+});
+
+describe("ImportDialog with a file already chosen (cloud restore)", () => {
+  it("skips the picker and previews the file at once", async () => {
+    const readFile = vi.fn(async () => ({ added: 7, replaced: 2, conflicts: [], unknown: [] }));
+    const file = new File([new Uint8Array([1])], "sabung-idol-2026-11-13.sabung");
+    render(<ImportDialog open onOpenChange={() => {}} title="Impor" accept=".sabung" readFile={readFile} onApply={() => {}} file={file} />);
+    expect(screen.queryByLabelText("File")).toBeNull();
+    expect(await screen.findByText("ditambah", { exact: false })).toBeTruthy();
+    expect(readFile).toHaveBeenCalledWith(file);
   });
 });

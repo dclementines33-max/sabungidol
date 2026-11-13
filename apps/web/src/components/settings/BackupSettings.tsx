@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
+import { CloudBackup } from "./CloudBackup";
 import { SECTION } from "./settingsShared";
 
 const download = (bytes: Uint8Array, name: string) => {
@@ -19,6 +20,7 @@ const download = (bytes: Uint8Array, name: string) => {
 export function BackupSettings({ seasonId }: { seasonId: string }) {
   const [section, setSection] = useState<BackupSection>("full");
   const [importing, setImporting] = useState(false);
+  const [cloudFile, setCloudFile] = useState<File | undefined>(); // a cloud backup to restore
   const file = useRef<Uint8Array | null>(null);
   const { data: snapshots = [], refetch } = useQuery({ queryKey: ["snapshots"], queryFn: () => engine().listSnapshots() });
 
@@ -57,7 +59,8 @@ export function BackupSettings({ seasonId }: { seasonId: string }) {
         <Button variant="primary" onClick={exportNow}>Unduh backup</Button>
         <Button onClick={() => setImporting(true)}>Impor backup…</Button>
       </div>
-      <ImportDialog open={importing} onOpenChange={setImporting} title="Impor backup .sabung" accept=".sabung" readFile={readFile} onApply={apply} />
+      <ImportDialog open={importing} onOpenChange={(open) => { setImporting(open); if (!open) setCloudFile(undefined); }} title="Impor backup .sabung" accept=".sabung" readFile={readFile} onApply={apply} file={cloudFile} />
+      <CloudBackup onRestore={(f) => { setCloudFile(f); setImporting(true); }} />
       <div>
         <h3 className="m-0 text-sm font-medium">Snapshot otomatis (3 terakhir, dibuat sebelum aksi berbahaya)</h3>
         {snapshots.length === 0
