@@ -54,4 +54,12 @@ describe("LeagueRosterModal (PRD §9)", () => {
     expect(screen.getByText(/Juga di liga lain: Rina \(D2C\)/)).toBeTruthy();
     expect(apply().disabled).toBe(false); // another league is a warning, not a block
   });
+
+  it("replacing from text drops the old roster", () => {
+    open();
+    fireEvent.change(screen.getByRole("textbox", { name: /Tempel nama/ }), { target: { value: "rina\nIdol 3\nrina" } });
+    fireEvent.click(screen.getByRole("button", { name: "Ganti roster dengan teks" }));
+    expect(screen.getByRole("status").textContent).toContain("2 / 20");
+    expect(screen.queryByRole("button", { name: "Hapus Idol 0 dari D1A" })).toBeNull();
+  });
 });

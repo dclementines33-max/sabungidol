@@ -1,5 +1,5 @@
 // Edit one league's roster (PRD §9): exactly 20, no duplicates, warn about idols in another league.
-// Paste names to add many at once; unknown or ambiguous names are listed, never guessed.
+// Paste names to add many at once, or to replace the whole roster; unknown or ambiguous names are listed, never guessed.
 import { LEAGUE_SIZE, checkRoster } from "@sabung/shared";
 import { TriangleAlert, X } from "lucide-react";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
   const elsewhere = new Map(check.elsewhere.map((e) => [e.idolId, e.league]));
   const name = (id: string) => lookup(id)?.name ?? id;
 
-  const addPasted = () => {
+  const addPasted = (replace: boolean) => {
     const missing: string[] = [];
     const found: string[] = [];
     for (const line of pasted.split("\n").map((l) => l.trim()).filter(Boolean)) {
@@ -35,7 +35,8 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
       if (hits.length === 1) found.push(hits[0]);
       else missing.push(hits.length === 0 ? `${line} — tidak dikenal` : `${line} — ${hits.length} idol bernama sama, pilih lewat pencarian`);
     }
-    setDraft([...draft, ...found.filter((id) => !draft.includes(id))]);
+    const base = replace ? [] : draft; // replace = paste a whole new roster, the old one is dropped
+    setDraft([...base, ...[...new Set(found)].filter((id) => !base.includes(id))]);
     setNotFound(missing);
     setPasted("");
   };
@@ -95,7 +96,10 @@ export function LeagueRosterModal({ open, onOpenChange, league, roster, idolIds,
           className="mt-1 block w-full rounded-control border border-border-strong bg-surface px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright"
         />
       </label>
-      <Button className="mt-2" disabled={!pasted.trim()} onClick={addPasted}>Tambahkan dari teks</Button>
+      <div className="mt-2 flex gap-2">
+        <Button disabled={!pasted.trim()} onClick={() => addPasted(false)}>Tambahkan dari teks</Button>
+        <Button disabled={!pasted.trim()} onClick={() => addPasted(true)}>Ganti roster dengan teks</Button>
+      </div>
       {notFound.length > 0 && (
         <ul role="alert" className="m-0 mt-2 pl-5 text-sm text-danger">{notFound.map((line) => <li key={line}>{line}</li>)}</ul>
       )}

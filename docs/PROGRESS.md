@@ -235,6 +235,7 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - packages/ui: IdolCard (trading card), IdolPhoto, RatingBadge (`TIER_FILL`), VirtualTable,
   PhotoDropZone, ColorSwatchPicker, Button (danger = outlined), Modal, ConfirmDialog (typeToConfirm),
   ImportDialog, LeagueRosterModal, SearchableIdolSelect, MatchModal, WheelPicker, brackets, notices.
+  LeagueRosterModal paste has two buttons: "Tambahkan dari teks" (append) and "Ganti roster dengan teks" (drop the old roster, keep only the pasted names; nothing saved until Apply).
 
 ## Rules and decisions that are easy to break
 
