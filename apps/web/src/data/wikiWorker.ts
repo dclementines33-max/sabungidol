@@ -49,3 +49,15 @@ export async function matchPage(db: Db, filter: MatchFilter, opts: { after?: str
 
 // Career Stats (PRD §8): every idol's row for one competition key ("ALL" = Combined).
 export const careerTable = async (db: Db, comp: string) => (await wikiStats(db)).rows.filter((r) => r.comp === comp);
+
+export const seasonList = async (db: Db) => (await listSeasons(db)).map((s) => ({ id: s.id, number: s.number, name: s.name, status: s.status }));
+
+// Head to Head (PRD §8): the pair's record from A's side, both idols' Combined lines, and the 10 pairs met most often.
+export async function headToHead(db: Db, a?: string, b?: string) {
+  const stats = await wikiStats(db);
+  const top = Object.entries(stats.pairs).sort((x, y) => y[1].meetings - x[1].meetings || x[0].localeCompare(y[0])).slice(0, 10)
+    .map(([key, p]) => ({ a: key.split("|")[0]!, b: key.split("|")[1]!, meetings: p.meetings, winsA: p.winsLo, winsB: p.winsHi, draws: p.draws }));
+  const line = (id?: string) => stats.rows.find((r) => r.idolId === id && r.comp === "ALL") ?? null;
+  const pair = a && b ? rivalsOf(stats.pairs, a, Number.POSITIVE_INFINITY).find((r) => r.opponent === b) ?? null : null;
+  return { top, pair, lineA: line(a), lineB: line(b) };
+}

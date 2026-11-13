@@ -60,3 +60,19 @@ test("Career Stats: Combined and per competition, columns, scope, CSV", async ()
   expect((await download).suggestedFilename()).toBe("career-d1.csv");
   await page.screenshot({ path: "test-results/career-stats.png" });
 });
+
+test("Head to Head: top rivalries open a pair, record and direct match log", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/h2h");
+  const first = page.getByRole("heading", { name: /Top 10 Most Matchups/ }).locator("..").getByRole("link", { name: /^\d+ match$/ }).first();
+  const meetings = Number((await first.textContent({ timeout: 60_000 }))!.split(" ")[0]);
+  await first.click();
+  await expect(page).toHaveURL(/a=.+&b=.+/);
+  await expect(page.getByRole("combobox", { name: "Idol pertama" })).not.toHaveValue("");
+  await expect(page.getByRole("heading", { name: `Direct Match Log (${meetings} Matches)` })).toBeVisible();
+  await expect(page.getByText(/^Match langsung: \d+ match$/)).toHaveText(`Match langsung: ${meetings} match`);
+  await page.getByRole("combobox", { name: /^Season/ }).selectOption({ label: "Season 1" });
+  await expect(page.getByText(/^Match langsung: \d+ match$/)).toHaveText(`Match langsung: ${meetings} match`);
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/h2h.png", fullPage: true });
+});
