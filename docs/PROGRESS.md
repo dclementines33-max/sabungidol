@@ -144,7 +144,7 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - Settings sections save only their own config fields over the latest saved config.
 - Empty rating in input = 75 (yellow). Deleting an idol in a roster is refused (offer deactivate).
 - The Idols roster is fixed at season start (else rating changes would rewrite the season); likewise an
-  idol's rating is fixed within a season once played ( reads it from the saved matches).
+  idol's rating is fixed within a season once played (`seasonInput` reads it from the saved matches).
 - Engine Tuning preset numbers are ours (PRD gives none): Realistic 40/σ4, Chaotic 60/σ8, Dominant 28/σ2.
 - Project rules (CLAUDE.md): screens in `pages/`, pieces in `components/`, saving/loading in `data/`,
   one job per file, ≤ 300 lines, minimal code, ask instead of guessing, test every change, report real
