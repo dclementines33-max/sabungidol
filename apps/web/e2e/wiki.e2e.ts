@@ -88,3 +88,19 @@ test("Hall of Champions: titles per competition with runner-up and final score",
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/champions.png", fullPage: true });
 });
+
+test("All-time Records: top 10 cards, see all, search keeps the rank", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/records");
+  const wins = page.getByRole("region", { name: "Kemenangan terbanyak" });
+  await expect(wins.getByRole("listitem")).toHaveCount(10, { timeout: 60_000 });
+  await wins.getByRole("button", { name: /^Lihat semua/ }).click();
+  expect(await wins.getByRole("listitem").count()).toBeGreaterThan(10);
+  const fifth = wins.getByRole("listitem").nth(4);
+  const [rank, name] = [await fifth.locator("span").first().textContent(), await fifth.getByRole("link").first().textContent()];
+  await page.getByLabel("Cari nama").fill(name!);
+  await expect(wins.getByRole("listitem").first()).toContainText(`${rank}${name}`);
+  await page.getByLabel("Cari nama").fill("");
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/records.png" });
+});

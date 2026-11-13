@@ -1,7 +1,7 @@
 // Wiki reads in the Worker (PRD §8): career stats are computed once per change of the saved matches and
 // sliced per page here, so a page receives only what it shows (not 30,000 head-to-head pairs).
 import { type Db, type MatchFilter, countMatches, countMatchesWhere, listAchievements, listPlacements, listRatingHistory, listSeasons, queryMatches } from "@sabung/db";
-import { type PairRecord, allTimeRecords } from "@sabung/engine";
+import { type PairRecord, allTimeRecords, rankRecords } from "@sabung/engine";
 import { careerStats } from "./careerWorker";
 
 type Stats = Awaited<ReturnType<typeof careerStats>>;
@@ -75,4 +75,14 @@ export async function champions(db: Db) {
     const score = final ? (final.idolA === p.idolId ? `${final.scoreA}–${final.scoreB}` : `${final.scoreB}–${final.scoreA}`) : null;
     return { season: number.get(p.seasonId) ?? 0, key: p.comp, champion: p.idolId, runnerUp, score };
   }).sort((a, b) => b.season - a.season || a.key.localeCompare(b.key));
+}
+
+// All-time Records (PRD §8, §7.3): every category ranked (competition ranking, fixed before any name search),
+// plus the biggest upsets and the most head-to-head meetings, ranked the same way.
+export async function records(db: Db, minMatches: number) {
+  const stats = await wikiStats(db);
+  const upsets = rankRecords(stats.upsets.map((u) => ({ idolId: u.matchId, value: u.gap, matches: 0 })), "total")
+    .map((e) => ({ ...e, ...stats.upsets.find((u) => u.matchId === e.idolId)! }));
+  const meetings = rankRecords(Object.entries(stats.pairs).map(([key, p]) => ({ idolId: key, value: p.meetings, matches: 0 })), "total").slice(0, 100);
+  return { categories: allTimeRecords(stats.rows, { minMatches }), upsets, meetings };
 }

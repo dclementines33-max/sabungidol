@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–7 done, next step 8 (All-time Records)** |
+| **Fase 4 Wiki** | **in progress: steps 1–8 done, next step 9 (Match Database)** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -95,7 +95,9 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    shown = each idol's career best win streak (no pair-only streak). Match log filters: competition, season.
 7. ✅ Hall of Champions `/wiki/champions` (components/champions: WallOfFame = IdolCards with N× most titles first,
    ChampionList; Worker champions = placements rank 1 + rank 2 + FN match score). Tabs skip Swiss/LCQ (no titles).
-8. All-time Records: top-10 leaderboard cards per category + "lihat semua".
+8. ✅ All-time Records `/wiki/records` (components/records/RecordCard top 10 + "Lihat semua"; Worker records(minMatches)
+   = allTimeRecords + upsets + H2H meetings ranked by rankRecords). Name search hides rows, rank stays; min matches
+   select. Not built: scope filters on this page (Career Stats has them).
 9. Match Database: filters, sort, cursor paging, counts, Reset Filters (never loads everything).
 10. Season Archive: per season read-only honours, 13 final tables, cup brackets, promotion, rating changes.
 11. Season Story (template headlines → match links) + Girl Group Stats.

@@ -13,7 +13,7 @@ import { acceptMatch, matchPreview } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { careerSync, lastSeasonProgression } from "./ratingSources";
 import { careerStats, rebuildStats } from "./careerWorker";
-import { careerTable, champions, headToHead, idolProfile, matchPage, seasonList } from "./wikiWorker";
+import { careerTable, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -139,6 +139,7 @@ const api = {
   careerTable: async (comp: string) => careerTable(await open(), comp),
   seasonList: async () => seasonList(await open()),
   champions: async () => champions(await open()),
+  records: async (minMatches: number) => records(await open(), minMatches),
   headToHead: async (a?: string, b?: string) => headToHead(await open(), a, b),
   matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),
   // Closing the season (PRD §4, §6.3).
