@@ -2,7 +2,7 @@
 // phase = the PRD §15 phase that builds the panel; until then it shows a placeholder.
 import {
   Archive, ChartColumn, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
-  Newspaper, Settings, Swords, Trophy, UserRoundX, Users, UsersRound, type LucideIcon,
+  Newspaper, Settings, Swords, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type LucideIcon,
 } from "lucide-react";
 
 export type NavItem = { label: string; to: string; icon: LucideIcon; phase: number };
@@ -36,6 +36,7 @@ export const SPACES: NavSpace[] = [
       { label: "Hall of Champions", to: "/wiki/champions", icon: Crown, phase: 4 },
       { label: "All-time Records", to: "/wiki/records", icon: Medal, phase: 4 },
       { label: "Match Database", to: "/wiki/matches", icon: Database, phase: 4 },
+      { label: "Season Progression", to: "/wiki/progression", icon: TrendingUp, phase: 4 },
       { label: "Season Archive", to: "/wiki/seasons", icon: Archive, phase: 4 },
     ],
   },

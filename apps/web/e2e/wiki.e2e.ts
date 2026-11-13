@@ -173,6 +173,16 @@ test("Dashboard: fixed cards with the season's data", async () => {
   await page.screenshot({ path: "test-results/dashboard.png", fullPage: true });
 });
 
+test("Season Progression: six title races, positions, progress, titles per group", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/progression");
+  await expect(page.getByRole("img", { name: /^Title race / })).toHaveCount(6, { timeout: 60_000 });
+  await expect(page.getByRole("img", { name: /^Posisi / })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Gelar per girl group" }).getByRole("listitem").first()).toBeVisible();
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/progression.png", fullPage: true });
+});
+
 test("Home: hero with the Unzure champion, action cards, backup line", async () => {
   test.setTimeout(120_000);
   await page.goto("/");
