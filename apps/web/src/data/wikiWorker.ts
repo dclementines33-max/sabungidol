@@ -61,3 +61,18 @@ export async function headToHead(db: Db, a?: string, b?: string) {
   const pair = a && b ? rivalsOf(stats.pairs, a, Number.POSITIVE_INFINITY).find((r) => r.opponent === b) ?? null : null;
   return { top, pair, lineA: line(a), lineB: line(b) };
 }
+
+// Hall of Champions (PRD §8): every title per season with its runner-up and the final's score (cups only;
+// leagues have no final). Finals are few, so they are read whole.
+export async function champions(db: Db) {
+  const number = await seasonNumbers(db);
+  const placements = await listPlacements(db);
+  const finals = (await queryMatches(db, { stage: "FN" }, { limit: 100_000, newest: false })).rows;
+  return placements.filter((p) => p.finalRank === 1).map((p) => {
+    const runnerUp = placements.find((r) => r.seasonId === p.seasonId && r.comp === p.comp && r.finalRank === 2)?.idolId ?? null;
+    const code = p.comp.startsWith("MBK") ? "MBK" : p.comp.split("-")[0];
+    const final = finals.filter((m) => m.seasonId === p.seasonId && m.comp === code && [m.idolA, m.idolB].includes(p.idolId) && (!runnerUp || [m.idolA, m.idolB].includes(runnerUp))).at(-1);
+    const score = final ? (final.idolA === p.idolId ? `${final.scoreA}–${final.scoreB}` : `${final.scoreB}–${final.scoreA}`) : null;
+    return { season: number.get(p.seasonId) ?? 0, key: p.comp, champion: p.idolId, runnerUp, score };
+  }).sort((a, b) => b.season - a.season || a.key.localeCompare(b.key));
+}

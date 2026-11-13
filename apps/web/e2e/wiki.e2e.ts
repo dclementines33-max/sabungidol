@@ -76,3 +76,15 @@ test("Head to Head: top rivalries open a pair, record and direct match log", asy
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/h2h.png", fullPage: true });
 });
+
+test("Hall of Champions: titles per competition with runner-up and final score", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/champions");
+  const list = page.getByRole("list", { name: "Juara per season" });
+  await expect(list.getByRole("listitem")).toHaveCount(6, { timeout: 60_000 }); // Liga Divisi 1: six leagues
+  await page.getByRole("tab", { name: "Unzure Cup" }).click();
+  await expect(list.getByRole("listitem")).toHaveCount(1);
+  await expect(list.getByRole("listitem")).toContainText(/runner-up .+\d–\d$/);
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/champions.png", fullPage: true });
+});
