@@ -247,3 +247,4 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - Display font: the mood references use a bold sans; `--font-display` is still Fraunces (undecided).
 - `design/refs/overall vibe layout & ui.mp4` not reviewed. Photo focal point not built.
 - A one-off E-DB-001 on an existing database after rapid reloads (unreproduced; a reload fixes it).
+- Reload with 2 seasons (10,530 matches, Playwright Chromium, dev server): the database is ready after ~6.6 s on EVERY page (season chip); the Fase 4 pages themselves then take ~0.1–0.8 s. Cause not looked into (start-up chain / integrity check?).

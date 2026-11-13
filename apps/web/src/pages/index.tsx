@@ -23,7 +23,7 @@ function Home() {
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
   const { data: o } = useQuery({ queryKey: ["overview"], queryFn: () => engine().overview(), staleTime: 0, enabled: on && !!season && !first });
   const { data: stories } = useQuery({ queryKey: ["season-story", season?.id], queryFn: () => engine().seasonStory(season!.id), staleTime: 0, enabled: on && season?.status === "live" });
-  if (!season) return null;
+  if (!season) return <p className="text-text-secondary">Membaca season…</p>;
   if (first) {
     const placed = new Set(Object.values(rosters).flat());
     return <Welcome seasonName={season.name} idols={idols.length} leagues={Object.keys(rosters).length} reserves={idols.filter((i) => i.active && !placed.has(i.id)).length} />;
