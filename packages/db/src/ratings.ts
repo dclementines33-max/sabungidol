@@ -26,3 +26,9 @@ export async function applyRatings(db: Db, changes: RatingChange[], source: stri
 export async function listRatingHistory(db: Db, idolId: string) {
   return db.select().from(ratingHistory).where(eq(ratingHistory.idolId, idolId)).orderBy(desc(ratingHistory.at), desc(ratingHistory.id));
 }
+
+// Rating changes saved for one season (Season Archive), biggest change first.
+export async function listSeasonRatingChanges(db: Db, seasonId: string) {
+  const rows = await db.select().from(ratingHistory).where(eq(ratingHistory.seasonId, seasonId));
+  return rows.map((r) => ({ idolId: r.idolId, old: r.old, new: r.new, source: r.source })).sort((a, b) => Math.abs(b.new - b.old) - Math.abs(a.new - a.old) || a.idolId.localeCompare(b.idolId));
+}
