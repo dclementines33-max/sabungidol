@@ -164,7 +164,10 @@ test("Dashboard: fixed cards with the season's data", async () => {
   await page.goto("/dashboard");
   await expect(page.getByRole("region", { name: "Data" }).locator("dl").first()).toContainText("5.583", { timeout: 60_000 });
   await expect(page.getByRole("region", { name: "Progress kompetisi" })).toContainText("Selesai");
-  await expect(page.getByRole("region", { name: "Juara bertahan" }).getByRole("listitem").first()).toBeVisible();
+  await expect(page.getByRole("table", { name: /^Klasemen / }).getByRole("row")).toHaveCount(21); // Update 2: D1 table + title race
+  await expect(page.getByRole("img", { name: /^Title race / })).toBeVisible();
+  await page.getByRole("button", { name: "D1F" }).click();
+  await expect(page.getByRole("heading", { name: "Peta season" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Top 5 rating" }).getByRole("listitem")).toHaveCount(5);
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/dashboard.png", fullPage: true });
@@ -177,6 +180,9 @@ test("Home: hero with the Unzure champion, action cards, backup line", async () 
   await expect(page.getByText("Lanjutkan season")).toBeVisible();
   await expect(page.getByText("100%")).toBeVisible();
   await expect(page.getByRole("heading", { name: "On This Day" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Angka sepanjang masa" })).toContainText("5.583"); // Update 2: totals, a fact, leaders
+  await expect(page.getByText("Fakta acak")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Para penguasa" })).toBeVisible();
   await expect(page.getByText(/Belum pernah backup\.|Backup terakhir \d+ hari lalu\./)).toBeVisible();
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/home-cinematic.png", fullPage: true });

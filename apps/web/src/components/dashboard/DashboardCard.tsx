@@ -1,10 +1,10 @@
-// One Dashboard card (PRD §8): a titled box in the fixed card grid (user decision: fixed order, no drag).
+// One Dashboard block (PRD §8; Update 2: no boxes): a title over a thin line, flowing in columns rather than a grid.
 import type { ReactNode } from "react";
 
-export function DashboardCard({ title, children, wide = false }: { title: string; children: ReactNode; wide?: boolean }) {
+export function DashboardCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section aria-label={title} className={`panel p-4 ${wide ? "md:col-span-2" : ""}`}>
-      <h2 className="m-0 mb-3 text-xs tracking-widest text-text-secondary uppercase">{title}</h2>
+    <section aria-label={title} className="mb-10 break-inside-avoid border-t border-border pt-3">
+      <h2 className="kicker m-0 mb-3 text-accent-bright">{title}</h2>
       {children}
     </section>
   );
