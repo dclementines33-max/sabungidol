@@ -36,7 +36,6 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
           const bad = problems.some((p) => p.league === code);
           return (
             <button key={code} type="button" disabled={!draft} onClick={() => setLeague(code)}
-              aria-label={`${code} ${b.name} ${n}/20 idol${bad ? ", ada masalah" : ""}`}
               className="flex items-center gap-3 rounded-card border border-border border-l-4 bg-surface p-3 text-left hover:bg-surface-hover disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright"
               style={{ borderLeftColor: b.color ? `var(--color-${b.color})` : undefined }}>
               <CompetitionLogo logoId={b.logoId} className="size-10" />
@@ -44,7 +43,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
                 <span className="block truncate font-medium">{b.name}</span>
                 <span className="font-mono text-xs text-text-secondary">{code}</span>
               </span>
-              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20</span>
+              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20 idol{bad && <span className="sr-only">, ada masalah</span>}</span>
             </button>
           );
         })}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isFinalScore, seriesOdds, seriesState } from "./seriesRules";
+import { finalScores, gamesForScore, isFinalScore, seriesOdds, seriesState } from "./seriesRules";
 
 describe("seriesState (PRD §5.3)", () => {
   it("is open until someone reaches the target", () => {
@@ -35,5 +35,24 @@ describe("seriesOdds matches the PRD §5.1 table at a 10-point gap", () => {
     near(odds.D, 0.32);
     near(odds.B, 0.14);
     near(odds.A + odds.D + odds.B, 1);
+  });
+});
+
+describe("finalScores and gamesForScore (MatchModal presets and typed scores)", () => {
+  it("lists every final score, A's wins first", () => {
+    expect(finalScores(5)).toEqual([[3, 0], [3, 1], [3, 2], [2, 3], [1, 3], [0, 3]]);
+    expect(finalScores(4)).toEqual([[3, 0], [3, 1], [2, 2], [1, 3], [0, 3]]);
+  });
+
+  it("builds games that end the series exactly on the last game, winner last", () => {
+    for (const bo of [3, 4, 5, 7] as const) {
+      for (const [a, b] of finalScores(bo)) {
+        const games = gamesForScore(a, b);
+        expect(seriesState(bo, games)).toMatchObject({ scoreA: a, scoreB: b });
+        expect(seriesState(bo, games.slice(0, -1)).result).toBeNull();
+      }
+    }
+    expect(gamesForScore(3, 2)).toEqual(["A", "B", "A", "B", "A"]);
+    expect(gamesForScore(1, 3)).toEqual(["B", "A", "B", "B"]);
   });
 });

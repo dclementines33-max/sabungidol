@@ -11,7 +11,17 @@ import { useBranding } from "../../data/branding";
 export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; onClose: () => void }) {
   const { label } = useBranding();
   const { data: match } = useQuery({ queryKey: ["match-preview", matchId], queryFn: () => engine().matchPreview(matchId!), enabled: !!matchId, staleTime: 0, gcTime: 0 });
+  const { data: h2h } = useQuery({ queryKey: ["match-h2h", match?.idolA, match?.idolB], queryFn: () => engine().headToHead(match!.idolA, match!.idolB), enabled: !!match, staleTime: 0 });
   if (!matchId || !match || match.id !== matchId) return null;
+  const line = (l: { wins: number; draws: number; losses: number; titles: number } | null | undefined) => l ? [`${l.wins}-${l.draws}-${l.losses}`, String(l.titles)] : ["–", "–"];
+  const [careerA, titlesA] = line(h2h?.lineA);
+  const [careerB, titlesB] = line(h2h?.lineB);
+  const facts = [
+    { label: `Season ini · ${label(match.comp)}`, a: match.record.comp[0]!, b: match.record.comp[1]! },
+    { label: "Season ini · semua", a: match.record.all[0]!, b: match.record.all[1]! },
+    { label: "Karier M-S-K", a: careerA!, b: careerB! },
+    { label: "Gelar", a: titlesA!, b: titlesB! },
+  ];
 
   const accept = async ({ method, games }: AcceptedResult) => {
     try {
@@ -33,6 +43,8 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
       idolA={match.idolA}
       idolB={match.idolB}
       bestOf={match.bestOf}
+      h2h={h2h?.pair ? { winsA: h2h.pair.wins, draws: h2h.pair.draws, winsB: h2h.pair.losses } : undefined}
+      facts={facts}
       simulate={() => match.games}
       onAccept={accept}
     />

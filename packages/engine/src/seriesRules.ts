@@ -24,6 +24,27 @@ export function isFinalScore(bestOf: BestOf, scoreA: number, scoreB: number): bo
   return bestOf === 4 && scoreA === 2 && scoreB === 2;
 }
 
+// Every score a series can end on, A's wins first (the MatchModal's preset buttons): Bo5 → 3–0 3–1 3–2 2–3 1–3 0–3.
+export function finalScores(bestOf: BestOf): [number, number][] {
+  const t = seriesTarget(bestOf);
+  const losers = Array.from({ length: Math.min(t, bestOf - t + 1) }, (_, i) => i); // Bo4: at most 4 games, so 3–1 is the last
+  return [...losers.map((l): [number, number] => [t, l]), ...(bestOf === 4 ? [[2, 2] as [number, number]] : []), ...losers.reverse().map((l): [number, number] => [l, t])];
+}
+
+// Games for a score typed directly: they alternate and the winner takes the last game, so a typed
+// score never invents a reverse sweep. Bo4 2–2 = A B A B.
+export function gamesForScore(scoreA: number, scoreB: number): Side[] {
+  const [win, lose]: [Side, Side] = scoreA >= scoreB ? ["A", "B"] : ["B", "A"];
+  let w = Math.max(scoreA, scoreB) - (scoreA === scoreB ? 0 : 1);
+  let l = Math.min(scoreA, scoreB);
+  const games: Side[] = [];
+  while (w > 0 || l > 0) {
+    if (w > 0) { games.push(win); w--; }
+    if (l > 0) { games.push(lose); l--; }
+  }
+  return scoreA === scoreB ? games : [...games, win];
+}
+
 // Exact chance of each result before the match (no variance), for the match screen (PRD §5.1 table).
 export function seriesOdds(effectiveA: number, effectiveB: number, bestOf: BestOf, scale = 40): Record<Side | "D", number> {
   const p = gameWinProbability(effectiveA, effectiveB, scale);

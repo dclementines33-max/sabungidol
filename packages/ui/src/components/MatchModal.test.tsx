@@ -35,21 +35,28 @@ describe("MatchModal (PRD §9)", () => {
     expect(onAccept).toHaveBeenCalledWith({ method: "sim", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
   });
 
-  it("manual = the winner of each game in order, so a reverse sweep stays true", () => {
+  it("preset = one click on a final score; games alternate with the winner last", () => {
+    const onAccept = open({ facts: [{ label: "Season ini", a: "5-1", b: "2-4" }] });
+    expect(screen.getByRole("rowheader", { name: "Season ini" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "Preset skor" }));
+    expect(screen.getAllByRole("button", { name: /^[0-9]–[0-9] / })).toHaveLength(6); // Bo5: 3–0 3–1 3–2 2–3 1–3 0–3
+    fireEvent.click(screen.getByRole("button", { name: "2–3 Yuna" }));
+    fireEvent.click(accept());
+    expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 2, scoreB: 3, result: "B", games: ["B", "A", "B", "A", "B"] });
+  });
+
+  it("manual = set the score directly; only a final score can be accepted", () => {
     const onAccept = open();
     fireEvent.click(screen.getByRole("radio", { name: "Manual" }));
-    const win = (name: RegExp) => fireEvent.click(screen.getByRole("button", { name }));
-    win(/^Mina Kim menang game 1/);
-    win(/^Mina Kim menang game 2/);
-    win(/^Yuna menang game 3/);
+    const plus = (name: string, n: number) => { for (let i = 0; i < n; i++) fireEvent.click(screen.getByRole("button", { name: `Tambah skor ${name}` })); };
+    plus("Mina Kim", 2);
+    plus("Yuna", 1);
     expect(accept().disabled).toBe(true); // 2–1 is not over in Bo5
-    win(/^Yuna menang game 4/);
-    win(/^Mina Kim menang game 5/);
-    fireEvent.click(screen.getByRole("button", { name: "Batalkan game terakhir" }));
-    win(/^Yuna menang game 5/);
-    expect(screen.getAllByRole("button", { name: /menang game 6/ }).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
+    expect(screen.getByText("Skor belum sah untuk Bo5")).toBeTruthy();
+    plus("Mina Kim", 1);
+    expect((screen.getByRole("button", { name: "Tambah skor Mina Kim" }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(accept());
-    expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 2, scoreB: 3, result: "B", games: ["A", "A", "B", "B", "B"] });
+    expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
   });
 
   it("wheel results are accepted as method wheel", () => {

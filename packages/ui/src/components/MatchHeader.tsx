@@ -14,7 +14,7 @@ function Side({ idolId, align }: { idolId: string; align: "left" | "right" }) {
   const idol = useIdol(idolId);
   return (
     <div className={`flex flex-col gap-1 ${align === "right" ? "items-end text-right" : "items-start"}`}>
-      <IdolPhoto idolId={idolId} size={1024} className="w-28 sm:w-40" />
+      <IdolPhoto idolId={idolId} size={1024} className="w-24 sm:w-32" />
       <p className="m-0 mt-1 font-display text-lg">{idol.name}</p>
       <p className="m-0 text-sm text-text-secondary">{idol.groupName ?? "Soloist"}</p>
       <div className="flex flex-wrap gap-1">

@@ -8,6 +8,7 @@ import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { GroupTable } from "./GroupTable";
+import { MatchList } from "./MatchList";
 import { Tabs } from "./Tabs";
 
 const LETTERS = "ABCDEFGHIJKLMNOP";
@@ -27,6 +28,8 @@ export function UnzurePanel() {
     rounds: [...new Set(view.cells.filter((c) => c.stage === "SW" && c.round.startsWith(`${LETTERS[g]}-`) && c.winner).map((c) => c.round))]
       .map((round) => view.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner! }))),
   }));
+  const groupCells = (stage: string, g: number, openOnly = false) => view.cells.filter((c) => c.stage === stage && c.round.startsWith(`${LETTERS[g]}-`) && (!openOnly || !c.score));
+  const list = (stage: string, g: number, openOnly = false) => <MatchList cells={groupCells(stage, g, openOnly)} busy={running} onOpen={setMatchId} roundLabel={(r) => r.split("-").slice(1).join(" ")} />;
   const ko = view.cells.filter((c) => c.comp === "UZC" && c.stage !== "GS");
   return (
     <div className="space-y-6">
@@ -38,10 +41,10 @@ export function UnzurePanel() {
       </div>
       <Tabs label="Unzure Cup" tabs={[
         { id: "swiss", label: "Swiss Play-in", content: () => (
-          <div className="grid gap-6 xl:grid-cols-2">{swiss.map((s, g) => <SwissPlayInBracket key={g} group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} />)}</div>
+          <div className="grid gap-6 xl:grid-cols-2">{swiss.map((s, g) => <div key={g} className="space-y-3"><SwissPlayInBracket group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} />{list("SW", g, true)}</div>)}</div>
         ) },
         { id: "lcq", label: "LCQ", content: () => (
-          <div className="grid gap-6 md:grid-cols-2">{view.lcqTables.map((rows, g) => <GroupTable key={g} name={`Grup ${LETTERS[g]}`} rows={rows} through={4} />)}</div>
+          <div className="grid gap-6 md:grid-cols-2">{view.lcqTables.map((rows, g) => <div key={g} className="space-y-3"><GroupTable name={`Grup ${LETTERS[g]}`} rows={rows} through={4} />{list("LQ", g)}</div>)}</div>
         ) },
         { id: "pots", label: "Pot & undian", content: () => (
           <div className="space-y-6">
@@ -54,7 +57,7 @@ export function UnzurePanel() {
           </div>
         ) },
         { id: "groups", label: "Grup", content: () => (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">{view.groupTables.map((rows, g) => <GroupTable key={g} name={`Grup ${LETTERS[g]}`} rows={rows} through={2} />)}</div>
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">{view.groupTables.map((rows, g) => <div key={g} className="space-y-3"><GroupTable name={`Grup ${LETTERS[g]}`} rows={rows} through={2} />{list("GS", g)}</div>)}</div>
         ) },
         { id: "ko", label: "Knockout", content: () => (ko.length ? <TournamentBracketTree cells={ko} onMatchClick={(cell) => { const match = ko.find((c) => c.key === cell.key); if (match && !match.winner && !running) setMatchId(match.id); }} /> : <p className="m-0 text-sm text-text-secondary">Babak 32 besar dimulai setelah fase grup.</p>) },
       ]} />
