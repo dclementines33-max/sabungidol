@@ -1,0 +1,15 @@
+// Cloudflare Worker (PRD §11): the cloud backup API at /api/*, and the built web app as static assets
+// (every other path; unknown paths get the SPA shell). Secrets go in .dev.vars locally and
+// `wrangler secret put` for the deployed Worker; never in this file.
+{
+  "name": "sabung-idol",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"], // postgres.js needs Node's net/crypto shims
+  "assets": {
+    "directory": "../web/dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  }
+}

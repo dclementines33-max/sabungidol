@@ -6,9 +6,9 @@ import { gzipSync } from "node:zlib";
 
 const BUDGET_BYTES = 180_000;
 const client = new URL("../dist/client/", import.meta.url);
-const shell = readFileSync(new URL("_shell.html", client), "utf8");
+const shell = readFileSync(new URL("index.html", client), "utf8");
 const scripts = [...new Set([...shell.matchAll(/["'](\/assets\/[^"']+\.js)["']/g)].map((m) => m[1]))];
-if (scripts.length === 0) throw new Error("No scripts found in dist/client/_shell.html — run vite build first");
+if (scripts.length === 0) throw new Error("No scripts found in dist/client/index.html — run vite build first");
 
 let total = 0;
 for (const path of scripts) {

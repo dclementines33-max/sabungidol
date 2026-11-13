@@ -1,3 +1,6 @@
 node_modules
 .turbo
 dist
+# Cloudflare: local secrets and wrangler's cache
+.dev.vars
+.wrangler

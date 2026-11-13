@@ -1,0 +1,25 @@
+{
+  "name": "@sabung/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run --testTimeout=30000",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "better-auth": "^1.7.22",
+    "drizzle-orm": "^0.45.4",
+    "postgres": "^4.1.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261112.1",
+    "@electric-sql/pglite": "^0.5.16",
+    "@types/node": "^26.6.6",
+    "drizzle-kit": "^0.31.11",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.160.1"
+  }
+}

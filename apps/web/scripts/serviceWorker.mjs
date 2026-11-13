@@ -8,7 +8,7 @@ const { count, size, warnings } = await generateSW({
   globDirectory: "dist/client",
   globPatterns: ["**/*.{html,js,css,wasm,data,json,woff2,svg,webmanifest}"],
   swDest: "dist/client/sw.js",
-  navigateFallback: "/_shell.html", // every route is the same SPA shell
+  navigateFallback: "/index.html", // every route is the same SPA shell
   maximumFileSizeToCacheInBytes: 12 * 1024 * 1024, // pglite.wasm is ~9 MB
   cleanupOutdatedCaches: true,
 });

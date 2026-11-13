@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     // SPA: the app runs fully in the browser (local-first, PRD §11). Screens live in src/pages.
-    tanstackStart({ spa: { enabled: true }, router: { routesDirectory: "pages" } }),
+    tanstackStart({ spa: { enabled: true, prerender: { outputPath: "/index" } }, router: { routesDirectory: "pages" } }),
     viteReact(),
   ],
   // PGlite ships its own WebAssembly and data files; Vite must not pre-bundle it.
