@@ -7,7 +7,7 @@ import type { IdolFilter } from "./filterIdols";
 
 export type View = "grid" | "table";
 
-function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: [string, string][] }) {
+export function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: [string, string][] }) {
   return (
     <label className="text-sm text-text-secondary">
       {label}

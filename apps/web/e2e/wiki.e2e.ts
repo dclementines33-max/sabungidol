@@ -41,3 +41,22 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/idol-profile.png", fullPage: true });
 });
+
+test("Career Stats: Combined and per competition, columns, scope, CSV", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/career");
+  const count = page.getByText(/^\d+ idol$/);
+  await expect(count).toHaveText("240 idol", { timeout: 60_000 }); // the 2 reserves never played
+  expect(await axe(page)).toEqual([]);
+  await page.getByRole("tab", { name: "Liga Divisi 1" }).click();
+  await expect(count).toHaveText("120 idol");
+  await page.getByRole("combobox", { name: /^Liga/ }).selectOption("D1A");
+  await expect(count).toHaveText("20 idol");
+  await page.getByText(/^Kolom \(/).click();
+  await page.getByRole("checkbox", { name: "Poin liga" }).uncheck();
+  await expect(page.getByRole("columnheader", { name: "Poin liga" })).toHaveCount(0);
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Ekspor CSV" }).click();
+  expect((await download).suggestedFilename()).toBe("career-d1.csv");
+  await page.screenshot({ path: "test-results/career-stats.png" });
+});

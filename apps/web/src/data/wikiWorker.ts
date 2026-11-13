@@ -46,3 +46,6 @@ export async function matchPage(db: Db, filter: MatchFilter, opts: { after?: str
   const page = await queryMatches(db, filter, opts);
   return { ...page, total: opts.after ? null : await countMatchesWhere(db, filter) };
 }
+
+// Career Stats (PRD §8): every idol's row for one competition key ("ALL" = Combined).
+export const careerTable = async (db: Db, comp: string) => (await wikiStats(db)).rows.filter((r) => r.comp === comp);

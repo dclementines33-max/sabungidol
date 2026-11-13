@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–4 done, next step 5 (Career Stats)** |
+| **Fase 4 Wiki** | **in progress: steps 1–5 done, next step 6 (Head to Head)** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -88,7 +88,9 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    compLabel; Worker data/wikiWorker.ts: wikiStats = careerStats memoised on (match count, season statuses),
    idolProfile, rivalsOf). Wiki queries use staleTime 0 (app default is ∞). Not built: edit / change photo / toggle
    active buttons (Input Data + Inactive Manager do that), form, group logo. E2E wiki.e2e.ts plays one season once.
-5. Career Stats: virtual table, chosen columns, sticky photo+name, Combined + per competition, scope, CSV.
+5. ✅ Career Stats `/wiki/career` (components/careerStats: CareerTable = Worker careerTable(comp) + VirtualTable, sticky
+   photo+name, sort select, CSV via careerCsv; ColumnPicker; scope = Status/Group/Liga reusing idolDatabase
+   filterIdols + exported Select). Not built: season-range scope (cache keeps career totals only), click-to-sort headers.
 6. Head to Head: two selects, W-D-L, titles, streaks, Top 10 rivalries, match log, filters.
 7. Hall of Champions: tab per competition, champions per season, most titles, wall of fame.
 8. All-time Records: top-10 leaderboard cards per category + "lihat semua".

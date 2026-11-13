@@ -13,7 +13,7 @@ import { acceptMatch, matchPreview } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { careerSync, lastSeasonProgression } from "./ratingSources";
 import { careerStats, rebuildStats } from "./careerWorker";
-import { idolProfile, matchPage } from "./wikiWorker";
+import { careerTable, idolProfile, matchPage } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -136,6 +136,7 @@ const api = {
   rebuildStats: async () => rebuildStats(await open()),
   // Wiki pages (PRD §8).
   idolProfile: async (id: string) => idolProfile(await open(), id),
+  careerTable: async (comp: string) => careerTable(await open(), comp),
   matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),
   // Closing the season (PRD §4, §6.3).
   closePreview: async () => closePreview(await open()),
