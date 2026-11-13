@@ -381,6 +381,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - The Idols roster is fixed at season start (else rating changes would rewrite the season); likewise an
   idol's rating is fixed within a season once played (`seasonInput` reads it from the saved matches).
 - Engine Tuning preset numbers are ours (PRD gives none): Realistic 40/σ4, Chaotic 60/σ8, Dominant 28/σ2.
+- Photos are prepared with tools/photos (K-pop Wiki concept photos / Wikimedia Commons, numbered contact sheets, every pick
+  checked by eye). Files are named "Name GROUP.jpg" so Photo Import matches them for sure.
 - Default photo rule (user 2026-11-14): never from kprofiles; the face must be fully visible and clean — no glasses, masks,
   hands or props over the face (concept shots are out). This is for the default base photo only; comeback photos later.
 - Update 3 engine rules (user): Nugu/B-Side upset cups (fatigue + flatter scale), in-series momentum, MatchModal re-roll,

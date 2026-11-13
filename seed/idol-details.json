@@ -360,13 +360,15 @@
   "name": "Haerin",
   "group": "NewJeans",
   "birthday": "2006-05-15",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Danielle",
   "group": "NewJeans",
   "birthday": "2005-04-11",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Hyein",
@@ -379,25 +381,29 @@
   "name": "Kim Minji",
   "group": "NewJeans",
   "birthday": "2004-05-07",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Pham Hanni",
   "group": "NewJeans",
   "birthday": "2004-10-06",
-  "nationality": "VN"
+  "nationality": "VN",
+  "role": "No official position"
  },
  {
   "name": "Wonhee",
   "group": "ILLIT",
   "birthday": "2007-06-26",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "Vocalist"
  },
  {
   "name": "Moka",
   "group": "ILLIT",
   "birthday": "2004-10-08",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "Main Dancer"
  },
  {
   "name": "Iroha",
@@ -410,13 +416,15 @@
   "name": "Park Minju",
   "group": "ILLIT",
   "birthday": "2004-05-11",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "Main Vocalist"
  },
  {
   "name": "Yunah",
   "group": "ILLIT",
   "birthday": "2004-01-15",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "Leader, Lead Vocalist"
  },
  {
   "name": "Natty",
@@ -1311,19 +1319,22 @@
   "name": "Newy",
   "group": "KEYVEATZ",
   "birthday": "2007-09-16",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "Kim Yuna",
   "group": "KEYVEATZ",
   "birthday": "2008-08-13",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Kang Yeseul",
   "group": "KEYVEATZ",
   "birthday": "2006-10-15",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Um Jione",
@@ -1336,25 +1347,29 @@
   "name": "Michi",
   "group": "AtHeart",
   "birthday": "2007-05-06",
-  "nationality": "US"
+  "nationality": "US",
+  "role": "No official position"
  },
  {
   "name": "Katelyn",
   "group": "AtHeart",
   "birthday": "2007-07-24",
-  "nationality": "PH"
+  "nationality": "PH",
+  "role": "No official position"
  },
  {
   "name": "Seohyeon",
   "group": "AtHeart",
   "birthday": "2008-09-12",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Aurora",
   "group": "AtHeart",
   "birthday": "2009-07-04",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "Bome",
@@ -1402,7 +1417,8 @@
   "name": "Ryu Sarang",
   "group": "izna",
   "birthday": "2007-04-18",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Choi Jungeun",
@@ -1429,19 +1445,22 @@
   "name": "Liv",
   "group": "RESCENE",
   "birthday": "2006-10-11",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Minami",
   "group": "RESCENE",
   "birthday": "2006-11-29",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "May",
   "group": "RESCENE",
   "birthday": "2008-08-19",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Zena",
@@ -1503,7 +1522,8 @@
   "name": "Mia Hinano",
   "group": "Baby DONT Cry",
   "birthday": "2007-09-03",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "Mashiro",
@@ -1516,13 +1536,15 @@
   "name": "MiU",
   "group": "MΛDEIN",
   "birthday": "2003-01-09",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "Serina",
   "group": "MΛDEIN",
   "birthday": "2006-05-03",
-  "nationality": "JP"
+  "nationality": "JP",
+  "role": "No official position"
  },
  {
   "name": "Nagomi",
@@ -1577,7 +1599,8 @@
   "name": "Kuk Chorok",
   "group": "OURBIRTHDAY",
   "birthday": "2005-07-28",
-  "nationality": "KR"
+  "nationality": "KR",
+  "role": "No official position"
  },
  {
   "name": "Shin Hyewon",
