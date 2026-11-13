@@ -16,15 +16,15 @@ describe("game probability (PRD §5.1)", () => {
     expect(gameWinProbability(80, 50)).toBeCloseTo(0.85, 2);
   });
 
-  it("acceptance §5.10: 100,000 games at a 10-point gap = 64% ± 0.5% (no variance)", () => {
-    let games = 0;
-    let winsA = 0;
-    for (const s of run(30_000, 7, 60, 50)) {
-      games += s.games.length;
-      winsA += s.scoreA;
-    }
-    expect(games).toBeGreaterThan(100_000);
-    expect(Math.abs(winsA / games - 0.6401)).toBeLessThan(0.005);
+  it("acceptance §5.10: at a 10-point gap a game with nobody behind = 64% ± 0.5% (no variance)", () => {
+    const firsts = run(100_000, 3, 60, 50).map((s) => s.games[0]); // Update 3: later games carry a small momentum push
+    expect(Math.abs(firsts.filter((g) => g === "A").length / firsts.length - 0.6401)).toBeLessThan(0.005);
+  });
+
+  it("momentum (Update 3): the side behind fights back a little, so more Bo5 go the distance", () => {
+    const deciders = run(20_000, 5, 60, 50).filter((s) => s.games.length === 5).length / 20_000;
+    const p = 0.6401, q = 1 - p; // without momentum: P(2–2 after 4 games) = 6 p² q²
+    expect(deciders).toBeGreaterThan(6 * p * p * q * q + 0.01);
   });
 
   it("series odds match the PRD table at a 10-point gap", () => {

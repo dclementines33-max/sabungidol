@@ -1,4 +1,4 @@
-// Click a match → MatchModal (PRD §9). "Simulate" shows the engine's games for this match; the
+// Click a match → MatchModal (PRD §9). "Simulate" plays the match when pressed (a new roll each time); the
 // accepted result is saved with its method and the season views refresh.
 import { type AcceptedResult, MatchModal } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
@@ -48,7 +48,7 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
       bestOf={match.bestOf}
       h2h={h2h?.pair ? { winsA: h2h.pair.wins, draws: h2h.pair.draws, winsB: h2h.pair.losses } : undefined}
       facts={facts}
-      simulate={() => match.games}
+      simulate={() => engine().simulateMatch(match.id, 1 + Math.floor(Math.random() * 2 ** 31))} // Update 3: rolled when pressed
       theme={{
         accent: (/^D[12]|^BS/.test(match.comp) ? brand(match.comp.startsWith("BS") ? `D1${match.comp[2]}` : match.comp).color : undefined)
           ?? ACCENT[match.comp] ?? ACCENT[match.comp.slice(0, 2)],

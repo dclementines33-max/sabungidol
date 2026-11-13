@@ -8,6 +8,8 @@ import { matchRng } from "../rng";
 import { simulateSeries } from "../series";
 import { type MatchRef, PENDING, type SeasonInput, type SimMatch } from "./types";
 
+const BIG_CUPS = new Set(["SWS", "LCQ", "UZC", "INK", "IDL"]);
+
 export type MatchPlayer = ReturnType<typeof createMatchPlayer>;
 
 export function createMatchPlayer(input: SeasonInput) {
@@ -18,6 +20,7 @@ export function createMatchPlayer(input: SeasonInput) {
   const pending: MatchRef[] = [];
   const stale: string[] = [];
   let inLeaguePhase = true;
+  const cupLoad = new Map<string, number>(); // big-cup matches each idol played this season (fatigue, Update 3)
 
   const play = (comp: CompetitionCode, stage: StageCode, round: string, slot: number, idolA: string, idolB: string): SimMatch | null => {
     const id = buildMatchId({ season: input.season, comp, stage, round, slot });
@@ -36,13 +39,19 @@ export function createMatchPlayer(input: SeasonInput) {
       }
       const ratingA = rating.get(idolA)!;
       const ratingB = rating.get(idolB)!;
+      // Update 3: Nugu and B-Side are the upset cups. An idol worn out by the big cups (Swiss, LCQ, Unzure, Inkigayo,
+      // The Idols playoff) loses 0.75 per such match (at most 6); rating gaps count less (scale ×1.4) and the day-to-day swing is 1.5× larger. Same rule for both sides.
+      const chaos = comp === "NUG" || comp.startsWith("BS");
+      const tired = (idol: string) => (chaos ? Math.min(6, 0.75 * (cupLoad.get(idol) ?? 0)) : 0);
       const series = simulateSeries({
-        ratingA, ratingB, formA: formA.modifier, formB: formB.modifier,
-        bestOf: seasonBestOf(input.config, comp, stage, round), rng: matchRng(input.seed, id), tuning: input.tuning,
+        ratingA, ratingB, formA: formA.modifier - tired(idolA), formB: formB.modifier - tired(idolB),
+        bestOf: seasonBestOf(input.config, comp, stage, round), rng: matchRng(input.seed, id, input.salt?.[id]),
+        tuning: chaos ? { scale: 1.4 * (input.tuning?.scale ?? 40), sigma: 1.5 * (input.tuning?.sigma ?? 4) } : input.tuning,
       });
       match = { id, comp, stage, round, slot, idolA, idolB, ...series, ratingA, ratingB, formA: formA.name, formB: formB.name };
     }
     matches.push(match);
+    if (BIG_CUPS.has(comp) && stage !== "LG") for (const idol of [idolA, idolB]) cupLoad.set(idol, (cupLoad.get(idol) ?? 0) + 1);
     const outcome = (side: "A" | "B"): Result => (match.result === "D" ? "D" : match.result === side ? "W" : "L");
     recent.set(idolA, [...(recent.get(idolA) ?? []), outcome("A")].slice(-5));
     recent.set(idolB, [...(recent.get(idolB) ?? []), outcome("B")].slice(-5));

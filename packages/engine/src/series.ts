@@ -25,8 +25,13 @@ export function simulateSeries({ ratingA, ratingB, formA = 0, formB = 0, bestOf,
   const effectiveB = ratingB + formB + rng.normal(sigma);
   const p = gameWinProbability(effectiveA, effectiveB, scale);
 
+  // Update 3 tweak: the side behind in the series fights back a little (+3% per game behind, at most +6%),
+  // so comebacks and close series happen a bit more often; the better idol still wins most of them.
   const games: Side[] = [];
-  while (!seriesState(bestOf, games).result) games.push(rng.next() < p ? "A" : "B");
+  for (let state = seriesState(bestOf, games); !state.result; state = seriesState(bestOf, games)) {
+    const push = Math.max(-0.06, Math.min(0.06, 0.03 * (state.scoreB - state.scoreA)));
+    games.push(rng.next() < p + push ? "A" : "B");
+  }
   const { scoreA, scoreB, result } = seriesState(bestOf, games);
   return { games, scoreA, scoreB, result: result! };
 }

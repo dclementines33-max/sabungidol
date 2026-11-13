@@ -2,27 +2,27 @@
 
 exports[`headless season (PRD §4) > golden: a fixed seed always gives this season (an unintended engine change shows up here) 1`] = `
 {
-  "checksum": 777462110,
+  "checksum": 4182985300,
   "notices": [],
   "titles": {
     "BSA": {
       "champion": "idol097",
-      "runnerUp": "idol090",
+      "runnerUp": "idol154",
     },
     "BSB": {
       "champion": "idol064",
       "runnerUp": "idol107",
     },
     "BSC": {
-      "champion": "idol110",
-      "runnerUp": "idol126",
+      "champion": "idol164",
+      "runnerUp": "idol110",
     },
     "BSD": {
       "champion": "idol046",
       "runnerUp": "idol022",
     },
     "BSE": {
-      "champion": "idol017",
+      "champion": "idol006",
       "runnerUp": "idol178",
     },
     "BSF": {
@@ -30,7 +30,7 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
       "runnerUp": "idol226",
     },
     "D1A": {
-      "champion": "idol054",
+      "champion": "idol003",
       "runnerUp": "idol097",
     },
     "D1B": {
@@ -38,8 +38,8 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
       "runnerUp": "idol064",
     },
     "D1C": {
-      "champion": "idol126",
-      "runnerUp": "idol110",
+      "champion": "idol110",
+      "runnerUp": "idol164",
     },
     "D1D": {
       "champion": "idol022",
@@ -47,7 +47,7 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
     },
     "D1E": {
       "champion": "idol114",
-      "runnerUp": "idol087",
+      "runnerUp": "idol212",
     },
     "D1F": {
       "champion": "idol176",
@@ -58,12 +58,12 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
       "runnerUp": "idol001",
     },
     "D2B": {
-      "champion": "idol077",
-      "runnerUp": "idol041",
+      "champion": "idol041",
+      "runnerUp": "idol077",
     },
     "D2C": {
-      "champion": "idol198",
-      "runnerUp": "idol144",
+      "champion": "idol144",
+      "runnerUp": "idol198",
     },
     "D2D": {
       "champion": "idol014",
@@ -75,7 +75,7 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
     },
     "D2F": {
       "champion": "idol125",
-      "runnerUp": "idol159",
+      "runnerUp": "idol004",
     },
     "IDL": {
       "champion": "idol077",
@@ -83,19 +83,19 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
     },
     "IDL-PO": {
       "champion": "idol077",
-      "runnerUp": "idol126",
+      "runnerUp": "idol029",
     },
     "INK": {
-      "champion": "idol176",
+      "champion": "idol114",
       "runnerUp": "idol107",
     },
     "NUG": {
-      "champion": "idol029",
-      "runnerUp": "idol030",
+      "champion": "idol077",
+      "runnerUp": "idol100",
     },
     "UZC": {
-      "champion": "idol064",
-      "runnerUp": "idol106",
+      "champion": "idol180",
+      "runnerUp": "idol003",
     },
   },
 }

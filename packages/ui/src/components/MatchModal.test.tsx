@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MatchModal } from "./MatchModal";
 import { PAUSE_MS, SPIN_MS } from "./WheelPicker";
@@ -28,12 +28,25 @@ describe("MatchModal (PRD §9)", () => {
     expect(screen.getByText("3–1–2")).toBeTruthy();
   });
 
-  it("writes nothing until Accept Result, then sends the simulated games", () => {
+  it("writes nothing until Accept Result, then sends the simulated games", async () => {
     const onAccept = open();
     expect(accept().disabled).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
+    await waitFor(() => expect(accept().disabled).toBe(false));
     fireEvent.click(accept());
     expect(onAccept).toHaveBeenCalledWith({ method: "sim", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
+  });
+
+  it("Simulate plays when pressed and 'Simulate ulang' rolls again (Update 3)", async () => {
+    const rolls = [["A", "A", "A"], ["B", "B", "B"]] as const;
+    const simulate = vi.fn(async () => [...rolls[simulate.mock.calls.length - 1]!]);
+    const onAccept = open({ simulate });
+    expect(simulate).not.toHaveBeenCalled(); // nothing decided before the button
+    fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Simulate ulang" }));
+    await waitFor(() => expect(simulate).toHaveBeenCalledTimes(2));
+    fireEvent.click(accept());
+    expect(onAccept).toHaveBeenCalledWith(expect.objectContaining({ result: "B", games: ["B", "B", "B"] }));
   });
 
   it("preset = one click on a final score; games alternate with the winner last", () => {

@@ -47,7 +47,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   bestOf: BestOf;
   h2h?: HeadToHead;
   facts?: MatchFact[];
-  simulate: () => Side[]; // the engine's games for this match
+  simulate: () => Side[] | Promise<Side[]>; // the engine plays the match when pressed; pressing again rolls again
   random?: () => number; // wheel randomness (tests)
   onAccept: (result: AcceptedResult) => void;
   theme?: MatchTheme; // the competition's colour and name, grand final look (Update 3)
@@ -57,6 +57,8 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   const [mode, setMode] = useState<Mode>("sim");
   const [games, setGames] = useState<Side[]>([]);
   const [typed, setTyped] = useState<[number, number]>([0, 0]);
+  const [roll, setRoll] = useState(0); // a new visualizer for every roll
+  const runSim = async () => { setGames(await simulate()); setRoll((r) => r + 1); };
   const scores = finalScores(bestOf);
   const state = seriesState(bestOf, games);
   const method: MatchMethod = mode === "sim" ? "sim" : mode === "wheel" ? "wheel" : "manual";
@@ -113,8 +115,11 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
 
       <div className="mt-4">
         {mode === "sim" && (games.length === 0
-          ? <div className="flex justify-center"><Button variant="primary" className="px-10 py-3 text-base" onClick={() => setGames(simulate())}>Simulate</Button></div>
-          : <LiveMatchVisualizer games={games} nameA={a.name} nameB={b.name} target={seriesTarget(bestOf)} />)}
+          ? <div className="flex justify-center"><Button variant="primary" className="px-10 py-3 text-base" onClick={() => void runSim()}>Simulate</Button></div>
+          : <div className="space-y-3">
+              <LiveMatchVisualizer key={roll} games={games} nameA={a.name} nameB={b.name} target={seriesTarget(bestOf)} />
+              <div className="flex justify-center"><Button onClick={() => void runSim()}>Simulate ulang</Button></div>
+            </div>)}
 
         {mode === "preset" && (
           <div role="group" aria-label="Preset skor" className="flex flex-wrap justify-center gap-2">

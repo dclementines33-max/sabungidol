@@ -9,7 +9,7 @@ import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engin
 import * as Comlink from "comlink";
 import { backupDue, exportBackup, importSabung, listSnapshots, readSnapshot, saveSnapshot } from "./backup/backupWorker";
 import { fixIntegrity, integrityCheck } from "./integrityWorker";
-import { acceptMatch, matchPreview } from "./singleMatch";
+import { acceptMatch, matchPreview, simulateMatch } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { careerSync, lastSeasonProgression } from "./ratingSources";
 import { careerStats, rebuildStats } from "./careerWorker";
@@ -123,6 +123,7 @@ const api = {
   leagueView: async (comp: string) => leagueView(await open(), comp),
   cupView: async (comps: string[], seasonId?: string) => cupView(await open(), comps, seasonId),
   matchPreview: async (id: string) => matchPreview(await open(), id),
+  simulateMatch: async (id: string, salt: number) => simulateMatch(await open(), id, salt),
   acceptMatch: async (id: string, games: ("A" | "B")[], method: "sim" | "manual" | "wheel") => acceptMatch(await open(), id, games, method),
   playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),
   pauseSeason: () => requestPause(),

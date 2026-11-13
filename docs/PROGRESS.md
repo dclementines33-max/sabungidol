@@ -248,9 +248,19 @@ V4 ✅ /wiki/groups = Tabs "Peringkat" (GroupEntry now shows the group logo) + "
    works for a group without members. H2H TopRivalries: the whole row is one link. Backup section "base" (shared
    SECTION_LABELS, db SECTION_TABLES): groups, photos, idols, + the current season's seasons/competitions/entries, no
    matches (+test). Replace with it on a database that has matches fails and rolls back (FKs, same as the Idol section).
-V5 Engine: every Simulate = new roll (PRD §5.4 re-roll salt), small tweak, Nugu/B-Side upsets (fatigue), new rating
-   progression (harder growth when high, faster when low; W-D-L, titles, upsets) with prestige order UZC > IDL > D1 >
-   INK ("Crown Cup" = Inkigayo, user 2026-11-14) > NUG > BS > DSG > MBK > D2.
+V5 ✅ (golden snapshot updated twice: intended engine changes)
+   - Re-roll: SeasonInput.salt {matchId: n} → matchRng(seed, id, salt). data/singleMatch simulateMatch(id, salt) (worker);
+     PlayMatchDialog simulate = a random salt per press; MatchModal simulate is async + "Simulate ulang". matchPreview
+     no longer carries games. Bulk "Main …" buttons stay on the season seed.
+   - Momentum (series.ts): the side behind gets +3% per game behind (max 6%). PRD §5.10 check now on games with nobody
+     behind (still 64%); more Bo5 go to 5 games.
+   - Upset cups (matchPlayer): NUG / BS* use scale ×1.4, sigma ×1.5, and fatigue −0.75 per big-cup match this season
+     (SWS, LCQ, UZC, INK, IDL playoff — not the IDL league), at most −6. Measured over 10 seasons: a 10+ favourite lost
+     20.0% → 26.8% (upsetCups.test). Form already counted every competition (last 5, ±3/−2).
+   - Progression (seasonClose): PRESTIGE UZC/SWS/LCQ 1, IDL .9, D1 .8, INK .7, NUG .6, BS .5, DSG .4, MBK .35, D2 .25
+     ("Crown Cup" = Inkigayo). Gain = performance (±6) + titles 3 × prestige (≤ 5) + giant kills 0.5 (≤ 2) ± 2 promotion,
+     × clamp((100 − rating) / 30, 0.2, 1.5) when positive; losses in full. The >92 regression is gone. Reason string says
+     the factor. seasonScores/seasonTop unchanged in shape.
 V6 (asked 2026-11-14) idol data from the web: birthday, nationality, role in group (new field), new idols + groups, photos
    (user: any free source is fine, non-commercial fun app).
 
@@ -361,6 +371,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - The Idols roster is fixed at season start (else rating changes would rewrite the season); likewise an
   idol's rating is fixed within a season once played (`seasonInput` reads it from the saved matches).
 - Engine Tuning preset numbers are ours (PRD gives none): Realistic 40/σ4, Chaotic 60/σ8, Dominant 28/σ2.
+- Update 3 engine rules (user): Nugu/B-Side upset cups (fatigue + flatter scale), in-series momentum, MatchModal re-roll,
+  new progression and prestige order — PRD §5.10 and §6.1–6.3 numbers are superseded where they differ (see V5).
 - Project rules (CLAUDE.md): screens in `pages/`, pieces in `components/`, saving/loading in `data/`,
   one job per file, ≤ 300 lines, minimal code, ask instead of guessing, test every change, report real
   results. Ponytail mode is on (full). Don't commit `design/refs/*` pictures unless asked.

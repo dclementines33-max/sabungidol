@@ -16,6 +16,7 @@ export type SeasonInput = {
   // Replay (Fase 3): saved results are reused, not played again; a match that is not saved is only
   // played when target allows it, otherwise it is pending. Without target everything is played.
   saved?: SimMatch[];
+  salt?: Record<string, number>; // Re-roll (PRD §5.4; Update 3): match id → salt, a fresh variation each time MatchModal simulates
   target?: (match: MatchRef) => boolean;
 };
 

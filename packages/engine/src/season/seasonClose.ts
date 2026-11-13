@@ -7,7 +7,8 @@ import { computeStandings } from "../standings";
 import { seasonPlacements } from "./placements";
 import type { SimMatch, Title } from "./types";
 
-export const PRESTIGE: Record<CompetitionKey, number> = { UZC: 1, SWS: 1, LCQ: 1, IDL: 0.9, INK: 0.75, D1: 0.7, DSG: 0.55, MBK: 0.45, NUG: 0.4, BS: 0.35, D2: 0.25 };
+// Update 3 (user, 2026-11-14): Unzure > The Idols > D1 > Inkigayo > Nugu > B-Side > Daesang > Music Bank > D2.
+export const PRESTIGE: Record<CompetitionKey, number> = { UZC: 1, SWS: 1, LCQ: 1, IDL: 0.9, D1: 0.8, INK: 0.7, NUG: 0.6, BS: 0.5, DSG: 0.4, MBK: 0.35, D2: 0.25 };
 const PLACE_POINTS = [100, 70, 55, 45, 30, 30, 30, 30, ...Array(8).fill(20)]; // place 1..16, then 0
 const placePoints = (from: number, to: number) => {
   let sum = 0;
@@ -77,7 +78,10 @@ export function seasonScores(matches: SimMatch[], titles: Partial<Record<string,
 // The season's best idols over every competition, by season score (Update 3: the honours podium).
 export const seasonTop = (scores: Map<string, number>, n = 3) => [...scores].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, n).map(([id]) => id);
 
-// PRD §6.3, from the ratings the season was played with (so running it again gives the same result).
+// PRD §6.3 as changed in Update 3, from the ratings the season was played with (running it again gives the same result):
+// performance (W-D-L and places vs what the rating expected, ±6) + titles (3 × prestige each, at most +5) + giant kills
+// (+0.5 each, at most +2) ± 2 for promotion / relegation. A gain shrinks the higher the rating is and grows below 70
+// (× (100 − rating) / 30, between 0.2 and 1.5); a loss counts in full, so a bad season costs more the worse it is.
 export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
   const start = startRatings(matches);
   const score = seasonScores(matches, titles, leagues);
@@ -92,7 +96,12 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
   for (const [key, t] of Object.entries(titles)) {
     if (!t) continue;
     const prestige = PRESTIGE[competitionKeyOf(key.split("-")[0]!)];
-    bonus.set(t.champion, Math.min(3, (bonus.get(t.champion) ?? 0) + (prestige >= 0.7 ? 2 : 1)));
+    bonus.set(t.champion, Math.min(5, (bonus.get(t.champion) ?? 0) + 3 * prestige));
+  }
+  const kills = new Map<string, number>(); // wins over an opponent rated 15+ higher
+  for (const m of matches) {
+    if (m.result === "A" && m.ratingB - m.ratingA >= 15) kills.set(m.idolA, (kills.get(m.idolA) ?? 0) + 1);
+    if (m.result === "B" && m.ratingA - m.ratingB >= 15) kills.set(m.idolB, (kills.get(m.idolB) ?? 0) + 1);
   }
   const promoted = new Set(plan.promoted);
   const relegated = new Set(plan.relegated);
@@ -101,10 +110,13 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
     const expected = my + b * (old - mx);
     const delta = Math.max(-6, Math.min(6, 0.08 * (score.get(id)! - expected)));
     const champ = bonus.get(id) ?? 0;
-    const regression = old > 92 ? -0.03 * (old - mx) : 0;
+    const upsets = Math.min(2, 0.5 * (kills.get(id) ?? 0));
     const move = promoted.has(id) ? 2 : relegated.has(id) ? -2 : 0;
-    const value = Math.max(1, Math.min(100, Math.round(old + delta + champ + regression + move)));
-    const reason = [`performa ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`, champ && `juara +${champ}`, regression && `regresi ${regression.toFixed(1)}`, move && (move > 0 ? "promosi +2" : "degradasi −2")].filter(Boolean).join(", ");
+    const raw = delta + champ + upsets + move;
+    const factor = raw > 0 ? Math.max(0.2, Math.min(1.5, (100 - old) / 30)) : 1;
+    const value = Math.max(1, Math.min(100, Math.round(old + raw * factor)));
+    const reason = [`performa ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`, champ && `juara +${champ.toFixed(1)}`, upsets && `upset +${upsets}`,
+      move && (move > 0 ? "promosi +2" : "degradasi −2"), factor !== 1 && `× ${factor.toFixed(2)} (rating ${old})`].filter(Boolean).join(", ");
     return { idolId: id, old, new: value, score: score.get(id)!, expected, reason };
   });
 }
