@@ -1,0 +1,8 @@
+# Copy to .dev.vars (never committed) and fill in from the Supabase dashboard.
+# Project Settings → Database → Connection string → "Transaction pooler" (port 6543), with your DB password:
+SUPABASE_DB_URL="postgresql://postgres.<project-ref>:<db-password>@aws-0-<region>.pooler.supabase.com:6543/postgres"
+# Project Settings → API (or Data API):
+SUPABASE_URL="https://<project-ref>.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="<service_role / secret key>"
+# Any long random text (32+ characters), e.g. from: node -e "console.log(crypto.randomUUID()+crypto.randomUUID())"
+BETTER_AUTH_SECRET="<random>"
