@@ -8,14 +8,14 @@ import { entries, groups, idols, matches, photos, seasons } from "./schema";
 
 export type IdolRow = {
   id: string; name: string; groupId: string | null; groupName: string | null; rating: number;
-  seed: number | null; nationality: string | null; birthday: string | null; photoId: string | null; active: boolean;
+  seed: number | null; nationality: string | null; birthday: string | null; role: string | null; photoId: string | null; active: boolean;
   focalX?: number | null; focalY?: number | null; // the photo's focal point (PRD §10.3), null = centre
 };
 
 export async function listIdols(db: Db | Tx): Promise<IdolRow[]> {
   return db.select({
     id: idols.id, name: idols.name, groupId: idols.groupId, groupName: groups.name, rating: idols.rating,
-    seed: idols.seed, nationality: idols.nationality, birthday: idols.birthday, photoId: idols.photoId, active: idols.active,
+    seed: idols.seed, nationality: idols.nationality, birthday: idols.birthday, role: idols.role, photoId: idols.photoId, active: idols.active,
     focalX: photos.focalX, focalY: photos.focalY,
   }).from(idols).leftJoin(groups, eq(idols.groupId, groups.id)).leftJoin(photos, eq(idols.photoId, photos.id)).orderBy(asc(sql`lower(${idols.name})`));
 }
@@ -31,7 +31,7 @@ export async function addIdols(db: Db | Tx, batch: (IdolInput & { photoId?: stri
     const groupIds = await ensureGroups(tx, keep.flatMap((i) => (i.groupName ? [i.groupName] : [])));
     const rows = keep.map((i) => ({
       id: ulid(), name: i.name, groupId: i.groupName ? groupIds.get(i.groupName.toLowerCase())! : null, rating: i.rating,
-      seed: i.seed, nationality: i.nationality, birthday: i.birthday, photoId: i.photoId, active: true,
+      seed: i.seed, nationality: i.nationality, birthday: i.birthday, role: i.role ?? null, photoId: i.photoId, active: true,
     }));
     for (let i = 0; i < rows.length; i += 500) await tx.insert(idols).values(rows.slice(i, i + 500));
     return {
@@ -51,6 +51,7 @@ export async function updateIdol(db: Db, id: string, input: IdolInput & { photoI
   await db.update(idols).set({
     name: value.name, groupId, rating: value.rating, seed: value.seed, nationality: value.nationality, birthday: value.birthday,
     ...(input.photoId !== undefined ? { photoId: input.photoId } : {}), // leave the photo alone unless given
+    ...(value.role !== undefined ? { role: value.role } : {}), // likewise the role
   }).where(eq(idols.id, id));
   return { ok: true as const };
 }
@@ -84,4 +85,23 @@ export async function setIdolPhoto(db: Db, id: string, photoId: string): Promise
     await tx.update(idols).set({ photoId }).where(eq(idols.id, id));
     return row.photoId;
   });
+}
+
+// "Perbarui data idol" (Update 3): details found on the web, matched by name + group (case-insensitive). Every
+// field given overwrites the idol's (user decision: web data wins); ratings, photos and seasons are not touched.
+export type IdolDetails = { name: string; group: string | null; birthday?: string | null; nationality?: string | null; role?: string | null };
+
+export async function updateIdolDetails(db: Db, rows: IdolDetails[], dryRun: boolean) {
+  const key = (name: string, group: string | null) => `${name.trim().toLowerCase()}|${(group ?? "").trim().toLowerCase()}`;
+  const byKey = new Map((await listIdols(db)).map((i) => [key(i.name, i.groupName), i]));
+  const found: { id: string; set: Partial<Pick<IdolRow, "birthday" | "nationality" | "role">> }[] = [];
+  const unknown: string[] = [];
+  for (const r of rows) {
+    const idol = byKey.get(key(r.name, r.group));
+    if (!idol) { unknown.push(`${r.name} (${r.group ?? "Soloist"})`); continue; }
+    const check = idolInputSchema.pick({ birthday: true, nationality: true, role: true }).partial().parse({ birthday: r.birthday, nationality: r.nationality, role: r.role });
+    found.push({ id: idol.id, set: Object.fromEntries(Object.entries(check).filter(([, v]) => v !== undefined)) });
+  }
+  if (!dryRun) await db.transaction(async (tx) => { for (const f of found) if (Object.keys(f.set).length) await tx.update(idols).set(f.set).where(eq(idols.id, f.id)); });
+  return { updated: found.length, unknown };
 }

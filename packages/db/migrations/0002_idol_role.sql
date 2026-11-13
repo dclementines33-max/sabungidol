@@ -1,0 +1,1 @@
+ALTER TABLE "idols" ADD COLUMN "role" text;

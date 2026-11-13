@@ -1,5 +1,6 @@
 // The default idol data (seed/idols.json, user decision 2026-11-13): only photo, name, group and
-// rating are used; every other field in the file is ignored. "Solo / Independent" means Soloist.
+// rating are used; every other field in the file is ignored. "Solo / Independent" means Soloist. Birthday, nationality
+// and role come from seed/idol-details.json (Update 3, applied after loading).
 import { z } from "zod";
 
 const SOLOIST_GROUP = "Solo / Independent";

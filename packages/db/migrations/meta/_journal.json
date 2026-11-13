@@ -15,6 +15,13 @@
       "when": 1794507271497,
       "tag": "0001_group_name_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794608372202,
+      "tag": "0002_idol_role",
+      "breakpoints": true
     }
   ]
 }

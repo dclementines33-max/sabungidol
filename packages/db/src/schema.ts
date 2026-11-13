@@ -18,6 +18,7 @@ export const idols = pgTable("idols", {
   seed: smallint(),
   nationality: text(), // ISO-3166
   birthday: date(),
+  role: text(), // position in the group, e.g. "Leader, Main Vocalist" (Update 3)
   photoId: text(),
   rating: smallint().notNull(),
   active: boolean().notNull().default(true),

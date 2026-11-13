@@ -2,7 +2,8 @@
 // Runs in the Worker. Photo files go to OPFS first; then photo records, groups and idols are saved in
 // ONE transaction, so a tab closed halfway leaves the database empty and the next start tries again.
 // Done once per database: a logged I-SEED-001 means "already loaded", even if the idols were deleted since.
-import { type Db, addIdols, insertPhoto, listEvents, listIdols, logEvent } from "@sabung/db";
+import { type Db, type IdolDetails, addIdols, insertPhoto, listEvents, listIdols, logEvent, updateIdolDetails } from "@sabung/db";
+import detailsUrl from "../../../../seed/idol-details.json?url";
 import seedUrl from "../../../../seed/idols.json?url";
 import { storePhotoFiles } from "./photoFiles";
 import { seedIdols } from "./seedData";
@@ -25,6 +26,8 @@ export async function loadDefaultData(db: Db, database: string): Promise<{ loade
       name: idol.name, groupName: idol.groupName, rating: idol.rating, seed: null, nationality: null, birthday: null, photoId: photos[i].id,
     })));
   });
+  // Update 3: birthday, nationality and role from the web (the same file Input Data → "Perbarui data idol" takes).
+  await updateIdolDetails(db, (await (await fetch(detailsUrl)).json()) as IdolDetails[], false);
   await logEvent(db, { level: "success", code: SEED_LOADED, message: `${result.added.length} idol dari data bawaan dimuat` });
   return { loaded: result.added.length, refused: result.refused.length };
 }

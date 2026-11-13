@@ -30,3 +30,12 @@ describe("default idol data (seed/idols.json)", () => {
     expect(() => seedIdols({ idols: [{ name: "A", rating: 70, photoUrl: "https://example.com/a.jpg" }] })).toThrow();
   });
 });
+
+describe("default idol details (seed/idol-details.json, Update 3)", () => {
+  const details = JSON.parse(readFileSync(new URL("../../../../seed/idol-details.json", import.meta.url), "utf8")) as { name: string; group: string | null; birthday: string; nationality: string; role?: string }[];
+  it("covers every default idol once, with a valid birthday, nationality and role", () => {
+    const key = (name: string, group: string | null) => `${name.toLowerCase()}|${(group ?? "").toLowerCase()}`;
+    expect(details.map((d) => key(d.name, d.group)).sort()).toEqual(seedIdols(file).map((i) => key(i.name, i.groupName)).sort());
+    for (const d of details) expect(idolInputSchema.pick({ birthday: true, nationality: true, role: true }).safeParse(d).success).toBe(true);
+  });
+});

@@ -4,3 +4,4 @@ dist
 # Cloudflare: local secrets and wrangler's cache
 .dev.vars
 .wrangler
+import/

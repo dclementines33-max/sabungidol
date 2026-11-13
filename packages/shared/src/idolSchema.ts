@@ -9,6 +9,7 @@ export const idolInputSchema = z.object({
   seed: z.number().int().min(1).max(4).nullable().default(null),
   nationality: z.string().regex(/^[A-Z]{2}$/, "Kode negara 2 huruf, mis. KR").nullable().default(null),
   birthday: z.iso.date("Tanggal lahir YYYY-MM-DD").nullable().default(null),
+  role: z.string().trim().max(80, "Role terlalu panjang (maks. 80)").nullable().optional(), // position in the group (Update 3)
 });
 
 export type IdolInput = z.infer<typeof idolInputSchema>;

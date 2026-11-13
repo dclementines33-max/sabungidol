@@ -15,7 +15,7 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
   const navigate = useNavigate();
   const { brand } = useBranding();
   const years = age(idol.birthday);
-  const facts = [idol.groupName ?? "Soloist", idol.nationality, years !== null ? `${years} tahun` : null, idol.active ? null : "Nonaktif"].filter(Boolean);
+  const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality, years !== null ? `${years} tahun` : null, idol.active ? null : "Nonaktif"].filter(Boolean);
   const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Gelar", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("id-ID")]];
   return (
     <section aria-labelledby="idol-name" className="relative isolate space-y-6">

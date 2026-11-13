@@ -261,8 +261,18 @@ V5 ✅ (golden snapshot updated twice: intended engine changes)
      ("Crown Cup" = Inkigayo). Gain = performance (±6) + titles 3 × prestige (≤ 5) + giant kills 0.5 (≤ 2) ± 2 promotion,
      × clamp((100 − rating) / 30, 0.2, 1.5) when positive; losses in full. The >92 regression is gone. Reason string says
      the factor. seasonScores/seasonTop unchanged in shape.
-V6 (asked 2026-11-14) idol data from the web: birthday, nationality, role in group (new field), new idols + groups, photos
-   (user: any free source is fine, non-commercial fun app).
+V6 ✅ part 1 (user: web data OVERWRITES; new idols: user sends a list; photos: test with IVE first)
+   - idols.role (migration 0002_idol_role, nullable text; shared idolInputSchema role optional, max 80). updateIdol only
+     sets role when given. Profile: edit form field + shown in the hero facts.
+   - db updateIdolDetails(rows, dryRun) (+test): match name + group (case-insensitive), overwrite birthday / nationality
+     / role that the row gives; returns { updated, unknown }. Worker updateIdolDetails. Input Data section
+     inputData/IdolDetailsImport (JSON file → preview → Terapkan), e2e idolDetails.
+   - seed/idol-details.json: all 242 default idols (birthday, ISO nationality, kprofiles position; 23 without official
+     position have no role), applied by loadDefaultData on a fresh install (+ seedData test). Same file is
+     import/idol-details.json for the user's existing database. Sources: kprofiles.com member profiles (2026-11-14),
+     Jini's birthday checked on Wikipedia (2004-04-16).
+   - import/ (git-ignored): ive-photos/ (6 kprofiles photos named as in the database, for Photo Import),
+     ive-details.json, idol-details.json.
 
 ## Architecture in one picture
 

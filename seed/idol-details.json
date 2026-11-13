@@ -1,0 +1,1673 @@
+[
+ {
+  "name": "Ahn Yujin",
+  "group": "IVE",
+  "birthday": "2003-09-01",
+  "nationality": "KR",
+  "role": "Leader, Main Vocalist, Main Dancer"
+ },
+ {
+  "name": "Gaeul",
+  "group": "IVE",
+  "birthday": "2002-09-24",
+  "nationality": "KR",
+  "role": "Main Dancer, Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Rei",
+  "group": "IVE",
+  "birthday": "2004-02-03",
+  "nationality": "JP",
+  "role": "Main Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Jang Wonyoung",
+  "group": "IVE",
+  "birthday": "2004-08-31",
+  "nationality": "KR",
+  "role": "Vocalist, Dancer, Visual"
+ },
+ {
+  "name": "Liz",
+  "group": "IVE",
+  "birthday": "2004-11-21",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Leeseo",
+  "group": "IVE",
+  "birthday": "2007-02-21",
+  "nationality": "KR",
+  "role": "Lead Dancer, Sub-Vocalist, Visual, Maknae"
+ },
+ {
+  "name": "Karina",
+  "group": "aespa",
+  "birthday": "2000-04-11",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer, Lead Rapper, Sub-Vocalist, Visual, Center"
+ },
+ {
+  "name": "Winter",
+  "group": "aespa",
+  "birthday": "2001-01-01",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer, Visual"
+ },
+ {
+  "name": "Ningning",
+  "group": "aespa",
+  "birthday": "2002-10-23",
+  "nationality": "CN",
+  "role": "Main Vocalist, Maknae"
+ },
+ {
+  "name": "Giselle",
+  "group": "aespa",
+  "birthday": "2000-10-30",
+  "nationality": "JP",
+  "role": "Main Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Jennie",
+  "group": "BLACKPINK",
+  "birthday": "1996-01-16",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Vocalist"
+ },
+ {
+  "name": "Lisa",
+  "group": "BLACKPINK",
+  "birthday": "1997-03-27",
+  "nationality": "TH",
+  "role": "Main Dancer, Lead Rapper, Sub-Vocalist, Maknae"
+ },
+ {
+  "name": "Jisoo",
+  "group": "BLACKPINK",
+  "birthday": "1995-01-03",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Visual"
+ },
+ {
+  "name": "Rosé",
+  "group": "BLACKPINK",
+  "birthday": "1997-02-11",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer"
+ },
+ {
+  "name": "Sana",
+  "group": "TWICE",
+  "birthday": "1996-12-29",
+  "nationality": "JP",
+  "role": "Sub-Vocalist"
+ },
+ {
+  "name": "Nayeon",
+  "group": "TWICE",
+  "birthday": "1995-09-22",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Lead Dancer, Center"
+ },
+ {
+  "name": "Momo",
+  "group": "TWICE",
+  "birthday": "1996-11-09",
+  "nationality": "JP",
+  "role": "Main Dancer, Sub-Vocalist, Sub-Rapper"
+ },
+ {
+  "name": "Jihyo",
+  "group": "TWICE",
+  "birthday": "1997-02-01",
+  "nationality": "KR",
+  "role": "Leader, Main Vocalist"
+ },
+ {
+  "name": "Mina",
+  "group": "TWICE",
+  "birthday": "1997-03-24",
+  "nationality": "JP",
+  "role": "Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Tzuyu",
+  "group": "TWICE",
+  "birthday": "1999-06-14",
+  "nationality": "TW",
+  "role": "Lead Dancer, Sub-Vocalist, Visual, Maknae"
+ },
+ {
+  "name": "Dahyun",
+  "group": "TWICE",
+  "birthday": "1998-05-28",
+  "nationality": "KR",
+  "role": "Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Chaeyoung",
+  "group": "TWICE",
+  "birthday": "1999-04-23",
+  "nationality": "KR",
+  "role": "Main Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Jeongyeon",
+  "group": "TWICE",
+  "birthday": "1996-11-01",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Kim Chaewon",
+  "group": "LE SSERAFIM",
+  "birthday": "2000-08-01",
+  "nationality": "KR",
+  "role": "Leader, Vocalist, Dancer"
+ },
+ {
+  "name": "Huh Yunjin",
+  "group": "LE SSERAFIM",
+  "birthday": "2001-10-08",
+  "nationality": "US",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Sakura",
+  "group": "LE SSERAFIM",
+  "birthday": "1998-03-19",
+  "nationality": "JP",
+  "role": "Vocalist, Rapper, Dancer"
+ },
+ {
+  "name": "Kazuha",
+  "group": "LE SSERAFIM",
+  "birthday": "2003-08-09",
+  "nationality": "JP",
+  "role": "Sub-Vocalist, Rapper, Dancer"
+ },
+ {
+  "name": "Eunchae",
+  "group": "LE SSERAFIM",
+  "birthday": "2006-11-10",
+  "nationality": "KR",
+  "role": "Vocalist, Lead Dancer, Maknae"
+ },
+ {
+  "name": "Irene",
+  "group": "Red Velvet",
+  "birthday": "1991-03-29",
+  "nationality": "KR",
+  "role": "Leader, Main Rapper, Lead Dancer, Sub-Vocalist, Visual, Center"
+ },
+ {
+  "name": "Seulgi",
+  "group": "Red Velvet",
+  "birthday": "1994-02-10",
+  "nationality": "KR",
+  "role": "Main Dancer, Lead Vocalist"
+ },
+ {
+  "name": "Joy",
+  "group": "Red Velvet",
+  "birthday": "1996-09-03",
+  "nationality": "KR",
+  "role": "Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Wendy",
+  "group": "Red Velvet",
+  "birthday": "1994-02-21",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Yeri",
+  "group": "Red Velvet",
+  "birthday": "1999-03-05",
+  "nationality": "KR",
+  "role": "Sub-Vocalist, Sub-Rapper, Maknae"
+ },
+ {
+  "name": "Ryujin",
+  "group": "ITZY",
+  "birthday": "2001-04-17",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Dancer, Sub-Vocalist, Center"
+ },
+ {
+  "name": "Yeji",
+  "group": "ITZY",
+  "birthday": "2000-05-26",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer, Lead Vocalist, Sub-Rapper"
+ },
+ {
+  "name": "Yuna",
+  "group": "ITZY",
+  "birthday": "2003-12-09",
+  "nationality": "KR",
+  "role": "Lead Rapper, Lead Dancer, Sub-Vocalist, Visual, Maknae"
+ },
+ {
+  "name": "Lia",
+  "group": "ITZY",
+  "birthday": "2000-07-21",
+  "nationality": "KR",
+  "role": "Main Vocalist, Sub-Rapper"
+ },
+ {
+  "name": "Chaeryoung",
+  "group": "ITZY",
+  "birthday": "2001-06-05",
+  "nationality": "KR",
+  "role": "Main Dancer, Sub-Vocalist, Sub-Rapper"
+ },
+ {
+  "name": "Sullyoon",
+  "group": "NMIXX",
+  "birthday": "2004-01-26",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Dancer"
+ },
+ {
+  "name": "Haewon",
+  "group": "NMIXX",
+  "birthday": "2003-02-25",
+  "nationality": "KR",
+  "role": "Leader, Main Vocalist"
+ },
+ {
+  "name": "Lily",
+  "group": "NMIXX",
+  "birthday": "2002-10-17",
+  "nationality": "AU",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Kyujin",
+  "group": "NMIXX",
+  "birthday": "2006-05-26",
+  "nationality": "KR",
+  "role": "Main Dancer, Rapper, Vocalist, Maknae"
+ },
+ {
+  "name": "Bae",
+  "group": "NMIXX",
+  "birthday": "2004-12-28",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Dancer"
+ },
+ {
+  "name": "Kim Jiwoo",
+  "group": "NMIXX",
+  "birthday": "2005-04-13",
+  "nationality": "KR",
+  "role": "Main Rapper, Vocalist, Dancer"
+ },
+ {
+  "name": "Ahyeon",
+  "group": "BABYMONSTER",
+  "birthday": "2007-04-11",
+  "nationality": "KR",
+  "role": "Main Vocalist, Rapper, Dancer, Visual, Center"
+ },
+ {
+  "name": "Chiquita",
+  "group": "BABYMONSTER",
+  "birthday": "2009-02-17",
+  "nationality": "TH",
+  "role": "Vocalist, Dancer, Rapper, Maknae"
+ },
+ {
+  "name": "Ruka",
+  "group": "BABYMONSTER",
+  "birthday": "2002-03-20",
+  "nationality": "JP",
+  "role": "Main Dancer, Main Rapper"
+ },
+ {
+  "name": "Asa",
+  "group": "BABYMONSTER",
+  "birthday": "2006-04-17",
+  "nationality": "JP",
+  "role": "Main Rapper, Vocalist, Dancer"
+ },
+ {
+  "name": "Pharita",
+  "group": "BABYMONSTER",
+  "birthday": "2005-08-26",
+  "nationality": "TH",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Rami",
+  "group": "BABYMONSTER",
+  "birthday": "2007-10-17",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Rora",
+  "group": "BABYMONSTER",
+  "birthday": "2008-08-14",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Visual"
+ },
+ {
+  "name": "Haerin",
+  "group": "NewJeans",
+  "birthday": "2006-05-15",
+  "nationality": "KR"
+ },
+ {
+  "name": "Danielle",
+  "group": "NewJeans",
+  "birthday": "2005-04-11",
+  "nationality": "KR"
+ },
+ {
+  "name": "Hyein",
+  "group": "NewJeans",
+  "birthday": "2008-04-21",
+  "nationality": "KR",
+  "role": "Maknae"
+ },
+ {
+  "name": "Kim Minji",
+  "group": "NewJeans",
+  "birthday": "2004-05-07",
+  "nationality": "KR"
+ },
+ {
+  "name": "Pham Hanni",
+  "group": "NewJeans",
+  "birthday": "2004-10-06",
+  "nationality": "VN"
+ },
+ {
+  "name": "Wonhee",
+  "group": "ILLIT",
+  "birthday": "2007-06-26",
+  "nationality": "KR"
+ },
+ {
+  "name": "Moka",
+  "group": "ILLIT",
+  "birthday": "2004-10-08",
+  "nationality": "JP"
+ },
+ {
+  "name": "Iroha",
+  "group": "ILLIT",
+  "birthday": "2008-02-04",
+  "nationality": "JP",
+  "role": "Maknae"
+ },
+ {
+  "name": "Park Minju",
+  "group": "ILLIT",
+  "birthday": "2004-05-11",
+  "nationality": "KR"
+ },
+ {
+  "name": "Yunah",
+  "group": "ILLIT",
+  "birthday": "2004-01-15",
+  "nationality": "KR"
+ },
+ {
+  "name": "Natty",
+  "group": "KISS OF LIFE",
+  "birthday": "2002-05-30",
+  "nationality": "TH",
+  "role": "Main Dancer, Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Julie",
+  "group": "KISS OF LIFE",
+  "birthday": "2000-03-29",
+  "nationality": "US",
+  "role": "Leader, Main Rapper, Lead Dancer"
+ },
+ {
+  "name": "Belle",
+  "group": "KISS OF LIFE",
+  "birthday": "2004-03-20",
+  "nationality": "US",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Haneul",
+  "group": "KISS OF LIFE",
+  "birthday": "2005-05-25",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Maknae"
+ },
+ {
+  "name": "Yuqi",
+  "group": "IDLE",
+  "birthday": "1999-09-23",
+  "nationality": "CN",
+  "role": "Main Dancer, Sub-Vocalist, Sub-Rapper"
+ },
+ {
+  "name": "Soyeon",
+  "group": "IDLE",
+  "birthday": "1998-08-26",
+  "nationality": "KR",
+  "role": "Leader, Main Rapper, Sub-Vocalist, Center"
+ },
+ {
+  "name": "Minnie",
+  "group": "IDLE",
+  "birthday": "1997-10-23",
+  "nationality": "TH",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Miyeon",
+  "group": "IDLE",
+  "birthday": "1997-01-31",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Shuhua",
+  "group": "IDLE",
+  "birthday": "2000-01-06",
+  "nationality": "TW",
+  "role": "Sub-Vocalist, Visual, Maknae"
+ },
+ {
+  "name": "Gawon",
+  "group": "MEOVV",
+  "birthday": "2005-04-27",
+  "nationality": "US",
+  "role": "Main Vocalist, Rapper"
+ },
+ {
+  "name": "Anna Tanaka",
+  "group": "MEOVV",
+  "birthday": "2005-11-17",
+  "nationality": "JP",
+  "role": "Vocalist, Visual"
+ },
+ {
+  "name": "Ella Gross",
+  "group": "MEOVV",
+  "birthday": "2008-12-01",
+  "nationality": "US",
+  "role": "Vocalist, Visual, Maknae"
+ },
+ {
+  "name": "Sooin",
+  "group": "MEOVV",
+  "birthday": "2005-04-12",
+  "nationality": "KR",
+  "role": "Main Dancer, Vocalist"
+ },
+ {
+  "name": "Narin",
+  "group": "MEOVV",
+  "birthday": "2007-08-15",
+  "nationality": "KR",
+  "role": "Main Rapper, Main Vocalist"
+ },
+ {
+  "name": "Jiyu",
+  "group": "KIIIKIII",
+  "birthday": "2006-05-14",
+  "nationality": "KR",
+  "role": "Leader, Vocalist, Rapper, Dancer"
+ },
+ {
+  "name": "Leesol",
+  "group": "KIIIKIII",
+  "birthday": "2005-09-18",
+  "nationality": "KR",
+  "role": "Main Rapper"
+ },
+ {
+  "name": "Sui",
+  "group": "KIIIKIII",
+  "birthday": "2006-04-10",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Haum",
+  "group": "KIIIKIII",
+  "birthday": "2006-11-14",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper, Dancer, Visual"
+ },
+ {
+  "name": "Kya",
+  "group": "KIIIKIII",
+  "birthday": "2010-12-18",
+  "nationality": "KR",
+  "role": "Vocalist, Maknae"
+ },
+ {
+  "name": "Jiwoo",
+  "group": "Hearts2Hearts",
+  "birthday": "2006-09-07",
+  "nationality": "KR",
+  "role": "Leader, Dancer, Rapper, Vocalist, Visual"
+ },
+ {
+  "name": "Carmen",
+  "group": "Hearts2Hearts",
+  "birthday": "2006-03-28",
+  "nationality": "ID",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Yuha",
+  "group": "Hearts2Hearts",
+  "birthday": "2007-04-12",
+  "nationality": "KR",
+  "role": "Vocalist, Dancer"
+ },
+ {
+  "name": "Stella",
+  "group": "Hearts2Hearts",
+  "birthday": "2007-06-18",
+  "nationality": "KR",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Juun",
+  "group": "Hearts2Hearts",
+  "birthday": "2008-12-03",
+  "nationality": "KR",
+  "role": "Main Dancer, Rapper, Vocalist"
+ },
+ {
+  "name": "A-na",
+  "group": "Hearts2Hearts",
+  "birthday": "2008-12-20",
+  "nationality": "KR",
+  "role": "Rapper, Vocalist, Visual"
+ },
+ {
+  "name": "Ian",
+  "group": "Hearts2Hearts",
+  "birthday": "2009-10-09",
+  "nationality": "KR",
+  "role": "Dancer, Vocalist, Visual, Center"
+ },
+ {
+  "name": "Ye-on",
+  "group": "Hearts2Hearts",
+  "birthday": "2010-04-19",
+  "nationality": "KR",
+  "role": "Vocalist, Maknae"
+ },
+ {
+  "name": "Jiheon",
+  "group": "FROMIS 9",
+  "birthday": "2003-04-17",
+  "nationality": "KR",
+  "role": "Vocalist, Maknae"
+ },
+ {
+  "name": "Lee Chaeyoung",
+  "group": "FROMIS 9",
+  "birthday": "2000-05-14",
+  "nationality": "KR",
+  "role": "Main Dancer, Lead Rapper, Vocalist"
+ },
+ {
+  "name": "Lee Seoyeon",
+  "group": "FROMIS 9",
+  "birthday": "2000-01-22",
+  "nationality": "KR",
+  "role": "Main Rapper, Main Dancer, Vocalist"
+ },
+ {
+  "name": "Jang Gyuri",
+  "group": "FROMIS 9",
+  "birthday": "1997-12-27",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Nagyung",
+  "group": "FROMIS 9",
+  "birthday": "2000-06-01",
+  "nationality": "KR",
+  "role": "Lead Dancer, Vocalist, Rapper, Visual"
+ },
+ {
+  "name": "Saerom",
+  "group": "FROMIS 9",
+  "birthday": "1997-01-07",
+  "nationality": "KR",
+  "role": "Leader, Lead Dancer, Vocalist, Rapper, Visual"
+ },
+ {
+  "name": "Hayoung",
+  "group": "FROMIS 9",
+  "birthday": "1997-09-29",
+  "nationality": "KR",
+  "role": "Co-Leader, Main Vocalist, Main Dancer"
+ },
+ {
+  "name": "Park Jiwon",
+  "group": "FROMIS 9",
+  "birthday": "1998-03-20",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Roh Jisun",
+  "group": "FROMIS 9",
+  "birthday": "1998-11-23",
+  "nationality": "KR",
+  "role": "Lead Dancer, Vocalist, Center"
+ },
+ {
+  "name": "Wang Yiren",
+  "group": "Everglow",
+  "birthday": "2000-12-29",
+  "nationality": "CN",
+  "role": "Lead Dancer, Visual, Center, Maknae"
+ },
+ {
+  "name": "E:U",
+  "group": "Everglow",
+  "birthday": "1998-05-19",
+  "nationality": "KR",
+  "role": "Main Rapper, Main Dancer"
+ },
+ {
+  "name": "Aisha",
+  "group": "Everglow",
+  "birthday": "2000-07-21",
+  "nationality": "KR",
+  "role": "Lead Rapper, Lead Dancer, Visual"
+ },
+ {
+  "name": "Kim Sihyeon",
+  "group": "Everglow",
+  "birthday": "1999-08-05",
+  "nationality": "KR",
+  "role": "Leader, Lead Vocalist"
+ },
+ {
+  "name": "Mia",
+  "group": "Everglow",
+  "birthday": "2000-01-13",
+  "nationality": "KR",
+  "role": "Main Vocalist, Main Dancer"
+ },
+ {
+  "name": "Onda",
+  "group": "Everglow",
+  "birthday": "2000-05-18",
+  "nationality": "KR",
+  "role": "Lead Dancer"
+ },
+ {
+  "name": "Amy Harvey",
+  "group": "XG",
+  "birthday": "2002-12-18",
+  "nationality": "JP",
+  "role": "Main Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Hinata",
+  "group": "XG",
+  "birthday": "2002-06-11",
+  "nationality": "JP",
+  "role": "Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Jurin",
+  "group": "XG",
+  "birthday": "2002-06-19",
+  "nationality": "JP",
+  "role": "Leader, Lead Rapper, Main Dancer, Vocalist"
+ },
+ {
+  "name": "Chisa",
+  "group": "XG",
+  "birthday": "2002-01-17",
+  "nationality": "JP",
+  "role": "Sub-Leader, Main Vocalist"
+ },
+ {
+  "name": "Cocona",
+  "group": "XG",
+  "birthday": "2005-12-06",
+  "nationality": "JP",
+  "role": "Main Rapper, Maknae"
+ },
+ {
+  "name": "Juria",
+  "group": "XG",
+  "birthday": "2004-11-28",
+  "nationality": "JP",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Maya",
+  "group": "XG",
+  "birthday": "2005-08-10",
+  "nationality": "JP",
+  "role": "Lead Vocalist, Rapper"
+ },
+ {
+  "name": "Chanelle Moon",
+  "group": "FIFTy FIFTY",
+  "birthday": "2003-06-14",
+  "nationality": "US",
+  "role": "Main Vocalist, Rapper"
+ },
+ {
+  "name": "Hana",
+  "group": "FIFTy FIFTY",
+  "birthday": "2006-09-05",
+  "nationality": "KR",
+  "role": "Main Vocalist, Dancer"
+ },
+ {
+  "name": "Keena",
+  "group": "FIFTy FIFTY",
+  "birthday": "2002-07-09",
+  "nationality": "KR",
+  "role": "Main Rapper, Vocalist"
+ },
+ {
+  "name": "Yewon",
+  "group": "FIFTy FIFTY",
+  "birthday": "2005-03-18",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Athena",
+  "group": "FIFTy FIFTY",
+  "birthday": "2007-03-15",
+  "nationality": "SE",
+  "role": "Vocalist, Maknae"
+ },
+ {
+  "name": "Eunha",
+  "group": "VIVIZ",
+  "birthday": "1997-05-30",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Umji",
+  "group": "VIVIZ",
+  "birthday": "1998-08-19",
+  "nationality": "KR",
+  "role": "Lead Dancer, Vocalist, Maknae"
+ },
+ {
+  "name": "SinB",
+  "group": "VIVIZ",
+  "birthday": "1998-06-03",
+  "nationality": "KR",
+  "role": "Main Dancer, Vocalist"
+ },
+ {
+  "name": "Gahyeon",
+  "group": "Dreamcatcher",
+  "birthday": "1999-02-03",
+  "nationality": "KR",
+  "role": "Lead Rapper, Sub-Vocalist, Maknae"
+ },
+ {
+  "name": "Dami",
+  "group": "Dreamcatcher",
+  "birthday": "1997-03-07",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Handong",
+  "group": "Dreamcatcher",
+  "birthday": "1996-03-26",
+  "nationality": "CN",
+  "role": "Sub-Vocalist"
+ },
+ {
+  "name": "JiU",
+  "group": "Dreamcatcher",
+  "birthday": "1994-05-17",
+  "nationality": "KR",
+  "role": "Leader, Lead Vocalist, Lead Dancer, Visual"
+ },
+ {
+  "name": "SuA",
+  "group": "Dreamcatcher",
+  "birthday": "1994-08-10",
+  "nationality": "KR",
+  "role": "Main Dancer, Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Yoohyeon",
+  "group": "Dreamcatcher",
+  "birthday": "1997-01-07",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Heejin",
+  "group": "ARTMS",
+  "birthday": "2000-10-19",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Rapper, Dancer, Center"
+ },
+ {
+  "name": "Jinsoul",
+  "group": "ARTMS",
+  "birthday": "1997-06-13",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Choerry",
+  "group": "ARTMS",
+  "birthday": "2001-06-04",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper, Dancer, Maknae"
+ },
+ {
+  "name": "Haseul",
+  "group": "ARTMS",
+  "birthday": "1997-08-18",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Kim Lip",
+  "group": "ARTMS",
+  "birthday": "1999-02-10",
+  "nationality": "KR",
+  "role": "Vocalist, Dancer"
+ },
+ {
+  "name": "Kim Hyunjin",
+  "group": "Loossemble",
+  "birthday": "2000-11-15",
+  "nationality": "KR",
+  "role": "Vocalist, Dancer, Visual"
+ },
+ {
+  "name": "Gowon",
+  "group": "Loossemble",
+  "birthday": "2000-11-19",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper, Dancer"
+ },
+ {
+  "name": "Hyeju",
+  "group": "Loossemble",
+  "birthday": "2001-11-13",
+  "nationality": "KR",
+  "role": "Rapper, Dancer, Vocalist"
+ },
+ {
+  "name": "Vivi",
+  "group": "Loossemble",
+  "birthday": "1996-12-09",
+  "nationality": "HK",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Yeojin",
+  "group": "Loossemble",
+  "birthday": "2002-11-11",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper, Maknae"
+ },
+ {
+  "name": "Yoon Seeun",
+  "group": "StayC",
+  "birthday": "2003-06-14",
+  "nationality": "KR",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Isa",
+  "group": "StayC",
+  "birthday": "2002-01-23",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "J",
+  "group": "StayC",
+  "birthday": "2004-12-09",
+  "nationality": "KR",
+  "role": "Vocalist, Maknae"
+ },
+ {
+  "name": "Park Si eun",
+  "group": "StayC",
+  "birthday": "2001-08-01",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Sumin",
+  "group": "StayC",
+  "birthday": "2001-03-13",
+  "nationality": "KR",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Yoon",
+  "group": "StayC",
+  "birthday": "2004-04-14",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Ari",
+  "group": "Oh My Girl",
+  "birthday": "1999-06-18",
+  "nationality": "KR",
+  "role": "Lead Dancer, Sub-Vocalist, Maknae"
+ },
+ {
+  "name": "Binnie",
+  "group": "Oh My Girl",
+  "birthday": "1997-09-09",
+  "nationality": "KR",
+  "role": "Sub-Vocalist"
+ },
+ {
+  "name": "Hyojung",
+  "group": "Oh My Girl",
+  "birthday": "1994-07-28",
+  "nationality": "KR",
+  "role": "Leader, Main Vocalist"
+ },
+ {
+  "name": "Mimi",
+  "group": "Oh My Girl",
+  "birthday": "1995-05-01",
+  "nationality": "KR",
+  "role": "Main Rapper, Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Seunghee",
+  "group": "Oh My Girl",
+  "birthday": "1996-01-25",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "YooA",
+  "group": "Oh My Girl",
+  "birthday": "1995-09-17",
+  "nationality": "KR",
+  "role": "Main Dancer, Lead Vocalist"
+ },
+ {
+  "name": "Chaein",
+  "group": "Purple Kiss",
+  "birthday": "2002-12-05",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer, Rapper"
+ },
+ {
+  "name": "Dosie",
+  "group": "Purple Kiss",
+  "birthday": "2000-02-11",
+  "nationality": "KR",
+  "role": "Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Ireh",
+  "group": "Purple Kiss",
+  "birthday": "2002-04-30",
+  "nationality": "KR",
+  "role": "Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Na Go eun",
+  "group": "Purple Kiss",
+  "birthday": "1999-09-03",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer"
+ },
+ {
+  "name": "Swan",
+  "group": "Purple Kiss",
+  "birthday": "2003-07-11",
+  "nationality": "KR",
+  "role": "Main Vocalist, Maknae"
+ },
+ {
+  "name": "Yuki",
+  "group": "Purple Kiss",
+  "birthday": "2002-11-06",
+  "nationality": "JP",
+  "role": "Main Rapper, Lead Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Haram",
+  "group": "BILLIE",
+  "birthday": "2001-01-13",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Haruna",
+  "group": "BILLIE",
+  "birthday": "2006-01-30",
+  "nationality": "JP",
+  "role": "Lead Vocalist, Lead Dancer, Maknae"
+ },
+ {
+  "name": "Moon Sua",
+  "group": "BILLIE",
+  "birthday": "1999-09-09",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Vocalist"
+ },
+ {
+  "name": "Siyoon",
+  "group": "BILLIE",
+  "birthday": "2005-02-16",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Dancer"
+ },
+ {
+  "name": "Suhyeon",
+  "group": "BILLIE",
+  "birthday": "2000-01-15",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer"
+ },
+ {
+  "name": "Tsuki",
+  "group": "BILLIE",
+  "birthday": "2002-09-21",
+  "nationality": "JP",
+  "role": "Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Hwasa",
+  "group": "Mamamoo",
+  "birthday": "1995-07-23",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper, Maknae"
+ },
+ {
+  "name": "Moonbyul",
+  "group": "Mamamoo",
+  "birthday": "1992-12-22",
+  "nationality": "KR",
+  "role": "Rapper, Performer"
+ },
+ {
+  "name": "Solar",
+  "group": "Mamamoo",
+  "birthday": "1991-02-21",
+  "nationality": "KR",
+  "role": "Leader, Vocalist"
+ },
+ {
+  "name": "Wheein",
+  "group": "Mamamoo",
+  "birthday": "1995-04-17",
+  "nationality": "KR",
+  "role": "Vocalist, Performer"
+ },
+ {
+  "name": "Siyeon",
+  "group": "QWER",
+  "birthday": "2000-05-16",
+  "nationality": "KR",
+  "role": "Main Vocalist, Guitarist"
+ },
+ {
+  "name": "Chodan",
+  "group": "QWER",
+  "birthday": "1998-11-01",
+  "nationality": "KR",
+  "role": "Leader, Drummer, Sub-Vocalist"
+ },
+ {
+  "name": "Magenta",
+  "group": "QWER",
+  "birthday": "1997-06-02",
+  "nationality": "KR",
+  "role": "Bassist"
+ },
+ {
+  "name": "Hina",
+  "group": "QWER",
+  "birthday": "2001-01-30",
+  "nationality": "KR",
+  "role": "Guitarist, Keyboardist, Maknae"
+ },
+ {
+  "name": "Nana",
+  "group": "WOOAH",
+  "birthday": "2001-03-09",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer, Lead Vocalist, Lead Rapper, Visual"
+ },
+ {
+  "name": "Wooyeon",
+  "group": "WOOAH",
+  "birthday": "2003-02-11",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Visual"
+ },
+ {
+  "name": "Sora",
+  "group": "WOOAH",
+  "birthday": "2003-08-30",
+  "nationality": "JP",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Lucy",
+  "group": "WOOAH",
+  "birthday": "2004-04-09",
+  "nationality": "KR",
+  "role": "Main Rapper, Lead Dancer"
+ },
+ {
+  "name": "Minseo",
+  "group": "WOOAH",
+  "birthday": "2004-08-12",
+  "nationality": "KR",
+  "role": "Main Vocalist, Lead Dancer, Maknae"
+ },
+ {
+  "name": "Bona",
+  "group": "WJSN",
+  "birthday": "1995-08-19",
+  "nationality": "KR",
+  "role": "Lead Dancer, Vocalist, Rapper, Visual"
+ },
+ {
+  "name": "Dawon",
+  "group": "WJSN",
+  "birthday": "1997-04-16",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Dayoung",
+  "group": "WJSN",
+  "birthday": "1999-05-14",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Eunseo",
+  "group": "WJSN",
+  "birthday": "1998-05-27",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Exy",
+  "group": "WJSN",
+  "birthday": "1995-11-06",
+  "nationality": "KR",
+  "role": "Leader, Main Rapper, Vocalist"
+ },
+ {
+  "name": "Luda",
+  "group": "WJSN",
+  "birthday": "1997-03-06",
+  "nationality": "KR",
+  "role": "Vocalist, Rapper"
+ },
+ {
+  "name": "Seola",
+  "group": "WJSN",
+  "birthday": "1994-12-24",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Soobin",
+  "group": "WJSN",
+  "birthday": "1996-09-14",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Yeonjung",
+  "group": "WJSN",
+  "birthday": "1999-08-03",
+  "nationality": "KR",
+  "role": "Main Vocalist, Maknae"
+ },
+ {
+  "name": "Yeoreum",
+  "group": "WJSN",
+  "birthday": "1999-01-10",
+  "nationality": "KR",
+  "role": "Main Dancer, Vocalist, Rapper"
+ },
+ {
+  "name": "Kasia",
+  "group": "ifeye",
+  "birthday": "2008-02-15",
+  "nationality": "KR",
+  "role": "Leader, Main Rapper"
+ },
+ {
+  "name": "Won Hwayeon",
+  "group": "ifeye",
+  "birthday": "2006-06-24",
+  "nationality": "KR",
+  "role": "Lead Vocalist"
+ },
+ {
+  "name": "Taerin",
+  "group": "ifeye",
+  "birthday": "2006-07-03",
+  "nationality": "KR",
+  "role": "Main Dancer"
+ },
+ {
+  "name": "Rahee",
+  "group": "ifeye",
+  "birthday": "2007-12-06",
+  "nationality": "KR",
+  "role": "Vocalist, Lead Dancer"
+ },
+ {
+  "name": "Meu",
+  "group": "ifeye",
+  "birthday": "2008-06-09",
+  "nationality": "KR",
+  "role": "Lead Vocalist, Dancer"
+ },
+ {
+  "name": "Sasha",
+  "group": "ifeye",
+  "birthday": "2009-05-20",
+  "nationality": "KR",
+  "role": "Main Vocalist, Maknae"
+ },
+ {
+  "name": "Son Juone",
+  "group": "KEYVEATZ",
+  "birthday": "2006-09-16",
+  "nationality": "KR",
+  "role": "Leader"
+ },
+ {
+  "name": "Newy",
+  "group": "KEYVEATZ",
+  "birthday": "2007-09-16",
+  "nationality": "JP"
+ },
+ {
+  "name": "Kim Yuna",
+  "group": "KEYVEATZ",
+  "birthday": "2008-08-13",
+  "nationality": "KR"
+ },
+ {
+  "name": "Kang Yeseul",
+  "group": "KEYVEATZ",
+  "birthday": "2006-10-15",
+  "nationality": "KR"
+ },
+ {
+  "name": "Um Jione",
+  "group": "KEYVEATZ",
+  "birthday": "2009-09-21",
+  "nationality": "KR",
+  "role": "Maknae"
+ },
+ {
+  "name": "Michi",
+  "group": "AtHeart",
+  "birthday": "2007-05-06",
+  "nationality": "US"
+ },
+ {
+  "name": "Katelyn",
+  "group": "AtHeart",
+  "birthday": "2007-07-24",
+  "nationality": "PH"
+ },
+ {
+  "name": "Seohyeon",
+  "group": "AtHeart",
+  "birthday": "2008-09-12",
+  "nationality": "KR"
+ },
+ {
+  "name": "Aurora",
+  "group": "AtHeart",
+  "birthday": "2009-07-04",
+  "nationality": "JP"
+ },
+ {
+  "name": "Bome",
+  "group": "AtHeart",
+  "birthday": "2007-11-26",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Arin",
+  "group": "AtHeart",
+  "birthday": "2007-07-01",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer"
+ },
+ {
+  "name": "Nahyun",
+  "group": "AtHeart",
+  "birthday": "2009-09-03",
+  "nationality": "KR",
+  "role": "Maknae"
+ },
+ {
+  "name": "Mai",
+  "group": "izna",
+  "birthday": "2004-10-28",
+  "nationality": "JP",
+  "role": "Visual"
+ },
+ {
+  "name": "Bang Jeemin",
+  "group": "izna",
+  "birthday": "2005-05-08",
+  "nationality": "KR",
+  "role": "Visual, Center"
+ },
+ {
+  "name": "Koko",
+  "group": "izna",
+  "birthday": "2006-11-14",
+  "nationality": "JP",
+  "role": "Main Dancer"
+ },
+ {
+  "name": "Ryu Sarang",
+  "group": "izna",
+  "birthday": "2007-04-18",
+  "nationality": "KR"
+ },
+ {
+  "name": "Choi Jungeun",
+  "group": "izna",
+  "birthday": "2007-08-04",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Jeong Saebi",
+  "group": "izna",
+  "birthday": "2008-01-22",
+  "nationality": "KR",
+  "role": "Visual, Maknae"
+ },
+ {
+  "name": "Woni",
+  "group": "RESCENE",
+  "birthday": "2004-05-25",
+  "nationality": "KR",
+  "role": "Leader"
+ },
+ {
+  "name": "Liv",
+  "group": "RESCENE",
+  "birthday": "2006-10-11",
+  "nationality": "KR"
+ },
+ {
+  "name": "Minami",
+  "group": "RESCENE",
+  "birthday": "2006-11-29",
+  "nationality": "JP"
+ },
+ {
+  "name": "May",
+  "group": "RESCENE",
+  "birthday": "2008-08-19",
+  "nationality": "KR"
+ },
+ {
+  "name": "Zena",
+  "group": "RESCENE",
+  "birthday": "2008-11-27",
+  "nationality": "KR",
+  "role": "Visual, Center, Maknae"
+ },
+ {
+  "name": "Doeun",
+  "group": "Young Posse",
+  "birthday": "2007-12-24",
+  "nationality": "KR",
+  "role": "Lead Rapper, Vocalist"
+ },
+ {
+  "name": "Jiana",
+  "group": "Young Posse",
+  "birthday": "2006-02-02",
+  "nationality": "KR",
+  "role": "Main Vocalist, Sub-Rapper, Center"
+ },
+ {
+  "name": "Jieun",
+  "group": "Young Posse",
+  "birthday": "2009-11-05",
+  "nationality": "KR",
+  "role": "Lead Dancer, Lead Vocalist, Maknae"
+ },
+ {
+  "name": "Sunhye",
+  "group": "Young Posse",
+  "birthday": "2004-04-12",
+  "nationality": "KR",
+  "role": "Leader, Main Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Yihyun",
+  "group": "Baby DONT Cry",
+  "birthday": "2006-04-11",
+  "nationality": "KR",
+  "role": "Leader, Main Vocalist, Visual"
+ },
+ {
+  "name": "Kumi",
+  "group": "Baby DONT Cry",
+  "birthday": "2007-08-30",
+  "nationality": "JP",
+  "role": "Rapper"
+ },
+ {
+  "name": "Beni",
+  "group": "Baby DONT Cry",
+  "birthday": "2008-12-23",
+  "nationality": "KR",
+  "role": "Dance Captain, Maknae"
+ },
+ {
+  "name": "Mia Hinano",
+  "group": "Baby DONT Cry",
+  "birthday": "2007-09-03",
+  "nationality": "JP"
+ },
+ {
+  "name": "Mashiro",
+  "group": "MΛDEIN",
+  "birthday": "1999-12-16",
+  "nationality": "JP",
+  "role": "Leader"
+ },
+ {
+  "name": "MiU",
+  "group": "MΛDEIN",
+  "birthday": "2003-01-09",
+  "nationality": "JP"
+ },
+ {
+  "name": "Serina",
+  "group": "MΛDEIN",
+  "birthday": "2006-05-03",
+  "nationality": "JP"
+ },
+ {
+  "name": "Nagomi",
+  "group": "MΛDEIN",
+  "birthday": "2007-07-02",
+  "nationality": "JP",
+  "role": "Maknae"
+ },
+ {
+  "name": "Ji Hyun",
+  "group": "HEART OF WOMAN",
+  "birthday": "2004-11-08",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer, Sub-Vocalist"
+ },
+ {
+  "name": "Chaei",
+  "group": "HEART OF WOMAN",
+  "birthday": "2005-07-21",
+  "nationality": "KR",
+  "role": "Lead Rapper, Sub-Vocalist"
+ },
+ {
+  "name": "Ayne",
+  "group": "HEART OF WOMAN",
+  "birthday": "2005-08-18",
+  "nationality": "KR",
+  "role": "Main Vocalist"
+ },
+ {
+  "name": "Liuyin",
+  "group": "HEART OF WOMAN",
+  "birthday": "2007-11-17",
+  "nationality": "IT",
+  "role": "Lead Rapper, Sub-Vocalist, Maknae"
+ },
+ {
+  "name": "Liri",
+  "group": "HEART OF WOMAN",
+  "birthday": "2007-02-12",
+  "nationality": "KR",
+  "role": "All-Rounder"
+ },
+ {
+  "name": "Cho Hyejin",
+  "group": "OURBIRTHDAY",
+  "birthday": "2007-10-24",
+  "nationality": "KR",
+  "role": "Leader, Main Dancer"
+ },
+ {
+  "name": "Kuk Chorok",
+  "group": "OURBIRTHDAY",
+  "birthday": "2005-07-28",
+  "nationality": "KR"
+ },
+ {
+  "name": "Shin Hyewon",
+  "group": "OURBIRTHDAY",
+  "birthday": "2005-10-05",
+  "nationality": "KR",
+  "role": "Vocalist"
+ },
+ {
+  "name": "U",
+  "group": "OURBIRTHDAY",
+  "birthday": "2008-08-21",
+  "nationality": "JP",
+  "role": "Rapper"
+ },
+ {
+  "name": "Baby",
+  "group": "OURBIRTHDAY",
+  "birthday": "2009-02-10",
+  "nationality": "TW",
+  "role": "Main Dancer"
+ },
+ {
+  "name": "Kilala",
+  "group": "OURBIRTHDAY",
+  "birthday": "2010-12-17",
+  "nationality": "JP",
+  "role": "Visual, Maknae"
+ },
+ {
+  "name": "Achiraya",
+  "group": "OURBIRTHDAY",
+  "birthday": "2009-08-18",
+  "nationality": "TH",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Na Yeongjoo",
+  "group": "Dodree",
+  "birthday": "2001-02-21",
+  "nationality": "KR",
+  "role": "Vocalist"
+ },
+ {
+  "name": "Lee Songhyun",
+  "group": "Dodree",
+  "birthday": "2004-10-28",
+  "nationality": "KR",
+  "role": "Dancer, Maknae"
+ },
+ {
+  "name": "Jo yuri",
+  "group": null,
+  "birthday": "2001-10-22",
+  "nationality": "KR",
+  "role": "Solo"
+ },
+ {
+  "name": "Kwon Eunbi",
+  "group": null,
+  "birthday": "1995-09-27",
+  "nationality": "KR",
+  "role": "Solo"
+ },
+ {
+  "name": "Yena",
+  "group": null,
+  "birthday": "1999-09-29",
+  "nationality": "KR",
+  "role": "Solo"
+ },
+ {
+  "name": "BIBI",
+  "group": null,
+  "birthday": "1998-09-27",
+  "nationality": "KR",
+  "role": "Solo"
+ },
+ {
+  "name": "Jini",
+  "group": null,
+  "birthday": "2004-04-16",
+  "nationality": "KR",
+  "role": "Solo"
+ },
+ {
+  "name": "Chuu",
+  "group": null,
+  "birthday": "1999-10-20",
+  "nationality": "KR",
+  "role": "Solo"
+ }
+]
