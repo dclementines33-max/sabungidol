@@ -14,4 +14,7 @@ it("overwrites birthday, nationality and role by name + group, leaves the rating
   await updateIdolDetails(db, rows, false);
   expect((await listIdols(db))[0]).toMatchObject({ rating: 90, nationality: "KR", birthday: "2004-08-31", role: "Center, Lead Vocalist" });
   await expect(updateIdolDetails(db, [{ name: "Wonyoung", group: "IVE", nationality: "Korea" }], true)).rejects.toThrow();
+  // a row with only a role leaves the birthday and nationality as they are (bug found by the user: they became empty)
+  await updateIdolDetails(db, [{ name: "Wonyoung", group: "IVE", role: "Visual" }], false);
+  expect((await listIdols(db))[0]).toMatchObject({ nationality: "KR", birthday: "2004-08-31", role: "Visual" });
 });

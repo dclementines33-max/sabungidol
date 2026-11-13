@@ -99,8 +99,10 @@ export async function updateIdolDetails(db: Db, rows: IdolDetails[], dryRun: boo
   for (const r of rows) {
     const idol = byKey.get(key(r.name, r.group));
     if (!idol) { unknown.push(`${r.name} (${r.group ?? "Soloist"})`); continue; }
-    const check = idolInputSchema.pick({ birthday: true, nationality: true, role: true }).partial().parse({ birthday: r.birthday, nationality: r.nationality, role: r.role });
-    found.push({ id: idol.id, set: Object.fromEntries(Object.entries(check).filter(([, v]) => v !== undefined)) });
+    // Only the fields the row has: a missing one must not become null (the schema's defaults did that, wiping birthdays).
+    const given = (["birthday", "nationality", "role"] as const).filter((f) => r[f] !== undefined);
+    const check = idolInputSchema.pick({ birthday: true, nationality: true, role: true }).parse({ birthday: r.birthday ?? null, nationality: r.nationality ?? null, role: r.role ?? null });
+    found.push({ id: idol.id, set: Object.fromEntries(given.map((f) => [f, check[f]])) });
   }
   if (!dryRun) await db.transaction(async (tx) => { for (const f of found) if (Object.keys(f.set).length) await tx.update(idols).set(f.set).where(eq(idols.id, f.id)); });
   return { updated: found.length, unknown };
