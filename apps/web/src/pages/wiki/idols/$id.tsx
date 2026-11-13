@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { UserX } from "lucide-react";
 import { Tabs } from "../../../components/competition/Tabs";
 import { CareerScope } from "../../../components/idolProfile/CareerScope";
+import { ProfileEdit } from "../../../components/idolProfile/ProfileEdit";
 import { ProfileHero } from "../../../components/idolProfile/ProfileHero";
 import { ProfileOverview } from "../../../components/idolProfile/ProfileOverview";
 import { ProfileRecords } from "../../../components/idolProfile/ProfileRecords";
@@ -35,6 +36,7 @@ function IdolProfile() {
     <div className="space-y-10">
       <ProfileHero idol={idol} idolIds={idols!.map((i) => i.id)} league={league}
         record={{ titles: all?.titles ?? 0, podiums: (all?.titles ?? 0) + (all?.runnerUp ?? 0) + (all?.third ?? 0), matches: all?.matches ?? 0, wins: all?.wins ?? 0, draws: all?.draws ?? 0, losses: all?.losses ?? 0, winRate: all?.winRate ?? 0 }} />
+      <ProfileEdit idol={idol} />
       {!profile ? <p className="text-text-secondary">Menghitung statistik…</p> : (
         <Tabs label="Profil idol" tabs={[
           { id: "overview", label: "Overview", content: () => <ProfileOverview badges={profile.badges} titles={profile.placements.filter((p) => p.finalRank === 1)} history={profile.ratingHistory} rating={idol.rating} /> },

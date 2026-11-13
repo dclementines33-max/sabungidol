@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Archive } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { ArchiveBrackets } from "../../components/archive/ArchiveBrackets";
 import { ArchiveCups } from "../../components/archive/ArchiveCups";
 import { ArchiveMovement } from "../../components/archive/ArchiveMovement";
 import { ArchiveTables } from "../../components/archive/ArchiveTables";
@@ -46,6 +47,7 @@ function SeasonArchive() {
             </div>
             <Section title="Klasemen akhir"><ArchiveTables tables={archive.tables} /></Section>
             <Section title="Cup"><ArchiveCups cups={archive.cups} /></Section>
+            <Section title="Bracket, Swiss dan grup"><ArchiveBrackets key={seasonId} seasonId={seasonId!} /></Section>
             <Section title="Promosi, degradasi, rating"><ArchiveMovement promoted={archive.promoted} relegated={archive.relegated} ratingChanges={archive.ratingChanges} /></Section>
           </>
         )}

@@ -114,7 +114,7 @@ const api = {
   },
   seasonOverview: async () => seasonOverview(await open()),
   leagueView: async (comp: string) => leagueView(await open(), comp),
-  cupView: async (comps: string[]) => cupView(await open(), comps),
+  cupView: async (comps: string[], seasonId?: string) => cupView(await open(), comps, seasonId),
   matchPreview: async (id: string) => matchPreview(await open(), id),
   acceptMatch: async (id: string, games: ("A" | "B")[], method: "sim" | "manual" | "wheel") => acceptMatch(await open(), id, games, method),
   playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),

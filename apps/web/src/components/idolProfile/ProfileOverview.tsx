@@ -1,7 +1,7 @@
-// Idol Profile → Overview (PRD §8): badges, titles won, rating history.
+// Idol Profile → Overview (PRD §8): badges, the trophy cabinet (PRD §16), rating history.
 import { BADGES } from "@sabung/shared";
-import { useBranding } from "../../data/branding";
 import { RatingChart } from "./RatingChart";
+import { TrophyCabinet } from "./TrophyCabinet";
 
 type Props = {
   badges: { badge: string; season: number }[];
@@ -13,7 +13,6 @@ type Props = {
 const H3 = "m-0 text-xs tracking-widest text-text-secondary uppercase";
 
 export function ProfileOverview({ badges, titles, history, rating }: Props) {
-  const { label } = useBranding();
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <section aria-labelledby="badges" className="space-y-2">
@@ -25,12 +24,8 @@ export function ProfileOverview({ badges, titles, history, rating }: Props) {
         ) : <p className="m-0 text-sm text-text-secondary">Belum ada badge.</p>}
       </section>
       <section aria-labelledby="titles" className="space-y-2">
-        <h3 id="titles" className={H3}>Gelar</h3>
-        {titles.length ? (
-          <ul className="m-0 list-none space-y-1 p-0 text-sm">
-            {titles.map((t) => <li key={`${t.comp}-${t.season}`}><span className="font-mono text-text-secondary">S{t.season}</span> {label(t.comp)}</li>)}
-          </ul>
-        ) : <p className="m-0 text-sm text-text-secondary">Belum ada gelar.</p>}
+        <h3 id="titles" className={H3}>Lemari piala</h3>
+        <TrophyCabinet titles={titles} />
       </section>
       <section aria-labelledby="rating-history" className="space-y-2 lg:col-span-2">
         <h3 id="rating-history" className={H3}>Riwayat rating</h3>

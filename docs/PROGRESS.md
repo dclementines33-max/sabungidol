@@ -169,9 +169,13 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
 6. ✅ (with step 3) Every match playable one by one: IDL LG/UB/LB/FN, SWS, LCQ, UZC groups + KO, INK, NUG, B-Side, DSG, MBK.
 7. ✅ Daesang + Music Bank = opener: engine `season/gala.ts` openerPairs (at Start New Season → `config.opener`, zod `Opener`) + playOpener before the league phase (pending opener never holds up the leagues; done needs it). Season 1: status "none" (not a close blocker). Season 1 = 5,583 matches, later 5,590. "Sampai fase berikutnya" plays the opener first.
 8. ✅ Small bugs: Engine Tuning table scrolls, notices show names (`withNames` in usePlaySeason), clash notice in Indonesian. NOT done: floating the storage warning (it covered buttons; CLS 0.083 is already "good").
-9. Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
+9. (partly ✅ 2026-11-14: profile edit buttons = idolProfile/ProfileEdit (updateIdol, replacePhoto; rating stays in Rating Manager);
+   archive brackets/Swiss/groups = archive/ArchiveBrackets via cupView(comps, seasonId); stories points-record + late-promotion =
+   engine stats/seasonDrama (+test), storyWorker best from db leagueTotals. Still open: Career Stats season range, group logo +
+   group page, photo focal point.) Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
    buttons on profile, "records broken" + "dramatic promotion" stories, photo focal point.
-10. PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
+10. (partly ✅: Trophy cabinet = idolProfile/TrophyCabinet; Rivalry label = h2h/rivalryLabel (+test) in H2H and profile Rivals.
+    Open: Season Recap card, final predictions.) PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
     transfer window (propose rules first) + Trophy cabinet on the idol profile.
 11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
 User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.

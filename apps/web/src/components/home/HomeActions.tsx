@@ -1,6 +1,6 @@
 // Home's action cards (PRD §8; Update 2 dropped the next match): continue the season (progress %) and the latest
 // Season Story headline.
-import type { Story } from "@sabung/engine";
+import type { DramaStory, Story } from "@sabung/engine";
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { StoryCard } from "../story/StoryCard";
@@ -11,7 +11,7 @@ function Card({ to, kicker, children }: { to: "/play" | "/story"; kicker: string
   return <Link to={to} className={CARD}><span className="kicker">{kicker}</span>{children}</Link>;
 }
 
-export function HomeActions({ progress, status, story }: { progress: number; status: string; story?: Story }) {
+export function HomeActions({ progress, status, story }: { progress: number; status: string; story?: Story | DramaStory }) {
   return (
     <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-[1fr_1.6fr]">
       <li>

@@ -28,7 +28,12 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   await expect(page).toHaveURL(/\/wiki\/idols\/\w+/);
   await expect(page.locator("#idol-name")).toBeVisible();
   await expect(page.getByRole("tab", { name: "Overview" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("heading", { name: "Lemari piala" })).toBeVisible(); // PRD §16 trophy cabinet
   expect(await axe(page)).toEqual([]);
+  await page.getByRole("button", { name: "Edit profil" }).click(); // step 9: edit from the profile
+  await page.getByRole("dialog").getByLabel("Negara (2 huruf)").fill("JP");
+  await page.getByRole("dialog").getByRole("button", { name: "Simpan" }).click();
+  await expect(page.getByText(/· JP ·|· JP$/).first()).toBeVisible();
   await page.getByRole("tab", { name: "Career" }).click();
   await expect(page.getByRole("cell", { name: "Combined" })).toBeVisible();
   await page.getByRole("group", { name: "Scope karier" }).getByRole("button").nth(1).click(); // Update 2: career scope per competition
@@ -135,6 +140,9 @@ test("Season Archive: honours, final tables, cups, promotion", async () => {
   await expect(page.getByRole("table").locator("tbody tr")).toHaveCount(20);
   await expect(page.getByRole("list", { name: "Hasil cup" }).getByText("Unzure Cup")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Promosi ke D1 (18)" })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Ronde F" })).toBeVisible({ timeout: 60_000 }); // step 9: the past season's brackets
+  await page.getByRole("button", { name: "Swiss Play-in" }).click();
+  await expect(page.getByRole("region", { name: "Swiss grup D" })).toBeVisible({ timeout: 60_000 });
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/season-archive.png", fullPage: true });
 });

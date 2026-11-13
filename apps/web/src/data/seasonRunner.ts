@@ -2,7 +2,7 @@
 // the season from the saved results and plays only what the target allows, in chunks so progress
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
-import { type Db, type SeasonRow, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
+import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
 import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
@@ -140,8 +140,9 @@ export type CupCell = { key: string; id: string; comp: string; stage: StageCode;
 
 // Cups (Fase 3 panels): their matches outside the league stage — played, or ready to play next — as
 // bracket cells, the draws (Swiss groups, pots, groups) and the group-stage tables.
-export async function cupView(db: Db, comps: string[]) {
-  const input = await seasonInput(db);
+export async function cupView(db: Db, comps: string[], seasonId?: string) {
+  const given = seasonId ? (await listSeasons(db)).find((x) => x.id === seasonId) : undefined; // an archived season (Season Archive)
+  const input = await seasonInput(db, given);
   const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
   const mine = (m: { comp: string; stage: string }) => comps.includes(m.comp) && m.stage !== "LG";
   const played: CupCell[] = result.matches.filter(mine).map((m) => ({

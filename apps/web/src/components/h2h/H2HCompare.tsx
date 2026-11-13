@@ -6,6 +6,7 @@ import { tierOf } from "@sabung/shared";
 import { IdolPhoto, useIdol } from "@sabung/ui";
 import type { ReactNode } from "react";
 import { IdolLink } from "../wiki/IdolLink";
+import { rivalryLabel } from "./rivalryLabel";
 
 type Pair = { meetings: number; wins: number; draws: number; losses: number } | null;
 type Form = ("W" | "D" | "L")[];
@@ -64,6 +65,7 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
             <span className="bg-accent-bright" style={{ width: `${(w / total) * 100}%` }} /><span className="bg-muted" style={{ width: `${(d / total) * 100}%` }} /><span className="bg-cool" style={{ width: `${(l / total) * 100}%` }} />
           </span>
           <p className="m-0 mt-2 font-mono text-xs text-text-secondary">{pair?.meetings ?? 0} match · game {games[0]}–{games[1]}</p>
+          {rivalryLabel(w, d, l) && <p className="tag m-0 mt-3">{rivalryLabel(w, d, l)}</p>}
         </div>
         <Side id={b} align="right" />
       </div>
