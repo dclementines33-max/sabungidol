@@ -4,6 +4,7 @@
 // shares the average of its places (two SF losers without a 3rd-place match = 50); draws count half.
 import { type CompetitionKey, D1_LEAGUES, D2_LEAGUES, competitionKeyOf } from "@sabung/shared";
 import { computeStandings } from "../standings";
+import { seasonPlacements } from "./placements";
 import type { SimMatch, Title } from "./types";
 
 export const PRESTIGE: Record<CompetitionKey, number> = { UZC: 1, SWS: 1, LCQ: 1, IDL: 0.9, INK: 0.75, D1: 0.7, DSG: 0.55, MBK: 0.45, NUG: 0.4, BS: 0.35, D2: 0.25 };
@@ -17,59 +18,16 @@ const placePoints = (from: number, to: number) => {
 type Points = Map<string, number>; // idol → Σ points × prestige
 const add = (points: Points, idol: string, value: number) => points.set(idol, (points.get(idol) ?? 0) + value);
 
-// A knockout or double-elimination bracket: 1 and 2 from the title, 3RD match winner/loser 3/4,
-// everyone else ranked by the round of their last match (later = better), ties share places.
-function bracketPlaces(matches: SimMatch[], title: Title | undefined): Map<string, number> {
-  const places = new Map<string, number>();
-  if (!title) return places;
-  places.set(title.champion, 100).set(title.runnerUp, 70);
-  const roundOrder = [...new Set(matches.map((m) => m.round))];
-  const last = new Map<string, SimMatch>();
-  for (const m of matches) { last.set(m.idolA, m); last.set(m.idolB, m); }
-  let next = 3;
-  const third = matches.find((m) => m.round === "3RD");
-  if (third) {
-    places.set(third.result === "A" ? third.idolA : third.idolB, placePoints(3, 3)).set(third.result === "A" ? third.idolB : third.idolA, placePoints(4, 4));
-    next = 5;
-  }
-  const byRound = new Map<string, string[]>();
-  for (const [idol, m] of last) if (!places.has(idol)) byRound.set(m.round, [...(byRound.get(m.round) ?? []), idol]);
-  for (const round of [...roundOrder].reverse()) {
-    const idols = byRound.get(round);
-    if (!idols) continue;
-    const value = placePoints(next, next + idols.length - 1);
-    for (const idol of idols) places.set(idol, value);
-    next += idols.length;
-  }
-  return places;
-}
-
+// Points from the season's places (§6.2): leagues 100 × (21 − rank) / 20; brackets by place, a tie
+// sharing the average of its places; Unzure: at least 12 through the group, 5 out in the group.
 export function seasonPoints(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, rating: (id: string) => number): Points {
   const points: Points = new Map();
-  for (const [comp, roster] of Object.entries(leagues)) { // leagues and The Idols: 100 × (21 − rank) / 20
-    const table = computeStandings(roster.map((id) => ({ id, startRating: rating(id) })), matches.filter((m) => m.comp === comp && m.stage === "LG"));
-    for (const row of table) add(points, row.idolId, ((100 * (21 - row.rank)) / 20) * PRESTIGE[competitionKeyOf(comp)]);
-  }
-  const brackets = new Map<string, SimMatch[]>(); // title key → matches
-  for (const m of matches) {
-    if (m.stage === "LG" || m.comp === "SWS" || m.comp === "LCQ" || m.stage === "GS") continue;
-    if (m.comp === "DSG" || m.comp === "MBK") { // one match: winner 100, loser 70
-      add(points, m.result === "A" ? m.idolA : m.idolB, 100 * PRESTIGE[m.comp]);
-      add(points, m.result === "A" ? m.idolB : m.idolA, 70 * PRESTIGE[m.comp]);
-      continue;
-    }
-    const key = m.comp === "IDL" ? "IDL-PO" : m.comp;
-    brackets.set(key, [...(brackets.get(key) ?? []), m]);
-  }
-  const unzureKo = new Map<string, number>();
-  for (const [key, list] of brackets) {
-    const places = bracketPlaces(list, titles[key]);
-    if (key === "UZC") for (const [idol, p] of places) unzureKo.set(idol, p);
-    else for (const [idol, p] of places) add(points, idol, p * PRESTIGE[competitionKeyOf(key === "IDL-PO" ? "IDL" : key)]);
-  }
-  const groupIdols = new Set(matches.filter((m) => m.comp === "UZC" && m.stage === "GS").flatMap((m) => [m.idolA, m.idolB]));
-  for (const idol of new Set([...groupIdols, ...unzureKo.keys()])) { // Unzure: through the group 12, out in the group 5
-    add(points, idol, Math.max(unzureKo.has(idol) ? 12 : 5, unzureKo.get(idol) ?? 0) * PRESTIGE.UZC);
+  for (const p of seasonPlacements(matches, titles, leagues, rating)) {
+    const prestige = PRESTIGE[competitionKeyOf(p.comp.split("-")[0]!)];
+    const value = p.stageReached === "LG" ? (100 * (21 - p.finalRank)) / 20
+      : p.comp === "UZC" ? (p.stageReached === "GS" ? 5 : Math.max(12, placePoints(p.finalRank, p.finalRank + p.tied - 1)))
+      : placePoints(p.finalRank, p.finalRank + p.tied - 1);
+    add(points, p.idolId, value * prestige);
   }
   return points;
 }

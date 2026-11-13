@@ -21,3 +21,6 @@ export * from "./season/testRoster";
 export * from "./season/splitLeagues";
 export { pickTheIdols } from "./season/leaguePhase";
 export * from "./season/seasonClose";
+export * from "./season/placements";
+export * from "./season/synthetic";
+export * from "./stats/careerStats";

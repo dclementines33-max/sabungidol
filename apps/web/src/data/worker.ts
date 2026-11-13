@@ -12,6 +12,7 @@ import { fixIntegrity, integrityCheck } from "./integrityWorker";
 import { acceptMatch, matchPreview } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { careerSync, lastSeasonProgression } from "./ratingSources";
+import { careerStats, rebuildStats } from "./careerWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -129,6 +130,9 @@ const api = {
   lastSeasonProgression: async () => lastSeasonProgression(await open()),
   careerSync: async (current: Record<string, number>, mode: "replace" | "blend") => careerSync(await open(), current, mode),
   applyRatings: async (changes: RatingChange[], source: string) => applyRatings(await open(), changes, source),
+  // Career stats (PRD §7): cached per finished season, rebuildable from the matches.
+  careerStats: async () => careerStats(await open()),
+  rebuildStats: async () => rebuildStats(await open()),
   // Closing the season (PRD §4, §6.3).
   closePreview: async () => closePreview(await open()),
   saveProgression: async () => saveProgression(await open()),

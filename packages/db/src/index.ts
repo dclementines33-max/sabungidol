@@ -16,3 +16,4 @@ export { bundledMigrations } from "./migrations";
 export * from "./seasonPlay";
 export * from "./integrity";
 export * from "./ratings";
+export * from "./stats";

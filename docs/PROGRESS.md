@@ -16,8 +16,9 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 0 Engine & data core | done, gate passed |
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
-| **Fase 3 Play** | **done, GATE PASSED (3 seasons in a row, integrity clean) — awaiting user approval** |
-| Fase 4 Wiki, Fase 5 Backend | not started |
+| Fase 3 Play | done, gate passed, approved 2026-11-13 |
+| **Fase 4 Wiki** | **in progress: step 1 done, next step 2** |
+| Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
 
@@ -58,6 +59,33 @@ file only when the task touches it. Keep this file current: update it at the end
    real Safari on a Mac/iPhone. React hydration mismatch only on /dev/worker in WebKit (check page).
 10. ✅ GATE e2e `fase3Gate`: 3 seasons in a row through the app (start, whole season, save progression,
    Start New Season), each exactly 5,590 matches, integrity clean — 31.8 s. Full e2e 34/34.
+
+### Fase 4 plan (APPROVED 2026-11-13; Podium 100, +4 proposed badges, Dashboard fixed order) — gate: "Rebuild Stats" = cache, identical, on 20 synthetic seasons
+
+User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-browser) → skip it and say so.
+1. ✅ Stats foundation (engine season/placements.ts seasonPlacements — also feeds seasonPoints; stats/careerStats.ts
+   foldSeason/careerRows; season/synthetic.ts syntheticSeasons; db stats.ts replacePlacements/readCache/writeCache;
+   web data/careerWorker.ts updateCareerCache/careerStats/rebuildStats; Settings → Data "Rebuild Stats").
+   GATE TEST careerWorker.test.ts: 20 synthetic seasons, cache = rebuild, placements identical (35 s). Placements
+   are written when a whole season is finished (not per competition); the live season is added on read.
+   Was: Stats foundation: `placements` written per finished competition (§7.2, reuses seasonClose bracket places),
+   career stats §7.1 per idol × competition + Combined into `stats_cache`, "Rebuild Stats" in Settings → Data,
+   a headless 20-season synthetic generator (promotion + progression) for tests; the GATE test built here first.
+2. Records engine §7.3 (pure): competition ranking 1, 2, T3, T3, 5; fixed global rank; min matches 50; scope
+   filters; deterministic tie-breaks; all categories.
+3. Achievements §7.4: badges computed when a competition finishes, stored with proof match, celebration popup.
+4. Idol Profile `/wiki/idols/$id`: hero, tabs Overview (badges, titles, rating history chart), Career, Seasons,
+   Matches (paged), Rivals, Records; IdolCard → profile link.
+5. Career Stats: virtual table, chosen columns, sticky photo+name, Combined + per competition, scope, CSV.
+6. Head to Head: two selects, W-D-L, titles, streaks, Top 10 rivalries, match log, filters.
+7. Hall of Champions: tab per competition, champions per season, most titles, wall of fame.
+8. All-time Records: top-10 leaderboard cards per category + "lihat semua".
+9. Match Database: filters, sort, cursor paging, counts, Reset Filters (never loads everything).
+10. Season Archive: per season read-only honours, 13 final tables, cup brackets, promotion, rating changes.
+11. Season Story (template headlines → match links) + Girl Group Stats.
+12. Dashboard (fixed card grid) + Home cinematic (hero = last Unzure champion, 3 action cards, On This Day =
+   same matchday in earlier seasons, On Fire, last backup).
+13. GATE: 20 synthetic seasons → Rebuild Stats identical to cache; pages stay fast on that data.
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
