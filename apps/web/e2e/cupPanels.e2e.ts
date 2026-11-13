@@ -29,15 +29,19 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.getByRole("tab", { name: "Pot & undian" }).click();
   await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
   await page.getByRole("tab", { name: "Grup" }).click();
-  await expect(page.getByRole("tabpanel").getByRole("table")).toHaveCount(16);
+  await expect(page.getByRole("group", { name: "Pilih grup" }).getByRole("button")).toHaveCount(16);
+  await page.getByRole("button", { name: "P", exact: true }).click();
+  await expect(page.getByRole("table", { name: "Grup P" })).toBeVisible();
   await page.getByRole("tab", { name: "Knockout" }).click();
-  await expect(page.getByRole("tabpanel").getByText(/–/).first()).toBeVisible();
+  await expect(page.getByRole("list", { name: "Ronde F" }).getByText("Selesai")).toBeVisible(); // the whole bracket, final played
   expect(await axe(page)).toEqual([]);
+  await expect(page.getByRole("button", { name: "Main sampai juara" })).toBeDisabled(); // a drawn group match is played, not open
+  await page.getByRole("list", { name: "Ronde F" }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: "test-results/unzure-panel.png" }); // for a human look
 
   await page.goto("/play/nugu");
   // Step 6: click an open bracket match → MatchModal → Simulate → Accept; the cup then goes on from it.
-  await page.locator('ol[aria-label^="Ronde"]').first().getByRole("button").first().click();
+  await page.getByRole("button", { name: /^Main .* vs / }).first().click(); // Nugu round 1 = plain fixtures (bracket from the last 16)
   const modal = page.getByRole("dialog");
   await modal.getByRole("button", { name: "Simulate", exact: true }).click();
   await modal.getByRole("button", { name: "Accept Result" }).click();

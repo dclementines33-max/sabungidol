@@ -8,6 +8,8 @@ import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { CompetitionCover } from "./CompetitionCover";
+import { GalaStage } from "./GalaStage";
+import { MatchList } from "./MatchList";
 import { usePlaySeason } from "../play/usePlaySeason";
 
 export function CupPanel({ codes, title }: { codes: string[]; title?: string }) {
@@ -19,7 +21,13 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "cup", comp, season?.status], queryFn: () => engine().cupView([comp]), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan cup ini.</p>;
   if (!view) return <p className="text-text-secondary">Membaca cup…</p>;
-  const next = view.cells.find((c) => !c.winner);
+  const next = view.cells.find((c) => c.id && !c.score);
+  // Nugu: the early rounds (more than 8 matches) read as plain fixtures; from the last 16 on it is a bracket.
+  const size = (round: string) => view.cells.filter((c) => c.round === round).length;
+  const early = comp === "NUG" ? view.cells.filter((c) => size(c.round) > 8) : [];
+  const bracket = view.cells.filter((c) => !early.includes(c));
+  const gala = comp === "DSG" || comp === "MBK";
+  const open = (key: string) => { const match = view.cells.find((c) => c.key === key); if (match?.id && !match.score && !running) setMatchId(match.id); };
   const played = view.cells.filter((c) => c.score).length;
   const champion = Object.values(view.titles)[0]?.champion;
   return (
@@ -47,7 +55,14 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
           ))}
         </ul>
       )}
-      {view.cells.length > 0 && <TournamentBracketTree cells={view.cells} onMatchClick={(cell) => { const match = view.cells.find((c) => c.key === cell.key); if (match && !match.winner && !running) setMatchId(match.id); }} />}
+      {early.length > 0 && (
+        <details className="space-y-3" open={early.some((c) => !c.winner)}>
+          <summary className="kicker cursor-pointer">Ronde awal · {early.filter((c) => c.score).length}/{early.length} match</summary>
+          <MatchList cells={early.filter((c) => c.id)} busy={running} onOpen={setMatchId} roundLabel={(r) => `Ronde ${r.slice(1)}`} />
+        </details>
+      )}
+      {gala && <GalaStage cells={view.cells} busy={running} onOpen={setMatchId} title={(c) => (comp === "DSG" ? "Daesang · Grand final" : `Music Bank · ${c.round}`)} />}
+      {!gala && bracket.length > 0 && <TournamentBracketTree cells={bracket} onMatchClick={(cell) => open(cell.key)} />}
       <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </section>
   );

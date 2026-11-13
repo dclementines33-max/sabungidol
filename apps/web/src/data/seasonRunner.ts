@@ -4,7 +4,8 @@
 // changed after a manual result are removed.
 import { type Db, type SeasonRow, currentSeason, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
-import { SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
+import { bracketSkeleton } from "./bracketSkeleton";
+import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
@@ -134,6 +135,7 @@ export async function leagueView(db: Db, comp: string) {
   };
 }
 
+// id "" = a slot whose match does not exist yet (the bracket is drawn whole from the start).
 export type CupCell = { key: string; id: string; comp: string; stage: StageCode; round: string; slot: number; a: string; b: string; winner?: string; score?: string };
 
 // Cups (Fase 3 panels): their matches outside the league stage — played, or ready to play next — as
@@ -154,8 +156,14 @@ export async function cupView(db: Db, comps: string[]) {
   const table = (ids: string[], stage: string, prefix: string) => computeStandings(ids.map((id) => ({ id, startRating: rating.get(id) ?? 0 })),
     result.matches.filter((m) => m.stage === stage && m.round.startsWith(`${prefix}-`)));
   const letter = (g: number) => "ABCDEFGHIJKLMNOP"[g]!;
+  const leagues = input.leagues as Record<string, string[]>;
+  const size = (codes: readonly string[]) => codes.reduce((n, c) => n + (leagues[c]?.length ?? 0), 0);
+  const off = new Set(input.config?.off ?? []);
+  const skeletons = comps.filter((c) => !off.has(competitionKeyOf(c))).map((c) => bracketSkeleton(c, [...played, ...open], size(D2_LEAGUES), size(D1_LEAGUES)));
+  const order = new Map(skeletons.flatMap((s) => s.order).map((key, i) => [key, i]));
+  const at = (c: CupCell) => order.get(c.key) ?? -1; // group / Swiss cells (no template) stay first, in play order
   return {
-    cells: [...played, ...open],
+    cells: [...played, ...open, ...(skeletons.flatMap((s) => s.blank) as CupCell[])].sort((x, y) => at(x) - at(y)),
     titles: Object.fromEntries(Object.entries(result.titles).filter(([key]) => comps.some((c) => key === c || key.startsWith(`${c}-`) || key === `MBK-${c}`))),
     draws: result.draws,
     lcqTables: (result.draws.lcq ?? []).map((ids, g) => table(ids, "LQ", letter(g))),

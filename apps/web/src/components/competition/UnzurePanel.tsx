@@ -9,8 +9,7 @@ import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { useBranding } from "../../data/branding";
 import { CompetitionCover } from "./CompetitionCover";
-import { GroupTable } from "./GroupTable";
-import { MatchList } from "./MatchList";
+import { GroupStage } from "./GroupStage";
 import { Tabs } from "./Tabs";
 
 const LETTERS = "ABCDEFGHIJKLMNOP";
@@ -28,14 +27,14 @@ export function UnzurePanel() {
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "cup", "unzure", season?.status], queryFn: () => engine().cupView(COMPS), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan Unzure Cup.</p>;
   if (!view) return <p className="text-text-secondary">Membaca Unzure Cup…</p>;
-  const next = view.cells.find((c) => !c.winner);
+  const next = view.cells.find((c) => c.id && !c.score);
   const swiss = (view.draws.swiss ?? []).map((ids, g) => ({
     ids,
     rounds: [...new Set(view.cells.filter((c) => c.stage === "SW" && c.round.startsWith(`${LETTERS[g]}-`) && c.winner).map((c) => c.round))]
       .map((round) => view.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner! }))),
   }));
-  const groupCells = (stage: string, g: number, openOnly = false) => view.cells.filter((c) => c.stage === stage && c.round.startsWith(`${LETTERS[g]}-`) && (!openOnly || !c.score));
-  const list = (stage: string, g: number, openOnly = false) => <MatchList cells={groupCells(stage, g, openOnly)} busy={running} onOpen={setMatchId} roundLabel={(r) => r.split("-").slice(1).join(" ")} />;
+  const swissOpen = (g: number) => view.cells.filter((c) => c.stage === "SW" && c.id && !c.score && c.round.startsWith(`${LETTERS[g]}-`))
+    .map((c) => ({ round: Number(c.round.split("-R")[1]) - 1, a: c.a, b: c.b, onOpen: () => { if (!running) setMatchId(c.id); } }));
   const ko = view.cells.filter((c) => c.comp === "UZC" && c.stage !== "GS");
   return (
     <div className="space-y-6">
@@ -51,10 +50,10 @@ export function UnzurePanel() {
       </div>
       <Tabs label="Unzure Cup" tabs={[
         { id: "swiss", label: "Swiss Play-in", content: () => (
-          <div className="grid gap-6 xl:grid-cols-2">{swiss.map((s, g) => <div key={g} className="space-y-3"><SwissPlayInBracket group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} />{list("SW", g, true)}</div>)}</div>
+          <div className="space-y-10">{swiss.map((s, g) => <div key={g}><h3 className="m-0 mb-3 font-display text-xl">Grup <span className="font-gothic text-3xl text-accent-bright">{LETTERS[g]}</span></h3><SwissPlayInBracket group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} open={swissOpen(g)} /></div>)}</div>
         ) },
         { id: "lcq", label: "LCQ", content: () => (
-          <div className="grid gap-6 md:grid-cols-2">{view.lcqTables.map((rows, g) => <div key={g} className="space-y-3"><GroupTable name={`Grup ${LETTERS[g]}`} rows={rows} through={4} />{list("LQ", g)}</div>)}</div>
+          <GroupStage tables={view.lcqTables} cells={view.cells} stage="LQ" through={4} busy={running} onOpen={setMatchId} />
         ) },
         { id: "pots", label: "Pot & undian", content: () => (
           <div className="space-y-6">
@@ -67,9 +66,9 @@ export function UnzurePanel() {
           </div>
         ) },
         { id: "groups", label: "Grup", content: () => (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">{view.groupTables.map((rows, g) => <div key={g} className="space-y-3"><GroupTable name={`Grup ${LETTERS[g]}`} rows={rows} through={2} />{list("GS", g)}</div>)}</div>
+          <GroupStage tables={view.groupTables} cells={view.cells} stage="GS" through={2} busy={running} onOpen={setMatchId} />
         ) },
-        { id: "ko", label: "Knockout", content: () => (ko.length ? <TournamentBracketTree cells={ko} onMatchClick={(cell) => { const match = ko.find((c) => c.key === cell.key); if (match && !match.winner && !running) setMatchId(match.id); }} /> : <p className="m-0 text-sm text-text-secondary">Babak 32 besar dimulai setelah fase grup.</p>) },
+        { id: "ko", label: "Knockout", content: () => (ko.length ? <TournamentBracketTree cells={ko} onMatchClick={(cell) => { const match = ko.find((c) => c.key === cell.key); if (match?.id && !match.score && !running) setMatchId(match.id); }} /> : <p className="m-0 text-sm text-text-secondary">Babak 32 besar dimulai setelah fase grup.</p>) },
       ]} />
       <PlayMatchDialog matchId={matchId} onClose={() => setMatchId(null)} />
     </div>
