@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–12 done, next step 13 (gate)** |
+| **Fase 4 Wiki** | **done, gate passed 2026-11-13 — waiting for the user's approval before Fase 5** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -114,7 +114,10 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    next match, latest story card; OnThisDay = same matchday LG round in earlier seasons, biggest upsets first; On Fire =
    current win streak ≥ 5; last backup line). Worker data/overviewWorker.ts; db MatchFilter got `round`. Welcome stays
    only for Season 1 draft. Not built: "records just broken" card, form table (On Fire instead), carousel animation.
-13. GATE: 20 synthetic seasons → Rebuild Stats identical to cache; pages stay fast on that data.
+13. ✅ GATE PASSED 2026-11-13: careerWorker.test.ts — 20 synthetic seasons, cache = Rebuild Stats (rows, placements,
+   badges identical), and every wiki read timed on that data (Node + in-memory PGlite, ms): career 44, profile 123,
+   H2H 27, champions 175, records 465, match page 12 / 5, archive 277, story 364, home/dashboard 225 (asserted < 3 s).
+   Browser on OPFS will be slower; not measured in a real browser with 20 seasons.
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
@@ -235,7 +238,7 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 
 ## Open items
 
-- FASE 3 GATE PASSED 2026-11-13 — waiting for the user's approval before Fase 4. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
+- FASE 4 GATE PASSED 2026-11-13 — waiting for approval before Fase 5. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
 - E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
   fresh profiles. (Fixed: db tests have `--hookTimeout=30000`; opening two PGlite dbs takes ~10 s.)
 - Real Safari (Mac/iPhone) untested: IndexedDB database + OPFS photo files. CLS 0.083 from the late

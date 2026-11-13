@@ -3,7 +3,11 @@
 import { type Db, archiveSeason, createDraftSeason, groups, idols, listAchievements, listPlacements, openDb, readCache, saveMatches } from "@sabung/db";
 import { syntheticSeasons } from "@sabung/engine";
 import { describe, expect, it } from "vitest";
+import { seasonArchive } from "./archiveWorker";
 import { careerStats, rebuildStats, updateCareerCache } from "./careerWorker";
+import { overview } from "./overviewWorker";
+import { storyOf } from "./storyWorker";
+import { careerTable, champions, headToHead, idolProfile, matchPage, records } from "./wikiWorker";
 
 const SEASONS = 20;
 
@@ -42,5 +46,23 @@ describe("Fase 4 gate: Rebuild Stats = cache", () => {
     expect(byKey(await listAchievements(db))).toEqual(byKey(badgesBefore));
     expect(badgesBefore.filter((b) => b.badge === "idol-of-season")).toHaveLength(SEASONS);
     expect(placementsBefore.length).toBeGreaterThan(SEASONS * 600);
+
+    // Pages stay fast on this data: every wiki read, timed (the first one also loads the stats once).
+    const idol = rowsBefore.rows[0]!.idolId;
+    const reads: [string, () => Promise<unknown>][] = [
+      ["career stats (first, loads the cache)", () => careerTable(db, "ALL")], ["idol profile", () => idolProfile(db, idol)],
+      ["head to head", () => headToHead(db, idol, rowsBefore.rows[1]!.idolId)], ["hall of champions", () => champions(db)],
+      ["all-time records", () => records(db, 50)], ["match database page", () => matchPage(db, {}, {})],
+      ["match database, one idol", () => matchPage(db, { idolId: idol }, {})], ["season archive", () => seasonArchive(db, "S20")],
+      ["season story", () => storyOf(db, "S20")], ["home/dashboard", () => overview(db)],
+    ];
+    const times: Record<string, number> = {};
+    for (const [name, read] of reads) {
+      const t = performance.now();
+      await read();
+      times[name] = Math.round(performance.now() - t);
+    }
+    console.log("wiki reads on 20 seasons (ms):", times);
+    expect(Math.max(...Object.values(times))).toBeLessThan(3000);
   }, 600_000);
 });
