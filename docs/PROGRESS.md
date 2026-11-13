@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–8 done, next step 9 (Match Database)** |
+| **Fase 4 Wiki** | **in progress: steps 1–11 done, next step 12 (Dashboard + Home)** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -98,9 +98,17 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
 8. ✅ All-time Records `/wiki/records` (components/records/RecordCard top 10 + "Lihat semua"; Worker records(minMatches)
    = allTimeRecords + upsets + H2H meetings ranked by rankRecords). Name search hides rows, rank stays; min matches
    select. Not built: scope filters on this page (Career Stats has them).
-9. Match Database: filters, sort, cursor paging, counts, Reset Filters (never loads everything).
-10. Season Archive: per season read-only honours, 13 final tables, cup brackets, promotion, rating changes.
-11. Season Story (template headlines → match links) + Girl Group Stats.
+9. ✅ Match Database `/wiki/matches` (reuses components/wiki/MatchLog; filters season, competition, stage, idol, result —
+   Menang/Kalah only with an idol —, order by id = season/competition/stage, Reset Filters). "Newest" = id order, not
+   play time.
+10. ✅ Season Archive `/wiki/seasons` (Worker data/archiveWorker.ts replays the season: titles → SeasonHonours, 13 final
+   tables → competition/LeagueStandings without form/trend, cup top 4 from placements, promotionPlan, db
+   listSeasonRatingChanges). Not built: Swiss grid, Unzure groups and cup BRACKETS in the archive (the panels only read
+   the current season; reworking them per season = big), season story inside the archive (own page).
+11. ✅ Season Story `/story` (engine stats/seasonStory.ts: first titles (hidden in the first season), top-5 upsets, reverse
+   sweeps, top-3 streaks, Idol of the Month per MD 1–10/11–20/21–30/31–38 by league wins; components/story/StoryCard
+   templates; links → the pair's H2H) + Girl Group Stats `/wiki/groups` (components/groups/groupStats; click a group →
+   member grid). Not built: "records broken" and "dramatic promotion" stories, group logo / own group route.
 12. Dashboard (fixed card grid) + Home cinematic (hero = last Unzure champion, 3 action cards, On This Day =
    same matchday in earlier seasons, On Fire, last backup).
 13. GATE: 20 synthetic seasons → Rebuild Stats identical to cache; pages stay fast on that data.
