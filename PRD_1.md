@@ -572,6 +572,6 @@ Pembangunan berjalan dalam 6 fase berurutan; setiap fase punya gate yang harus l
 - [x] Pemetaan nama turnamen lama (Supreme, Crown, Champion Shield, Open Arena, Spotlight) ke kompetisi baru di §6.1 sudah benar?
 - [x] Nugu Cup: terima bye 1–2 ronde (rencana §4), atau ubah jumlah ronde/peserta agar bye 3–4 ronde mungkin?
 - [x] LCQ: 4 teratas per grup (total 8, agar Unzure Cup tepat 64)?
-- [ ] Daesang & Music Bank dimainkan di akhir season ini atau sebagai pembuka season berikutnya?
-- [ ] Ambang Perennial Podium tetap 1.000 atau diturunkan ke 100?
+- [x] Daesang & Music Bank dimainkan di akhir season ini atau sebagai pembuka season berikutnya? (pembuka season berikutnya, user 2026-11-13)
+- [x] Ambang Perennial Podium tetap 1.000 atau diturunkan ke 100? (100)
 - [x] Urutan tie-break klasemen §5.5 disetujui?

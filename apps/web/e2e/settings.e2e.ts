@@ -17,7 +17,7 @@ test("Settings A: season, branding, roster, Data Maker", async ({ page }) => {
   await expect(page.getByTestId("season-chip")).toHaveText("Musim Pertama · Draft");
 
   await page.getByRole("radio", { name: "teal" }).first().check({ force: true }); // the native radio is visually hidden behind its swatch
-  await page.getByRole("button", { name: "Simpan D1" }).click();
+  await page.getByRole("button", { name: "Simpan D1A" }).click();
   await expect(page.getByText(/Branding .* disimpan/)).toBeVisible();
 
   await expect(page.getByRole("button", { name: /D1A\s*20\/20 idol/ })).toBeVisible();

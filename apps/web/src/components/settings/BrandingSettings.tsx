@@ -1,25 +1,22 @@
 // Settings → Branding (PRD §8, §10.1): each competition's display name, accent colour and logo.
-// Codes never change; only what is shown does.
+// Every D1 league has its own; D2X follows D1X ("… · Divisi 2"). Codes never change; only what is shown does.
 import type { Branding } from "@sabung/db";
-import { SEASON_COMPETITIONS } from "@sabung/shared";
+import { D1_LEAGUES, SEASON_COMPETITIONS } from "@sabung/shared";
 import { Button, ColorSwatchPicker } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
-import { photoUrl, requestPhoto, usePhotoUrls } from "../../data/photoCache";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
+import { CompetitionLogo } from "../CompetitionLogo";
 import { FIELD, SECTION } from "./settingsShared";
 
 type Row = { name: string; branding: Branding };
-
-function Logo({ photoId }: { photoId: string }) {
-  usePhotoUrls((s) => s.urls); // re-render when it arrives
-  const url = photoUrl(photoId, 64);
-  if (!url) queueMicrotask(() => requestPhoto(photoId, 64));
-  return url ? <img src={url} alt="Logo" className="size-10 rounded-control object-contain" /> : null;
-}
+const ROWS = [
+  ...D1_LEAGUES.map((code) => ({ key: code, name: `Liga ${code}` })),
+  ...SEASON_COMPETITIONS.filter((c) => c.key !== "D1" && c.key !== "D2").map((c) => ({ key: c.key as string, name: c.name })),
+];
 
 export function BrandingSettings({ seasonId }: { seasonId: string }) {
   const key = [...SEASON_QUERY, "competitions", seasonId];
@@ -45,15 +42,17 @@ export function BrandingSettings({ seasonId }: { seasonId: string }) {
   return (
     <section className={SECTION} aria-labelledby="set-branding">
       <h2 id="set-branding" className="m-0 font-display text-lg">Branding kompetisi</h2>
+      <p className="m-0 text-sm text-text-secondary">Tiap liga Divisi 2 memakai logo dan warna liga D1 yang sama, dengan nama "… · Divisi 2".</p>
       <ul className="m-0 grid list-none gap-4 p-0 lg:grid-cols-2">
-        {SEASON_COMPETITIONS.map((c) => {
+        {ROWS.map((c) => {
           const row = rowFor(c.key, c.name);
+          const d2 = c.key.startsWith("D1") ? ` (juga D2${c.key[2]})` : "";
           return (
             <li key={c.key} className="space-y-2 rounded-card border border-border border-l-4 p-3" style={{ borderLeftColor: row.branding.color ? `var(--color-${row.branding.color})` : undefined }}>
-              <label className="block text-sm text-text-secondary">Nama tampilan ({c.key})<input value={row.name} maxLength={40} onChange={(e) => edit(c.key, c.name, { name: e.target.value })} className={FIELD} /></label>
+              <label className="block text-sm text-text-secondary">Nama tampilan ({c.key}{d2})<input value={row.name} maxLength={40} onChange={(e) => edit(c.key, c.name, { name: e.target.value })} className={FIELD} /></label>
               <ColorSwatchPicker label={`Warna aksen ${c.key}`} value={row.branding.color} onChange={(color) => edit(c.key, c.name, { branding: { ...row.branding, color } })} />
               <div className="flex items-center gap-3">
-                {row.branding.logoId && <Logo photoId={row.branding.logoId} />}
+                <CompetitionLogo logoId={row.branding.logoId} />
                 <label className="text-sm text-text-secondary">Logo {c.key}<input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadLogo(c.key, c.name, e.target.files[0])} className="mt-1 block text-text-primary" /></label>
               </div>
               <Button className="px-3 py-1" onClick={() => save(c.key, c.name)}>Simpan {c.key}</Button>

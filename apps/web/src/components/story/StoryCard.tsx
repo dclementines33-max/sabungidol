@@ -3,19 +3,20 @@
 import type { Story } from "@sabung/engine";
 import { useIdolLookup } from "@sabung/ui";
 import { Link } from "@tanstack/react-router";
-import { titleLabel } from "../play/competitionLinks";
+import { useBranding } from "../../data/branding";
 
 const KICKER: Record<Story["kind"], string> = { upset: "Upset", "reverse-sweep": "Reverse sweep", streak: "Streak", "first-title": "Juara pertama kali", "idol-of-month": "Idol of the Month" };
 const LINK = "text-sm text-accent-bright underline underline-offset-4";
 
 export function StoryCard({ story }: { story: Story }) {
+  const { label } = useBranding();
   const lookup = useIdolLookup();
   const name = (id: string) => lookup(id)?.name ?? id;
   const s = story;
   const headline = s.kind === "upset" ? `${name(s.winner)} menumbangkan ${name(s.loser)} meski selisih rating ${s.gap}`
     : s.kind === "reverse-sweep" ? `${name(s.winner)} bangkit dari ketinggalan dan menyapu ${name(s.loser)}`
     : s.kind === "streak" ? `${name(s.idol)} menang ${s.wins} kali beruntun`
-    : s.kind === "first-title" ? `${name(s.idol)} juara ${titleLabel(s.title)} untuk pertama kali`
+    : s.kind === "first-title" ? `${name(s.idol)} juara ${label(s.title)} untuk pertama kali`
     : `${name(s.idol)} jadi Idol of the Month (matchday ${s.from}–${s.to}, ${s.wins} kemenangan)`;
   return (
     <article className={`flex w-full flex-col gap-3 rounded-card border p-4 ${s.kind === "upset" || s.kind === "first-title" ? "border-accent bg-accent text-on-accent" : "border-border bg-bg-raised"}`}>

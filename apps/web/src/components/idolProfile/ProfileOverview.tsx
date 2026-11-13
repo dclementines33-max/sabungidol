@@ -1,6 +1,6 @@
 // Idol Profile → Overview (PRD §8): badges, titles won, rating history.
 import { BADGES } from "@sabung/shared";
-import { titleLabel } from "../play/competitionLinks";
+import { useBranding } from "../../data/branding";
 import { RatingChart } from "./RatingChart";
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
 const H3 = "m-0 text-xs tracking-widest text-text-secondary uppercase";
 
 export function ProfileOverview({ badges, titles, history, rating }: Props) {
+  const { label } = useBranding();
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <section aria-labelledby="badges" className="space-y-2">
@@ -27,7 +28,7 @@ export function ProfileOverview({ badges, titles, history, rating }: Props) {
         <h3 id="titles" className={H3}>Gelar</h3>
         {titles.length ? (
           <ul className="m-0 list-none space-y-1 p-0 text-sm">
-            {titles.map((t) => <li key={`${t.comp}-${t.season}`}><span className="font-mono text-text-secondary">S{t.season}</span> {titleLabel(t.comp)}</li>)}
+            {titles.map((t) => <li key={`${t.comp}-${t.season}`}><span className="font-mono text-text-secondary">S{t.season}</span> {label(t.comp)}</li>)}
           </ul>
         ) : <p className="m-0 text-sm text-text-secondary">Belum ada gelar.</p>}
       </section>

@@ -54,6 +54,9 @@ describe("season settings in the database", () => {
     await updateSeason(db, "S01", { config: { off: [] } });
     await db.update(seasons).set({ status: "live" });
     await expect(setLeagueRosters(db, "S01", { D1A: [] })).rejects.toThrow("Roster hanya bisa diubah saat season masih draft");
+
+    await createDraftSeason(db, { id: "S02", number: 2, name: "Season 2", seed: "y", leagues: {} });
+    expect(await listCompetitions(db, "S02")).toEqual([{ code: "UZC", name: "Unzure Cup", branding: { color: "brand-sky", logoId: null } }]);
   });
 });
 

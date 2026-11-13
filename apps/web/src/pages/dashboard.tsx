@@ -9,7 +9,7 @@ import { CompetitionProgress } from "../components/dashboard/CompetitionProgress
 import { DashboardCard } from "../components/dashboard/DashboardCard";
 import { RatingHistogram } from "../components/dashboard/RatingHistogram";
 import { groupStats } from "../components/groups/groupStats";
-import { titleLabel } from "../components/play/competitionLinks";
+import { useBranding } from "../data/branding";
 import { IdolLink } from "../components/wiki/IdolLink";
 import { engine } from "../data/engineClient";
 import { IDOLS_QUERY } from "../data/IdolDataProvider";
@@ -20,6 +20,7 @@ const on = typeof Worker !== "undefined";
 const LIST = "m-0 list-none space-y-1 p-0 text-sm";
 
 function Dashboard() {
+  const { label } = useBranding();
   const { data: o } = useQuery({ queryKey: ["overview"], queryFn: () => engine().overview(), staleTime: 0, enabled: on });
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
   const { data: combined = [] } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: on });
@@ -37,7 +38,7 @@ function Dashboard() {
       <DashboardCard title="Juara bertahan">
         {o.reigning.length === 0 ? <p className="m-0 text-sm text-text-secondary">Belum ada juara.</p> : (
           <ul className="m-0 grid max-h-64 list-none grid-cols-2 gap-2 overflow-auto p-0 text-sm">
-            {o.reigning.map((t) => <li key={t.key} className="flex items-center gap-2"><IdolPhoto idolId={t.champion} size={64} className="w-8" /><span className="min-w-0"><IdolLink id={t.champion} /><span className="block truncate text-xs text-text-secondary">{titleLabel(t.key)}</span></span></li>)}
+            {o.reigning.map((t) => <li key={t.key} className="flex items-center gap-2"><IdolPhoto idolId={t.champion} size={64} className="w-8" /><span className="min-w-0"><IdolLink id={t.champion} /><span className="block truncate text-xs text-text-secondary">{label(t.key)}</span></span></li>)}
           </ul>
         )}
       </DashboardCard>

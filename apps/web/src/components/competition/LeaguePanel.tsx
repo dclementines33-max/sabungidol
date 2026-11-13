@@ -3,7 +3,9 @@
 import { Button, IdolCard, StatTile, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useBranding } from "../../data/branding";
 import { engine } from "../../data/engineClient";
+import { CompetitionLogo } from "../CompetitionLogo";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
@@ -17,6 +19,7 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
   const [matchId, setMatchId] = useState<string | null>(null);
   const { progress, running, play } = usePlaySeason();
   const lookup = useIdolLookup();
+  const { brand } = useBranding();
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "league", comp, season?.status], queryFn: () => engine().leagueView(comp), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan liga ini.</p>;
   if (!view) return <p className="text-text-secondary">Membaca liga…</p>;
@@ -28,9 +31,14 @@ export function LeaguePanel({ codes, zoneKey }: { codes: string[]; zoneKey: stri
     <div className="space-y-6">
       {codes.length > 1 && (
         <div className="flex flex-wrap gap-1" role="group" aria-label="Liga">
-          {codes.map((c) => <Button key={c} aria-pressed={c === comp} className={`px-3 font-mono ${c === comp ? "bg-surface-hover" : ""}`} onClick={() => setComp(c)}>{c}</Button>)}
+          {codes.map((c) => (
+            <Button key={c} aria-pressed={c === comp} className={`gap-2 border-l-4 px-3 ${c === comp ? "bg-surface-hover" : ""}`} style={{ borderLeftColor: brand(c).color ? `var(--color-${brand(c).color})` : undefined }} onClick={() => setComp(c)}>
+              <CompetitionLogo logoId={brand(c).logoId} className="size-5" />{brand(c).name}
+            </Button>
+          ))}
         </div>
       )}
+      <h2 className="m-0 flex items-center gap-3 font-display text-2xl"><CompetitionLogo logoId={brand(comp).logoId} />{brand(comp).name}</h2>
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp, stage: "LG", round: next! })}>Main matchday berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp, stage: "LG" })}>Main sampai akhir liga</Button>

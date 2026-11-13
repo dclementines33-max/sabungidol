@@ -152,6 +152,29 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
+### Fase 6 plan (APPROVED 2026-11-13, post-PRD updates) — each step: tests, preview upload, user says "deploy"
+
+User decisions: Daesang + Music Bank = OPENER of season N+1 with season N's champions (Season 1 has none);
+Perennial Podium = 100 (already in code). NOT wanted: seeded seasons, undo matchday, Safari/browser-specific
+work, any speed fix that makes the app or database heavier (so no memfs2opfs = whole db in memory).
+A big layout/theme redesign of almost every page comes AFTER this plan, from user references.
+1. ✅ Branding per D1 league: Settings rows D1A–D1F + the other cups (no D1/D2 rows); `components/play/competitionLinks` brandOf/labelOf (D2X = D1X logo/colour, "{name} · Divisi 2"), `data/branding.ts` useBranding = every screen that names a competition, `components/CompetitionLogo`; league tabs + heading show logo/name; createDraftSeason copies the last season's branding.
+2. Roster cards show league logo/name/colour; all roster errors in ONE panel outside the popup.
+3. Click the match area itself (no "Main" buttons) in fixtures, brackets, groups.
+4. MatchModal: preset scores (every valid BoN score), Manual = set the score directly (+/−), more content
+   (big photos, rating + win chance, H2H, last-5 form, season record). Direct scores: games alternate, winner
+   takes the last game (no fake reverse sweep).
+5. Wheel picker: physical wheel, 12–16 alternating segments, ticking pointer, ease-out; Spin all = one spin per
+   game with a pause (Bo3 ≤ 3, Bo5 ≤ 5…).
+6. Every match playable one by one: IDL LG/UB/LB/FN, SWS, LCQ, UZC groups + KO, INK, NUG, B-Side, DSG, MBK.
+7. Daesang + Music Bank move to the season opener.
+8. Small bugs: Settings 375 px overflow, Gala notices with ids, reserve space for the storage warning.
+9. Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
+   buttons on profile, "records broken" + "dramatic promotion" stories, photo focal point.
+10. PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
+    transfer window (propose rules first) + Trophy cabinet on the idol profile.
+11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
+
 ## Architecture in one picture
 
 ```

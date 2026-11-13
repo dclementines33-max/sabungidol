@@ -6,9 +6,10 @@ import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
-import { titleLabel } from "./competitionLinks";
+import { useBranding } from "../../data/branding";
 
 export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; onClose: () => void }) {
+  const { label } = useBranding();
   const { data: match } = useQuery({ queryKey: ["match-preview", matchId], queryFn: () => engine().matchPreview(matchId!), enabled: !!matchId, staleTime: 0, gcTime: 0 });
   if (!matchId || !match || match.id !== matchId) return null;
 
@@ -28,7 +29,7 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
       key={match.id}
       open
       onOpenChange={(open) => { if (!open) onClose(); }}
-      title={`${titleLabel(match.comp)} · ${match.round} · Match ${match.slot}`}
+      title={`${label(match.comp)} · ${match.round} · Match ${match.slot}`}
       idolA={match.idolA}
       idolB={match.idolB}
       bestOf={match.bestOf}

@@ -5,11 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
-import { titleLabel } from "../play/competitionLinks";
+import { useBranding } from "../../data/branding";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 
 export function CupPanel({ codes, title }: { codes: string[]; title?: string }) {
+  const { label } = useBranding();
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
   const [matchId, setMatchId] = useState<string | null>(null);
@@ -35,7 +36,7 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
       {Object.entries(view.titles).length > 0 && (
         <ul className="m-0 flex list-none flex-wrap gap-4 p-0">
           {Object.entries(view.titles).map(([key, t]) => (
-            <li key={key} className="space-y-2"><p className="m-0 text-xs tracking-widest text-text-secondary uppercase">Juara {titleLabel(key)}</p><IdolCard idolId={t!.champion} /></li>
+            <li key={key} className="space-y-2"><p className="m-0 text-xs tracking-widest text-text-secondary uppercase">Juara {label(key)}</p><IdolCard idolId={t!.champion} /></li>
           ))}
         </ul>
       )}

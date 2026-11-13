@@ -8,7 +8,11 @@ export type SeasonRow = { id: string; number: number; name: string; seed: string
 
 export async function createDraftSeason(db: Db, season: { id: string; number: number; name: string; seed: string; leagues: Record<string, string[]>; config?: unknown }) {
   await db.transaction(async (tx) => {
+    const previous = await currentSeason(tx);
     await tx.insert(seasons).values({ id: season.id, number: season.number, name: season.name, seed: season.seed, status: "draft", config: season.config ?? null });
+    // Branding carries over: the new season keeps the last season's names, colours and logos.
+    const branding = previous ? await listCompetitions(tx, previous.id) : [];
+    if (branding.length > 0) await tx.insert(competitions).values(branding.map((c) => ({ ...c, seasonId: season.id })));
     const rows = Object.entries(season.leagues).flatMap(([comp, ids]) =>
       ids.map((idolId, i) => ({ seasonId: season.id, comp, stage: "LG", idolId, slot: i + 1, source: "data-maker" })));
     if (rows.length > 0) await tx.insert(entries).values(rows);
