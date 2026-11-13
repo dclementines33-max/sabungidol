@@ -10,14 +10,18 @@ import { IdolDataProvider } from "../data/IdolDataProvider";
 import { queryClient } from "../data/queryClient";
 import appCss from "../styles.css?url";
 
+// PWA: the service worker (scripts/serviceWorker.mjs) exists only in the production build.
+if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) void navigator.serviceWorker.register("/sw.js");
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "Sabung Idol" },
+      { name: "theme-color", content: "#010003" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [{ rel: "stylesheet", href: appCss }, { rel: "manifest", href: "/manifest.webmanifest" }, { rel: "icon", href: "/icon.svg" }],
   }),
   shellComponent: RootDocument,
   component: () => (

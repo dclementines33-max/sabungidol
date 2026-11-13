@@ -22,6 +22,13 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
+      // The production build with its service worker, for the offline check (offline.e2e.ts).
+      command: "pnpm build && pnpm exec vite preview --port 5181 --strictPort",
+      url: "http://localhost:5181",
+      reuseExistingServer: true,
+      timeout: 300_000,
+    },
+    {
       // The design system's stories, built and served statically for the accessibility check.
       command: "pnpm --filter @sabung/ui build-storybook --quiet && pnpm --filter @sabung/ui exec vite preview --outDir storybook-static --port 6007 --strictPort",
       url: "http://localhost:6007/index.json",

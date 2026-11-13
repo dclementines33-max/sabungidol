@@ -1,0 +1,10 @@
+{
+  "name": "Sabung Idol",
+  "short_name": "Sabung Idol",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#010003",
+  "theme_color": "#010003",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
