@@ -104,3 +104,57 @@ test("All-time Records: top 10 cards, see all, search keeps the rank", async () 
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/records.png" });
 });
+
+test("Match Database: count, filters, cursor paging, Reset Filters", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/matches");
+  const count = page.getByText(/^Hasil: \d+ match$/);
+  await expect(count).toHaveText("Hasil: 5590 match", { timeout: 60_000 });
+  const rows = page.getByRole("list", { name: "Hasil" }).getByRole("listitem");
+  await expect(rows).toHaveCount(50);
+  await page.getByRole("button", { name: "Muat 50 lagi" }).click();
+  await expect(rows).toHaveCount(100);
+  await page.getByRole("combobox", { name: /^Kompetisi/ }).selectOption({ label: "Unzure Cup" });
+  await page.getByRole("combobox", { name: /^Stage/ }).selectOption("FN");
+  await expect(count).toHaveText("Hasil: 2 match"); // the final and the match for third place
+  expect(await axe(page)).toEqual([]);
+  await page.getByRole("button", { name: "Reset Filters" }).click();
+  await expect(count).toHaveText("Hasil: 5590 match");
+});
+
+test("Season Archive: honours, final tables, cups, promotion", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/seasons");
+  await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("table").locator("tbody tr")).toHaveCount(20); // D1A final table
+  await page.getByRole("group", { name: "Liga" }).getByRole("button", { name: "IDL" }).click();
+  await expect(page.getByRole("table").locator("tbody tr")).toHaveCount(20);
+  await expect(page.getByRole("list", { name: "Hasil cup" }).getByText("Unzure Cup")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Promosi ke D1 (18)" })).toBeVisible();
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/season-archive.png", fullPage: true });
+});
+
+test("Season Story: news cards linking to their matches", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/story");
+  const cards = page.getByRole("list", { name: "Berita season" }).getByRole("listitem");
+  await expect(cards.first()).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText(/menumbangkan .+ meski selisih rating \d+/).first()).toBeVisible();
+  await expect(page.getByText(/^Idol of the Month$/)).toHaveCount(4);
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/season-story.png", fullPage: true });
+  await page.getByRole("link", { name: /^Match S01-/ }).first().click();
+  await expect(page).toHaveURL(/\/wiki\/h2h\?a=.+&b=.+/);
+});
+
+test("Girl Group Stats: table and a group's members", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/wiki/groups");
+  const first = page.getByRole("table").locator("tbody tr").first().getByRole("button");
+  await first.click({ timeout: 60_000 });
+  const name = await first.textContent();
+  await expect(page.getByRole("heading", { name: name! })).toBeVisible();
+  expect(await page.getByRole("list", { name: `Member ${name}` }).getByRole("listitem").count()).toBeGreaterThan(0);
+  expect(await axe(page)).toEqual([]);
+});
