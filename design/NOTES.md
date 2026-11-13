@@ -24,5 +24,15 @@ tokens, not copied.
 | `Overal vibe layout & ui 3.jpg` | Overall mood | Big photo hero with huge headline type, rounded photo cards, stat bubbles ("18K+", "#01"). |
 | `another ref for layout and visual.jpg` | Overall mood, Home and hero screens | K-pop editorial in crimson and black: huge bold sans headlines in capitals, photo-led panels, red/black cards with thin corner marks. |
 | `overall vibe layout & ui.mp4` | Overall mood | A video (not reviewed: cannot be played here). |
+| `editrial ui 1.jpg` | Layout, heroes | Editorial magazine: a photo hero with a huge OUTLINED word behind the person, small orange kicker label, condensed sans headlines, photo grids with captions under them. |
+| `editorial ui2.jpg` | Layout, type | VOIDMAG: condensed caps nav, a ragged photo row of different sizes with justified caps captions, one giant blackletter title, "ISSUE Nº02" corner label. |
+| `editorial  ui3.jpg` | Layout | Split screen: one huge word on a calm half, a dense photo mosaic on the other, tiny labels in the four corners. |
+| `swiss punk ui 1.jpg` | Layout, labels | Swiss punk: centred tall photo, scattered blocks, white-on-black tag labels, vertical text, a round logo stamp, giant spaced letters along the bottom. |
+| `swiss punk ui 2.jpg` | Mood, texture | Grunge: distorted pink display type, halftone/torn photo, highlighted words in blocks, plant line drawings, thin connector lines between small labels. |
+| `swiss punk ui 3.jpg` | Type, buttons | Wide heavy caps headline overlapping a grainy B&W photo, vertical "READ ALL" with an arrow, one long pill button with an arrow. |
+| `saptial immersive 2.jpg` | Depth | Spatial: floating panels at angles in a room, each a page with big photos. |
+| `saptial immersive 3.jpg` | Depth, light | Dark immersive: a tilted glass screen, coloured edge glow, thin technical lines and corner marks, mono labels. |
+| `saptial immersive 1.html` | (background) | A saved chat about 20 UI styles (Editorial, Swiss, Spatial …); no layout of its own. |
+| `penjelasan untuk perubahan keseluru.txt` | **The brief (user, 2026-11-13)** | Applies to every page and component, now and later: experimental, unique and elegant layouts mixing Editorial, Swiss punk and Spatial/Immersive; **no outlines and no boxed frames** (if a block is needed, a fill without outline; plain lines are fine); current colours but used more freely, background stays dark, rich and grand; many visuals (photos, charts; ask the user for photos and say where they go); grunge/gothic elements, textures and extra ornaments; a clear, strong sans serif. |
 
-Open: the mood references use a bold grotesk sans for headlines; `--font-display` is still the Fraunces serif (not decided yet).
+Decided by the brief: headlines and text use a strong sans serif (Fraunces goes).

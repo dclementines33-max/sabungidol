@@ -174,6 +174,14 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
 10. PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
     transfer window (propose rules first) + Trophy cabinet on the idol profile.
 11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
+User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.
+
+### Redesign plan (PROPOSED 2026-11-13, waiting for approval) — brief: design/NOTES.md "penjelasan…" row
+R1 Foundation: strong sans (proposal: Archivo variable = body + wide/condensed headlines from one file; a
+   blackletter accent only for ornamental numbers), no outlines/boxes (fills, glow, single lines), freer use of the
+   palette on dark, inline-SVG grain/halftone/torn edges + gothic ornaments, shared components restyled.
+R2 Home, Sabung Idol, competition panels (each competition a "cover": its colour, logo, huge outlined name).
+R3 Wiki pages. R4 Studio pages. Then steps 9–11 in the new style (light theme dropped: the brief keeps it dark).
 
 ## Architecture in one picture
 
