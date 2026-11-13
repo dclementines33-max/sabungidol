@@ -14,7 +14,8 @@ describe("career stats (PRD §7.1–7.2)", () => {
     expect(all.reduce((n, r) => n + r.matches, 0)).toBe(2 * played);
     const champions = seasons.flatMap((s) => s.placements.filter((p) => p.finalRank === 1)).length;
     expect(all.reduce((n, r) => n + r.titles, 0)).toBe(champions);
-    expect(champions).toBe(3 * Object.keys(seasons[0]!.result.titles).length); // one per title key per season
+    expect(champions).toBe(seasons.reduce((n, s) => n + Object.keys(s.result.titles).length, 0)); // one per title key per season
+    expect(Object.keys(seasons[1]!.result.titles).length).toBe(Object.keys(seasons[0]!.result.titles).length + 7); // season 2 adds Daesang + 6 Music Bank
   });
 
   it("places: ties share a rank (two SF losers without a 3rd-place match are both 3rd), Unzure group exits", () => {

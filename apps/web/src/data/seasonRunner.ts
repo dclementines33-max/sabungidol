@@ -46,7 +46,9 @@ export async function seasonOverview(db: Db) {
   const waiting = new Set(result.pending.map((m) => competitionKeyOf(m.comp)));
   const competitions = SEASON_COMPETITIONS.map((c) => {
     const n = played.get(c.key) ?? 0;
-    const status = off.has(c.key) ? "off" : waiting.has(c.key) ? (n ? "running" : "next") : n ? "finished" : "waiting";
+    // Daesang + Music Bank open the season with last season's champions: none in Season 1 (not a blocker).
+    const none = GALA.has(c.key) && !input.config?.opener?.[c.key as "DSG" | "MBK"];
+    const status = off.has(c.key) ? "off" : none ? "none" : waiting.has(c.key) ? (n ? "running" : "next") : n ? "finished" : "waiting";
     return { key: c.key, name: c.name, played: n, status } as const;
   });
   const third = result.matches.find((m) => m.comp === "UZC" && m.round === "3RD");
@@ -64,8 +66,8 @@ function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) => bool
     case "ids": { const ids = new Set(target.ids); return (m) => ids.has(m.id); }
     case "comps": return (m) => target.comps.includes(m.comp);
     case "phase": {
+      if (frontier.some((m) => GALA.has(m.comp))) return (m) => GALA.has(m.comp); // the opener comes first
       if (frontier.some((m) => m.stage === "LG")) return (m) => m.stage === "LG";
-      if (frontier.some((m) => !GALA.has(m.comp))) return (m) => !GALA.has(m.comp);
       return () => true;
     }
   }

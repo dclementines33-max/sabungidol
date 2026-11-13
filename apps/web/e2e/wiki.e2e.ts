@@ -109,7 +109,7 @@ test("Match Database: count, filters, cursor paging, Reset Filters", async () =>
   test.setTimeout(120_000);
   await page.goto("/wiki/matches");
   const count = page.getByText(/^Hasil: \d+ match$/);
-  await expect(count).toHaveText("Hasil: 5590 match", { timeout: 60_000 });
+  await expect(count).toHaveText("Hasil: 5583 match", { timeout: 60_000 });
   const rows = page.getByRole("list", { name: "Hasil" }).getByRole("listitem");
   await expect(rows).toHaveCount(50);
   await page.getByRole("button", { name: "Muat 50 lagi" }).click();
@@ -119,7 +119,7 @@ test("Match Database: count, filters, cursor paging, Reset Filters", async () =>
   await expect(count).toHaveText("Hasil: 2 match"); // the final and the match for third place
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Reset Filters" }).click();
-  await expect(count).toHaveText("Hasil: 5590 match");
+  await expect(count).toHaveText("Hasil: 5583 match");
 });
 
 test("Season Archive: honours, final tables, cups, promotion", async () => {
@@ -162,7 +162,7 @@ test("Girl Group Stats: table and a group's members", async () => {
 test("Dashboard: fixed cards with the season's data", async () => {
   test.setTimeout(120_000);
   await page.goto("/dashboard");
-  await expect(page.getByRole("region", { name: "Data" }).locator("dl").first()).toContainText("5.590", { timeout: 60_000 });
+  await expect(page.getByRole("region", { name: "Data" }).locator("dl").first()).toContainText("5.583", { timeout: 60_000 });
   await expect(page.getByRole("region", { name: "Progress kompetisi" })).toContainText("Selesai");
   await expect(page.getByRole("region", { name: "Juara bertahan" }).getByRole("listitem").first()).toBeVisible();
   await expect(page.getByRole("region", { name: "Top 5 rating" }).getByRole("listitem")).toHaveCount(5);

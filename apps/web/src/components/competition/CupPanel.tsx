@@ -31,7 +31,7 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: [comp] })}>Main sampai selesai</Button>
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
-        {!next && view.cells.length === 0 && <span className="text-sm text-text-secondary">Menunggu fase sebelumnya selesai.</span>}
+        {!next && view.cells.length === 0 && <span className="text-sm text-text-secondary">{comp === "DSG" || comp === "MBK" ? "Dimainkan sebagai pembuka season berikutnya, antara juara season ini." : "Menunggu fase sebelumnya selesai."}</span>}
       </div>
       {Object.entries(view.titles).length > 0 && (
         <ul className="m-0 flex list-none flex-wrap gap-4 p-0">

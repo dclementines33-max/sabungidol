@@ -23,11 +23,16 @@ export const SEASON_COMPETITIONS: { key: CompetitionKey; name: string; codes: Co
 export const ALWAYS_ON: CompetitionKey[] = ["D1", "D2"];
 export const BEST_OF_CHOICES: BestOf[] = [3, 4, 5, 7];
 
+const pairSchema = z.tuple([z.string(), z.string()]);
+// Daesang + Music Bank open the season with the last season's champions (fixed when the season is created).
+const openerSchema = z.object({ DSG: pairSchema.optional(), MBK: z.record(z.string(), pairSchema).optional() });
+export type Opener = z.infer<typeof openerSchema>;
 const bestOf = z.union([z.literal(3), z.literal(4), z.literal(5), z.literal(7)]);
 export const seasonConfigSchema = z.object({
   off: z.array(z.string()).default([]), // competition keys switched off
   bestOf: z.record(z.string(), bestOf).default({}), // "KEY:STAGE" → BoN, only where it differs from the default
   tuning: z.object({ scale: z.number().min(10).max(100), sigma: z.number().min(0).max(15) }).default({ scale: 40, sigma: 4 }), // PRD §5.1
+  opener: openerSchema.optional(),
 });
 export type SeasonConfig = z.infer<typeof seasonConfigSchema>;
 export const readSeasonConfig = (raw: unknown): SeasonConfig => seasonConfigSchema.parse(raw ?? {});

@@ -2,10 +2,8 @@
 
 exports[`headless season (PRD §4) > golden: a fixed seed always gives this season (an unintended engine change shows up here) 1`] = `
 {
-  "checksum": 379747991,
-  "notices": [
-    "Music Bank Cup D1F: idol176 won both sides, so the runner-up plays instead",
-  ],
+  "checksum": 777462110,
+  "notices": [],
   "titles": {
     "BSA": {
       "champion": "idol097",
@@ -79,10 +77,6 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
       "champion": "idol125",
       "runnerUp": "idol159",
     },
-    "DSG": {
-      "champion": "idol064",
-      "runnerUp": "idol077",
-    },
     "IDL": {
       "champion": "idol077",
       "runnerUp": "idol164",
@@ -94,30 +88,6 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
     "INK": {
       "champion": "idol176",
       "runnerUp": "idol107",
-    },
-    "MBK-D1A": {
-      "champion": "idol054",
-      "runnerUp": "idol097",
-    },
-    "MBK-D1B": {
-      "champion": "idol064",
-      "runnerUp": "idol107",
-    },
-    "MBK-D1C": {
-      "champion": "idol126",
-      "runnerUp": "idol110",
-    },
-    "MBK-D1D": {
-      "champion": "idol046",
-      "runnerUp": "idol022",
-    },
-    "MBK-D1E": {
-      "champion": "idol114",
-      "runnerUp": "idol017",
-    },
-    "MBK-D1F": {
-      "champion": "idol176",
-      "runnerUp": "idol226",
     },
     "NUG": {
       "champion": "idol029",

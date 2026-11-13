@@ -1,5 +1,7 @@
 // Test helper: many seasons in a row, the way the app plays them (Fase 4 gate: 20 synthetic seasons).
-// Each season: replay → places → promotion/relegation and Season Progression feed the next season.
+// Each season: replay → places → promotion/relegation, Season Progression and the opener (Daesang +
+// Music Bank between its champions) feed the next season.
+import { openerPairs } from "./gala";
 import { pickTheIdols } from "./leaguePhase";
 import { type Placement, seasonPlacements } from "./placements";
 import { runSeason } from "./runSeason";
@@ -21,6 +23,7 @@ export function* syntheticSeasons(count: number, seed = "synthetic"): Generator<
     yield { input: full, result, placements };
     const plan = promotionPlan(result.matches, full.leagues, (id) => rating.get(id)!);
     const next = new Map(seasonProgression(result.matches, result.titles, leagues, plan).map((r) => [r.idolId, r.new]));
-    input = { ...full, theIdols: undefined, leagues: plan.leagues as SeasonInput["leagues"], idols: full.idols.map((i) => ({ ...i, rating: next.get(i.id) ?? i.rating })) };
+    input = { ...full, theIdols: undefined, leagues: plan.leagues as SeasonInput["leagues"],
+      config: { off: [], bestOf: {}, tuning: { scale: 40, sigma: 4 }, ...full.config, opener: openerPairs(result.titles, full.config?.off ?? [], []) }, idols: full.idols.map((i) => ({ ...i, rating: next.get(i.id) ?? i.rating })) };
   }
 }

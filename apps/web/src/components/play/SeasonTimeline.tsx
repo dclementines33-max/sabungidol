@@ -3,14 +3,15 @@ import type { CompetitionKey } from "@sabung/shared";
 import { Link } from "@tanstack/react-router";
 import { PANEL_OF } from "./competitionLinks";
 
-type Competition = { key: CompetitionKey; name: string; played: number; status: "off" | "waiting" | "next" | "running" | "finished" };
+type Competition = { key: CompetitionKey; name: string; played: number; status: "off" | "none" | "waiting" | "next" | "running" | "finished" };
 const PHASES: [string, CompetitionKey[]][] = [
+  ["Pembuka (juara season lalu)", ["DSG", "MBK"]],
   ["Fase liga", ["D1", "D2", "IDL"]],
   ["Fase cup", ["SWS", "LCQ", "UZC", "BS", "NUG", "INK"]],
-  ["Gala Night", ["DSG", "MBK"]],
 ];
 const STATUS = {
   off: { label: "Nonaktif", className: "text-text-secondary line-through" },
+  none: { label: "Mulai season depan", className: "text-text-secondary" },
   waiting: { label: "Menunggu", className: "text-text-secondary" },
   next: { label: "Siap dimainkan", className: "text-cool" },
   running: { label: "Berjalan", className: "text-accent-bright" },

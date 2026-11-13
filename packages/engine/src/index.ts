@@ -15,6 +15,7 @@ export * from "./doubleElimination";
 export * from "./nuguPlan";
 export * from "./season/types";
 export * from "./season/runSeason";
+export { openerPairs } from "./season/gala";
 export * from "./drawCheck";
 export * from "./seriesRules";
 export * from "./season/testRoster";

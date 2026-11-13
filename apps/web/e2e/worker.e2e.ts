@@ -13,7 +13,7 @@ test("a full season runs in the Worker in < 10 s and never blocks the page > 50 
   const read = (label: string) => result.locator("dl", { hasText: label }).locator("dd").innerText();
 
   expect(await read("Penyimpanan")).toBe("OPFS");
-  expect(await read("Baru tersimpan")).toBe("5.590");
+  expect(await read("Baru tersimpan")).toBe("5.583");
   const seasonSeconds = Number.parseFloat(await read("Season: simulasi + simpan"));
   const setupSeconds = Number.parseFloat(await read("Penyiapan database"));
   const longestTaskMs = Number.parseInt(await read("Long task terpanjang"), 10);

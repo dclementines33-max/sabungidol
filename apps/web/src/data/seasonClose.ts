@@ -1,14 +1,14 @@
 // Closing the season (PRD §4, §6.3): archive guard, Rating Progression (preview → save, optional),
 // promotion/relegation preview and "Start New Season" (a new draft season N+1). Runs in the Worker.
 import { type Db, applyRatings, archiveSeason, createDraftSeason, currentSeason, listAchievements, listSeasonMatches } from "@sabung/db";
-import { promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
-import { ulid } from "@sabung/shared";
+import { openerPairs, promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
+import { readSeasonConfig, ulid } from "@sabung/shared";
 import { updateCareerCache } from "./careerWorker";
 import { seasonInput, seasonOverview } from "./seasonRunner";
 
 async function closeState(db: Db) {
   const overview = await seasonOverview(db);
-  const blockers = overview.competitions.filter((c) => c.status !== "off" && c.status !== "finished").map((c) => c.name);
+  const blockers = overview.competitions.filter((c) => c.status !== "off" && c.status !== "none" && c.status !== "finished").map((c) => c.name);
   const input = await seasonInput(db);
   const result = runSeason({ ...input, saved: await listSeasonMatches(db, input.seasonId), target: () => false });
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
@@ -36,14 +36,15 @@ export async function saveProgression(db: Db) {
   return applyRatings(db, progression.map((r) => ({ idolId: r.idolId, new: r.new, reason: r.reason })), "progression", season!.id);
 }
 
-// The caller takes a snapshot first (worker.ts).
+// The caller takes a snapshot first (worker.ts). The new season opens with Daesang + Music Bank between
+// this season's champions (config.opener).
 export async function startNewSeason(db: Db): Promise<{ ok: true; name: string } | { ok: false; blockers: string[] }> {
-  const { input, plan, blockers } = await closeState(db);
+  const { input, result, plan, blockers } = await closeState(db);
   if (blockers.length) return { ok: false, blockers };
   const old = (await currentSeason(db))!;
   const number = old.number + 1;
   const name = `Season ${number}`;
-  await createDraftSeason(db, { id: `S${String(number).padStart(2, "0")}`, number, name, seed: ulid(), leagues: plan.leagues, config: old.config });
+  await createDraftSeason(db, { id: `S${String(number).padStart(2, "0")}`, number, name, seed: ulid(), leagues: plan.leagues, config: { ...readSeasonConfig(old.config), opener: openerPairs(result.titles, readSeasonConfig(old.config).off, []) } });
   await archiveSeason(db, input.seasonId);
   return { ok: true, name };
 }

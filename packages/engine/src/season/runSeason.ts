@@ -1,13 +1,13 @@
-// One season (PRD §4): league phase → cup phase (interleaved) → Gala Night. Headless, or as a replay
+// One season (PRD §4): opener (Daesang + Music Bank with last season's champions) → league phase → cup phase (interleaved). Headless, or as a replay
 // (Fase 3): saved results are reused and only what input.target allows is played; the result says
 // what is pending next and whether the season is done. Competitions switched off in Settings are skipped.
-import { B_SIDE_CUPS, D1_LEAGUES } from "@sabung/shared";
+import { B_SIDE_CUPS } from "@sabung/shared";
 import { bSideCups, idolsPlayoff, inkigayoCup, nuguCup } from "./cups";
 import { finish, interleave } from "./interleave";
-import { playGala } from "./gala";
+import { playOpener } from "./gala";
 import { playLeaguePhase } from "./leaguePhase";
 import { createMatchPlayer } from "./matchPlayer";
-import { PENDING, type SeasonInput, type SeasonResult, type Title } from "./types";
+import { type SeasonInput, type SeasonResult, type Title } from "./types";
 import { unzurePath } from "./unzurePath";
 
 export function runSeason(input: SeasonInput): SeasonResult {
@@ -17,9 +17,12 @@ export function runSeason(input: SeasonInput): SeasonResult {
   const titles: SeasonResult["titles"] = {};
   const result = (done: boolean): SeasonResult => ({ matches: player.matches, titles, notices, pending: player.pending, stale: player.stale, draws: player.draws, done });
 
+  const ids = new Set(input.idols.map((i) => i.id));
+  Object.assign(titles, playOpener(player, input.config?.opener, (id) => ids.has(id)));
+  const openerPending = player.pending.length; // the opener never holds up the leagues
   const tables = playLeaguePhase(input, player, !off.has("IDL"));
   player.endLeaguePhase();
-  if (player.pending.length) return result(false); // the cups start from the final league tables
+  if (player.pending.length > openerPending) return result(false); // the cups start from the final league tables
   for (const [code, table] of Object.entries(tables)) titles[code] = { champion: table![0].idolId, runnerUp: table![1].idolId };
 
   // Same order as always, so a season without Settings stays exactly as before (golden test).
@@ -38,13 +41,5 @@ export function runSeason(input: SeasonInput): SeasonResult {
   bSide?.forEach((title, i) => { if (title) titles[B_SIDE_CUPS[i]!] = title; });
   if (running.some(([key]) => !cup[key]) || bSide?.includes(undefined)) return result(false); // a cup is still waiting for a match
 
-  try {
-    const gala = playGala(player, tables, off.has("DSG") ? undefined : (cup.UZC as Title | undefined), off.has("MBK") ? undefined : (bSide as Title[] | undefined), notices);
-    if (gala.daesang) titles.DSG = gala.daesang;
-    gala.musicBank?.forEach((title, i) => { titles[`MBK-${D1_LEAGUES[i]}`] = title; });
-  } catch (error) {
-    if (error !== PENDING) throw error;
-    return result(false);
-  }
-  return result(true);
+  return result(openerPending === 0);
 }

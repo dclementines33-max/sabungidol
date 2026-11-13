@@ -1,6 +1,7 @@
 import { classifyMatch } from "@sabung/shared";
 import { describe, expect, it } from "vitest";
 import { computeStandings } from "../standings";
+import { openerPairs } from "./gala";
 import { runSeason } from "./runSeason";
 import { testSeason } from "./testRoster";
 
@@ -20,8 +21,8 @@ describe("headless season (PRD §4)", () => {
     expect({
       D1: count("D1"), D2: count("D2"), IDL: count("IDL"), SWS: count("SWS"), LCQ: count("LCQ"), UZC: count("UZC"),
       INK: count("INK"), NUG: count("NUG"), BS: count("BS"), DSG: count("DSG"), MBK: count("MBK"),
-    }).toEqual({ D1: 2280, D2: 2280, IDL: 380 + 16, SWS: 132, LCQ: 30, UZC: 96 + 32, INK: 8, NUG: 239, BS: 90, DSG: 1, MBK: 6 });
-    expect(season.matches.length).toBe(5590);
+    }).toEqual({ D1: 2280, D2: 2280, IDL: 380 + 16, SWS: 132, LCQ: 30, UZC: 96 + 32, INK: 8, NUG: 239, BS: 90, DSG: 0, MBK: 0 }); // Daesang + Music Bank open the NEXT season
+    expect(season.matches.length).toBe(5583);
   });
 
   it("every match id is unique and reads back to its own competition and stage", () => {
@@ -45,7 +46,7 @@ describe("headless season (PRD §4)", () => {
   });
 
   it("every title has a champion different from the runner-up", () => {
-    expect(Object.keys(season.titles).length).toBe(12 + 1 + 5 + 6 + 6); // leagues + IDL, UZC/NUG/INK/IDL-PO/DSG, B-Side ×6, MBK ×6
+    expect(Object.keys(season.titles).length).toBe(12 + 1 + 4 + 6); // leagues + IDL, UZC/NUG/INK/IDL-PO, B-Side ×6 (no opener in season 1)
     for (const t of Object.values(season.titles)) expect(t!.champion).not.toBe(t!.runnerUp);
   });
 
@@ -85,5 +86,23 @@ describe("Unzure Cup qualification (PRD §4, guardrail §14.4)", () => {
     expect([...groups].filter((id) => swiss.has(id) && !lcq.has(id)).length).toBe(20);
     expect([...groups].filter((id) => lcq.has(id)).length).toBe(8);
     expect(lcq.size).toBe(12);
+  });
+});
+
+describe("opener (user 2026-11-13: Daesang + Music Bank open the next season)", () => {
+  it("pairs last season's champions, plays them first, and keeps a pending opener from holding up the leagues", () => {
+    const first = runSeason(testSeason("opener", 1));
+    const notices: string[] = [];
+    const opener = openerPairs(first.titles, [], notices);
+    expect(opener.DSG?.[0]).toBe(first.titles.IDL!.champion);
+    expect(Object.keys(opener.MBK ?? {})).toEqual(["D1A", "D1B", "D1C", "D1D", "D1E", "D1F"]);
+    const input = { ...testSeason("opener", 2), config: { off: [], bestOf: {}, tuning: { scale: 40, sigma: 4 }, opener } };
+    const second = runSeason(input);
+    expect(second.matches.slice(0, 7).map((m) => m.comp)).toEqual(["DSG", "MBK", "MBK", "MBK", "MBK", "MBK", "MBK"]);
+    expect(second.titles.DSG).toBeTruthy();
+    const held = runSeason({ ...input, target: (m) => m.comp !== "DSG" });
+    expect(held.pending.map((m) => m.comp)).toEqual(["DSG"]);
+    expect(held.titles.UZC).toBeTruthy(); // the cups still ran
+    expect(held.done).toBe(false);
   });
 });

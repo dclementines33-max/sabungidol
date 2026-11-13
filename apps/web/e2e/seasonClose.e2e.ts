@@ -36,6 +36,8 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await page.getByRole("button", { name: "Mulai Season 2" }).click();
   await expect(page.getByTestId("season-chip")).toHaveText(/Season 2 · live/);
   await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
+  await expect(page.getByText(/^7 match dimainkan/).first()).toBeVisible({ timeout: 60_000 }); // the opener: Daesang + 6 Music Bank
+  await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
   await expect(page.getByText(/4\.940 match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
 
   // Step 8: Season 1's progression was saved, so applying it again changes nothing (idempotent, §6.4);
