@@ -140,6 +140,9 @@ test("Season Archive: honours, final tables, cups, promotion", async () => {
   await expect(page.getByRole("table").locator("tbody tr")).toHaveCount(20);
   await expect(page.getByRole("list", { name: "Hasil cup" }).getByText("Unzure Cup")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Promosi ke D1 (18)" })).toBeVisible();
+  const recap = page.waitForEvent("download"); // PRD §16 Season Recap card
+  await page.getByRole("button", { name: "Unduh Season Recap" }).click();
+  expect((await recap).suggestedFilename()).toBe("season-1-recap.png");
   await expect(page.getByRole("list", { name: "Ronde F" })).toBeVisible({ timeout: 60_000 }); // step 9: the past season's brackets
   await page.getByRole("button", { name: "Swiss Play-in" }).click();
   await expect(page.getByRole("region", { name: "Swiss grup D" })).toBeVisible({ timeout: 60_000 });
@@ -167,6 +170,11 @@ test("Girl Group Stats: table and a group's members", async () => {
   await first.click({ timeout: 60_000 });
   const name = await first.textContent();
   expect(await page.getByRole("list", { name: `Member ${name}` }).getByRole("listitem").count()).toBeGreaterThan(0);
+  await page.getByRole("link", { name: "Halaman grup" }).first().click(); // step 9: a page per group, with a logo upload
+  await expect(page.getByRole("button", { name: /^(Unggah|Ganti) logo$/ })).toBeVisible({ timeout: 60_000 });
+  expect(await axe(page)).toEqual([]);
+  await page.goBack();
+  await page.getByRole("heading", { level: 2 }).getByRole("button").first().click();
   await expect(page.getByRole("table", { name: `Performa member ${name}` })).toBeVisible(); // Update 2: member table
   expect(await axe(page)).toEqual([]);
 });

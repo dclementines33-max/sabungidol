@@ -10,6 +10,7 @@ import { notify } from "../../data/notices";
 import { forgetPhoto } from "../../data/photoCache";
 import { queryClient } from "../../data/queryClient";
 import { FIELD } from "../settings/settingsShared";
+import { PhotoFocal } from "./PhotoFocal";
 
 const refresh = () => queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
 
@@ -41,6 +42,7 @@ export function ProfileEdit({ idol }: { idol: IdolRow }) {
     <div className="flex flex-wrap gap-2">
       <Button onClick={() => { setError(null); setOpen(true); }}>Edit profil</Button>
       <Button onClick={() => picker.current?.click()}>Ganti foto</Button>
+      {idol.photoId && <PhotoFocal idol={{ ...idol, photoId: idol.photoId }} />}
       <input ref={picker} type="file" accept="image/*" hidden aria-label={`Foto baru ${idol.name}`} onChange={(e) => { const file = e.target.files?.[0]; if (file) void replace(file); e.target.value = ""; }} />
       <Link to="/studio/ratings" className="inline-flex items-center bg-surface-hover/70 px-3 py-2 text-xs font-bold uppercase [font-stretch:115%] hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">Atur rating</Link>
       <Modal open={open} onOpenChange={setOpen} title={`Edit ${idol.name}`} description="Rating diubah lewat Rating Manager supaya riwayatnya tercatat.">

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
+import { FinalPredictions } from "../play/FinalPredictions";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { CompetitionCover } from "./CompetitionCover";
 import { GalaStage } from "./GalaStage";
@@ -55,6 +56,7 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
           ))}
         </ul>
       )}
+      <FinalPredictions cells={view.cells} title={(c) => `${title ?? label(c.comp)} · ${c.round}`} />
       {early.length > 0 && (
         <details className="space-y-3" open={early.some((c) => !c.winner)}>
           <summary className="kicker cursor-pointer">Ronde awal · {early.filter((c) => c.score).length}/{early.length} match</summary>

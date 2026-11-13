@@ -14,6 +14,12 @@ export async function getPhoto(db: Db | Tx, id: string): Promise<PhotoRecord | u
   return row && { id: row.id, sizes: row.sizes as PhotoRecord["sizes"], bytes: row.bytes ?? 0, focalX: row.focalX ?? 0.5, focalY: row.focalY ?? 0.5 };
 }
 
+// Where the portrait crop centres (0–1 across, 0–1 down), set by the user (PRD §10.3).
+export async function setPhotoFocal(db: Db | Tx, id: string, focalX: number, focalY: number) {
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  await db.update(photos).set({ focalX: clamp(focalX), focalY: clamp(focalY) }).where(eq(photos.id, id));
+}
+
 export async function deletePhoto(db: Db | Tx, id: string) {
   await db.delete(photos).where(eq(photos.id, id));
 }

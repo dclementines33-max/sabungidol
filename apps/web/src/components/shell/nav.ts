@@ -58,6 +58,7 @@ const ALL = [...SPACES.flatMap((s) => s.items), ...COMPETITIONS];
 // The panel a path belongs to; an idol's own page is not in the menu.
 export function panelFor(pathname: string): NavItem | undefined {
   const path = pathname.replace(/\/$/, "") || "/";
+  if (path.startsWith("/wiki/group/")) return { label: "Girl Group", to: path, icon: UsersRound, phase: 4 };
   if (path.startsWith("/wiki/idols/")) return { label: "Idol Profile", to: path, icon: Users, phase: 4 };
   if (path === "/dev/worker") return { label: "Uji Worker", to: path, icon: Gauge, phase: 1 }; // Fase 1 checks, not in the menu
   if (path === "/dev/notices") return { label: "Uji Notifikasi", to: path, icon: Gauge, phase: 1 };

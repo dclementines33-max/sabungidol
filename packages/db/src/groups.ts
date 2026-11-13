@@ -1,11 +1,11 @@
 // Girl groups (PRD §3). A group is found by name, case-insensitive; a missing one is created.
 import { ulid } from "@sabung/shared";
-import { asc, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import type { Db, Tx } from "./openDb";
 import { groups } from "./schema";
 
 export async function listGroups(db: Db | Tx) {
-  return db.select({ id: groups.id, name: groups.name }).from(groups).orderBy(asc(sql`lower(${groups.name})`));
+  return db.select({ id: groups.id, name: groups.name, logoId: groups.logoId }).from(groups).orderBy(asc(sql`lower(${groups.name})`));
 }
 
 // Returns lower-case name → id for every name given, creating the groups that do not exist yet.
@@ -20,4 +20,9 @@ export async function ensureGroups(db: Db | Tx, names: string[]): Promise<Map<st
     for (const row of rows) byName.set(row.key, row.id);
   }
   return byName;
+}
+
+// A group's logo (stored like a photo; null removes it).
+export async function setGroupLogo(db: Db | Tx, id: string, logoId: string | null) {
+  await db.update(groups).set({ logoId }).where(eq(groups.id, id));
 }

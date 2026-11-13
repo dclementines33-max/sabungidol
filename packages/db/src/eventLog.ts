@@ -32,3 +32,8 @@ export async function lastEventAt(db: Db, code: string): Promise<string | null> 
   const [row] = await db.select({ at: eventLog.at }).from(eventLog).where(eq(eventLog.code, code)).orderBy(desc(eventLog.at)).limit(1);
   return row ? row.at.toISOString() : null;
 }
+
+// Every event with one code, oldest first (e.g. the user's final predictions).
+export async function listEventsByCode(db: Db, code: string): Promise<LoggedEvent[]> {
+  return (await db.select().from(eventLog).where(eq(eventLog.code, code)).orderBy(eventLog.id)).map(toLogged);
+}

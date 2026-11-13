@@ -3,7 +3,7 @@
 import {
   type MatchFilter, type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
-  deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
+  deletePhoto, logEvent, openDb, setGroupLogo, setPhotoFocal, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
@@ -16,6 +16,7 @@ import { careerStats, rebuildStats } from "./careerWorker";
 import { seasonArchive } from "./archiveWorker";
 import { storyOf } from "./storyWorker";
 import { overview } from "./overviewWorker";
+import { predict, predictions } from "./predictionsWorker";
 import { careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
@@ -60,6 +61,11 @@ const api = {
   // Idols and groups (PRD §3, §8).
   listIdols: async () => listIdols(await open()),
   listGroups: async () => listGroups(await open()),
+  setGroupLogo: async (groupId: string, logoId: string | null) => setGroupLogo(await open(), groupId, logoId),
+  setPhotoFocal: async (photoId: string, x: number, y: number) => setPhotoFocal(await open(), photoId, x, y),
+  // Final predictions (PRD §16).
+  predict: async (matchId: string, pick: string) => predict(await open(), matchId, pick),
+  predictions: async () => predictions(await open()),
   addIdols: async (batch: Parameters<typeof addIdols>[1]) => addIdols(await open(), batch),
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),

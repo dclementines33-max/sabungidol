@@ -24,6 +24,7 @@ function Dashboard() {
   const { data: o } = useQuery({ queryKey: ["overview"], queryFn: () => engine().overview(), staleTime: 0, enabled: on });
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
   const { data: combined = [] } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: on });
+  const { data: guesses } = useQuery({ queryKey: ["predictions"], queryFn: () => engine().predictions(), staleTime: 0, enabled: on });
   const { data: storage } = useQuery({ queryKey: ["storage-estimate"], queryFn: () => navigator.storage.estimate(), staleTime: 0, enabled: on });
   if (!o) return <p className="text-text-secondary">Membaca season…</p>;
   const active = idols.filter((i) => i.active);
@@ -49,6 +50,10 @@ function Dashboard() {
         <DashboardCard title="Distribusi rating (idol aktif)"><RatingHistogram ratings={active.map((i) => i.rating)} /></DashboardCard>
         <DashboardCard title="Girl group teratas">
           <ol className={LIST}>{groupStats(idols, combined).slice(0, 5).map((g) => <li key={g.id} className="flex"><span className="flex-1">{g.name}</span><span className="font-mono">{g.titles} gelar · {(g.winRate * 100).toFixed(0)}%</span></li>)}</ol>
+        </DashboardCard>
+        <DashboardCard title="Akurasi tebakan final">
+          {guesses?.total ? <p className="m-0"><span className="font-gothic text-4xl text-accent-bright">{Math.round((guesses.hits / guesses.total) * 100)}%</span> <span className="text-text-secondary">{guesses.hits} dari {guesses.total} tebakan benar</span></p>
+            : <p className="m-0 text-sm text-text-secondary">Belum ada final yang ditebak. Tebak juara di panel cup sebelum final dimainkan.</p>}
         </DashboardCard>
         <DashboardCard title="Data">
           <div className="grid grid-cols-2 gap-3">

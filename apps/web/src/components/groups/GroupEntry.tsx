@@ -3,6 +3,7 @@
 import type { CareerRow } from "@sabung/engine";
 import { SEASON_COMPETITIONS } from "@sabung/shared";
 import { IdolPhoto } from "@sabung/ui";
+import { Link } from "@tanstack/react-router";
 import { IdolLink } from "../wiki/IdolLink";
 import type { GroupStat, TitleLine } from "./groupStats";
 
@@ -22,7 +23,7 @@ export function GroupEntry({ rank, g, open, onToggle, career, titles }: {
           <h2 className="m-0 text-[clamp(1.5rem,3.5vw,2.5rem)]">
             <button type="button" aria-expanded={open} onClick={onToggle} className="text-left hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g.name}</button>
           </h2>
-          <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} gelar</span> · {g.members.length} member · {g.matches.toLocaleString("id-ID")} match</p>
+          <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} gelar</span> · {g.members.length} member · {g.matches.toLocaleString("id-ID")} match · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Halaman grup</Link></p>
           {comps.length > 0 && (
             <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`Gelar ${g.name}`}>
               {comps.map((c) => <li key={c} className="bg-surface-hover/60 px-2 py-0.5 text-xs">{NAME[c] ?? c} <b className="text-accent-bright">{g.byComp[c]}</b></li>)}

@@ -24,7 +24,7 @@ export function databaseErrorNotice(error: unknown) {
 export function startNotifications(): void {
   if (useNotices.getState().persister) return; // already started
   if (typeof Worker !== "undefined") {
-    useNotices.setState({ persister: { log: (event, options) => engine().logEvent(event, options), list: () => engine().listEvents() } });
+    useNotices.setState({ persister: { log: (event, options) => engine().logEvent(event, options), list: async () => (await engine().listEvents()).filter((e) => e.code !== "PREDICTION") } });
     // Loading the history is the first database use, so a database that cannot open shows up here, once.
     useNotices.getState().loadHistory().catch((error) => {
       console.error("Notification history not loaded from event_log", error, error?.cause);

@@ -171,11 +171,14 @@ A big layout/theme redesign of almost every page comes AFTER this plan, from use
 8. ✅ Small bugs: Engine Tuning table scrolls, notices show names (`withNames` in usePlaySeason), clash notice in Indonesian. NOT done: floating the storage warning (it covered buttons; CLS 0.083 is already "good").
 9. (partly ✅ 2026-11-14: profile edit buttons = idolProfile/ProfileEdit (updateIdol, replacePhoto; rating stays in Rating Manager);
    archive brackets/Swiss/groups = archive/ArchiveBrackets via cupView(comps, seasonId); stories points-record + late-promotion =
-   engine stats/seasonDrama (+test), storyWorker best from db leagueTotals. Still open: Career Stats season range, group logo +
-   group page, photo focal point.) Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
+   engine stats/seasonDrama (+test), storyWorker best from db leagueTotals. Then ✅: photo focal point (db setPhotoFocal, listIdols focalX/Y,
+   IdolPhoto objectPosition, idolProfile/PhotoFocal), group page /wiki/group/$id + logo (db setGroupLogo, listGroups logoId).
+   Still open: Career Stats season range (cache keeps career totals only).) Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
    buttons on profile, "records broken" + "dramatic promotion" stories, photo focal point.
 10. (partly ✅: Trophy cabinet = idolProfile/TrophyCabinet; Rivalry label = h2h/rivalryLabel (+test) in H2H and profile Rivals.
-    Open: Season Recap card, final predictions.) PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
+    Then ✅: Season Recap = archive/recapCard drawRecap (canvas 1080×1350) + RecapButton on Season Archive; final predictions =
+    data/predictionsWorker (event_log code PREDICTION, latest pick per match; hidden from notices) + play/FinalPredictions on cup
+    panels + Dashboard accuracy.) PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
     transfer window (propose rules first) + Trophy cabinet on the idol profile.
 11. Lighter + faster without growing the app or the db: measure first (bundle, start-up, page reads), fix the biggest.
 User 2026-11-13 (later): retirement & debut and transfer window DROPPED. Final predictions stay.

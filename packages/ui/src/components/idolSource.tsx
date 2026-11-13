@@ -14,6 +14,7 @@ export type IdolInfo = {
   form?: Form["name"];
   recent?: Result[]; // last results, oldest first
   titles?: number;
+  focal?: [number, number]; // photo focal point 0–1 (PRD §10.3); centre when absent
   active?: boolean; // false = inactive (PRD §15: shown with a badge in the Idol Database)
 };
 

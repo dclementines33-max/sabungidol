@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Archive } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { ArchiveBrackets } from "../../components/archive/ArchiveBrackets";
+import { RecapButton } from "../../components/archive/RecapButton";
 import { ArchiveCups } from "../../components/archive/ArchiveCups";
 import { ArchiveMovement } from "../../components/archive/ArchiveMovement";
 import { ArchiveTables } from "../../components/archive/ArchiveTables";
@@ -40,6 +41,7 @@ function SeasonArchive() {
         : (
           <>
             <SeasonHonours titles={archive.titles} uzcThird={archive.uzcThird} />
+            <RecapButton seasonName={archive.season.name} titles={archive.titles} />
             <div className="grid max-w-xl grid-cols-3 gap-3">
               <StatTile label="Match" value={archive.numbers.matches} />
               <StatTile label="Seri" value={archive.numbers.draws} />

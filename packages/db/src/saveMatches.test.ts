@@ -27,12 +27,12 @@ beforeAll(async () => {
 });
 
 describe("saving a season (PRD §12, §13)", () => {
-  it("writes all 5,590 matches in round batches", async () => {
+  it("writes all 5,583 matches in round batches", async () => {
     let inserted = 0;
     for (const batch of batches.values()) inserted += (await saveMatches(db, "S01", batch)).inserted;
-    expect(inserted).toBe(5590);
+    expect(inserted).toBe(5583);
     const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(matches);
-    expect(n).toBe(5590);
+    expect(n).toBe(5583);
   });
 
   it("counts per competition in SQL match the engine", async () => {
@@ -42,9 +42,9 @@ describe("saving a season (PRD §12, §13)", () => {
 
   it("guardrail §14.4: saving the same matches twice adds no rows", async () => {
     const again = await saveMatches(db, "S01", season.matches);
-    expect(again).toEqual({ inserted: 0, skipped: 5590 });
+    expect(again).toEqual({ inserted: 0, skipped: 5583 });
     const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(matches);
-    expect(n).toBe(5590);
+    expect(n).toBe(5583);
   });
 
   it("game order survives the round trip", async () => {
@@ -66,6 +66,6 @@ describe("saving a season (PRD §12, §13)", () => {
 
 describe("countMatches", () => {
   it("counts the saved matches", async () => {
-    expect(await countMatches(db)).toBe(5590);
+    expect(await countMatches(db)).toBe(5583);
   });
 });

@@ -9,7 +9,8 @@ export function IdolPhoto({ idolId, size, className = "w-16" }: { idolId: string
   const idol = useIdol(idolId);
   const src = useIdolPhoto(idolId, size);
   const frame = `${className} aspect-[4/5] overflow-hidden rounded-control`;
-  if (src) return <img src={src} alt={idol.name} loading="lazy" decoding="async" className={`${frame} object-cover`} />;
+  if (src) return <img src={src} alt={idol.name} loading="lazy" decoding="async" className={`${frame} object-cover`}
+    style={idol.focal ? { objectPosition: `${idol.focal[0] * 100}% ${idol.focal[1] * 100}%` } : undefined} />;
   return (
     <div
       role="img"
