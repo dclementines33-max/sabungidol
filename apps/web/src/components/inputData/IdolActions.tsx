@@ -43,8 +43,8 @@ export function IdolActions({ idols }: { idols: IdolRow[] }) {
     : `Sudah punya ${target.blocker.matches} match, jadi bagian dari sejarah. Nonaktifkan saja: tetap tercatat, tapi tidak ikut season berikutnya.`);
 
   return (
-    <section className="space-y-4" aria-labelledby="manage">
-      <h2 id="manage" className="m-0 font-display text-lg">Kelola idol</h2>
+    <section className="studio-section space-y-4" aria-labelledby="manage">
+      <h2 id="manage" className="m-0 font-display">Kelola idol</h2>
       <label className="block max-w-sm text-sm text-text-secondary">
         Cari
         <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Nama atau group…"

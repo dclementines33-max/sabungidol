@@ -35,7 +35,7 @@ export function DataSettings() {
   });
   return (
     <section className={SECTION} aria-labelledby="set-data">
-      <h2 id="set-data" className="m-0 font-display text-lg">Data</h2>
+      <h2 id="set-data" className="m-0 font-display">Data</h2>
       {data && (
         <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
           <dt className="text-text-secondary">Penyimpanan</dt><dd className="m-0">{data.storage === "opfs" ? "OPFS (cepat)" : "IndexedDB (lambat)"}</dd>

@@ -48,7 +48,7 @@ export function BackupSettings({ seasonId }: { seasonId: string }) {
 
   return (
     <section className={SECTION} aria-labelledby="set-backup">
-      <h2 id="set-backup" className="m-0 font-display text-lg">Backup</h2>
+      <h2 id="set-backup" className="m-0 font-display">Backup</h2>
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
           Bagian

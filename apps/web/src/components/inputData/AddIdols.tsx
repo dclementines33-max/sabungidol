@@ -46,8 +46,8 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
   };
 
   return (
-    <section className="space-y-4" aria-labelledby="add-idols">
-      <h2 id="add-idols" className="m-0 font-display text-lg">Tambah idol</h2>
+    <section className="studio-section space-y-4" aria-labelledby="add-idols">
+      <h2 id="add-idols" className="m-0 font-display">Tambah idol</h2>
       <div className="flex flex-wrap gap-1" role="group" aria-label="Cara menambah">
         {Object.entries(SOURCES).map(([key, label]) => (
           <Button key={key} aria-pressed={source === key} className={`px-3 ${source === key ? "bg-surface-hover" : ""}`}

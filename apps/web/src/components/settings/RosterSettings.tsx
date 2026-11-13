@@ -27,7 +27,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
   };
   return (
     <section className={SECTION} aria-labelledby="set-roster">
-      <h2 id="set-roster" className="m-0 font-display text-lg">Roster liga</h2>
+      <h2 id="set-roster" className="m-0 font-display">Roster liga</h2>
       {!draft && <p className="m-0 text-sm text-text-secondary">Season sudah berjalan: roster diubah lewat alur season (Fase 3).</p>}
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {[...D1_LEAGUES, ...D2_LEAGUES].map((code) => {

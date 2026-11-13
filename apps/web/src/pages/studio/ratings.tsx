@@ -56,11 +56,11 @@ function RatingManager() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="studio-flow space-y-8">
       <PageHeader tag="Rating Manager" title="Atur kekuatan setiap idol" note="Usulan rating untuk season berikutnya, preset, dan Engine Lab." />
-      <section aria-labelledby="draft" className="space-y-3">
+      <section aria-labelledby="draft" className="studio-section space-y-3">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 id="draft" className="m-0 font-display text-xl">Draft: {diff.length} perubahan</h2>
+          <h2 id="draft" className="m-0 font-display">Draft: {diff.length} perubahan</h2>
           <Button disabled={!steps.length} onClick={() => setConfirm("revert")}>Revert{steps.length ? ` (${steps.at(-1)!.label})` : ""}</Button>
           <Button disabled={!steps.length} onClick={() => setConfirm("discard")}>Discard</Button>
           <Button variant="primary" disabled={!diff.length} onClick={() => setConfirm("save")}>Save Now</Button>
@@ -74,16 +74,16 @@ function RatingManager() {
           </details>
         )}
       </section>
-      <section aria-labelledby="actions" className="space-y-3">
-        <h2 id="actions" className="m-0 font-display text-xl">Aksi</h2>
+      <section aria-labelledby="actions" className="studio-section space-y-3">
+        <h2 id="actions" className="m-0 font-display">Aksi</h2>
         <RatingActions idols={idols} onChange={change} />
       </section>
-      <section aria-labelledby="table" className="space-y-3">
-        <h2 id="table" className="m-0 font-display text-xl">Rating</h2>
+      <section aria-labelledby="table" className="studio-section space-y-3">
+        <h2 id="table" className="m-0 font-display">Rating</h2>
         <RatingTable idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
       </section>
-      <section aria-labelledby="lab" className="space-y-3">
-        <h2 id="lab" className="m-0 font-display text-xl">Engine Lab</h2>
+      <section aria-labelledby="lab" className="studio-section space-y-3">
+        <h2 id="lab" className="m-0 font-display">Engine Lab</h2>
         <EngineLab idolIds={idols.filter((i) => i.active).map((i) => i.id)} ratingOf={(id) => draft.get(id) ?? current.get(id) ?? 75} tuning={readSeasonConfig(season?.config).tuning} />
       </section>
       {confirm && (

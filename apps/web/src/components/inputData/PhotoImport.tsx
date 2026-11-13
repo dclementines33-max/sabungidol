@@ -39,8 +39,8 @@ export function PhotoImport({ idols }: { idols: IdolRow[] }) {
   };
 
   return (
-    <section className="space-y-4" aria-labelledby="photos">
-      <h2 id="photos" className="m-0 font-display text-lg">Foto</h2>
+    <section className="studio-section space-y-4" aria-labelledby="photos">
+      <h2 id="photos" className="m-0 font-display">Foto</h2>
       <PhotoDropZone label="Seret banyak foto sekaligus; nama file dicocokkan ke nama idol" onFiles={(files) => setMatches(matchPhotos(files, idols))} />
       {matches.length > 0 && (
         <>

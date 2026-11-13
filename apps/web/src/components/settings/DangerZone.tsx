@@ -27,7 +27,7 @@ export function DangerZone({ season }: { season: SeasonRow }) {
   };
   return (
     <section className={`${SECTION} border-danger`} aria-labelledby="set-danger">
-      <h2 id="set-danger" className="m-0 font-display text-lg text-danger">Danger Zone</h2>
+      <h2 id="set-danger" className="m-0 font-display text-danger">Danger Zone</h2>
       <div className="flex flex-wrap gap-3">
         <Button variant="danger" onClick={() => setOpen("reset")}>Reset season…</Button>
         <Button variant="danger" onClick={() => setOpen("wipe")}>Hapus semua data…</Button>

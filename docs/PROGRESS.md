@@ -223,7 +223,8 @@ U5 ✅ Groups: groupStats(+byComp, record) + GroupEntry list; worker titlesByCom
    CareerScope; /wiki/profile = top-rated idol. H2H: tale of the tape (games, last 5 from headToHead). Champions: per
    season, many-champion comps grouped; champions() returns third. NOT done: Swiss/LCQ "lolos/gugur" career counts
    (no placements for SWS/LCQ; would change the engine stats + golden snapshots).
-U6 ✅ components/PageHeader on Studio + remaining wiki pages + Story. Nav: Idol Profile, Season Progression.
+U6 ✅ components/PageHeader on Studio + remaining wiki pages + Story. R4 ✅ (2026-11-14): tokens.css .studio-flow/.studio-section
+   (numbered chapter: crimson rule, blackletter 01…, big h2) = settings SECTION + Input Data + Rating Manager sections. Nav: Idol Profile, Season Progression.
 
 ## Architecture in one picture
 

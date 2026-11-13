@@ -41,7 +41,7 @@ export function BrandingSettings({ seasonId }: { seasonId: string }) {
 
   return (
     <section className={SECTION} aria-labelledby="set-branding">
-      <h2 id="set-branding" className="m-0 font-display text-lg">Branding kompetisi</h2>
+      <h2 id="set-branding" className="m-0 font-display">Branding kompetisi</h2>
       <p className="m-0 text-sm text-text-secondary">Tiap liga Divisi 2 memakai logo dan warna liga D1 yang sama, dengan nama "… · Divisi 2".</p>
       <ul className="m-0 grid list-none gap-4 p-0 lg:grid-cols-2">
         {ROWS.map((c) => {

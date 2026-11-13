@@ -14,7 +14,7 @@ function InputData() {
   const { data: idols = [], isPending } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
   if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
   return (
-    <div className="space-y-10">
+    <div className="studio-flow space-y-10">
       <PageHeader tag="Input Data" title="Tambah dan rapikan idol" note="Tambah idol satu per satu atau sekaligus, unggah foto, lalu edit atau hapus." />
       <AddIdols idols={idols} />
       <PhotoImport idols={idols} />

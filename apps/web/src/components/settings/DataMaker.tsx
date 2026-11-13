@@ -30,7 +30,7 @@ export function DataMaker({ seasonId, draft, idols }: { seasonId: string; draft:
   };
   return (
     <section className={SECTION} aria-labelledby="set-maker">
-      <h2 id="set-maker" className="m-0 font-display text-lg">Data Maker</h2>
+      <h2 id="set-maker" className="m-0 font-display">Data Maker</h2>
       <p className="m-0 text-sm text-text-secondary">120 rating tertinggi ke Divisi 1, 120 berikutnya ke Divisi 2, dibagi pola ular ke 6 liga; seed 1–4 disebar rata. Sisanya cadangan.</p>
       <Button disabled={!draft} onClick={preview}>Pratinjau pembagian ulang</Button>
       {split && (

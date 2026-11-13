@@ -23,7 +23,7 @@ function Settings() {
   if (!season) return <p className="text-text-secondary">Belum ada season.</p>;
   const draft = season.status === "draft";
   return (
-    <div className="space-y-8">
+    <div className="studio-flow space-y-8">
       <PageHeader tag="Settings" title="Pengaturan season dan data" note="Season, roster liga, branding, aturan, backup dan data." />
       <SeasonSettings key={season.id} season={season} />
       <BrandingSettings seasonId={season.id} />
