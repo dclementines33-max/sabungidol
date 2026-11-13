@@ -17,8 +17,8 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **done, gate passed 2026-11-13 — waiting for the user's approval before Fase 5** |
-| Fase 5 Backend | not started |
+| Fase 4 Wiki | done, gate passed, approved 2026-11-13 |
+| **Fase 5 Backend** | **in progress: steps 1–3 done; steps 4–6 wait for the user's Supabase keys + `wrangler login`** |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
 
@@ -119,6 +119,32 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    H2H 27, champions 175, records 465, match page 12 / 5, archive 277, story 364, home/dashboard 225 (asserted < 3 s).
    Browser on OPFS will be slower; not measured in a real browser with 20 seasons.
 
+### Fase 5 plan (started 2026-11-13; user: email + password login only, Supabase + Cloudflare accounts exist) — gate: a cloud backup from device A restored on device B; the app works 100% offline without login
+
+1. ✅ `46e5328` PWA: `public/manifest.webmanifest` + `icon.svg`, Workbox `scripts/serviceWorker.mjs` after `vite build`
+   (precaches all 84 files / 20.7 MB incl. PGlite WASM; every route → `index.html`), registered in `__root.tsx` only in
+   the production build. e2e `offline.e2e.ts` (own preview server on 5181): open once online, then offline a deep link
+   loads and the database answers. No skipWaiting (shortcut: new version after all tabs close). Icon is SVG only (no PNG
+   apple-touch-icon yet).
+2. ✅ `20d48f3` `apps/api` Cloudflare Worker: Better Auth (email + password) + Drizzle on Supabase Postgres (postgres.js,
+   pooler port 6543, one client per request), tables user/session/account/verification/cloud_backup, RLS on with no
+   policies (0001_rls.sql), .sabung files in the private Supabase Storage bucket `backups` (service key, server only).
+   Routes `/api/auth/*`, `/api/backups` GET/POST(?name=…sabung, ≤ 90 MB), `/api/backups/:id` GET/DELETE, each filtered on
+   the session user. Test `app.test.ts` on PGlite: 2 users, 401, wrong name 400, download = same bytes, other user 404,
+   delete, RLS on all 5 tables. The SPA shell is now `index.html` (vite.config `prerender.outputPath: "/index"`) so
+   Cloudflare's single-page-application fallback works. `wrangler deploy --dry-run`: 422 KB gzip.
+3. ✅ `a6545e4` Settings → Backup → Cloud (`components/settings/CloudBackup.tsx`, `data/cloudApi.ts`): login / sign up,
+   "Backup ke cloud" (full .sabung), list, "Pulihkan…" opens the usual ImportDialog with the downloaded file (new
+   `file` prop: no picker), "Hapus" with ConfirmDialog. Offline/no API: "Cloud tidak bisa dihubungi", nothing else
+   breaks. Dev: vite proxies `/api` → `wrangler dev` on 8787.
+4. ⏳ `be24d0a` prepared: `pnpm --filter @sabung/api setup` (migrations + private bucket, reads `apps/api/.dev.vars`,
+   example in `.dev.vars.example`). WAITING for the user to fill `.dev.vars` and run `npx wrangler login`. Then: run
+   setup, `wrangler dev` locally, sign up + backup by hand.
+5. Deploy: `wrangler secret put` ×4, `pnpm --filter @sabung/web build && pnpm --filter @sabung/api deploy`; check the
+   free plan's 10 ms CPU limit with Better Auth's password hashing (may need the paid plan or a lighter hash).
+6. Gate: `CLOUD_URL=http://localhost:8787 pnpm --filter @sabung/web e2e cloud.e2e.ts` (device A sign up → backup → device
+   B log in → restore Replace → identical table checksums → delete) + `offline.e2e.ts`; then on the deployed URL.
+
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).
 
 ## Architecture in one picture
@@ -175,6 +201,12 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   `integrity.ts`, `backupRead.ts`/`backupWrite.ts` (Merge by name+group, Replace, preview = rolled-back
   import), `eventLog.ts` (`lastEventAt`).
 
+### apps/api (Cloudflare Worker: cloud backup API + serves the built web app)
+- `src/index.ts` Worker entry (`/api/*` → `app.ts`, else static assets) · `app.ts` routes · `auth.ts` Better Auth ·
+  `backups.ts` list/upload/download/delete per user · `files.ts` Supabase Storage (+ in-memory for tests) · `schema.ts`
+  · `db.ts` the Db type · `migrations/` (drizzle-kit, `pnpm db:generate`) · `scripts/setupSupabase.mjs` ·
+  `wrangler.jsonc` (assets = `../web/dist/client`, worker first only on `/api/*`). Secrets: `.dev.vars` (git-ignored).
+
 ### apps/web/src/data (saving and loading; Worker side and its clients)
 - `worker.ts` the Worker API · `engineClient.ts` `engine()` · `seasonRunner.ts` **season play**:
   `playSeason(target)` (targets: all / phase / stage / round / ids / comps; chunks of 1,000, pause,
@@ -211,6 +243,12 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   text `on-accent`), `accent-bright` (text/focus), `cool`, `muted`, `danger`, `tier-s…d`. Crimson and navy
   are fills only. Contrast is tested (`tokens.test.ts`).
 - Settings sections save only their own config fields over the latest saved config.
+- Cloud is optional: no screen may need `/api`; every cloudApi call can fail offline. Secrets live only in
+  `apps/api/.dev.vars` / `wrangler secret`, never in the web app or git. RLS stays on with no policies.
+- Don't shrink PGlite's opfs-ahp spare pool (maintainedPoolSize): a new database then hangs in its first migration
+  (0000_init needs 57 new files; tried and reverted 2026-11-13).
+- Editing `apps/web/vite.config.ts` restarts every running vite dev server; the long-running 5173 one came back
+  answering "Cannot GET" (2026-11-13) and needs a manual restart.
 - Empty rating in input = 75 (yellow). Deleting an idol in a roster is refused (offer deactivate).
 - The Idols roster is fixed at season start (else rating changes would rewrite the season); likewise an
   idol's rating is fixed within a season once played (`seasonInput` reads it from the saved matches).
@@ -232,11 +270,16 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   of 180 KB). Lighthouse: `pnpm --filter @sabung/web lighthouse`.
 - `pnpm --filter @sabung/web budget` now builds first (before 2026-11-13 it measured whatever dist/ held, so the
   148.3 KB reported in Fase 3 steps 6–10 was a stale build; real: 154.2 KB at Fase 4 step 3).
+- Cloud API: `pnpm --filter @sabung/api test` (PGlite) · `pnpm --filter @sabung/api dev` (wrangler, :8787, serves
+  `apps/web/dist/client` — build web first) · `pnpm --filter @sabung/api setup` (Supabase migrations + bucket).
+  Offline e2e builds the app and serves it on 5181; cloud gate e2e needs `CLOUD_URL`.
 - Shell pitfalls: no Python on this machine; sed eats `\d` (use the Edit tool for regex text); a heredoc
   with tricky quoting can fail silently — check the file was written; never edit package.json while
   pnpm is running.
 
 ## Open items
+- Settings at 375 px scrolls sideways: the Engine Tuning probability table ("Peluang favorit menang") is 404 px wide
+  (Fase 3, not fixed).
 
 - FASE 4 GATE PASSED 2026-11-13 — waiting for approval before Fase 5. MatchModal is taller than a 720 px screen (title/Accept need a scroll).
 - E2E flake under load: a full e2e run 1 of 3 on 2026-11-13 had 6 fails waiting for "Season 1 · Draft" on
