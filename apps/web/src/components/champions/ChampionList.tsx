@@ -32,7 +32,7 @@ export function ChampionList({ titles }: { titles: Champion[] }) {
             <div className={many ? "flex flex-wrap gap-x-8 gap-y-6" : ""}>
               {list.map((t) => (
                 <article key={t.key} aria-label={`${label(t.key)} season ${season}`} className={`flex items-end gap-4 ${many ? "w-full sm:w-[calc(50%-1rem)] xl:w-[calc(33%-1.5rem)]" : ""}`}>
-                  <IdolPhoto idolId={t.champion} size={many ? 256 : 1024} className={`torn shrink-0 ${many ? "w-20" : "w-36 sm:w-44"}`} />
+                  <IdolPhoto idolId={t.champion} size={many ? 256 : 1024} className={`photo-frame shrink-0 ${many ? "w-20" : "w-36 sm:w-44"}`} />
                   <div className="min-w-0 pb-1">
                     {many && <p className="kicker m-0 truncate text-text-secondary">{label(t.key)}</p>}
                     <IdolLink id={t.champion} className={`block truncate font-display ${many ? "text-xl" : "text-3xl"}`} />

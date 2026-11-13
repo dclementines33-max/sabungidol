@@ -53,20 +53,35 @@ export function promotionPlan(matches: SimMatch[], leagues: Record<string, strin
 
 export type ProgressionRow = { idolId: string; old: number; new: number; score: number; expected: number; reason: string };
 
-// PRD §6.3, from the ratings the season was played with (so running it again gives the same result).
-export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
+// The rating each idol played the season with (taken from its matches).
+const startRatings = (matches: SimMatch[]) => {
   const start = new Map<string, number>();
+  for (const m of matches) start.set(m.idolA, m.ratingA).set(m.idolB, m.ratingB);
+  return start;
+};
+
+// PRD §6.2 season score per idol: Σ points × prestige + 10 × (win rate − 0.5). Also ranks the season's top idols (Update 3 honours).
+export function seasonScores(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>): Map<string, number> {
+  const start = startRatings(matches);
   const record = new Map<string, { played: number; won: number }>();
   for (const m of matches) {
-    start.set(m.idolA, m.ratingA).set(m.idolB, m.ratingB);
     for (const [idol, side] of [[m.idolA, "A"], [m.idolB, "B"]] as const) {
       const r = record.get(idol) ?? { played: 0, won: 0 };
       record.set(idol, { played: r.played + 1, won: r.won + (m.result === side ? 1 : m.result === "D" ? 0.5 : 0) });
     }
   }
   const points = seasonPoints(matches, titles, leagues, (id) => start.get(id) ?? 0);
+  return new Map([...start.keys()].map((id) => { const r = record.get(id)!; return [id, (points.get(id) ?? 0) + 10 * (r.won / r.played - 0.5)]; }));
+}
+
+// The season's best idols over every competition, by season score (Update 3: the honours podium).
+export const seasonTop = (scores: Map<string, number>, n = 3) => [...scores].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, n).map(([id]) => id);
+
+// PRD §6.3, from the ratings the season was played with (so running it again gives the same result).
+export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
+  const start = startRatings(matches);
+  const score = seasonScores(matches, titles, leagues);
   const ids = [...start.keys()];
-  const score = new Map(ids.map((id) => { const r = record.get(id)!; return [id, (points.get(id) ?? 0) + 10 * (r.won / r.played - 0.5)]; }));
   // Least squares: expected score = a + b × rating.
   const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
   const mx = mean(ids.map((id) => start.get(id)!));

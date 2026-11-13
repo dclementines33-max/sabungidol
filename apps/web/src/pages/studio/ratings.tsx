@@ -8,7 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { EngineLab } from "../../components/ratingManager/EngineLab";
 import { RatingActions } from "../../components/ratingManager/RatingActions";
-import { RatingTable } from "../../components/ratingManager/RatingTable";
+import { RatingCards } from "../../components/ratingManager/RatingCards";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
@@ -80,7 +80,7 @@ function RatingManager() {
       </section>
       <section aria-labelledby="table" className="studio-section space-y-3">
         <h2 id="table" className="m-0 font-display">Rating</h2>
-        <RatingTable idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
+        <RatingCards idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
       </section>
       <section aria-labelledby="lab" className="studio-section space-y-3">
         <h2 id="lab" className="m-0 font-display">Engine Lab</h2>

@@ -13,6 +13,7 @@ import { engine } from "../../../data/engineClient";
 import { IDOLS_QUERY } from "../../../data/IdolDataProvider";
 import { useCurrentSeason, useLeagueRosters } from "../../../data/seasonQuery";
 import { PageHeader } from "../../../components/PageHeader";
+import { TierStrip } from "../../../components/TierStrip";
 
 export const Route = createFileRoute("/wiki/idols/")({ component: IdolDatabase });
 
@@ -31,6 +32,7 @@ function IdolDatabase() {
       <PageHeader tag="Idol Database" title="Semua idol dalam satu tempat" note="Saring, urutkan, lalu buka profil." />
       <IdolFilters idols={idols} filter={filter} onFilter={setFilter} view={view} onView={setView} />
       <p className="m-0 text-sm text-text-secondary" aria-live="polite">{shown.length} dari {idols.length} idol</p>
+      <TierStrip ratings={shown.map((i) => i.rating)} />
       {shown.length === 0
         ? <EmptyState icon={SearchX} title="Tidak ada idol yang cocok" action={<Button onClick={() => setFilter(NO_FILTER)}>Hapus filter</Button>} />
         : view === "grid" ? <IdolDatabaseGrid ids={shown.map((i) => i.id)} /> : <IdolDatabaseTable idols={shown} leagueOf={leagueOf} />}

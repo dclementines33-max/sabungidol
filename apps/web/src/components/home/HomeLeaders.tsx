@@ -13,7 +13,7 @@ export function HomeLeaders({ leaders }: { leaders: Leader[] }) {
       <h2 id="leaders" className="m-0 text-[clamp(2rem,5vw,3.5rem)]">Para penguasa</h2>
       <div className="mt-6 flex flex-col gap-10 lg:flex-row lg:items-start">
         <figure className="relative m-0 shrink-0 lg:w-80">
-          <IdolPhoto idolId={top.idolId} size={1024} className="torn w-full max-w-80" />
+          <IdolPhoto idolId={top.idolId} size={1024} className="photo-frame w-full max-w-80" />
           <figcaption className="-mt-10 pl-4">
             <span className="tag">{top.label}</span>
             <IdolLink id={top.idolId} className="mt-2 block font-display text-3xl" />

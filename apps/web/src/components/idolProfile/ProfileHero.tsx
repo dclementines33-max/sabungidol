@@ -27,7 +27,7 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
       </div>
       <p aria-hidden="true" className="outline-text pointer-events-none absolute top-16 right-0 -z-10 m-0 max-w-full truncate font-display text-[clamp(4rem,13vw,10rem)] leading-none opacity-40">{idol.name}</p>
       <div className="flex flex-col gap-8 md:flex-row md:items-end">
-        <IdolPhoto idolId={idol.id} size={1024} className="torn w-56 shrink-0 sm:w-72" />
+        <IdolPhoto idolId={idol.id} size={1024} className="photo-frame w-56 shrink-0 sm:w-72" />
         <div className="min-w-0 flex-1 space-y-4">
           <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Cadangan"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
           <h2 id="idol-name" className="m-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words">{idol.name}</h2>

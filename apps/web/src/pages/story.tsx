@@ -25,8 +25,8 @@ function SeasonStory() {
       <PageHeader tag="Season Story" title="Berita dari setiap season" note="Kejutan, rekor dan drama yang tercatat otomatis." />
       <Select label="Season" value={seasonId!} onChange={setPicked} options={played.map((s): [string, string] => [s.id, s.name])} />
       {!stories ? <p className="text-text-secondary">Menulis berita…</p> : stories.length === 0 ? <p className="text-text-secondary">Belum ada match di season ini.</p> : (
-        <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3" aria-label="Berita season">
-          {stories.map((s, i) => <li key={i} className="flex"><StoryCard story={s} /></li>)}
+        <ul className="m-0 list-none gap-8 p-0 md:columns-2 xl:columns-3" aria-label="Berita season">
+          {stories.map((s, i) => <li key={i} className={`mb-6 flex break-inside-avoid ${i === 0 ? "[column-span:all] mb-10" : ""}`}><StoryCard story={s} lead={i === 0} /></li>)}
         </ul>
       )}
     </div>

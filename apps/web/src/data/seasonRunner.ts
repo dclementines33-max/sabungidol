@@ -3,7 +3,7 @@
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
 import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
-import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason } from "@sabung/engine";
+import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason, seasonScores, seasonTop } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
 import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 import { seasonMatches } from "./seasonMatches";
@@ -54,10 +54,10 @@ export async function seasonOverview(db: Db) {
     const status = off.has(c.key) ? "off" : none ? "none" : waiting.has(c.key) ? (n ? "running" : "next") : n ? "finished" : "waiting";
     return { key: c.key, name: c.name, played: n, status } as const;
   });
-  const third = result.matches.find((m) => m.comp === "UZC" && m.round === "3RD");
   return {
     titles: result.titles, pending: result.pending, done: result.done, played: result.matches.length, notices: result.notices, competitions,
-    uzcThird: third ? (third.result === "A" ? third.idolA : third.idolB) : null,
+    // Update 3: the honours podium = the season's top 3 over every competition (season score, PRD §6.2)
+    seasonTop: result.done ? seasonTop(seasonScores(result.matches, result.titles, { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) })) : [],
   };
 }
 

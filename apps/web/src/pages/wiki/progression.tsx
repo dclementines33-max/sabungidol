@@ -1,5 +1,5 @@
 // Season Progression (Update 2): what happened in this season as charts — the six D1 title races, one league's
-// positions over time, how far every competition is, and which girl groups took this season's titles.
+// positions over time, The Idols' positions (Update 3, instead of how far every competition is), and which girl groups took this season's titles.
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
@@ -11,8 +11,6 @@ import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 
 export const Route = createFileRoute("/wiki/progression")({ component: Progression });
 
-// Matches a full competition plays in a season (PRD §4 table), to draw how far along each one is.
-const PLANNED: Record<string, number> = { D1: 2280, D2: 2280, IDL: 398, SWS: 132, LCQ: 30, UZC: 128, INK: 8, NUG: 239, BS: 90, DSG: 1, MBK: 6 };
 
 function Chapter({ n, title, note, children }: { n: string; title: string; note: string; children: ReactNode }) {
   return (
@@ -45,21 +43,8 @@ function Progression() {
       </Chapter>
       <div className="flex flex-col gap-16 lg:flex-row">
         <div className="flex-1">
-          <Chapter n="03" title="Seberapa jauh" note="Match yang sudah dimainkan dari total tiap kompetisi.">
-            {o && (
-              <ul className="m-0 list-none space-y-2 p-0" aria-label="Kemajuan kompetisi">
-                {o.competitions.filter((c) => c.status !== "off").map((c) => {
-                  const share = c.status === "finished" ? 1 : Math.min(1, c.played / (PLANNED[c.key] ?? 1));
-                  return (
-                    <li key={c.key} className="grid grid-cols-[9rem_1fr_3rem] items-center gap-3 text-sm">
-                      <span className="truncate">{c.name}</span>
-                      <span aria-hidden="true" className="h-2 bg-surface-hover/50"><span className="block h-full bg-cool" style={{ width: `${share * 100}%` }} /></span>
-                      <span className="text-right font-mono tabular-nums">{Math.round(share * 100)}%</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+          <Chapter n="03" title="Naik turun The Idols" note="Posisi enam teratas The Idols dari matchday ke matchday. Garis paling atas = peringkat 1.">
+            <Bump codes={["IDL"]} />
           </Chapter>
         </div>
         <div className="flex-1 lg:mt-24">

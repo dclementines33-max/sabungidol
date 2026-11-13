@@ -18,11 +18,11 @@
   --color-danger: #ff4d63; /* destructive actions: outlined buttons, error text */
   --color-on-fill: #010003; /* text on light fills (tiers S–C, branding colours, the bright accent) */
 
-  /* Rating tiers (PRD §3): S red, A–C light to dark steel, D navy (light text on it). */
-  --color-tier-s: #ff4d63;
-  --color-tier-a: #b9d3e2;
-  --color-tier-b: #87a4b5;
-  --color-tier-c: #6b8a9e;
+  /* Rating tiers (PRD §3; Update 3: five clearly different colours): S gold, A red, B violet, C teal, D navy (light text on it). */
+  --color-tier-s: #e9b44c;
+  --color-tier-a: #ff4d63;
+  --color-tier-b: #a99bf0;
+  --color-tier-c: #5fc4b8;
   --color-tier-d: #25435d;
 
   /* Competition branding: the 12 curated colours users pick from (PRD §10.1). */
@@ -140,8 +140,8 @@
       linear-gradient(var(--color-text-secondary) 0 0) bottom left / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) bottom left / 1px 14px no-repeat,
       linear-gradient(var(--color-text-secondary) 0 0) bottom right / 14px 1px no-repeat, linear-gradient(var(--color-text-secondary) 0 0) bottom right / 1px 14px no-repeat;
   }
-  /* A ragged, torn bottom edge (cards, heroes). */
-  .torn { mask: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 6%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 0H100V3L96 5 91 2.5 86 5.5 80 3 74 5 69 2 63 5.5 57 3.5 51 5 45 2.5 39 5.5 33 3 27 5 21 2.5 15 5.5 9 3 4 5 0 3Z%27/%3E%3C/svg%3E") bottom / 100% 10px no-repeat, linear-gradient(#000 0 0) top / 100% calc(100% - 9px) no-repeat; }
+  /* Update 3: a photo frame instead of the torn edge — a thin crimson-to-gold passe-partout around the picture, with depth. */
+  .photo-frame { padding: 4px; background: linear-gradient(155deg, var(--color-accent-bright), var(--color-accent) 30%, var(--color-bg-base) 55%, var(--color-surface-hover) 80%, var(--color-brand-gold)); box-shadow: 0 12px 28px -14px rgb(0 0 0 / 0.95); }
   /* A soft panel: a fill and a little light from the top, never an outline. */
   /* Studio sections (R4): a numbered editorial chapter — a crimson rule on top, the number in blackletter on the right,
      a big headline. The page that holds them resets the counter with .studio-flow. */

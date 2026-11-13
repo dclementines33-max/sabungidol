@@ -25,7 +25,7 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
   await expect(page.getByText(/Season selesai!/)).toBeVisible({ timeout: 150_000 });
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
-  await expect(page.getByRole("figure").filter({ hasText: "Unzure Cup" })).toBeVisible();
+  await expect(page.getByRole("figure").filter({ hasText: "Top 3 season" })).toBeVisible();
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/studio/settings");

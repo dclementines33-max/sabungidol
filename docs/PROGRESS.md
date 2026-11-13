@@ -237,9 +237,12 @@ V2 ✅ MatchHeader theme {accent token, kicker, grandFinal} (PlayMatchDialog ACC
    tilted big photos, faded blackletter competition word, gothic VS, gold + trophies for F/GF/Daesang. LiveMatchVisualizer:
    tug-of-war per game, "Game N berlangsung" (never the total), Match point, winner line. WheelPicker: rim bulbs blink,
    gold pointer/hub, spin winner photo lights up, big score. e2e cupPanels checks no spoiler + Spin all to the end.
-V3 Visuals: photo frame instead of torn edge, tier colours S/A/B/C/D distinct, "1×" badge, Season Story colours/layout,
-   the "T1/T2" column, Dashboard "Seberapa jauh" → The Idols position movement, honours podium = season top 3 (all comps),
-   tier distribution strip, Rating Manager as cards (slider, ±5, quick values, record, cups).
+V3 ✅ tokens.css .photo-frame (crimson→gold passe-partout) replaces .torn everywhere; tier colours S gold, A red, B violet,
+   C teal, D navy; WallOfFame count = gold blackletter number above the card; engine rankLabel "#3 bersama" (was T3);
+   StoryCard = newspaper (lead story big, coloured rule per kind, framed photo, no crimson blocks); /wiki/progression
+   chapter 03 = Bump codes={["IDL"]} (Bump takes codes); engine seasonScores + seasonTop → honours podium = season top 3
+   (seasonOverview / archive .seasonTop, uzcThird gone); components/TierStrip (Rating Manager + Idol Database);
+   ratingManager/RatingCards + RatingCard (slider commits on release, number field, ±5, quick values, record, titles).
 V4 Panels: Girl Groups as a panel (all groups + add a group; logo missing in group stats), H2H rival area clickable,
    partial backup download (idols, ratings, groups, branding, rosters).
 V5 Engine: every Simulate = new roll (PRD §5.4 re-roll salt), small tweak, Nugu/B-Side upsets (fatigue), new rating

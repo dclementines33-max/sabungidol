@@ -38,4 +38,5 @@ export function allTimeRecords(rows: CareerRow[], { minMatches = 50, include = (
   });
 }
 
-export const rankLabel = (e: RecordEntry) => `${e.tied ? "T" : ""}${e.rank}`;
+// Update 3: "T3" read as nonsense; a shared place says so in words.
+export const rankLabel = (e: RecordEntry) => `#${e.rank}${e.tied ? " bersama" : ""}`;

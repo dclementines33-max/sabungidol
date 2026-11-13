@@ -2,7 +2,7 @@
 // 13 leagues, every cup's final places, promotion/relegation, saved rating changes and a few season numbers.
 // The season is replayed from its saved matches (nothing is played).
 import { type Db, listPlacements, listSeasonRatingChanges, listSeasons } from "@sabung/db";
-import { computeStandings, promotionPlan, runSeason } from "@sabung/engine";
+import { computeStandings, promotionPlan, runSeason, seasonScores, seasonTop } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
@@ -22,7 +22,7 @@ export async function seasonArchive(db: Db, seasonId: string) {
   return {
     season, done: true as const,
     titles: result.titles,
-    uzcThird: placements.find((p) => p.comp === "UZC" && p.finalRank === 3)?.idolId ?? null,
+    seasonTop: seasonTop(seasonScores(result.matches, result.titles, leagues)), // Update 3 honours podium
     tables,
     cups: placements.sort((a, b) => a.comp.localeCompare(b.comp) || a.finalRank - b.finalRank),
     promoted: plan.promoted, relegated: plan.relegated,

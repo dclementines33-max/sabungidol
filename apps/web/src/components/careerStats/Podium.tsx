@@ -16,7 +16,7 @@ export function Podium({ rows, column }: { rows: CareerRow[]; column: { header: 
         return (
           <li key={r.idolId} className={`flex flex-col items-center text-center ${i === 0 ? "-translate-y-6" : ""}`}>
             <span aria-hidden="true" className="font-gothic text-3xl text-accent-bright">{i + 1}</span>
-            <IdolPhoto idolId={r.idolId} size={256} className={`torn ${i === 0 ? "w-32 sm:w-40" : "w-24 sm:w-28"}`} />
+            <IdolPhoto idolId={r.idolId} size={256} className={`photo-frame ${i === 0 ? "w-32 sm:w-40" : "w-24 sm:w-28"}`} />
             <IdolLink id={r.idolId} className="mt-1 max-w-32 truncate font-display" />
             <span className="kicker text-text-secondary">{column.header}</span>
             <span className="font-display text-2xl tabular-nums">{column.value(r)}</span>

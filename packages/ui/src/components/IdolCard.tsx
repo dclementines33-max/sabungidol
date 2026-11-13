@@ -1,5 +1,5 @@
 // Idol card as a trading card (design/refs/idol card design 1–2; redesign brief 2026-11-13): no frame —
-// the photo bleeds to the edges with a torn bottom, the rating is a big blackletter number in the corner with
+// the photo sits in a crimson-to-gold frame (Update 3), the rating is a big blackletter number in the corner with
 // a tier-coloured bar, the group colour glows under the card, and the name plate shows group, NAME, titles.
 import { tierOf } from "@sabung/shared";
 import { Trophy } from "lucide-react";
@@ -15,7 +15,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
     <article className="relative w-48 overflow-hidden rounded-card bg-bg-raised shadow-[0_14px_24px_-18px_var(--glow)] transition-transform duration-(--duration-base) hover:-translate-y-1"
       style={{ "--glow": glow } as React.CSSProperties}>
       <div className="relative">
-        <IdolPhoto idolId={idolId} size={256} className="torn w-full rounded-none! contrast-110 saturate-90" />
+        <IdolPhoto idolId={idolId} size={256} className="photo-frame w-full rounded-none! contrast-110 saturate-90" />
         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-bg-raised/90 via-transparent to-bg-base/40" />
         <span aria-hidden="true" className="absolute top-3 left-0 h-14 w-1" style={{ background: glow }} />
         <span role="img" aria-label={`Rating ${idol.rating}, tier ${tier}`} className="absolute top-1 right-2 flex flex-col items-end">

@@ -10,7 +10,7 @@ describe("records engine (PRD §7.3)", () => {
       { idolId: "e", value: 1, matches: 9 }, { idolId: "c", value: 5, matches: 10 }, { idolId: "d", value: 5, matches: 12 },
       { idolId: "a", value: 9, matches: 1 }, { idolId: "b", value: 7, matches: 1 },
     ], "total");
-    expect(ranked.map((e) => `${e.idolId}:${rankLabel(e)}`)).toEqual(["a:1", "b:2", "d:T3", "c:T3", "e:5"]); // totals: more matches first
+    expect(ranked.map((e) => `${e.idolId}:${rankLabel(e)}`)).toEqual(["a:#1", "b:#2", "d:#3 bersama", "c:#3 bersama", "e:#5"]); // totals: more matches first
     expect(rankRecords([{ idolId: "x", value: 0.7, matches: 60 }, { idolId: "y", value: 0.7, matches: 50 }], "percent").map((e) => e.idolId)).toEqual(["y", "x"]);
   });
 

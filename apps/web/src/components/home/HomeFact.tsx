@@ -16,7 +16,7 @@ export function HomeFact({ facts }: { facts: Fact[] }) {
       <div className="mt-4 flex flex-wrap items-end gap-5">
         {fact.ids.map((id, k) => (
           <figure key={id} className={`m-0 ${k === 1 ? "sm:translate-y-6" : ""}`}>
-            <IdolPhoto idolId={id} size={256} className="torn w-28 sm:w-36" />
+            <IdolPhoto idolId={id} size={256} className="photo-frame w-28 sm:w-36" />
             <figcaption className="mt-1 font-display text-lg">{lookup(id)?.name ?? id}</figcaption>
           </figure>
         ))}

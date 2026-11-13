@@ -7,7 +7,7 @@ function Fighter({ id, won, lost, align }: { id: string; won: boolean; lost: boo
   const idol = useIdolLookup()(id);
   return (
     <div className={`flex flex-col items-center gap-2 ${lost ? "opacity-45 grayscale" : ""}`}>
-      <IdolPhoto idolId={id} size={1024} className={`torn w-32 sm:w-44 ${won ? "drop-shadow-[0_0_30px_var(--color-accent-bright)]" : ""}`} />
+      <IdolPhoto idolId={id} size={1024} className={`photo-frame w-32 sm:w-44 ${won ? "drop-shadow-[0_0_30px_var(--color-accent-bright)]" : ""}`} />
       <p className={`m-0 font-display text-xl ${align === "left" ? "text-accent-bright" : "text-cool"}`}>{idol?.name}</p>
       <p className="kicker m-0 text-text-secondary">{idol?.groupName ?? "Solo"} · {idol?.rating}</p>
       {won && <p className="tag m-0">Juara</p>}

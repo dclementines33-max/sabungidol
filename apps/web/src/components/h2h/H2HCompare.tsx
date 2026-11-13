@@ -17,7 +17,7 @@ function Side({ id, align }: { id: string; align: "left" | "right" }) {
   return (
     <div className={`flex min-w-0 flex-col gap-2 ${align === "right" ? "items-end text-right" : "items-start"}`}>
       <span className="tag">Tier {tierOf(idol.rating)} · {idol.rating}</span>
-      <IdolPhoto idolId={id} size={1024} className="torn w-32 sm:w-52" />
+      <IdolPhoto idolId={id} size={1024} className="photo-frame w-32 sm:w-52" />
       <IdolLink id={id} className="font-display text-xl sm:text-3xl" />
       <p className="kicker m-0 text-text-secondary">{idol.groupName ?? "Soloist"}</p>
     </div>

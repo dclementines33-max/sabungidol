@@ -20,7 +20,7 @@ export function HomeHero({ seasonName, champion, championSeason }: { seasonName:
           {champion ? <ChampionName id={champion} /> : <p className="m-0 font-display text-[clamp(2.5rem,7vw,5.5rem)]">{seasonName}</p>}
           <p className="m-0 font-gothic text-2xl text-on-accent">{seasonName}</p>
         </div>
-        {champion && <IdolPhoto idolId={champion} size={1024} className="torn w-52 justify-self-center sm:w-72 md:mr-8" />}
+        {champion && <IdolPhoto idolId={champion} size={1024} className="photo-frame w-52 justify-self-center sm:w-72 md:mr-8" />}
       </div>
     </section>
   );

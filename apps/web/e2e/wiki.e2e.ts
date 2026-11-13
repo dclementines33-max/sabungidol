@@ -200,7 +200,7 @@ test("Season Progression: six title races, positions, progress, titles per group
   test.setTimeout(120_000);
   await page.goto("/wiki/progression");
   await expect(page.getByRole("img", { name: /^Title race / })).toHaveCount(6, { timeout: 60_000 });
-  await expect(page.getByRole("img", { name: /^Posisi / })).toBeVisible();
+  await expect(page.getByRole("img", { name: /^Posisi / })).toHaveCount(2); // a D1 league + The Idols (Update 3)
   await expect(page.getByRole("list", { name: "Gelar per girl group" }).getByRole("listitem").first()).toBeVisible();
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/progression.png", fullPage: true });

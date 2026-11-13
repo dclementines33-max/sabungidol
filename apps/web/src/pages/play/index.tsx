@@ -75,7 +75,7 @@ function SabungIdol() {
         </div>
       )}
       <SeasonTimeline competitions={overview.competitions} />
-      {overview.done && <SeasonHonours titles={overview.titles} uzcThird={overview.uzcThird} />}
+      {overview.done && <SeasonHonours titles={overview.titles} top={overview.seasonTop} />}
       <SeasonClose done={overview.done} />
     </div>
   );

@@ -40,7 +40,7 @@ function SeasonArchive() {
         : !archive.done ? <p className="text-text-secondary">{archive.season.name} belum selesai — arsipnya lengkap setelah semua kompetisi selesai.</p>
         : (
           <>
-            <SeasonHonours titles={archive.titles} uzcThird={archive.uzcThird} />
+            <SeasonHonours titles={archive.titles} top={archive.seasonTop} />
             <RecapButton seasonName={archive.season.name} titles={archive.titles} />
             <div className="grid max-w-xl grid-cols-3 gap-3">
               <StatTile label="Match" value={archive.numbers.matches} />
