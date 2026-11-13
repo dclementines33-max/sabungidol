@@ -1,7 +1,7 @@
 // The Web Worker (PRD §11, §13): engine and database run here so the screen never freezes.
 // The page talks to it through Comlink (engineClient.ts).
 import {
-  type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
+  type MatchFilter, type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   listGroups, listIdols,
   deletePhoto, logEvent, openDb, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
@@ -13,6 +13,7 @@ import { acceptMatch, matchPreview } from "./singleMatch";
 import { closePreview, saveProgression, startNewSeason } from "./seasonClose";
 import { careerSync, lastSeasonProgression } from "./ratingSources";
 import { careerStats, rebuildStats } from "./careerWorker";
+import { idolProfile, matchPage } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -133,6 +134,9 @@ const api = {
   // Career stats (PRD §7): cached per finished season, rebuildable from the matches.
   careerStats: async () => careerStats(await open()),
   rebuildStats: async () => rebuildStats(await open()),
+  // Wiki pages (PRD §8).
+  idolProfile: async (id: string) => idolProfile(await open(), id),
+  matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),
   // Closing the season (PRD §4, §6.3).
   closePreview: async () => closePreview(await open()),
   saveProgression: async () => saveProgression(await open()),
