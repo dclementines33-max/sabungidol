@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { UserX } from "lucide-react";
 import { Tabs } from "../../../components/competition/Tabs";
+import { CareerScope } from "../../../components/idolProfile/CareerScope";
 import { ProfileHero } from "../../../components/idolProfile/ProfileHero";
 import { ProfileOverview } from "../../../components/idolProfile/ProfileOverview";
 import { ProfileRecords } from "../../../components/idolProfile/ProfileRecords";
@@ -32,13 +33,17 @@ function IdolProfile() {
   const all = profile?.rows.find((r) => r.comp === "ALL");
   return (
     <div className="space-y-10">
-      <ProfileHero idol={idol} league={league} titles={all?.titles ?? 0} matches={all?.matches ?? 0} winRate={all?.winRate ?? 0} />
+      <ProfileHero idol={idol} idolIds={idols!.map((i) => i.id)} league={league}
+        record={{ titles: all?.titles ?? 0, podiums: (all?.titles ?? 0) + (all?.runnerUp ?? 0) + (all?.third ?? 0), matches: all?.matches ?? 0, wins: all?.wins ?? 0, draws: all?.draws ?? 0, losses: all?.losses ?? 0, winRate: all?.winRate ?? 0 }} />
       {!profile ? <p className="text-text-secondary">Menghitung statistik…</p> : (
         <Tabs label="Profil idol" tabs={[
           { id: "overview", label: "Overview", content: () => <ProfileOverview badges={profile.badges} titles={profile.placements.filter((p) => p.finalRank === 1)} history={profile.ratingHistory} rating={idol.rating} /> },
           { id: "career", label: "Career", content: () => (
+            <div className="space-y-10">
+            <CareerScope rows={profile.rows} />
             <VirtualTable rows={[...profile.rows].sort((a, b) => (a.comp === "ALL" ? -1 : b.comp === "ALL" ? 1 : b.matches - a.matches))} rowKey={(r) => r.comp} label="Career per kompetisi" height="none"
               columns={[{ header: "Kompetisi", cell: (r) => compLabel(r.comp), className: "whitespace-nowrap font-medium" }, ...CAREER_COLUMNS.map((c) => ({ header: c.header, cell: c.value, className: "font-mono tabular-nums whitespace-nowrap" }))]} />
+            </div>
           ) },
           { id: "seasons", label: "Seasons", content: () => <ProfileSeasons placements={profile.placements} /> },
           { id: "matches", label: "Matches", content: () => <MatchLog filter={{ idolId: id }} label={`Match ${idol.name}`} /> },

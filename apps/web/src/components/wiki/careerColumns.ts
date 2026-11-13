@@ -28,3 +28,16 @@ export const CAREER_COLUMNS: CareerColumn[] = [
   { id: "highestRating", header: "Rating tertinggi", value: (r) => r.highestRating },
   { id: "seasons", header: "Season", value: (r) => r.seasons },
 ];
+
+// Update 2: each format shows the stats it has — no titles for Swiss / LCQ (nobody wins them), no league points for
+// cups, group exit / advance for the Unzure Cup, best finish for knockout cups.
+const RECORD = ["matches", "wdl", "winRate", "gameDiff"];
+export function columnsFor(comp: string): string[] {
+  if (comp === "ALL") return ["titles", "runnerUp", ...RECORD, "bestWinStreak", "seasons"];
+  if (comp === "D1" || comp === "D2") return ["titles", ...RECORD, "leaguePoints", "avgPlacement", "bestPlacement", "seasons"];
+  if (comp === "IDL") return ["titles", "runnerUp", ...RECORD, "leaguePoints", "bestPlacement", "seasons"];
+  if (comp === "SWS" || comp === "LCQ") return [...RECORD, "gamesFor", "gamesAgainst", "bestWinStreak", "seasons"];
+  if (comp === "UZC") return ["titles", "runnerUp", "third", "groupAdvance", "groupExit", ...RECORD, "bestPlacement"];
+  if (comp === "DSG" || comp === "MBK") return ["titles", "runnerUp", ...RECORD];
+  return ["titles", "runnerUp", "bestPlacement", "avgPlacement", ...RECORD]; // INK, NUG, BS
+}

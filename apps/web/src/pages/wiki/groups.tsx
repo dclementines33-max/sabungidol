@@ -1,49 +1,35 @@
-// Girl Group Stats (PRD §8): a table of groups; choosing one shows its member grid. (Groups have no logo yet.)
-import { IdolCard } from "@sabung/ui";
+// Girl Group Stats (PRD §8; Update 2): groups ranked by titles as an editorial list — the top three bigger — each with
+// its record, titles per competition and members; opening a group shows how each member performed.
 import { useQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { GroupEntry } from "../../components/groups/GroupEntry";
 import { groupStats } from "../../components/groups/groupStats";
-import { IdolLink } from "../../components/wiki/IdolLink";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 
 export const Route = createFileRoute("/wiki/groups")({ component: GirlGroupStats });
 
+const on = typeof Worker !== "undefined";
+
 function GirlGroupStats() {
-  const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
-  const { data: combined } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: typeof Worker !== "undefined" });
-  const stats = useMemo(() => groupStats(idols, combined ?? []), [idols, combined]);
+  const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
+  const { data: combined } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: on });
+  const { data: titles = [] } = useQuery({ queryKey: ["titles-by-comp"], queryFn: () => engine().titlesByComp(), staleTime: 0, enabled: on });
+  const stats = useMemo(() => groupStats(idols, combined ?? [], titles), [idols, combined, titles]);
+  const career = useMemo(() => new Map((combined ?? []).map((r) => [r.idolId, r])), [combined]);
   const [open, setOpen] = useState<string | null>(null);
-  const group = stats.find((g) => g.id === open);
   if (!combined) return <p className="text-text-secondary">Menghitung statistik…</p>;
   return (
     <div className="space-y-8">
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm tabular-nums">
-          <thead><tr className="text-left text-text-secondary">{["Group", "Member aktif", "Gelar", "Win rate", "Member terbaik", "Rata rating"].map((h) => <th key={h} scope="col" className="px-2 py-2 font-medium">{h}</th>)}</tr></thead>
-          <tbody>
-            {stats.map((g) => (
-              <tr key={g.id} className="border-t border-border">
-                <td className="px-2 py-1"><button type="button" aria-expanded={open === g.id} onClick={() => setOpen(open === g.id ? null : g.id)} className="text-left font-medium text-accent-bright underline underline-offset-4">{g.name}</button></td>
-                <td className="px-2 py-1 font-mono">{g.active}/{g.members.length}</td>
-                <td className="px-2 py-1 font-mono">{g.titles}</td>
-                <td className="px-2 py-1 font-mono">{(g.winRate * 100).toFixed(1)}%</td>
-                <td className="px-2 py-1"><IdolLink id={g.best} /></td>
-                <td className="px-2 py-1 font-mono">{g.avgRating.toFixed(1)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {group && (
-        <section aria-labelledby="group-name" className="space-y-3">
-          <h2 id="group-name" className="m-0 font-display text-2xl uppercase">{group.name}</h2>
-          <ul className="m-0 flex list-none flex-wrap gap-4 p-0" aria-label={`Member ${group.name}`}>
-            {group.members.map((id) => <li key={id}><Link to="/wiki/idols/$id" params={{ id }} className="block rounded-card focus-visible:outline-2 focus-visible:outline-accent-bright"><IdolCard idolId={id} /></Link></li>)}
-          </ul>
-        </section>
-      )}
+      <header>
+        <p className="m-0 flex items-center gap-3"><span className="tag">Girl Group Stats</span><span className="kicker">{stats.length} grup</span></p>
+        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Peringkat girl group</h2>
+        <p className="m-0 text-text-secondary">Diurutkan menurut jumlah gelar member. Klik nama grup untuk performa tiap member.</p>
+      </header>
+      <ol className="m-0 list-none p-0">
+        {stats.map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} />)}
+      </ol>
     </div>
   );
 }

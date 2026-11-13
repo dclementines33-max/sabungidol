@@ -16,7 +16,7 @@ import { careerStats, rebuildStats } from "./careerWorker";
 import { seasonArchive } from "./archiveWorker";
 import { storyOf } from "./storyWorker";
 import { overview } from "./overviewWorker";
-import { careerTable, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
+import { careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -140,6 +140,7 @@ const api = {
   // Wiki pages (PRD §8).
   idolProfile: async (id: string) => idolProfile(await open(), id),
   careerTable: async (comp: string) => careerTable(await open(), comp),
+  titlesByComp: async () => titlesByComp(await open()),
   seasonList: async () => seasonList(await open()),
   champions: async () => champions(await open()),
   records: async (minMatches: number) => records(await open(), minMatches),

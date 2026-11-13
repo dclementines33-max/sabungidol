@@ -1,18 +1,22 @@
 // One Career Stats tab (PRD §8 "spreadsheet legend"): every idol in scope for one competition key, the chosen
-// columns, photo + name sticky on the left, sorted, and the shown rows as CSV.
+// columns (Update 2: chosen per format), a podium of the top three, photo + name sticky on the left, sorted, and CSV.
 import type { CareerRow } from "@sabung/engine";
 import { Button, IdolPhoto, VirtualTable, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Download } from "lucide-react";
 import { engine } from "../../data/engineClient";
-import { CAREER_COLUMNS } from "../wiki/careerColumns";
+import { CAREER_COLUMNS, columnsFor } from "../wiki/careerColumns";
 import { IdolLink } from "../wiki/IdolLink";
 import { careerCsv } from "./careerCsv";
+import { ColumnPicker } from "./ColumnPicker";
+import { Podium } from "./Podium";
 
 export const CAREER_SORTS: [keyof CareerRow, string][] = [["titles", "Gelar"], ["wins", "Menang"], ["matches", "Match"], ["winRate", "Win rate"], ["gameDiff", "Selisih game"], ["leaguePoints", "Poin liga"], ["bestWinStreak", "Streak menang"]];
 
-export function CareerTable({ comp, label, allowed, shown, sort }: { comp: string; label: string; allowed: Set<string>; shown: string[]; sort: keyof CareerRow }) {
+export function CareerTable({ comp, label, allowed, sort }: { comp: string; label: string; allowed: Set<string>; sort: keyof CareerRow }) {
   const lookup = useIdolLookup();
+  const [shown, setShown] = useState(() => columnsFor(comp));
   const { data, isPending } = useQuery({ queryKey: ["career-table", comp], queryFn: () => engine().careerTable(comp), staleTime: 0 });
   if (isPending) return <p className="text-text-secondary">Menghitung statistik…</p>;
   const rows = (data ?? []).filter((r) => allowed.has(r.idolId)).sort((a, b) => Number(b[sort]) - Number(a[sort]) || b.matches - a.matches || a.idolId.localeCompare(b.idolId));
@@ -26,7 +30,9 @@ export function CareerTable({ comp, label, allowed, shown, sort }: { comp: strin
     URL.revokeObjectURL(link.href);
   };
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
+      <Podium rows={rows.slice(0, 3)} column={CAREER_COLUMNS.find((c) => c.id === (shown.includes(sort) ? sort : shown[0]))!} />
+      <ColumnPicker shown={shown} onChange={setShown} />
       <div className="flex items-center gap-3">
         <p className="m-0 flex-1 text-sm text-text-secondary" aria-live="polite">{rows.length} idol</p>
         <Button onClick={download}><Download aria-hidden="true" size={16} /> Ekspor CSV</Button>

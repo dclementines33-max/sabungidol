@@ -33,7 +33,7 @@ function HeadToHead() {
       </div>
       {a && b && data && (
         <>
-          <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} />
+          <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} games={data.games as [number, number]} formA={data.formA as ("W" | "D" | "L")[]} formB={data.formB as ("W" | "D" | "L")[]} />
           <section aria-labelledby="direct" className="space-y-3">
             <h2 id="direct" className="m-0 font-display text-xl uppercase">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
             <div className="flex flex-wrap gap-3">

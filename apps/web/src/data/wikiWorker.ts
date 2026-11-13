@@ -50,6 +50,9 @@ export async function matchPage(db: Db, filter: MatchFilter, opts: { after?: str
 // Career Stats (PRD §8): every idol's row for one competition key ("ALL" = Combined).
 export const careerTable = async (db: Db, comp: string) => (await wikiStats(db)).rows.filter((r) => r.comp === comp);
 
+// Girl Group Stats: every title an idol holds per competition key (only lines with a title).
+export const titlesByComp = async (db: Db) => (await wikiStats(db)).rows.filter((r) => r.comp !== "ALL" && r.titles > 0).map((r) => ({ idolId: r.idolId, comp: r.comp, titles: r.titles }));
+
 export const seasonList = async (db: Db) => (await listSeasons(db)).map((s) => ({ id: s.id, number: s.number, name: s.name, status: s.status }));
 
 // Head to Head (PRD §8): the pair's record from A's side, both idols' Combined lines, and the 10 pairs met most often.
@@ -59,7 +62,12 @@ export async function headToHead(db: Db, a?: string, b?: string) {
     .map(([key, p]) => ({ a: key.split("|")[0]!, b: key.split("|")[1]!, meetings: p.meetings, winsA: p.winsLo, winsB: p.winsHi, draws: p.draws }));
   const line = (id?: string) => stats.rows.find((r) => r.idolId === id && r.comp === "ALL") ?? null;
   const pair = a && b ? rivalsOf(stats.pairs, a, Number.POSITIVE_INFINITY).find((r) => r.opponent === b) ?? null : null;
-  return { top, pair, lineA: line(a), lineB: line(b) };
+  // Update 2 tale of the tape: games won in their direct matches, and each idol's last five results (newest first).
+  const direct = a && b ? (await queryMatches(db, { idolId: a, vsId: b }, { limit: 100_000 })).rows : [];
+  const games = direct.reduce(([x, y], m) => (m.idolA === a ? [x + m.scoreA, y + m.scoreB] : [x + m.scoreB, y + m.scoreA]), [0, 0]);
+  const form = async (id?: string) => (id ? (await queryMatches(db, { idolId: id }, { limit: 5, newest: true })).rows
+    .map((m) => (m.result === "D" ? "D" : (m.result === "A") === (m.idolA === id) ? "W" : "L")) : []);
+  return { top, pair, lineA: line(a), lineB: line(b), games, formA: await form(a), formB: await form(b) };
 }
 
 // Hall of Champions (PRD §8): every title per season with its runner-up and the final's score (cups only;
@@ -70,10 +78,11 @@ export async function champions(db: Db) {
   const finals = (await queryMatches(db, { stage: "FN" }, { limit: 100_000, newest: false })).rows;
   return placements.filter((p) => p.finalRank === 1).map((p) => {
     const runnerUp = placements.find((r) => r.seasonId === p.seasonId && r.comp === p.comp && r.finalRank === 2)?.idolId ?? null;
+    const third = placements.find((r) => r.seasonId === p.seasonId && r.comp === p.comp && r.finalRank === 3)?.idolId ?? null;
     const code = p.comp.startsWith("MBK") ? "MBK" : p.comp.split("-")[0];
     const final = finals.filter((m) => m.seasonId === p.seasonId && m.comp === code && [m.idolA, m.idolB].includes(p.idolId) && (!runnerUp || [m.idolA, m.idolB].includes(runnerUp))).at(-1);
     const score = final ? (final.idolA === p.idolId ? `${final.scoreA}–${final.scoreB}` : `${final.scoreB}–${final.scoreA}`) : null;
-    return { season: number.get(p.seasonId) ?? 0, key: p.comp, champion: p.idolId, runnerUp, score };
+    return { season: number.get(p.seasonId) ?? 0, key: p.comp, champion: p.idolId, runnerUp, third, score };
   }).sort((a, b) => b.season - a.season || a.key.localeCompare(b.key));
 }
 

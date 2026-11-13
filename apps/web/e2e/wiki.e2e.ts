@@ -31,6 +31,8 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   expect(await axe(page)).toEqual([]);
   await page.getByRole("tab", { name: "Career" }).click();
   await expect(page.getByRole("cell", { name: "Combined" })).toBeVisible();
+  await page.getByRole("group", { name: "Scope karier" }).getByRole("button").nth(1).click(); // Update 2: career scope per competition
+  await expect(page.getByRole("region", { name: "Streak & puncak" })).toBeVisible();
   await page.getByRole("tab", { name: "Matches" }).click();
   await expect(page.getByText(/^Match .+: \d+ match$/)).toBeVisible();
   expect(await page.getByRole("list", { name: /^Match / }).getByRole("listitem").count()).toBeGreaterThan(0);
@@ -64,7 +66,7 @@ test("Career Stats: Combined and per competition, columns, scope, CSV", async ()
 test("Head to Head: top rivalries open a pair, record and direct match log", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/h2h");
-  const first = page.getByRole("heading", { name: /Top 10 Most Matchups/ }).locator("..").getByRole("link", { name: /^\d+ match$/ }).first();
+  const first = page.getByRole("heading", { name: "Heated Rivalries" }).locator("..").getByRole("link", { name: /^\d+ match$/ }).first();
   const meetings = Number((await first.textContent({ timeout: 60_000 }))!.split(" ")[0]);
   await first.click();
   await expect(page).toHaveURL(/a=.+&b=.+/);
@@ -74,6 +76,7 @@ test("Head to Head: top rivalries open a pair, record and direct match log", asy
   await page.getByRole("combobox", { name: /^Season/ }).selectOption({ label: "Season 1" });
   await expect(page.getByText(/^Match langsung: \d+ match$/)).toHaveText(`Match langsung: ${meetings} match`);
   expect(await axe(page)).toEqual([]);
+  await expect(page.getByRole("table", { name: "Tale of the tape" })).toContainText("5 match terakhir"); // Update 2
   await page.screenshot({ path: "test-results/h2h.png", fullPage: true });
 });
 
@@ -81,10 +84,11 @@ test("Hall of Champions: titles per competition with runner-up and final score",
   test.setTimeout(120_000);
   await page.goto("/wiki/champions");
   const list = page.getByRole("list", { name: "Juara per season" });
-  await expect(list.getByRole("listitem")).toHaveCount(6, { timeout: 60_000 }); // Liga Divisi 1: six leagues
+  await expect(list.getByRole("article")).toHaveCount(6, { timeout: 60_000 }); // Liga Divisi 1: six leagues in one season block
   await page.getByRole("tab", { name: "Unzure Cup" }).click();
-  await expect(list.getByRole("listitem")).toHaveCount(1);
-  await expect(list.getByRole("listitem")).toContainText(/runner-up .+\d–\d$/);
+  await expect(list.getByRole("article")).toHaveCount(1);
+  await expect(list.getByRole("article")).toContainText(/Final \d–\d/);
+  await expect(list.getByRole("article")).toContainText(/Runner-up .+ · Ke-3 /);
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/champions.png", fullPage: true });
 });
@@ -151,11 +155,11 @@ test("Season Story: news cards linking to their matches", async () => {
 test("Girl Group Stats: table and a group's members", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/groups");
-  const first = page.getByRole("table").locator("tbody tr").first().getByRole("button");
+  const first = page.getByRole("heading", { level: 2 }).getByRole("button").first();
   await first.click({ timeout: 60_000 });
   const name = await first.textContent();
-  await expect(page.getByRole("heading", { name: name! })).toBeVisible();
   expect(await page.getByRole("list", { name: `Member ${name}` }).getByRole("listitem").count()).toBeGreaterThan(0);
+  await expect(page.getByRole("table", { name: `Performa member ${name}` })).toBeVisible(); // Update 2: member table
   expect(await axe(page)).toEqual([]);
 });
 

@@ -1,7 +1,7 @@
 // Every panel the shell links to (PRD §8), in the order the agreed shell shows them.
 // phase = the PRD §15 phase that builds the panel; until then it shows a placeholder.
 import {
-  Archive, ChartColumn, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
+  Archive, ChartColumn, Contact, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
   Newspaper, Settings, Swords, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type LucideIcon,
 } from "lucide-react";
 
@@ -30,6 +30,7 @@ export const SPACES: NavSpace[] = [
     label: "Wiki",
     items: [
       { label: "Idol Database", to: "/wiki/idols", icon: Users, phase: 2 },
+      { label: "Idol Profile", to: "/wiki/profile", icon: Contact, phase: 4 },
       { label: "Girl Group Stats", to: "/wiki/groups", icon: UsersRound, phase: 4 },
       { label: "Career Stats", to: "/wiki/career", icon: ChartColumn, phase: 4 },
       { label: "Head to Head", to: "/wiki/h2h", icon: GitCompareArrows, phase: 4 },

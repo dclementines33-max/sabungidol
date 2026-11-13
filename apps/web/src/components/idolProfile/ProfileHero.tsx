@@ -1,36 +1,51 @@
-// Idol Profile hero (PRD §8; design/refs mood: one big photo, a huge capital headline, stat bubbles):
-// photo, group, NAME, rating and tier, league, nationality, age, and the button to compare in Head to Head.
+// Idol Profile hero (PRD §8; Update 2 ref "5 idol profile hero"): a dossier cover — an idol picker, the big torn photo,
+// the name huge with its outline behind, group / nationality / age, rating tier, current league, then the career record
+// as big numbers (W–D–L, win rate, titles, podiums, matches) and the Head to Head button.
 import type { IdolRow } from "@sabung/db";
 import { tierOf } from "@sabung/shared";
-import { IdolPhoto, RatingBadge, StatTile } from "@sabung/ui";
-import { Link } from "@tanstack/react-router";
+import { IdolPhoto, RatingBadge, SearchableIdolSelect } from "@sabung/ui";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { GitCompareArrows } from "lucide-react";
+import { useBranding } from "../../data/branding";
 
 const age = (birthday: string | null) => (birthday ? Math.floor((Date.now() - Date.parse(birthday)) / 31_557_600_000) : null);
+type CareerRecord = { titles: number; podiums: number; matches: number; wins: number; draws: number; losses: number; winRate: number };
 
-export function ProfileHero({ idol, league, titles, matches, winRate }: { idol: IdolRow; league?: string; titles: number; matches: number; winRate: number }) {
+export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; idolIds: string[]; league?: string; record: CareerRecord }) {
+  const navigate = useNavigate();
+  const { brand } = useBranding();
   const years = age(idol.birthday);
-  const facts = [league ? `Liga ${league}` : "Cadangan", idol.nationality, years !== null ? `${years} tahun` : null, idol.active ? null : "Nonaktif"].filter(Boolean);
+  const facts = [idol.groupName ?? "Soloist", idol.nationality, years !== null ? `${years} tahun` : null, idol.active ? null : "Nonaktif"].filter(Boolean);
+  const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Gelar", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("id-ID")]];
   return (
-    <section className="flex flex-col gap-6 sm:flex-row sm:items-end" aria-labelledby="idol-name">
-      <IdolPhoto idolId={idol.id} size={1024} className="w-48 shrink-0 sm:w-64" />
-      <div className="min-w-0 flex-1 space-y-4">
-        <div>
-          <p className="m-0 text-xs tracking-widest text-text-secondary uppercase">{idol.groupName ?? "Soloist"}</p>
-          <h2 id="idol-name" className="m-0 font-display text-2xl leading-none font-bold break-words uppercase sm:text-3xl">{idol.name}</h2>
+    <section aria-labelledby="idol-name" className="relative isolate space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <p className="kicker m-0 text-text-secondary">Player dossier / career archive</p>
+        <div className="w-full max-w-xs">
+          <SearchableIdolSelect key={idol.id} label="Cari idol" idolIds={idolIds} value={idol.id} onChange={(id) => id && navigate({ to: "/wiki/idols/$id", params: { id } })} />
         </div>
-        <p className="m-0 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
-          <RatingBadge rating={idol.rating} /> <span>Tier {tierOf(idol.rating)}</span>
-          {facts.map((f) => <span key={f}>· {f}</span>)}
-        </p>
-        <div className="grid max-w-xl grid-cols-3 gap-3">
-          <StatTile label="Gelar" value={titles} />
-          <StatTile label="Match" value={matches} />
-          <StatTile label="Win rate" value={`${Math.round(winRate * 100)}%`} />
+      </div>
+      <p aria-hidden="true" className="outline-text pointer-events-none absolute top-16 right-0 -z-10 m-0 max-w-full truncate font-display text-[clamp(4rem,13vw,10rem)] leading-none opacity-40">{idol.name}</p>
+      <div className="flex flex-col gap-8 md:flex-row md:items-end">
+        <IdolPhoto idolId={idol.id} size={1024} className="torn w-56 shrink-0 sm:w-72" />
+        <div className="min-w-0 flex-1 space-y-4">
+          <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Cadangan"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
+          <h2 id="idol-name" className="m-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words">{idol.name}</h2>
+          <p className="kicker m-0 text-text-secondary">{facts.join(" · ")}</p>
+          <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Rekor karier ${record.wins} menang, ${record.draws} seri, ${record.losses} kalah`}>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] text-cool">{record.wins}<small className="text-sm">M</small></span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)]">{record.draws}<small className="text-sm">S</small></span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] text-danger">{record.losses}<small className="text-sm">K</small></span>
+          </p>
+          <dl className="m-0 flex flex-wrap gap-x-8 gap-y-2">
+            {numbers.map(([label, value]) => (
+              <div key={label} className="border-l-2 border-accent-bright pl-3"><dt className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{label}</dt><dd className="m-0 font-display text-2xl">{value}</dd></div>
+            ))}
+          </dl>
+          <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 bg-surface-hover/60 px-3 py-2 text-xs font-bold uppercase hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <GitCompareArrows aria-hidden="true" size={16} /> Bandingkan (Head to Head)
+          </Link>
         </div>
-        <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 rounded-control bg-surface-hover/60 px-3 py-2 text-sm hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-          <GitCompareArrows aria-hidden="true" size={16} /> Bandingkan (Head to Head)
-        </Link>
       </div>
     </section>
   );
