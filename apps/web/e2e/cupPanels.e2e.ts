@@ -12,12 +12,16 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   await page.goto("/play");
   await page.getByRole("button", { name: "Mulai Season 1" }).click();
+  await page.getByRole("button", { name: "Main matchday 1 semua liga" }).click(); // U1: one matchday in every league
+  await expect(page.getByText(/^1\d\d match dimainkan$/)).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
-  await expect(page.getByText(/4\.940 match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
+  await expect(page.getByText(/4\.8\d\d match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
 
   await page.goto("/play/unzure");
-  await page.getByRole("button", { name: "Main ronde berikutnya" }).click();
-  await expect(page.getByText("8 match dimainkan")).toBeVisible({ timeout: 60_000 }); // Swiss group A, round 1 (rounds are per group)
+  await page.getByRole("button", { name: "Main Swiss R1" }).click();
+  await expect(page.getByText("32 match dimainkan")).toBeVisible({ timeout: 60_000 }); // round 1 in all 4 Swiss groups
+  await page.getByRole("button", { name: "Main sampai akhir Swiss" }).click();
+  await expect(page.getByRole("button", { name: "Main LCQ MD1" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByRole("region", { name: "Swiss grup A" })).toBeVisible(); // 4 Swiss groups
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Main sampai juara" }).click();
@@ -46,4 +50,6 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.getByRole("button", { name: "BSC" }).click();
   await page.getByRole("button", { name: "Main sampai selesai" }).click();
   await expect(page.getByText(/Juara B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Semua cup sampai selesai" }).click(); // U1: the other five B-Side cups at once
+  await expect(page.getByText(/^\d+ match dimainkan$/)).toBeVisible({ timeout: 60_000 });
 });

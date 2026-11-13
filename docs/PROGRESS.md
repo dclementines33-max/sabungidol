@@ -192,6 +192,19 @@ R2 ✅ Home, Sabung Idol, competition panels: `components/competition/Competitio
    with lines, no panels.
 R3 Wiki pages. R4 Studio pages. Then steps 9–11 in the new style (light theme dropped: the brief keeps it dark).
 
+### Update 2 plan (APPROVED 2026-11-13) — refs: design/NOTES.md "Update 2"; replaces R3, R4 stays after
+U1 ✅ Sim controls: PlayTarget `comps` takes an optional `round` ("R1" = every group's "A-R1"…; data/seasonRunner `allows` + test).
+   /play "Main matchday N semua liga"; Unzure "Main Swiss R1" (all groups) / "Main sampai akhir {fase}" / juara; B-Side
+   "Ronde X di semua cup" + "Semua cup sampai selesai". League panels already had matchday / end of league.
+U2 Brackets + stages: full bracket from the start (empty slots blank) for IDL playoff, UZC KO, Inkigayo (double elim),
+   B-Side, Nugu (fixtures until R16, bracket from R16); Swiss as a record-grid bracket; LCQ + UZC groups = standings beside
+   schedule with group tabs; Daesang + Music Bank grand and epic.
+U3 Home (drop next match + On Fire; random facts, totals, all-time leaders) + Dashboard (drop defending champ, most titles,
+   On Fire; tournament order/format map, D1 standings, D1 title race chart).
+U4 New page Season Progression (wiki): D1 title race + more charts.
+U5 Wiki: Girl group stats, Career stats per format, H2H tale of the tape, Idol profile with picker, Hall of Champions.
+U6 Polish pass on every page + R4 Studio.
+
 ## Architecture in one picture
 
 ```

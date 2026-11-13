@@ -12,7 +12,8 @@ export type PlayTarget =
   | { kind: "stage"; comp: string; stage: string }
   | { kind: "round"; comp: string; stage: string; round: string } // a matchday or a cup round
   | { kind: "ids"; ids: string[] } // single matches
-  | { kind: "comps"; comps: string[] }; // everything left in these competitions (a cup to its end)
+  | { kind: "comps"; comps: string[]; round?: string }; // everything left in these competitions (a cup to its end), or one round
+                                                       // of them; "R1" also means every group's "A-R1", "B-R1"…
 export type PlayProgress = { done: number; total: number };
 
 const CHUNK = 1000;
@@ -58,13 +59,13 @@ export async function seasonOverview(db: Db) {
   };
 }
 
-function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) => boolean {
+export function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) => boolean {
   switch (target.kind) {
     case "all": return () => true;
     case "stage": return (m) => m.comp === target.comp && m.stage === target.stage;
     case "round": return (m) => m.comp === target.comp && m.stage === target.stage && m.round === target.round;
     case "ids": { const ids = new Set(target.ids); return (m) => ids.has(m.id); }
-    case "comps": return (m) => target.comps.includes(m.comp);
+    case "comps": { const r = target.round; return (m) => target.comps.includes(m.comp) && (!r || m.round === r || m.round.endsWith(`-${r}`)); }
     case "phase": {
       if (frontier.some((m) => GALA.has(m.comp))) return (m) => GALA.has(m.comp); // the opener comes first
       if (frontier.some((m) => m.stage === "LG")) return (m) => m.stage === "LG";

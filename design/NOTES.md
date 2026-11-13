@@ -36,3 +36,16 @@ tokens, not copied.
 | `penjelasan untuk perubahan keseluru.txt` | **The brief (user, 2026-11-13)** | Applies to every page and component, now and later: experimental, unique and elegant layouts mixing Editorial, Swiss punk and Spatial/Immersive; **no outlines and no boxed frames** (if a block is needed, a fill without outline; plain lines are fine); current colours but used more freely, background stays dark, rich and grand; many visuals (photos, charts; ask the user for photos and say where they go); grunge/gothic elements, textures and extra ornaments; a clear, strong sans serif. |
 
 Decided by the brief: headlines and text use a strong sans serif (Fraunces goes).
+
+## Update 2 (user, 2026-11-13) — `design/refs/update-2/`
+Source: `Beberapa perubahan dan update.docx` (same folder). The pictures are references for **content**
+(which info and stats to show); layout and look follow the brief above (no outlined boxes, not grid-bound).
+| File | Shows |
+|---|---|
+| `1 bracket.png` | Full bracket drawn from the start (empty slots blank), round labels, connecting lines, winner row filled, seed/rating chip, score per row. For IDL playoff, UZC KO, Inkigayo, B-Side, Nugu from R16. |
+| `2 group stage.png` | Group tabs; standings (rank, idol + rating, P W D L, GF-GA, diff, pts, form) beside the group's match schedule with a play button. For LCQ and UZC groups. |
+| `3 girl group stats.png` | Per group: rank, titles count, members, matches, W/D/L, win rate, game diff, titles per competition; expandable member table (titles per comp, matches, W-D-L, win rate). |
+| `4 head to head.png` | Tale of the tape: two pickers, direct H2H W-D-L + bar + game score, rows: rating, titles, career win rate, matches, points, longest streak, last 5; top-10 rivalries below. |
+| `5 idol profile hero.png` | Profile with idol picker, big photo, group/country/seed, OVR tier, current division + rank, career W-D-L, win rate, titles, matches. |
+| `6 idol profile career.png` | Career scope tabs per competition (with match counts); win rate, matches, titles, podiums, game diff, avg points; summaries: scoring, competition distribution, streaks. |
+| `7 hall of champions.png` | Per season card: champion photo, group, final score, runner-up and 3rd. |

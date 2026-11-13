@@ -48,6 +48,10 @@ function SabungIdol() {
     );
   }
   if (!overview) return <p className="text-text-secondary">Membaca season…</p>;
+  // The earliest league matchday still open, played in every league that has it (the opener goes first).
+  const leagueNext = overview.pending.some((m) => m.comp === "DSG" || m.comp === "MBK") ? [] : overview.pending.filter((m) => m.stage === "LG");
+  const round = leagueNext.map((m) => m.round).sort()[0];
+  const matchday = round ? { round, comps: [...new Set(leagueNext.filter((m) => m.round === round).map((m) => m.comp))] } : null;
   return (
     <div className="space-y-8">
       <header className="relative isolate overflow-hidden rounded-card px-5 pt-6 pb-8 sm:px-10"
@@ -59,6 +63,7 @@ function SabungIdol() {
       </header>
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || overview.done} onClick={() => play({ kind: "all" })}><Play aria-hidden="true" size={16} strokeWidth={1.5} /> Simulate Whole Season</Button>
+        {matchday && <Button disabled={running} onClick={() => play({ kind: "comps", comps: matchday.comps, round: matchday.round })}><SkipForward aria-hidden="true" size={16} strokeWidth={1.5} /> Main matchday {Number(matchday.round.slice(2))} semua liga</Button>}
         <Button disabled={running || overview.done} onClick={() => play({ kind: "phase" })}><SkipForward aria-hidden="true" size={16} strokeWidth={1.5} /> Sampai fase berikutnya</Button>
         <Button disabled={!running} onClick={() => engine().pauseSeason()}><Pause aria-hidden="true" size={16} strokeWidth={1.5} /> Pause</Button>
         <span className="sr-only" aria-live="polite">{overview.played.toLocaleString("id-ID")} match dimainkan</span>

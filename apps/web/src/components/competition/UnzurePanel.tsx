@@ -15,6 +15,9 @@ import { Tabs } from "./Tabs";
 
 const LETTERS = "ABCDEFGHIJKLMNOP";
 const COMPS = ["SWS", "LCQ", "UZC"];
+const STAGE_NAME: Record<string, string> = { SW: "Swiss", LQ: "LCQ", GS: "fase grup", KO: "knockout", FN: "final" };
+// Swiss, LCQ and group rounds are named per group ("A-R1"): the next round is that round in every group.
+const roundOf = (c: { stage: string; round: string }) => (["SW", "LQ", "GS"].includes(c.stage) ? c.round.split("-").slice(1).join("-") : c.round);
 
 export function UnzurePanel() {
   const season = useCurrentSeason();
@@ -40,7 +43,8 @@ export function UnzurePanel() {
         hero={view.titles.UZC?.champion ?? null} heroRole="Juara"
         stats={[{ label: "Dimainkan", value: view.cells.filter((c) => c.score).length }, { label: "Menunggu", value: view.cells.filter((c) => !c.score).length }]} />
       <div className="flex flex-wrap items-center gap-3">
-        <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya</Button>
+        <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "comps", comps: [next!.comp], round: roundOf(next!) })}>Main {next ? `${STAGE_NAME[next.stage]} ${roundOf(next)}` : "ronde berikutnya"}</Button>
+        <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp: next!.comp, stage: next!.stage })}>Main sampai akhir {next ? STAGE_NAME[next.stage] : "fase"}</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: COMPS })}>Main sampai juara</Button>
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
         {view.cells.length === 0 && <span className="text-sm text-text-secondary">Swiss dimulai setelah fase liga selesai.</span>}

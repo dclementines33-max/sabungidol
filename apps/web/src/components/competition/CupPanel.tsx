@@ -33,8 +33,10 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
         color={comp.startsWith("BS") ? brand(`D1${comp[2]}`).color : undefined} logoId={comp.startsWith("BS") ? brand(`D1${comp[2]}`).logoId : undefined}
         hero={champion ?? null} heroRole="Juara" stats={[{ label: "Dimainkan", value: played }, { label: "Menunggu", value: view.cells.length - played }]} />
       <div className="flex flex-wrap items-center gap-3">
-        <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya</Button>
+        <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp: next!.comp, stage: next!.stage, round: next!.round })}>Main ronde berikutnya{next ? ` (${next.round})` : ""}</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: [comp] })}>Main sampai selesai</Button>
+        {codes.length > 1 && <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: codes, round: next!.round })}>Ronde {next?.round ?? "berikutnya"} di semua cup</Button>}
+        {codes.length > 1 && <Button disabled={running} onClick={() => play({ kind: "comps", comps: codes })}>Semua cup sampai selesai</Button>}
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
         {!next && view.cells.length === 0 && <span className="text-sm text-text-secondary">{comp === "DSG" || comp === "MBK" ? "Dimainkan sebagai pembuka season berikutnya, antara juara season ini." : "Menunggu fase sebelumnya selesai."}</span>}
       </div>
