@@ -74,8 +74,8 @@ test("Career Stats: Combined and per competition, columns, scope, CSV", async ()
 test("Head to Head: top rivalries open a pair, record and direct match log", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/h2h");
-  const first = page.getByRole("heading", { name: "Heated Rivalries" }).locator("..").getByRole("link", { name: /^\d+ match$/ }).first();
-  const meetings = Number((await first.textContent({ timeout: 60_000 }))!.split(" ")[0]);
+  const first = page.getByRole("heading", { name: "Heated Rivalries" }).locator("..").getByRole("link", { name: / \d+ match$/ }).first(); // Update 3: the whole row is the link
+  const meetings = Number(/(\d+) match$/.exec((await first.textContent({ timeout: 60_000 }))!)![1]);
   await first.click();
   await expect(page).toHaveURL(/a=.+&b=.+/);
   await expect(page.getByRole("combobox", { name: "Idol pertama" })).not.toHaveValue("");
@@ -179,6 +179,12 @@ test("Girl Group Stats: table and a group's members", async () => {
   await page.goBack();
   await page.getByRole("heading", { level: 2 }).getByRole("button").first().click();
   await expect(page.getByRole("table", { name: `Performa member ${name}` })).toBeVisible(); // Update 2: member table
+  expect(await axe(page)).toEqual([]);
+  await page.getByRole("tab", { name: "Semua grup" }).click(); // Update 3: every group + add a new one
+  await page.getByLabel("Nama grup baru").fill("Grup Uji Baru");
+  await page.getByRole("button", { name: "Tambah grup" }).click();
+  await page.getByRole("list", { name: "Semua girl group" }).getByRole("link", { name: /Grup Uji Baru/ }).click();
+  await expect(page.getByText("Belum ada member.", { exact: false })).toBeVisible();
   expect(await axe(page)).toEqual([]);
 });
 

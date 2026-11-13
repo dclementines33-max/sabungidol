@@ -2,7 +2,7 @@
 // The page talks to it through Comlink (engineClient.ts).
 import {
   type MatchFilter, type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
-  listGroups, listIdols,
+  addGroup, listGroups, listIdols,
   deletePhoto, logEvent, openDb, setGroupLogo, setPhotoFocal, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engine";
@@ -62,6 +62,7 @@ const api = {
   listIdols: async () => listIdols(await open()),
   listGroups: async () => listGroups(await open()),
   setGroupLogo: async (groupId: string, logoId: string | null) => setGroupLogo(await open(), groupId, logoId),
+  addGroup: async (name: string) => addGroup(await open(), name),
   setPhotoFocal: async (photoId: string, x: number, y: number) => setPhotoFocal(await open(), photoId, x, y),
   // Final predictions (PRD §16).
   predict: async (matchId: string, pick: string) => predict(await open(), matchId, pick),

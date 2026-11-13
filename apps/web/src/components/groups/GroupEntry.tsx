@@ -1,17 +1,18 @@
 // One girl group in the ranked list (Update 2 ref "3 girl group stats"): blackletter rank, name, titles and record,
-// titles per competition as chips, the members' photos; opened, a member table with titles per competition.
+// titles per competition as chips, the group logo (Update 3), the members' photos; opened, a member table with titles per competition.
 import type { CareerRow } from "@sabung/engine";
 import { SEASON_COMPETITIONS } from "@sabung/shared";
 import { IdolPhoto } from "@sabung/ui";
 import { Link } from "@tanstack/react-router";
+import { CompetitionLogo } from "../CompetitionLogo";
 import { IdolLink } from "../wiki/IdolLink";
 import type { GroupStat, TitleLine } from "./groupStats";
 
 const NAME = Object.fromEntries(SEASON_COMPETITIONS.map((c) => [c.key, c.name]));
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
-export function GroupEntry({ rank, g, open, onToggle, career, titles }: {
-  rank: number; g: GroupStat; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[];
+export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: {
+  rank: number; g: GroupStat; logoId?: string | null; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[];
 }) {
   const comps = Object.keys(g.byComp);
   const numbers: [string, string, string][] = [["Menang", String(g.wins), "text-cool"], ["Seri", String(g.draws), ""], ["Kalah", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Selisih", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""]];
@@ -19,6 +20,7 @@ export function GroupEntry({ rank, g, open, onToggle, career, titles }: {
     <li className={`relative border-t border-border/60 py-6 ${rank <= 3 ? "pl-0" : "sm:pl-16"}`}>
       <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
         <span aria-hidden="true" className={`font-gothic leading-none text-accent-bright ${rank <= 3 ? "text-7xl" : "text-4xl opacity-70"}`}>{rank}</span>
+        <CompetitionLogo logoId={logoId} className={rank <= 3 ? "size-16" : "size-10"} />
         <div className="min-w-0 flex-1">
           <h2 className="m-0 text-[clamp(1.5rem,3.5vw,2.5rem)]">
             <button type="button" aria-expanded={open} onClick={onToggle} className="text-left hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g.name}</button>

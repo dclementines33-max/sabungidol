@@ -243,8 +243,11 @@ V3 ✅ tokens.css .photo-frame (crimson→gold passe-partout) replaces .torn eve
    chapter 03 = Bump codes={["IDL"]} (Bump takes codes); engine seasonScores + seasonTop → honours podium = season top 3
    (seasonOverview / archive .seasonTop, uzcThird gone); components/TierStrip (Rating Manager + Idol Database);
    ratingManager/RatingCards + RatingCard (slider commits on release, number field, ±5, quick values, record, titles).
-V4 Panels: Girl Groups as a panel (all groups + add a group; logo missing in group stats), H2H rival area clickable,
-   partial backup download (idols, ratings, groups, branding, rosters).
+V4 ✅ /wiki/groups = Tabs "Peringkat" (GroupEntry now shows the group logo) + "Semua grup" (groups/AllGroups: every group,
+   logo, members, link; form "Tambah grup" with optional logo → db addGroup (+test) / worker addGroup). /wiki/group/$id
+   works for a group without members. H2H TopRivalries: the whole row is one link. Backup section "base" (shared
+   SECTION_LABELS, db SECTION_TABLES): groups, photos, idols, + the current season's seasons/competitions/entries, no
+   matches (+test). Replace with it on a database that has matches fails and rolls back (FKs, same as the Idol section).
 V5 Engine: every Simulate = new roll (PRD §5.4 re-roll salt), small tweak, Nugu/B-Side upsets (fatigue), new rating
    progression (harder growth when high, faster when low; W-D-L, titles, upsets) with prestige order UZC > IDL > D1 >
    INK ("Crown Cup" = Inkigayo, user 2026-11-14) > NUG > BS > DSG > MBK > D2.

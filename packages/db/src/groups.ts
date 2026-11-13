@@ -26,3 +26,10 @@ export async function ensureGroups(db: Db | Tx, names: string[]): Promise<Map<st
 export async function setGroupLogo(db: Db | Tx, id: string, logoId: string | null) {
   await db.update(groups).set({ logoId }).where(eq(groups.id, id));
 }
+
+// A new girl group by name (Update 3: Girl Groups panel); an existing name (any case) gives the existing group.
+export async function addGroup(db: Db | Tx, name: string): Promise<string> {
+  const trimmed = name.trim();
+  if (!trimmed) throw new Error("Nama grup kosong");
+  return (await ensureGroups(db, [trimmed])).get(trimmed.toLowerCase())!;
+}

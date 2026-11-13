@@ -25,7 +25,7 @@ export function BackupSettings({ seasonId }: { seasonId: string }) {
   const { data: snapshots = [], refetch } = useQuery({ queryKey: ["snapshots"], queryFn: () => engine().listSnapshots() });
 
   const exportNow = async () => {
-    const { bytes, name } = await engine().exportBackup(section, section === "season" ? seasonId : undefined);
+    const { bytes, name } = await engine().exportBackup(section, section === "season" || section === "base" ? seasonId : undefined);
     download(bytes, name);
     notify({ level: "success", message: `Backup ${SECTION_LABELS[section]} diunduh` }, { log: false }); // the Worker logged it
   };

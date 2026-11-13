@@ -26,32 +26,37 @@ function GroupPage() {
   const stats = useMemo(() => groupStats(idols, combined ?? [], titles), [idols, combined, titles]);
   const career = useMemo(() => new Map((combined ?? []).map((r) => [r.idolId, r])), [combined]);
   const g = stats.find((x) => x.id === id);
-  const logoId = groups.find((x) => x.id === id)?.logoId;
+  const base = groups.find((x) => x.id === id); // Update 3: a new group has a page before it has members
+  const logoId = base?.logoId;
+  const name = g?.name ?? base?.name ?? "";
   if (!combined) return <p className="text-text-secondary">Menghitung statistik…</p>;
-  if (!g) return <p className="text-text-secondary">Grup tidak ditemukan. <Link to="/wiki/groups" className="text-accent-bright underline">Kembali ke Girl Group Stats</Link></p>;
+  if (!g && !base) return <p className="text-text-secondary">Grup tidak ditemukan. <Link to="/wiki/groups" className="text-accent-bright underline">Kembali ke Girl Group Stats</Link></p>;
   const upload = async (file: File) => {
     await engine().setGroupLogo(id, await engine().savePhoto(file));
     await queryClient.invalidateQueries({ queryKey: ["groups"] });
-    notify({ level: "success", message: `Logo ${g.name} disimpan` });
+    notify({ level: "success", message: `Logo ${name} disimpan` });
   };
   return (
     <div className="space-y-10">
       <header className="relative isolate flex flex-wrap items-end gap-6">
-        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-0 -z-10 m-0 font-display text-[clamp(4rem,14vw,10rem)] leading-none whitespace-nowrap opacity-40">{g.name}</p>
+        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-0 -z-10 m-0 font-display text-[clamp(4rem,14vw,10rem)] leading-none whitespace-nowrap opacity-40">{name}</p>
         <CompetitionLogo logoId={logoId} className="size-28" />
         <div>
-          <p className="m-0"><span className="tag">Girl group #{stats.indexOf(g) + 1}</span></p>
-          <h2 className="m-0 mt-3 text-[clamp(2.5rem,8vw,6rem)] leading-none">{g.name}</h2>
+          <p className="m-0"><span className="tag">{g ? `Girl group #${stats.indexOf(g) + 1}` : "Girl group baru"}</span></p>
+          <h2 className="m-0 mt-3 text-[clamp(2.5rem,8vw,6rem)] leading-none">{name}</h2>
           <div className="mt-3 flex gap-2">
             <Button onClick={() => picker.current?.click()}>{logoId ? "Ganti logo" : "Unggah logo"}</Button>
-            <input ref={picker} type="file" accept="image/*" hidden aria-label={`Logo ${g.name}`} onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); e.target.value = ""; }} />
+            <input ref={picker} type="file" accept="image/*" hidden aria-label={`Logo ${name}`} onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); e.target.value = ""; }} />
           </div>
         </div>
       </header>
-      <ul className="m-0 flex list-none flex-wrap gap-4 p-0" aria-label={`Kartu member ${g.name}`}>
-        {g.members.map((m) => <li key={m}><Link to="/wiki/idols/$id" params={{ id: m }} className="block focus-visible:outline-2 focus-visible:outline-accent-bright"><IdolCard idolId={m} /></Link></li>)}
-      </ul>
-      <ol className="m-0 list-none p-0"><GroupEntry rank={stats.indexOf(g) + 1} g={g} open onToggle={() => {}} career={career} titles={titles} /></ol>
+      {!g && <p className="m-0 text-text-secondary">Belum ada member. Tambahkan idol lewat Input Data dengan nama grup ini.</p>}
+      {g && <>
+        <ul className="m-0 flex list-none flex-wrap gap-4 p-0" aria-label={`Kartu member ${g.name}`}>
+          {g.members.map((m) => <li key={m}><Link to="/wiki/idols/$id" params={{ id: m }} className="block focus-visible:outline-2 focus-visible:outline-accent-bright"><IdolCard idolId={m} /></Link></li>)}
+        </ul>
+        <ol className="m-0 list-none p-0"><GroupEntry rank={stats.indexOf(g) + 1} g={g} logoId={logoId} open onToggle={() => {}} career={career} titles={titles} /></ol>
+      </>}
     </div>
   );
 }

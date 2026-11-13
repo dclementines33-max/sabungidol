@@ -18,12 +18,13 @@ export const SECTION_TABLES: Record<BackupSection, TableName[]> = {
   roster: ["seasons", "competitions", "entries"],
   season: ["seasons", "competitions", "entries", "matches", "placements", "rating_history", "achievements"],
   rating: ["idols", "rating_history"],
+  base: ["groups", "photos", "idols", "seasons", "competitions", "entries"], // one season: its branding + rosters, no matches
   full: [...TABLE_ORDER],
 };
 
 
 export async function readBackupTables(db: Db, section: BackupSection, seasonId?: string): Promise<BackupTables> {
-  const one = section === "season" && seasonId;
+  const one = (section === "season" || section === "base") && seasonId;
   const read: Record<TableName, () => Promise<Record<string, unknown>[]>> = {
     groups: () => db.select().from(groups).orderBy(asc(groups.id)),
     photos: () => db.select().from(photos).orderBy(asc(photos.id)),

@@ -49,6 +49,15 @@ describe("backup (PRD §12.3)", () => {
     expect(await leagueRosters(b, "S01")).toEqual({ D1A: [m, y] });
   });
 
+  it("the base section (Update 3) holds idols, groups, ratings and one season's rosters, but no match; Merge restores it", async () => {
+    const base = asFile(await readBackupTables(a, "base", "S01"));
+    expect(Object.keys(base).sort()).toEqual(["competitions", "entries", "groups", "idol_keys", "idols", "photos", "seasons"]);
+    await importBackup(b, base, "merge", false);
+    expect((await listIdols(b)).map((i) => `${i.name}:${i.rating}`)).toEqual(["Mina:92", "Yuna:84"]);
+    expect(Object.values(await leagueRosters(b, "S01"))[0]).toHaveLength(2);
+    expect(await readBackupTables(b, "full").then((t) => t.matches)).toEqual([]);
+  });
+
   it("the Rating section applies ratings by name + group and reports unknown idols", async () => {
     await addIdols(b, [idol("Mina", "Aurora", 70)]);
     const result = await importBackup(b, asFile(await readBackupTables(a, "rating")), "merge", false);
