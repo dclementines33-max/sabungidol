@@ -17,7 +17,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 1 Design system & shell | done, gate passed |
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
-| **Fase 4 Wiki** | **in progress: steps 1–11 done, next step 12 (Dashboard + Home)** |
+| **Fase 4 Wiki** | **in progress: steps 1–12 done, next step 13 (gate)** |
 | Fase 5 Backend | not started |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
@@ -109,8 +109,11 @@ User rule (2026-11-13): anything complicated or hard to integrate (esp. cross-br
    sweeps, top-3 streaks, Idol of the Month per MD 1–10/11–20/21–30/31–38 by league wins; components/story/StoryCard
    templates; links → the pair's H2H) + Girl Group Stats `/wiki/groups` (components/groups/groupStats; click a group →
    member grid). Not built: "records broken" and "dramatic promotion" stories, group logo / own group route.
-12. Dashboard (fixed card grid) + Home cinematic (hero = last Unzure champion, 3 action cards, On This Day =
-   same matchday in earlier seasons, On Fire, last backup).
+12. ✅ Dashboard `/dashboard` (fixed card grid: components/dashboard DashboardCard, CompetitionProgress, RatingHistogram;
+   reuses groupStats) + Home cinematic `/` (components/home HomeHero = last Unzure champion, HomeActions = continue %,
+   next match, latest story card; OnThisDay = same matchday LG round in earlier seasons, biggest upsets first; On Fire =
+   current win streak ≥ 5; last backup line). Worker data/overviewWorker.ts; db MatchFilter got `round`. Welcome stays
+   only for Season 1 draft. Not built: "records just broken" card, form table (On Fire instead), carousel animation.
 13. GATE: 20 synthetic seasons → Rebuild Stats identical to cache; pages stay fast on that data.
 
 Deferred on purpose: Home cinematic, Rebuild Stats, achievements, stats pages → Fase 4 (PRD §15).

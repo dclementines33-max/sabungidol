@@ -5,7 +5,7 @@ import { and, asc, desc, eq, gt, inArray, lt, or, sql } from "drizzle-orm";
 import type { Db } from "./openDb";
 import { matches } from "./schema";
 
-export type MatchFilter = { seasonId?: string; comps?: string[]; stage?: string; idolId?: string; vsId?: string; result?: "W" | "D" | "L" };
+export type MatchFilter = { seasonId?: string; comps?: string[]; stage?: string; round?: string; idolId?: string; vsId?: string; result?: "W" | "D" | "L" };
 export type MatchRow = { id: string; seasonId: string; comp: string; stage: string; round: string; idolA: string; idolB: string; scoreA: number; scoreB: number; result: string; ratingA: number; ratingB: number };
 
 function where(f: MatchFilter) {
@@ -17,6 +17,7 @@ function where(f: MatchFilter) {
     f.seasonId ? eq(m.seasonId, f.seasonId) : undefined,
     f.comps?.length ? inArray(m.comp, f.comps) : undefined,
     f.stage ? eq(m.stage, f.stage) : undefined,
+    f.round ? eq(m.round, f.round) : undefined,
     f.idolId ? has(f.idolId) : undefined,
     f.vsId ? has(f.vsId) : undefined,
     f.result === "D" ? eq(m.result, "D") : undefined,

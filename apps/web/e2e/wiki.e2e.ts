@@ -158,3 +158,26 @@ test("Girl Group Stats: table and a group's members", async () => {
   expect(await page.getByRole("list", { name: `Member ${name}` }).getByRole("listitem").count()).toBeGreaterThan(0);
   expect(await axe(page)).toEqual([]);
 });
+
+test("Dashboard: fixed cards with the season's data", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/dashboard");
+  await expect(page.getByRole("region", { name: "Data" }).locator("dl").first()).toContainText("5.590", { timeout: 60_000 });
+  await expect(page.getByRole("region", { name: "Progress kompetisi" })).toContainText("Selesai");
+  await expect(page.getByRole("region", { name: "Juara bertahan" }).getByRole("listitem").first()).toBeVisible();
+  await expect(page.getByRole("region", { name: "Top 5 rating" }).getByRole("listitem")).toHaveCount(5);
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/dashboard.png", fullPage: true });
+});
+
+test("Home: hero with the Unzure champion, action cards, backup line", async () => {
+  test.setTimeout(120_000);
+  await page.goto("/");
+  await expect(page.getByText(/^Juara Unzure Cup · Season 1$/)).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("Lanjutkan season")).toBeVisible();
+  await expect(page.getByText("100%")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "On This Day" })).toBeVisible();
+  await expect(page.getByText(/Belum pernah backup\.|Backup terakhir \d+ hari lalu\./)).toBeVisible();
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/home-cinematic.png", fullPage: true });
+});
