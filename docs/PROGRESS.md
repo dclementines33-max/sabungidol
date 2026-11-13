@@ -18,7 +18,7 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 2 Studio | done, gate passed (240 idols + photos in 30.5 s; backup → restore elsewhere = identical checksums) |
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
 | Fase 4 Wiki | done, gate passed, approved 2026-11-13 |
-| **Fase 5 Backend** | **done, gate passed 2026-11-13 (local + online) — waiting for the user's approval** |
+| Fase 5 Backend | done, gate passed, approved 2026-11-13 — all PRD §15 phases done |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
 
