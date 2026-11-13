@@ -159,16 +159,16 @@ Perennial Podium = 100 (already in code). NOT wanted: seeded seasons, undo match
 work, any speed fix that makes the app or database heavier (so no memfs2opfs = whole db in memory).
 A big layout/theme redesign of almost every page comes AFTER this plan, from user references.
 1. ✅ Branding per D1 league: Settings rows D1A–D1F + the other cups (no D1/D2 rows); `components/play/competitionLinks` brandOf/labelOf (D2X = D1X logo/colour, "{name} · Divisi 2"), `data/branding.ts` useBranding = every screen that names a competition, `components/CompetitionLogo`; league tabs + heading show logo/name; createDraftSeason copies the last season's branding.
-2. Roster cards show league logo/name/colour; all roster errors in ONE panel outside the popup.
-3. Click the match area itself (no "Main" buttons) in fixtures, brackets, groups.
-4. MatchModal: preset scores (every valid BoN score), Manual = set the score directly (+/−), more content
+2. ✅ Roster cards (logo/name/colour) + `components/settings/rosterProblems` = every problem of the 12 leagues in ONE list outside the popup (size, twice, in two leagues, inactive). LeagueRosterModal got `title`/`logo` props.
+3. ✅ `components/competition/MatchRow` (an open match IS the button, name "Main A vs B") + `MatchList` (rounds) in league fixtures and under every Swiss group, LCQ group and Unzure group table; brackets were already clickable.
+4. ✅ MatchModal: preset scores (every valid BoN score), Manual = set the score directly (+/−), more content
    (big photos, rating + win chance, H2H, last-5 form, season record). Direct scores: games alternate, winner
    takes the last game (no fake reverse sweep).
-5. Wheel picker: physical wheel, 12–16 alternating segments, ticking pointer, ease-out; Spin all = one spin per
+5. ✅ Wheel picker: physical wheel, 12–16 alternating segments, ticking pointer, ease-out; Spin all = one spin per
    game with a pause (Bo3 ≤ 3, Bo5 ≤ 5…).
-6. Every match playable one by one: IDL LG/UB/LB/FN, SWS, LCQ, UZC groups + KO, INK, NUG, B-Side, DSG, MBK.
-7. Daesang + Music Bank move to the season opener.
-8. Small bugs: Settings 375 px overflow, Gala notices with ids, reserve space for the storage warning.
+6. ✅ (with step 3) Every match playable one by one: IDL LG/UB/LB/FN, SWS, LCQ, UZC groups + KO, INK, NUG, B-Side, DSG, MBK.
+7. ✅ Daesang + Music Bank = opener: engine `season/gala.ts` openerPairs (at Start New Season → `config.opener`, zod `Opener`) + playOpener before the league phase (pending opener never holds up the leagues; done needs it). Season 1: status "none" (not a close blocker). Season 1 = 5,583 matches, later 5,590. "Sampai fase berikutnya" plays the opener first.
+8. ✅ Small bugs: Engine Tuning table scrolls, notices show names (`withNames` in usePlaySeason), clash notice in Indonesian. NOT done: floating the storage warning (it covered buttons; CLS 0.083 is already "good").
 9. Skipped features: archive brackets/Swiss/groups, Career Stats season range, group logo + group page, edit
    buttons on profile, "records broken" + "dramatic promotion" stories, photo focal point.
 10. PRD §16: Season Recap card 1080×1350, Rivalry label, light theme, final predictions, retirement & debut,
