@@ -7,7 +7,7 @@ import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./Button";
 import { LiveMatchVisualizer } from "./LiveMatchVisualizer";
-import { type HeadToHead, MatchHeader } from "./MatchHeader";
+import { type HeadToHead, MatchHeader, type MatchTheme } from "./MatchHeader";
 import { Modal } from "./Modal";
 import { WheelPicker } from "./WheelPicker";
 import { useIdol } from "./idolSource";
@@ -38,7 +38,7 @@ function Stepper({ name, value, max, onChange }: { name: string; value: number; 
   );
 }
 
-export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], simulate, random, onAccept }: {
+export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], simulate, random, onAccept, theme }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string; // e.g. "Unzure Cup · R32 · Match 4"
@@ -50,6 +50,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   simulate: () => Side[]; // the engine's games for this match
   random?: () => number; // wheel randomness (tests)
   onAccept: (result: AcceptedResult) => void;
+  theme?: MatchTheme; // the competition's colour and name, grand final look (Update 3)
 }) {
   const a = useIdol(idolA);
   const b = useIdol(idolB);
@@ -87,7 +88,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
         </>
       }
     >
-      <MatchHeader idolA={idolA} idolB={idolB} bestOf={bestOf} h2h={h2h} />
+      <MatchHeader idolA={idolA} idolB={idolB} bestOf={bestOf} h2h={h2h} theme={theme} />
       {facts.length > 0 && (
         <table className="mt-4 w-full text-sm tabular-nums">
           <tbody>
@@ -112,8 +113,8 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
 
       <div className="mt-4">
         {mode === "sim" && (games.length === 0
-          ? <Button variant="primary" onClick={() => setGames(simulate())}>Simulate</Button>
-          : <LiveMatchVisualizer games={games} nameA={a.name} nameB={b.name} />)}
+          ? <div className="flex justify-center"><Button variant="primary" className="px-10 py-3 text-base" onClick={() => setGames(simulate())}>Simulate</Button></div>
+          : <LiveMatchVisualizer games={games} nameA={a.name} nameB={b.name} target={seriesTarget(bestOf)} />)}
 
         {mode === "preset" && (
           <div role="group" aria-label="Preset skor" className="flex flex-wrap justify-center gap-2">

@@ -1,5 +1,6 @@
-// Replays a series game by game (PRD §9): a dominance bar moves, game scores appear in order,
-// comebacks are highlighted. Skippable; with prefers-reduced-motion it shows the final score at once.
+// Replays a series game by game (PRD §9; Update 3): each game is a short tug of war before its winner shows,
+// the score grows, "Match point" when one more game decides it. The number of games is never shown before
+// the end, so the final score stays a surprise. Skippable; with prefers-reduced-motion it ends at once.
 import type { Side } from "@sabung/engine";
 import { useEffect, useState } from "react";
 import { Button } from "./Button";
@@ -20,10 +21,11 @@ export function isComeback(games: Side[]): boolean {
   });
 }
 
-export function LiveMatchVisualizer({ games, nameA, nameB, stepMs = 700, onDone }: {
+export function LiveMatchVisualizer({ games, nameA, nameB, target, stepMs = 1400, onDone }: {
   games: Side[];
   nameA: string;
   nameB: string;
+  target?: number; // games needed to win (Bo5 = 3): enables "Match point"
   stepMs?: number;
   onDone?: () => void;
 }) {
@@ -43,29 +45,39 @@ export function LiveMatchVisualizer({ games, nameA, nameB, stepMs = 700, onDone 
   const scoreA = played.filter((g) => g === "A").length;
   const scoreB = played.length - scoreA;
   const shareA = played.length ? scoreA / played.length : 0.5;
+  const matchPoint = !done && !!target && (scoreA === target - 1 || scoreB === target - 1);
+  const winner = done ? (scoreA > scoreB ? nameA : scoreB > scoreA ? nameB : null) : null;
 
   return (
-    <div>
-      <div className="flex items-baseline justify-between font-mono text-2xl tabular-nums" aria-live="polite">
-        <span><span className="sr-only">{nameA} </span>{scoreA}</span>
-        <span className="text-sm text-text-secondary">Game {Math.min(shown, games.length)} / {games.length}</span>
-        <span><span className="sr-only">{nameB} </span>{scoreB}</span>
+    <div className="relative">
+      <style>{"@keyframes tug{0%,100%{transform:translateX(-18%)}25%{transform:translateX(14%)}50%{transform:translateX(-8%)}75%{transform:translateX(22%)}}@keyframes pop{0%{transform:scale(1.6);opacity:0}100%{transform:scale(1);opacity:1}}"}</style>
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4" aria-live="polite">
+        <span className="truncate text-right font-display text-lg text-accent-bright">{nameA}</span>
+        <span className="flex items-baseline gap-3 font-display text-6xl leading-none tabular-nums">
+          <span key={`a${scoreA}`} className="animate-[pop_400ms_ease-out]"><span className="sr-only">{nameA} </span>{scoreA}</span>
+          <span className="text-2xl text-text-secondary">–</span>
+          <span key={`b${scoreB}`} className="animate-[pop_400ms_ease-out]"><span className="sr-only">{nameB} </span>{scoreB}</span>
+        </span>
+        <span className="truncate font-display text-lg text-cool">{nameB}</span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-cool" aria-hidden="true">
-        <div
-          className="h-full origin-left bg-accent-bright transition-transform duration-[var(--duration-slow)] ease-spring"
-          style={{ transform: `scaleX(${shareA})` }}
-        />
+      <p className="m-0 mt-2 text-center text-xs font-bold tracking-[0.3em] text-text-secondary uppercase">
+        {done ? "Selesai" : `Game ${shown + 1} berlangsung`}
+        {matchPoint && <span className="ml-2 bg-accent px-2 py-0.5 tracking-widest text-on-accent">Match point</span>}
+      </p>
+      <div className="relative mt-3 h-3 overflow-hidden bg-cool" aria-hidden="true">
+        <div className="h-full origin-left bg-accent-bright transition-transform duration-[var(--duration-slow)] ease-spring" style={{ transform: `scaleX(${shareA})` }} />
+        {!done && <span className="absolute inset-y-0 left-1/2 w-1 bg-text-primary shadow-[0_0_12px_var(--color-text-primary)] animate-[tug_900ms_ease-in-out_infinite]" />}
       </div>
-      <ol className="m-0 mt-3 flex list-none flex-wrap gap-2 p-0" aria-label="Pemenang tiap game">
+      <ol className="m-0 mt-3 flex list-none flex-wrap justify-center gap-2 p-0" aria-label="Pemenang tiap game">
         {played.map((g, i) => (
-          <li key={i} className={`${g === "A" ? "text-accent-bright" : "text-cool"} rounded-control bg-surface-hover/60 px-2 py-0.5 text-xs`}>
+          <li key={i} className={`${g === "A" ? "bg-accent/60" : "bg-surface-hover"} animate-[pop_300ms_ease-out] px-2 py-0.5 text-xs`}>
             G{i + 1} · {g === "A" ? nameA : nameB}
           </li>
         ))}
       </ol>
-      <div className="mt-3 flex items-center gap-2">
-        {done && isComeback(games) && <span className="rounded-control bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">Comeback!</span>}
+      <div className="mt-3 flex min-h-8 items-center justify-center gap-2">
+        {done && <span className="font-display text-xl uppercase">{winner ? `${winner} menang` : "Seri"}</span>}
+        {done && isComeback(games) && <span className="bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">Comeback!</span>}
         {!done && <Button className="px-2 py-1" onClick={() => setShown(games.length)}>Lewati</Button>}
       </div>
     </div>

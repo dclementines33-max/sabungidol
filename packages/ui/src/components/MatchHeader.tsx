@@ -1,22 +1,27 @@
-// Top of the match screen (PRD §9): two big photos VS, name, group, rating, form,
-// chance to win (engine, before variance) and a short head-to-head.
+// Top of the match screen (PRD §9; Update 3): a stage in the competition's own colour — big tilted photos,
+// a giant faded competition word behind them, a blackletter VS, name, group, rating, form, chance to win
+// (engine, before variance) and a short head-to-head. A grand final gets gold, a trophy and more light.
 import { getForm, seriesOdds } from "@sabung/engine";
 import type { BestOf } from "@sabung/shared";
+import { Trophy } from "lucide-react";
 import { FormBadge } from "./FormBadge";
 import { IdolPhoto } from "./IdolPhoto";
 import { RatingBadge } from "./RatingBadge";
 import { useIdol } from "./idolSource";
 
 export type HeadToHead = { winsA: number; draws: number; winsB: number };
+export type MatchTheme = { accent?: string; kicker?: string; grandFinal?: boolean }; // accent = a colour token name, e.g. "brand-violet"
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
-function Side({ idolId, align }: { idolId: string; align: "left" | "right" }) {
+function Side({ idolId, align, glow }: { idolId: string; align: "left" | "right"; glow: string }) {
   const idol = useIdol(idolId);
   return (
-    <div className={`flex flex-col gap-1 ${align === "right" ? "items-end text-right" : "items-start"}`}>
-      <IdolPhoto idolId={idolId} size={1024} className="w-24 sm:w-32" />
-      <p className="m-0 mt-1 font-display text-lg">{idol.name}</p>
-      <p className="m-0 text-sm text-text-secondary">{idol.groupName ?? "Soloist"}</p>
+    <div className={`relative z-[1] flex min-w-0 flex-col gap-1 ${align === "right" ? "items-end text-right" : "items-start"}`}>
+      <div className={`${align === "left" ? "-rotate-2" : "rotate-2"} shadow-[0_24px_50px_-18px_var(--glow)]`} style={{ "--glow": glow } as React.CSSProperties}>
+        <IdolPhoto idolId={idolId} size={1024} className="w-28 sm:w-40" />
+      </div>
+      <p className="m-0 mt-2 max-w-full truncate font-display text-xl uppercase sm:text-2xl">{idol.name}</p>
+      <p className="m-0 text-xs font-bold tracking-[0.2em] text-text-secondary uppercase">{idol.groupName ?? "Soloist"}</p>
       <div className="flex flex-wrap gap-1">
         <RatingBadge rating={idol.rating} />
         {idol.form && <FormBadge form={idol.form} recent={idol.recent} />}
@@ -25,25 +30,39 @@ function Side({ idolId, align }: { idolId: string; align: "left" | "right" }) {
   );
 }
 
-export function MatchHeader({ idolA, idolB, bestOf, h2h }: { idolA: string; idolB: string; bestOf: BestOf; h2h?: HeadToHead }) {
+export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: string; idolB: string; bestOf: BestOf; h2h?: HeadToHead; theme?: MatchTheme }) {
   const a = useIdol(idolA);
   const b = useIdol(idolB);
   const odds = seriesOdds(a.rating + getForm(a.recent ?? []).modifier, b.rating + getForm(b.recent ?? []).modifier, bestOf);
+  const color = `var(--color-${theme.grandFinal ? "brand-gold" : (theme.accent ?? "accent-bright")})`;
   return (
     <div>
-      <div className="flex items-start justify-between gap-2">
-        <Side idolId={idolA} align="left" />
-        <div className="mt-12 text-center">
-          <p className="m-0 font-display text-2xl">VS</p>
-          <p className="m-0 font-mono text-xs text-text-secondary">Bo{bestOf}</p>
+      <div className="relative -mx-6 overflow-hidden px-6 py-5"
+        style={{ background: `radial-gradient(30rem 14rem at 50% 0%, color-mix(in oklab, ${color} 28%, transparent), transparent 70%), radial-gradient(18rem 12rem at 0% 100%, rgb(255 77 99 / 0.14), transparent 70%), radial-gradient(18rem 12rem at 100% 100%, rgb(185 211 226 / 0.1), transparent 70%)` }}>
+        {theme.kicker && (
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-gothic text-[clamp(4rem,14vw,8rem)] leading-none whitespace-nowrap opacity-[0.07]" style={{ color }}>
+            {theme.kicker}
+          </span>
+        )}
+        {theme.grandFinal && (
+          <p className="relative z-[1] m-0 mb-3 flex items-center justify-center gap-2 text-xs font-extrabold tracking-[0.4em] uppercase" style={{ color }}>
+            <Trophy aria-hidden="true" size={16} /> Grand final <Trophy aria-hidden="true" size={16} />
+          </p>
+        )}
+        <div className="flex items-start justify-between gap-2">
+          <Side idolId={idolA} align="left" glow="var(--color-accent-bright)" />
+          <div className="relative z-[1] mt-10 shrink-0 text-center">
+            <p className="m-0 font-gothic text-5xl leading-none sm:text-6xl" style={{ color, textShadow: `0 0 28px ${color}` }}>VS</p>
+            <p className="m-0 mt-1 font-mono text-xs text-text-secondary">Bo{bestOf}</p>
+          </div>
+          <Side idolId={idolB} align="right" glow="var(--color-cool)" />
         </div>
-        <Side idolId={idolB} align="right" />
       </div>
       <div className="mt-4">
         <p className="sr-only">
           Peluang menang: {a.name} {pct(odds.A)}{bestOf === 4 ? `, seri ${pct(odds.D)}` : ""}, {b.name} {pct(odds.B)}
         </p>
-        <div aria-hidden="true" className="flex h-2 overflow-hidden rounded-full">
+        <div aria-hidden="true" className="flex h-2 overflow-hidden">
           <div className="bg-accent-bright" style={{ width: pct(odds.A) }} />
           <div className="bg-muted" style={{ width: pct(odds.D) }} />
           <div className="bg-cool" style={{ width: pct(odds.B) }} />

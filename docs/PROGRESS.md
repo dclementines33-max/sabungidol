@@ -233,7 +233,10 @@ V1 ✅ engine season/types pendingBatch: a round (bracket), a Swiss round of all
    "Spin all" pause clean-up cancelled it: stuck after one spin). Bracket: final/GF in its own column at the right (big,
    gold), 3RD under it; double-elim round names (Ronde 1, Final upper, Lower ronde N, Final lower). CupPanel champions above
    the play buttons; IdolCard glow smaller. The Idols playoff = "Playoff" tab of LeaguePanel; D1/D2 "Simulate semua liga".
-V2 MatchModal redesign (per-competition look, grand final special), live sim without the "Game x / N" spoiler, wheel look.
+V2 ✅ MatchHeader theme {accent token, kicker, grandFinal} (PlayMatchDialog ACCENT map; leagues/B-Side use league branding colour):
+   tilted big photos, faded blackletter competition word, gothic VS, gold + trophies for F/GF/Daesang. LiveMatchVisualizer:
+   tug-of-war per game, "Game N berlangsung" (never the total), Match point, winner line. WheelPicker: rim bulbs blink,
+   gold pointer/hub, spin winner photo lights up, big score. e2e cupPanels checks no spoiler + Spin all to the end.
 V3 Visuals: photo frame instead of torn edge, tier colours S/A/B/C/D distinct, "1×" badge, Season Story colours/layout,
    the "T1/T2" column, Dashboard "Seberapa jauh" → The Idols position movement, honours podium = season top 3 (all comps),
    tier distribution strip, Rating Manager as cards (slider, ±5, quick values, record, cups).

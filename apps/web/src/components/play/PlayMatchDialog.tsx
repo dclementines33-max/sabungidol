@@ -8,8 +8,11 @@ import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
 
+// Each competition's own colour on the match stage (Update 3); a league or B-Side cup uses its league's branding colour.
+const ACCENT: Record<string, string> = { UZC: "brand-violet", SWS: "brand-indigo", LCQ: "brand-indigo", IDL: "brand-gold", INK: "brand-rose", NUG: "brand-lime", DSG: "brand-gold", MBK: "brand-orchid", D2: "brand-sky", BS: "brand-teal" };
+
 export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; onClose: () => void }) {
-  const { label } = useBranding();
+  const { label, brand } = useBranding();
   const { data: match } = useQuery({ queryKey: ["match-preview", matchId], queryFn: () => engine().matchPreview(matchId!), enabled: !!matchId, staleTime: 0, gcTime: 0 });
   const { data: h2h } = useQuery({ queryKey: ["match-h2h", match?.idolA, match?.idolB], queryFn: () => engine().headToHead(match!.idolA, match!.idolB), enabled: !!match, staleTime: 0 });
   if (!matchId || !match || match.id !== matchId) return null;
@@ -46,6 +49,12 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
       h2h={h2h?.pair ? { winsA: h2h.pair.wins, draws: h2h.pair.draws, winsB: h2h.pair.losses } : undefined}
       facts={facts}
       simulate={() => match.games}
+      theme={{
+        accent: (/^D[12]|^BS/.test(match.comp) ? brand(match.comp.startsWith("BS") ? `D1${match.comp[2]}` : match.comp).color : undefined)
+          ?? ACCENT[match.comp] ?? ACCENT[match.comp.slice(0, 2)],
+        kicker: label(match.comp),
+        grandFinal: match.round === "F" || match.round === "GF" || match.comp === "DSG",
+      }}
       onAccept={accept}
     />
   );

@@ -44,6 +44,16 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.getByRole("button", { name: /^Main .* vs / }).first().click(); // Nugu round 1 = plain fixtures (bracket from the last 16)
   const modal = page.getByRole("dialog");
   await modal.getByRole("button", { name: "Simulate", exact: true }).click();
+  await expect(modal.getByText(/^Game \d berlangsung|^Selesai/)).toBeVisible();
+  await expect(modal.getByText(/Game \d+ \/ \d/)).toHaveCount(0); // Update 3: the live sim never shows how many games
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/match-modal.png", fullPage: true }); // for a human look
+  await modal.getByRole("radio", { name: "Wheel Picker" }).click();
+  await modal.getByRole("button", { name: "Spin all" }).click();
+  await expect(modal.getByText(/ menang$|^Seri$/)).toBeVisible({ timeout: 30_000 }); // Update 3 bug: Spin all stuck after one spin
+  await modal.locator("..").screenshot({ path: "test-results/wheel.png" });
+  await modal.getByRole("radio", { name: "Simulate" }).click();
+  await modal.getByRole("button", { name: "Simulate", exact: true }).click();
   await modal.getByRole("button", { name: "Accept Result" }).click();
   await expect(page.getByText(/^Hasil disimpan: \d–\d$/)).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Main sampai selesai" }).click();
