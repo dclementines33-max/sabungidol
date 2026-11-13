@@ -16,8 +16,8 @@ afterEach(() => {
 });
 
 const PRD_PANELS = [
-  "Home", "Dashboard", "Sabung Idol", "Season Story", "Idol Database", "Girl Group Stats", "Career Stats", "Head to Head",
-  "Hall of Champions", "All-time Records", "Match Database", "Season Archive", "Input Data", "Rating Manager", "Inactive Manager", "Settings",
+  "Home", "Dashboard", "Sabung Idol", "Season Story", "Idol Database", "Idol Profile", "Girl Group Stats", "Career Stats", "Head to Head",
+  "Hall of Champions", "All-time Records", "Match Database", "Season Progression", "Season Archive", "Input Data", "Rating Manager", "Inactive Manager", "Settings",
 ];
 
 describe("nav (PRD §8)", () => {

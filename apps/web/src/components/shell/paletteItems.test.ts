@@ -7,7 +7,7 @@ const labels = (query: string) => filterItems(items, query).map((i) => i.label);
 describe("command palette items (PRD §8)", () => {
   it("has every panel, the 9 competitions and the commands", () => {
     expect(items.filter((i) => i.group === "Kompetisi")).toHaveLength(9);
-    expect(items.filter((i) => i.to).length).toBe(16 + 9);
+    expect(items.filter((i) => i.to).length).toBe(18 + 9); // Update 2: + Idol Profile, Season Progression
     expect(items.filter((i) => i.command).map((i) => i.command)).toEqual(["toggle-rail", "mark-read"]);
     expect(new Set(items.map((i) => i.id)).size).toBe(items.length);
   });
