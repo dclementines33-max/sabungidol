@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const QUICK = [95, 88, 80, 70];
 const STEPS = [-5, -3, -1, 1, 3, 5];
-const EDGE: Record<Tier, string> = { S: "border-tier-s", A: "border-tier-a", B: "border-tier-b", C: "border-tier-c", D: "border-tier-d" };
+const EDGE: Record<Tier, string> = { "S+": "border-tier-splus", S: "border-tier-s", A: "border-tier-a", B: "border-tier-b", C: "border-tier-c", D: "border-tier-d", F: "border-tier-f" };
 const CHIP = "px-2 py-1 font-mono text-xs tabular-nums hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright";
 export type CareerLine = { wins: number; draws: number; losses: number; winRate: number; titles: number };
 

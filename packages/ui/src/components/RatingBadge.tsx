@@ -3,11 +3,13 @@ import { type Tier, tierOf } from "@sabung/shared";
 
 // Fill + text per tier; exported for the idol card's rating circle.
 export const TIER_FILL: Record<Tier, string> = {
+  "S+": "bg-tier-splus text-on-fill",
   S: "bg-tier-s text-on-fill",
   A: "bg-tier-a text-on-fill",
   B: "bg-tier-b text-on-fill",
   C: "bg-tier-c text-on-fill",
-  D: "bg-tier-d text-text-primary", // navy: light text
+  D: "bg-tier-d text-on-fill",
+  F: "bg-tier-f text-text-primary", // navy: light text
 };
 
 export function RatingBadge({ rating }: { rating: number }) {

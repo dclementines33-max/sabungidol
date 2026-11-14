@@ -13,7 +13,7 @@ import { StatTile } from "./StatTile";
 afterEach(cleanup);
 
 describe("RatingBadge", () => {
-  it.each([[95, "S", "bg-tier-s"], [80, "A", "bg-tier-a"], [79, "B", "bg-tier-b"], [60, "C", "bg-tier-c"], [59, "D", "bg-tier-d"]])(
+  it.each([[96, "S+", "bg-tier-splus"], [95, "S", "bg-tier-s"], [83, "A", "bg-tier-a"], [82, "B", "bg-tier-b"], [65, "C", "bg-tier-c"], [55, "D", "bg-tier-d"], [54, "F", "bg-tier-f"]])(
     "rating %i is tier %s in its tier colour", (rating, tier, fill) => {
       render(<RatingBadge rating={rating} />);
       const badge = screen.getByLabelText(`Rating ${rating}, tier ${tier}`);

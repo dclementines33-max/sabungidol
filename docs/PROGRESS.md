@@ -14,6 +14,8 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
+**TIERS (2026-11-15, router): S+ ≥96, S ≥90, A ≥83, B ≥75, C ≥65, D ≥55, F below — one table `TIERS` in packages/shared/src/tier.ts (tierOf, TierStrip, Idol Database filter all read it). Colours tier-splus…tier-f in tokens.css: gold, coral, crimson, ice, steel, muted, navy (light text only on F).**
+
 **ENGLISH UI (2026-11-15, router task 1): every UI text is English (semi-formal sports voice); news headlines + kickers stay Indonesian (StoryCard, lang="id"). Numbers/dates en-GB (5,583). Competitions "Division 1/2", settings view ?s=leagues (was liga), confirm words DELETE / DELETE ALL. /dev/* check pages left Indonesian. Scanner scripts were in the session scratchpad (not kept).**
 **DESIGN PASS (2026-11-15, router task 2):** Engine Tuning unboxed (same numbered chapter as every Settings section), podium caption = small kicker (Season Honours stays the one headline), /story ordered by newsScore (lead = biggest story), Rating Manager: selection + bulk edit grouped under "Bulk edit · n selected", leftover labels (W/D/L, P column, Compare, Value). Settings e2e saves settings-season.png + settings-leagues.png in apps/web/test-results (git-ignored).
 
