@@ -15,6 +15,7 @@ Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the
 The user tests on another device. Nothing is half-built in the code.
 
 **ENGLISH UI (2026-11-15, router task 1): every UI text is English (semi-formal sports voice); news headlines + kickers stay Indonesian (StoryCard, lang="id"). Numbers/dates en-GB (5,583). Competitions "Division 1/2", settings view ?s=leagues (was liga), confirm words DELETE / DELETE ALL. /dev/* check pages left Indonesian. Scanner scripts were in the session scratchpad (not kept).**
+**DESIGN PASS (2026-11-15, router task 2):** Engine Tuning unboxed (same numbered chapter as every Settings section), podium caption = small kicker (Season Honours stays the one headline), /story ordered by newsScore (lead = biggest story), Rating Manager: selection + bulk edit grouped under "Bulk edit · n selected", leftover labels (W/D/L, P column, Compare, Value). Settings e2e saves settings-season.png + settings-leagues.png in apps/web/test-results (git-ignored).
 
 **HEAVY QUEUE (router "Redesign dan UI polish kompetisi", 2026-11-15) — BUILT, committed 9f97a04 (by the router), no preview yet.**
 - Home: top = all-time #1 (`home/AllTimeTop.tsx`) = Career Stats "Semua" by titles via the shared engine `careerOrder(sort)`

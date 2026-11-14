@@ -29,6 +29,7 @@ test("Settings A: season, branding, roster, Data Maker", async ({ page }) => {
   await expect(page.getByText("2 reserves")).toBeVisible();
   const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
   expect(violations).toEqual([]);
+  await page.screenshot({ path: "test-results/settings-leagues.png", fullPage: true });
   await page.getByRole("button", { name: "Apply to season…" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Apply" }).click();
   await expect(page.getByText("12 leagues redrawn")).toBeVisible();
@@ -37,4 +38,5 @@ test("Settings A: season, branding, roster, Data Maker", async ({ page }) => {
   await page.getByRole("navigation", { name: "Settings sections" }).getByRole("link", { name: /^Season & rules/ }).click();
   await expect(page.getByRole("checkbox", { name: "Swiss Play-in" })).not.toBeChecked();
   await expect(page.getByRole("row", { name: /Unzure Cup/ }).getByRole("combobox", { name: /knockout/ })).toHaveValue("7");
+  await page.screenshot({ path: "test-results/settings-season.png", fullPage: true });
 });

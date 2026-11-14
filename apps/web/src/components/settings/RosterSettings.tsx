@@ -43,7 +43,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
                 <span className="block truncate font-medium">{b.name}</span>
                 <span className="font-mono text-xs text-text-secondary">{code}</span>
               </span>
-              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20 idol{bad && <span className="sr-only">, has problems</span>}</span>
+              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20 idols{bad && <span className="sr-only">, has problems</span>}</span>
             </button>
           );
         })}

@@ -34,7 +34,7 @@ export function KahootPodium({ first, second, third, title }: { first: string; s
   const idolFor = { 1: first, 2: second, 3: third };
   return (
     <figure className="m-0">
-      {title && <figcaption className="mb-4 text-center font-display text-xl">{title}</figcaption>}
+      {title && <figcaption className="kicker mb-4 text-center text-text-secondary">{title}</figcaption>}
       <ol className="m-0 flex list-none items-end justify-center gap-2 p-0">
         {PLACES.map(({ place, height, order }) => (
           <Step key={place} idolId={idolFor[place]} place={place} height={height} delay={still ? 0 : order * RISE_GAP_MS} still={still} />

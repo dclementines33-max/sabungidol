@@ -27,7 +27,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
     </label>
   );
   return (
-    <section className="space-y-4 panel p-4 md:p-6" aria-labelledby="set-engine">
+    <section className={SECTION} aria-labelledby="set-engine">
       <h2 id="set-engine" className="m-0 font-display">Engine Tuning</h2>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Preset">
         {Object.entries(TUNING_PRESETS).map(([name, preset]) => (

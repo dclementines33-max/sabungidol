@@ -42,7 +42,7 @@ export function D1Board() {
             <LineRace label={`Title race ${brand(comp).name}`} series={top.map((id) => ({ id, values: race[id] ?? [0] }))} />
           </div>
           <table aria-label={`Standings ${brand(comp).name}`} className="w-full flex-1 border-collapse text-sm tabular-nums xl:-mt-16">
-            <thead><tr className="text-left text-[10px] tracking-[0.18em] text-text-secondary uppercase">{["#", "Idol", "M", "±", "Pts"].map((h) => <th key={h} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
+            <thead><tr className="text-left text-[10px] tracking-[0.18em] text-text-secondary uppercase">{["#", "Idol", "P", "±", "Pts"].map((h) => <th key={h} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
             <tbody>
               {view.standings.map((r) => (
                 <tr key={r.idolId} className={zone(r.rank)}>

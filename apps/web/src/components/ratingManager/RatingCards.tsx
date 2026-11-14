@@ -52,11 +52,12 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
         <Select label="Scope" value={scope} onChange={setScope} options={[["active", "Active idols"], ["all", "All idols"], ...leagues.map((l): [string, string] => [l, `League ${l}`])]} />
         <Select label="Group" value={group} onChange={setGroup} options={[["", "All"], ...groups, ["solo", "Soloist"]]} />
         <Select label="Order" value={order} onChange={(v) => setOrder(v as keyof typeof ORDERS)} options={Object.entries(ORDERS)} />
+      </div>
+      <div className="flex flex-wrap items-end gap-2 border-t border-border pt-3" role="group" aria-label="Bulk edit">
+        <p className="kicker m-0 w-full text-text-secondary">Bulk edit · {selected.size} selected</p>
         <Button onClick={() => setSelected(new Set(rows.map((i) => i.id)))}>Select all ({rows.length})</Button>
         <Button disabled={!selected.size} onClick={() => setSelected(new Set())}>Clear selection</Button>
-      </div>
-      <div className="flex flex-wrap items-end gap-2" role="group" aria-label="Bulk edit">
-        <label className="text-sm text-text-secondary">Nilai
+        <label className="text-sm text-text-secondary">Value
           <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className={`${input} mt-1 block w-20 font-mono`} />
         </label>
         <Button disabled={!selected.size || !Number.isFinite(n)} onClick={() => bulk(() => n, `Set ${n}`)}>Set {selected.size} selected</Button>

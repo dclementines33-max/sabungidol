@@ -33,9 +33,9 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
           <h2 id="idol-name" className="m-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words">{idol.name}</h2>
           <p className="kicker m-0 text-text-secondary">{facts.join(" · ")}</p>
           <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Career record ${record.wins} wins, ${record.draws} draws, ${record.losses} losses`}>
-            <span className="text-[clamp(2rem,5vw,3.5rem)] text-cool">{record.wins}<small className="text-sm">M</small></span>
-            <span className="text-[clamp(2rem,5vw,3.5rem)]">{record.draws}<small className="text-sm">S</small></span>
-            <span className="text-[clamp(2rem,5vw,3.5rem)] text-danger">{record.losses}<small className="text-sm">K</small></span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] text-cool">{record.wins}<small className="text-sm">W</small></span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)]">{record.draws}<small className="text-sm">D</small></span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] text-danger">{record.losses}<small className="text-sm">L</small></span>
           </p>
           <dl className="m-0 flex flex-wrap gap-x-8 gap-y-2">
             {numbers.map(([label, value]) => (
@@ -43,7 +43,7 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
             ))}
           </dl>
           <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 bg-surface-hover/60 px-3 py-2 text-xs font-bold uppercase hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-            <GitCompareArrows aria-hidden="true" size={16} /> Bandingkan (Head to Head)
+            <GitCompareArrows aria-hidden="true" size={16} /> Compare (Head to Head)
           </Link>
         </div>
       </div>
