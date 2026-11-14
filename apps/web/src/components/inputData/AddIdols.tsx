@@ -20,6 +20,23 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
   const [saving, setSaving] = useState(false);
   const rows = useMemo(() => previewBatch(fields, idols.map((i) => ({ name: i.name, groupName: i.groupName }))), [fields, idols]);
   const toSave = rows.flatMap((r) => (r.input ? [r.input] : []));
+  // Update 3: idols that already exist (refused as duplicates) can still take this file's birthday and nationality.
+  const existing = rows.filter((r) => r.status === "duplicate").map((r) => fields[r.line - 1]!)
+    .filter((f) => f.birthday?.trim() || f.nationality?.trim())
+    .map((f) => ({ name: f.name!.trim(), group: f.group?.trim() || null, ...(f.birthday?.trim() ? { birthday: f.birthday.trim() } : {}), ...(f.nationality?.trim() ? { nationality: f.nationality.trim().toUpperCase() } : {}) }));
+  const updateExisting = async () => {
+    setSaving(true);
+    try {
+      const { updated } = await engine().updateIdolDetails(existing, false);
+      notify({ level: "success", message: `Tanggal lahir & negara ${updated} idol diperbarui` });
+      setFields([]);
+      await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
+    } catch (error) {
+      notify({ level: "error", code: "E-INPUT-003", message: "Data idol gagal diperbarui. Tidak ada yang berubah.", context: String(error) });
+    } finally {
+      setSaving(false);
+    }
+  };
   const groups = useMemo(() => [...new Set(idols.flatMap((i) => (i.groupName ? [i.groupName] : [])))].sort(), [idols]);
 
   const readFile = async (file: File) => {
@@ -71,6 +88,12 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
       {source === "form" && <IdolForm groups={groups} onFields={setFields} />}
       {rows.length > 0 && (
         <>
+          {existing.length > 0 && (
+            <p className="m-0 bg-surface/60 p-3 text-sm">
+              {existing.length} idol sudah ada, jadi tidak ditambah. Tanggal lahir dan negaranya dari file ini bisa dipakai untuk memperbarui mereka.{" "}
+              <Button variant="primary" className="mt-2" disabled={saving} onClick={() => void updateExisting()}>Perbarui lahir & negara {existing.length} idol</Button>
+            </p>
+          )}
           <PasteBatchPreview rows={rows} />
           <Button variant="primary" disabled={saving || toSave.length === 0} onClick={save}>
             {saving ? "Menyimpan…" : `Simpan ${toSave.length} idol`}

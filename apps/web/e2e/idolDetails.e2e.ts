@@ -23,4 +23,13 @@ test("Perbarui data idol: preview, apply, role on the profile", async ({ page })
   await page.getByRole("list", { name: "Idol" }).getByRole("link").filter({ has: page.getByText("Rei", { exact: true }) }).first().click();
   await expect(page.getByText(/Main Rapper, Sub-Vocalist/).first()).toBeVisible({ timeout: 60_000 });
   await expect(page.getByText(/· JP ·/).first()).toBeVisible();
+
+  // The same file put into "Tambah idol → File CSV/JSON" (the user did that): existing idols are refused as new ones,
+  // but a button updates their birthday and nationality.
+  await page.goto("/studio/input");
+  await page.getByRole("button", { name: "File CSV/JSON" }).click();
+  await page.getByLabel(/File CSV/).setInputFiles({ name: "idol-details.json", mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify([{ name: "Rei", group: "IVE", birthday: "2004-02-03", nationality: "kr" }])) });
+  await page.getByRole("button", { name: "Perbarui lahir & negara 1 idol" }).click();
+  await expect(page.getByText("Tanggal lahir & negara 1 idol diperbarui")).toBeVisible({ timeout: 30_000 });
 });
