@@ -11,8 +11,8 @@ const rows = Array.from({ length: 1000 }, (_, i) => ({ id: `r${i}`, name: `Row $
 
 describe("VirtualTable", () => {
   it("renders only the rows in view, but tells assistive tech the full count", () => {
-    render(<VirtualTable rows={rows} rowKey={(r) => r.id} label="Rows" columns={[{ header: "Nama", cell: (r) => r.name }]} />);
-    expect(screen.getByRole("columnheader", { name: "Nama" })).toBeTruthy();
+    render(<VirtualTable rows={rows} rowKey={(r) => r.id} label="Rows" columns={[{ header: "Name", cell: (r) => r.name }]} />);
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeTruthy();
     expect(screen.getByText("Row 0")).toBeTruthy();
     expect(screen.queryByText("Row 999")).toBeNull();
     const shown = screen.getAllByRole("row").length;

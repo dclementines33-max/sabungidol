@@ -19,34 +19,34 @@ export function AllGroups({ groups, idols }: { groups: Group[]; idols: IdolRow[]
     try {
       const id = await engine().addGroup(name);
       if (logo) await engine().setGroupLogo(id, await engine().savePhoto(logo));
-      notify({ level: "success", message: `Grup ${name.trim()} ditambahkan` });
+      notify({ level: "success", message: `Group ${name.trim()} added` });
       setName("");
       setLogo(null);
       await queryClient.invalidateQueries({ queryKey: ["groups"] });
     } catch (error) {
-      notify({ level: "error", code: "E-GROUP-001", message: "Grup tidak tersimpan.", context: error instanceof Error ? error.message : String(error) });
+      notify({ level: "error", code: "E-GROUP-001", message: "Group not saved.", context: error instanceof Error ? error.message : String(error) });
     }
   };
   return (
     <div className="space-y-8">
       <form className="flex flex-wrap items-end gap-3 bg-surface/60 p-4" onSubmit={(e) => { e.preventDefault(); void add(); }}>
-        <label className="text-sm text-text-secondary">Nama grup baru
+        <label className="text-sm text-text-secondary">New group name
           <input value={name} onChange={(e) => setName(e.target.value)} required
             className="mt-1 block w-64 border-0 border-b-2 border-border-strong bg-bg-base/60 px-2 py-1 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
         </label>
-        <label className="text-sm text-text-secondary">Logo (opsional)
+        <label className="text-sm text-text-secondary">Logo (optional)
           <input type="file" accept="image/*" onChange={(e) => setLogo(e.target.files?.[0] ?? null)} className="mt-1 block text-xs" />
         </label>
-        <Button type="submit" variant="primary" disabled={!name.trim()}>Tambah grup</Button>
+        <Button type="submit" variant="primary" disabled={!name.trim()}>Add group</Button>
       </form>
-      <ul aria-label="Semua girl group" className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-3 p-0">
+      <ul aria-label="All girl groups" className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-3 p-0">
         {groups.map((g) => (
           <li key={g.id}>
             <Link to="/wiki/group/$id" params={{ id: g.id }} className="flex items-center gap-3 bg-surface/60 p-3 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
               {g.logoId ? <CompetitionLogo logoId={g.logoId} className="size-10" /> : <span aria-hidden="true" className="flex size-10 items-center justify-center bg-surface-hover font-gothic text-xl text-accent-bright">{g.name[0]}</span>}
               <span className="min-w-0">
                 <span className="block truncate font-display">{g.name}</span>
-                <span className="block text-xs text-text-secondary">{count(g.id)} member</span>
+                <span className="block text-xs text-text-secondary">{count(g.id)} members</span>
               </span>
             </Link>
           </li>

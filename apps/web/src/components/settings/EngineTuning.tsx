@@ -16,7 +16,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
   const [tuning, setTuning] = useState(() => readSeasonConfig(season.config).tuning);
   const save = async () => {
     await engine().updateSeason(season.id, { config: { ...readSeasonConfig(season.config), tuning } });
-    notify({ level: "success", message: "Engine Tuning disimpan" });
+    notify({ level: "success", message: "Engine Tuning saved" });
     await refreshSeason();
   };
   const field = (key: "scale" | "sigma", label: string, min: number, max: number) => (
@@ -34,10 +34,10 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
           <Button key={name} aria-pressed={tuning.scale === preset.scale && tuning.sigma === preset.sigma} className="px-3" onClick={() => setTuning({ ...preset })}>{name}</Button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-4">{field("scale", "Konstanta odds (PRD: 40)", 10, 100)}{field("sigma", "Variance σ per match (PRD: 4)", 0, 15)}</div>
+      <div className="flex flex-wrap gap-4">{field("scale", "Odds constant (PRD: 40)", 10, 100)}{field("sigma", "Variance σ per match (PRD: 4)", 0, 15)}</div>
       <div className="overflow-x-auto"><table className="border-collapse text-sm tabular-nums">
-        <caption className="pb-2 text-left text-text-secondary">Peluang favorit menang, sebelum variance dan form</caption>
-        <thead><tr className="text-left text-text-secondary">{["Selisih rating", "Per game", "Bo3", "Bo5", "Bo7", "Bo4 M/S/K"].map((h) => <th key={h} scope="col" className="px-3 py-1 font-medium">{h}</th>)}</tr></thead>
+        <caption className="pb-2 text-left text-text-secondary">Favourite's win chance, before variance and form</caption>
+        <thead><tr className="text-left text-text-secondary">{["Rating gap", "Per game", "Bo3", "Bo5", "Bo7", "Bo4 W/D/L"].map((h) => <th key={h} scope="col" className="px-3 py-1 font-medium">{h}</th>)}</tr></thead>
         <tbody>
           {GAPS.map((gap) => {
             const odds = (bestOf: 3 | 4 | 5 | 7) => seriesOdds(50 + gap, 50, bestOf, tuning.scale);
@@ -55,7 +55,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
           })}
         </tbody>
       </table></div>
-      <Button variant="primary" onClick={save}>Simpan Engine Tuning</Button>
+      <Button variant="primary" onClick={save}>Save Engine Tuning</Button>
     </section>
   );
 }

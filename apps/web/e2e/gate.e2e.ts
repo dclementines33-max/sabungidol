@@ -14,23 +14,23 @@ test("GATE: 240 idols + photos through Input Data in < 5 minutes", async ({ page
   await page.goto("/studio/input");
 
   const started = Date.now();
-  const lines = Array.from({ length: 240 }, (_, i) => `Gerbang ${n(i)} | Grup Gerbang | ${50 + (i % 50)}`).join("\n");
-  await page.getByRole("textbox", { name: /Satu idol per baris/ }).fill(lines);
-  await expect(page.getByText("240 baru · 0 peringatan · 0 ditolak")).toBeVisible();
-  await page.getByRole("button", { name: "Simpan 240 idol" }).click();
-  await expect(page.getByText("240 idol disimpan")).toBeVisible({ timeout: 60_000 });
+  const lines = Array.from({ length: 240 }, (_, i) => `Gerbang ${n(i)} | Group Gerbang | ${50 + (i % 50)}`).join("\n");
+  await page.getByRole("textbox", { name: /One idol per line/ }).fill(lines);
+  await expect(page.getByText("240 new · 0 warnings · 0 rejected")).toBeVisible();
+  await page.getByRole("button", { name: "Save 240 idols" }).click();
+  await expect(page.getByText("240 idols saved")).toBeVisible({ timeout: 60_000 });
 
   const photo = Buffer.from(base64!, "base64");
-  await page.locator('input[type="file"][multiple]').setInputFiles(Array.from({ length: 240 }, (_, i) => ({ name: `gerbang-${n(i)}.webp`, mimeType: type!, buffer: photo })));
-  await expect(page.getByText("240 cocok · 0 saran, periksa · 0 belum dipilih")).toBeVisible({ timeout: 60_000 });
-  await page.getByRole("button", { name: "Simpan 240 foto" }).click();
-  await expect(page.getByText("240 foto disimpan")).toBeVisible({ timeout: 290_000 });
+  await page.locator('input[type="file"][accept="image/*"][multiple]').setInputFiles(Array.from({ length: 240 }, (_, i) => ({ name: `gerbang-${n(i)}.webp`, mimeType: type!, buffer: photo })));
+  await expect(page.getByText("240 matched · 0 suggested, check · 0 not picked")).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Save 240 photos" }).click();
+  await expect(page.getByText("240 photos saved")).toBeVisible({ timeout: 290_000 });
   const seconds = (Date.now() - started) / 1000;
   console.log(`GATE: 240 idols + photos in ${seconds.toFixed(1)} s`);
   expect(seconds).toBeLessThan(300);
 
   await page.goto("/wiki/idols"); // they are all there, with photos
-  await page.getByRole("combobox", { name: /^Group/ }).selectOption({ label: "Grup Gerbang" });
-  await expect(page.getByText("240 dari 482 idol")).toBeVisible();
+  await page.getByRole("combobox", { name: /^Group/ }).selectOption({ label: "Group Gerbang" });
+  await expect(page.getByText("240 of 482 idols")).toBeVisible();
   await expect(page.getByRole("list", { name: "Idol" }).locator("img").first()).toBeVisible();
 });

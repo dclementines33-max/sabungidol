@@ -29,10 +29,10 @@ export function PhotoImport({ idols }: { idols: IdolRow[] }) {
         if (old) forgetPhoto(old);
         setSaved(++done);
       } catch (error) {
-        notify({ level: "error", code: "E-PHOTO-002", message: `Foto ${m.file.name} gagal disimpan. Foto lain tetap tersimpan.`, context: String(error) });
+        notify({ level: "error", code: "E-PHOTO-002", message: `Photo ${m.file.name} couldn't be saved. The other photos are safe.`, context: String(error) });
       }
     }
-    notify({ level: "success", message: `${done} foto disimpan` });
+    notify({ level: "success", message: `${done} photos saved` });
     setMatches([]);
     setSaved(null);
     await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
@@ -40,12 +40,12 @@ export function PhotoImport({ idols }: { idols: IdolRow[] }) {
 
   return (
     <section className="studio-section space-y-4" aria-labelledby="photos">
-      <h2 id="photos" className="m-0 font-display">Foto</h2>
-      <PhotoDropZone label="Seret banyak foto sekaligus; nama file dicocokkan ke nama idol" onFiles={(files) => setMatches(matchPhotos(files, idols))} />
+      <h2 id="photos" className="m-0 font-display">Photos</h2>
+      <PhotoDropZone label="Drop many photos at once; file names are matched to idol names" onFiles={(files) => setMatches(matchPhotos(files, idols))} />
       {matches.length > 0 && (
         <>
           <p className="m-0 text-sm text-text-secondary" aria-live="polite">
-            {matches.filter((m) => m.sure && m.idolId).length} cocok · {matches.filter((m) => !m.sure && m.idolId).length} saran, periksa · {matches.filter((m) => !m.idolId).length} belum dipilih
+            {matches.filter((m) => m.sure && m.idolId).length} matched · {matches.filter((m) => !m.sure && m.idolId).length} suggested, check · {matches.filter((m) => !m.idolId).length} not picked
           </p>
           <ul className="m-0 grid list-none gap-3 p-0 md:grid-cols-2">
             {matches.map((m, i) => (
@@ -54,18 +54,18 @@ export function PhotoImport({ idols }: { idols: IdolRow[] }) {
                 <div className="min-w-0 flex-1">
                   <p className="m-0 truncate font-mono text-xs text-text-secondary">{m.file.name}</p>
                   <p className={`m-0 text-xs ${m.idolId ? (m.sure ? "text-cool" : "text-accent-bright") : "text-text-secondary"}`}>
-                    {m.idolId ? (m.sure ? "Cocok" : "Saran: periksa") : "Belum dipilih"}
+                    {m.idolId ? (m.sure ? "Match" : "Suggested: check") : "Not picked"}
                   </p>
-                  <SearchableIdolSelect label={`Idol untuk ${m.file.name}`} idolIds={ids} value={m.idolId} onChange={(id) => set(i, id)} />
+                  <SearchableIdolSelect label={`Idol for ${m.file.name}`} idolIds={ids} value={m.idolId} onChange={(id) => set(i, id)} />
                 </div>
-                <Button className="px-2" aria-label={`Buang ${m.file.name}`} onClick={() => setMatches((all) => all.filter((_, n) => n !== i))}>
+                <Button className="px-2" aria-label={`Remove ${m.file.name}`} onClick={() => setMatches((all) => all.filter((_, n) => n !== i))}>
                   <X aria-hidden="true" size={16} strokeWidth={1.5} />
                 </Button>
               </li>
             ))}
           </ul>
           <Button variant="primary" disabled={saved !== null || ready.length === 0} onClick={save}>
-            {saved !== null ? `Menyimpan ${saved}/${ready.length}…` : `Simpan ${ready.length} foto`}
+            {saved !== null ? `Saving ${saved}/${ready.length}…` : `Save ${ready.length} photos`}
           </Button>
         </>
       )}

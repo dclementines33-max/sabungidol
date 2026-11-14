@@ -20,7 +20,7 @@ export function NotificationCenter({ notices, unread, onOpen, onExport }: {
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
-        aria-label={unread ? `Notifikasi, ${unread} belum dibaca` : "Notifikasi"}
+        aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
         onClick={() => {
           setOpen(!open);
           if (!open) onOpen?.();
@@ -35,7 +35,7 @@ export function NotificationCenter({ notices, unread, onOpen, onExport }: {
         )}
       </button>
       {open && (
-        <section id={panelId} aria-label="Riwayat notifikasi" className="absolute right-0 z-40 mt-2 w-[min(400px,calc(100vw-32px))] panel p-4 shadow-lg">
+        <section id={panelId} aria-label="Notification history" className="absolute right-0 z-40 mt-2 w-[min(400px,calc(100vw-32px))] panel p-4 shadow-lg">
           <div className="flex items-center gap-2">
             <label className="flex-1 text-sm text-text-secondary">
               Level{" "}
@@ -44,14 +44,14 @@ export function NotificationCenter({ notices, unread, onOpen, onExport }: {
                 onChange={(e) => setLevel(e.target.value as NoticeLevel | "all")}
                 className="ml-1 rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary"
               >
-                <option value="all">Semua</option>
+                <option value="all">All</option>
                 {Object.entries(LEVEL).map(([key, { label }]) => <option key={key} value={key}>{label}</option>)}
               </select>
             </label>
-            <Button className="px-2 py-1" onClick={() => onExport(shown)}>Ekspor</Button>
+            <Button className="px-2 py-1" onClick={() => onExport(shown)}>Export</Button>
           </div>
           {shown.length === 0 ? (
-            <p className="m-0 mt-4 text-sm text-text-secondary">Belum ada notifikasi.</p>
+            <p className="m-0 mt-4 text-sm text-text-secondary">No notifications yet.</p>
           ) : (
             <ul className="m-0 mt-4 max-h-80 list-none space-y-2 overflow-auto p-0">
               {shown.map((n) => {

@@ -8,7 +8,7 @@ const BG = "linear-gradient(90deg, rgb(1 0 3 / 0.3), rgb(1 0 3 / 0.85) 50%, var(
 
 export function AllTimeTop({ row }: { row: CareerRow }) {
   const idol = useIdol(row.idolId);
-  const stats = [[row.titles, "gelar"], [row.matches, "match"], [`${row.wins}–${row.draws}–${row.losses}`, "M–S–K"], [`${(row.winRate * 100).toFixed(1)}%`, "win rate"]] as const;
+  const stats = [[row.titles, "titles"], [row.matches, "matches"], [`${row.wins}–${row.draws}–${row.losses}`, "W–D–L"], [`${(row.winRate * 100).toFixed(1)}%`, "win rate"]] as const;
   return (
     <section aria-labelledby="all-time-top" className="relative isolate overflow-hidden rounded-card bg-cover bg-[position:20%_35%]" style={{ backgroundImage: BG }}>
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-bg-base/60 md:hidden" />
@@ -16,9 +16,9 @@ export function AllTimeTop({ row }: { row: CareerRow }) {
       <div className="ml-auto grid max-w-3xl items-end gap-6 px-5 pt-10 pb-8 sm:px-10 md:grid-cols-[auto_1fr] md:pt-20">
         <IdolPhoto idolId={row.idolId} size={1024} className="photo-frame w-44 -rotate-2 sm:w-56" />
         <div className="min-w-0">
-          <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">#1 sepanjang masa</span><span className="kicker">Peringkat gelar · Career Stats</span></p>
+          <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">#1 of all time</span><span className="kicker">Ranked by titles · Career Stats</span></p>
           <h2 id="all-time-top" className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words"><IdolLink id={row.idolId} /></h2>
-          <p className="m-0 mt-1 font-gothic text-2xl text-accent-bright">{idol.groupName ?? "Solois"}</p>
+          <p className="m-0 mt-1 font-gothic text-2xl text-accent-bright">{idol.groupName ?? "Soloist"}</p>
           <dl className="m-0 mt-6 flex flex-wrap gap-x-8 gap-y-3">
             {stats.map(([value, label]) => (
               <div key={label}>

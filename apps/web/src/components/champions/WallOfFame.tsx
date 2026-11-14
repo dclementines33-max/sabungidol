@@ -13,7 +13,7 @@ export function WallOfFame({ champions }: { champions: string[] }) {
           <li key={id}>
             <p className="m-0 mb-1 flex items-baseline gap-2">
               <span className="font-gothic text-5xl leading-none text-brand-gold">{n}</span>
-              <span className="text-[10px] font-bold tracking-[0.3em] text-text-secondary uppercase">gelar</span>
+              <span className="text-[10px] font-bold tracking-[0.3em] text-text-secondary uppercase">titles</span>
             </p>
             <Link to="/wiki/idols/$id" params={{ id }} className="block rounded-card focus-visible:outline-2 focus-visible:outline-accent-bright"><IdolCard idolId={id} /></Link>
           </li>

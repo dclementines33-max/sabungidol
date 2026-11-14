@@ -14,10 +14,10 @@ export const Route = createFileRoute("/studio/input")({ component: InputData });
 
 function InputData() {
   const { data: idols = [], isPending } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
-  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
+  if (isPending) return <p className="text-text-secondary">Loading database…</p>;
   return (
     <div className="studio-flow space-y-10">
-      <PageHeader tag="Input Data" title="Tambah dan rapikan idol" note="Tambah idol satu per satu atau sekaligus, unggah foto, lalu edit atau hapus." />
+      <PageHeader tag="Input Data" title="Add and tidy up idols" note="Add idols one by one or in bulk, upload photos, then edit or delete." />
       <AddIdols idols={idols} />
       <PhotoImport idols={idols} />
       <GalleryImport idols={idols} />

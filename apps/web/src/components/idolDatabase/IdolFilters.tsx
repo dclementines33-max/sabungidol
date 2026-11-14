@@ -31,20 +31,20 @@ export function IdolFilters({ idols, filter, onFilter, view, onView }: {
   const nationalities = [...new Set(idols.flatMap((i) => (i.nationality ? [i.nationality] : [])))].sort();
   return (
     <div role="group" aria-label="Filter idol" className="flex flex-wrap items-end gap-3">
-      <Select label="Group" value={filter.group} onChange={set("group")} options={[["", "Semua"], ...groups, ["solo", "Soloist"]]} />
-      <Select label="Liga" value={filter.league} onChange={set("league")} options={[["", "Semua"], ...[...D1_LEAGUES, ...D2_LEAGUES].map((c): [string, string] => [c, c]), ["reserve", "Cadangan"]]} />
-      <Select label="Tier" value={filter.tier} onChange={set("tier")} options={[["", "Semua"], ...["S", "A", "B", "C", "D"].map((t): [string, string] => [t, t])]} />
-      <Select label="Status" value={filter.status} onChange={set("status")} options={[["", "Semua"], ["active", "Aktif"], ["inactive", "Nonaktif"]]} />
+      <Select label="Group" value={filter.group} onChange={set("group")} options={[["", "All"], ...groups, ["solo", "Soloist"]]} />
+      <Select label="League" value={filter.league} onChange={set("league")} options={[["", "All"], ...[...D1_LEAGUES, ...D2_LEAGUES].map((c): [string, string] => [c, c]), ["reserve", "Reserve"]]} />
+      <Select label="Tier" value={filter.tier} onChange={set("tier")} options={[["", "All"], ...["S", "A", "B", "C", "D"].map((t): [string, string] => [t, t])]} />
+      <Select label="Status" value={filter.status} onChange={set("status")} options={[["", "All"], ["active", "Active"], ["inactive", "Inactive"]]} />
       {nationalities.length > 0 && ( // the default data has no nationality, so the filter waits for data that does
-        <Select label="Nationality" value={filter.nationality} onChange={set("nationality")} options={[["", "Semua"], ...nationalities.map((n): [string, string] => [n, n])]} />
+        <Select label="Nationality" value={filter.nationality} onChange={set("nationality")} options={[["", "All"], ...nationalities.map((n): [string, string] => [n, n])]} />
       )}
-      <Select label="Urutkan" value={filter.sort} onChange={set("sort")} options={[["rating", "Rating"], ["name", "Nama"]]} />
-      <div className="ml-auto flex gap-1" role="group" aria-label="Tampilan">
+      <Select label="Sort by" value={filter.sort} onChange={set("sort")} options={[["rating", "Rating"], ["name", "Name"]]} />
+      <div className="ml-auto flex gap-1" role="group" aria-label="View">
         <Button aria-pressed={view === "grid"} className={`px-2 ${view === "grid" ? "bg-surface-hover" : ""}`} onClick={() => onView("grid")}>
-          <LayoutGrid aria-hidden="true" size={16} strokeWidth={1.5} /> Kartu
+          <LayoutGrid aria-hidden="true" size={16} strokeWidth={1.5} /> Cards
         </Button>
         <Button aria-pressed={view === "table"} className={`px-2 ${view === "table" ? "bg-surface-hover" : ""}`} onClick={() => onView("table")}>
-          <Table aria-hidden="true" size={16} strokeWidth={1.5} /> Tabel
+          <Table aria-hidden="true" size={16} strokeWidth={1.5} /> Table
         </Button>
       </div>
     </div>

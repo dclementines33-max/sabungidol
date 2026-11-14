@@ -14,7 +14,9 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
-**HEAVY QUEUE (router "Redesign dan UI polish kompetisi", 2026-11-15) — BUILT, NOT committed, NO preview yet.**
+**ENGLISH UI (2026-11-15, router task 1): every UI text is English (semi-formal sports voice); news headlines + kickers stay Indonesian (StoryCard, lang="id"). Numbers/dates en-GB (5,583). Competitions "Division 1/2", settings view ?s=leagues (was liga), confirm words DELETE / DELETE ALL. /dev/* check pages left Indonesian. Scanner scripts were in the session scratchpad (not kept).**
+
+**HEAVY QUEUE (router "Redesign dan UI polish kompetisi", 2026-11-15) — BUILT, committed 9f97a04 (by the router), no preview yet.**
 - Home: top = all-time #1 (`home/AllTimeTop.tsx`) = Career Stats "Semua" by titles via the shared engine `careerOrder(sort)`
   (CareerTable uses it too; `homeFacts.allTimeTop`, overview `.allTimeTop`). `home/HomeSeason.tsx` (was HomeActions) = season
   block + "Berita penting". Backgrounds = design/assets photos, stored SIDEWAYS (no EXIF) → rotated → `public/home/porch.webp`,
@@ -22,7 +24,7 @@ The user tests on another device. Nothing is half-built in the code.
 - News: engine `stats/seasonNews.ts` (rivalry ≥3 meetings, multi-title, title-milestone 5/10/15…, slump = rating ≥85 losing 4+,
   unbeaten = no loss in a finished D1/D2 league) added by storyWorker; `stats/newsScore.ts` newsScore 0–100 (our numbers; titles
   by PRESTIGE) + topNews(n, one per kind) → Home shows 4. /story order unchanged.
-- Settings: `/studio/settings?s=season|liga|branding|backup|data|danger`, side nav (strip on phones), one view at a time;
+- Settings: `/studio/settings?s=season|leagues|branding|backup|data|danger`, side nav (strip on phones), one view at a time;
   Home "Buka Backup" + Welcome restore link open ?s=backup. e2e tests go to the view they need.
 
 **UPDATE 4 — BUILT 2026-11-14, on preview 96975b81 (test alias), NOT deployed, NOT committed.** User list + decisions:
@@ -505,8 +507,8 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 
 - **Never delete a database automatically.** An automatic clean-up wiped a real database once (reverted
   in `3f02beb`). Deleting needs the user: `<db>.ready` is written after every successful open; a reset is
-  only offered when it is missing and needs "HAPUS"; the Worker deletes before opening only with a
-  `<db>.reset` request (and still no `.ready`) or a `<db>.wipe` request (Danger Zone, "HAPUS SEMUA").
+  only offered when it is missing and needs "DELETE" (was HAPUS); the Worker deletes before opening only with a
+  `<db>.reset` request (and still no `.ready`) or a `<db>.wipe` request (Danger Zone, "DELETE ALL", was HAPUS SEMUA).
 - Database lock waits up to 5 s (a reload is not "another tab"). A reload in the first seconds of a
   fresh install can break PGlite's OPFS pool → the confirmed reset is the way out (e2e `firstOpen`).
 - Colours only through tokens (`packages/ui/src/tokens.css`), named by role: `accent` (crimson fill,

@@ -8,10 +8,10 @@ export type PaletteItem = { id: string; label: string; group: string; icon: Luci
 export function paletteItems(): PaletteItem[] {
   const panels = SPACES.flatMap((space) =>
     space.items.map((item) => ({ id: item.to, label: item.label, group: space.label, icon: item.icon, to: item.to })));
-  const competitions = COMPETITIONS.map((item) => ({ id: item.to, label: item.label, group: "Kompetisi", icon: item.icon, to: item.to }));
+  const competitions = COMPETITIONS.map((item) => ({ id: item.to, label: item.label, group: "Competitions", icon: item.icon, to: item.to }));
   const commands = [
-    { id: "cmd:rail", label: "Ciutkan atau lebarkan menu", group: "Perintah", icon: PanelLeft, command: "toggle-rail" },
-    { id: "cmd:read", label: "Tandai semua notifikasi dibaca", group: "Perintah", icon: CheckCheck, command: "mark-read" },
+    { id: "cmd:rail", label: "Collapse or expand the menu", group: "Commands", icon: PanelLeft, command: "toggle-rail" },
+    { id: "cmd:read", label: "Mark all notifications read", group: "Commands", icon: CheckCheck, command: "mark-read" },
   ];
   return [...panels, ...competitions, ...commands];
 }

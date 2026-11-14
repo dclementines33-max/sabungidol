@@ -8,8 +8,8 @@ import type { StageCode } from "./stages";
 
 export type CompetitionKey = "D1" | "D2" | "IDL" | "SWS" | "LCQ" | "UZC" | "INK" | "NUG" | "BS" | "DSG" | "MBK";
 export const SEASON_COMPETITIONS: { key: CompetitionKey; name: string; codes: CompetitionCode[]; stages: StageCode[]; needs: CompetitionKey[] }[] = [
-  { key: "D1", name: "Liga Divisi 1", codes: [...D1_LEAGUES], stages: ["LG"], needs: [] },
-  { key: "D2", name: "Liga Divisi 2", codes: [...D2_LEAGUES], stages: ["LG"], needs: [] },
+  { key: "D1", name: "Division 1", codes: [...D1_LEAGUES], stages: ["LG"], needs: [] },
+  { key: "D2", name: "Division 2", codes: [...D2_LEAGUES], stages: ["LG"], needs: [] },
   { key: "IDL", name: "The Idols", codes: ["IDL"], stages: ["LG", "UB", "LB", "FN"], needs: [] },
   { key: "SWS", name: "Swiss Play-in", codes: ["SWS"], stages: ["SW"], needs: ["D1"] },
   { key: "LCQ", name: "Last Chance Qualifier", codes: ["LCQ"], stages: ["LQ"], needs: ["SWS"] },

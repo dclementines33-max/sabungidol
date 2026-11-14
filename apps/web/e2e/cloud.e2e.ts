@@ -16,15 +16,15 @@ const settings = async (page: Page) => {
   await expect(page.getByTestId("season-chip")).toHaveText(/· Draft/, { timeout: 150_000 });
   await page.goto(`${CLOUD}/studio/settings?s=backup`);
 };
-const login = async (page: Page, action: "Masuk" | "Daftar akun baru") => {
+const login = async (page: Page, action: "Sign in" | "Create account") => {
   await page.getByRole("textbox", { name: "Email" }).fill(email);
   await page.getByLabel(/^Password/).fill(password);
   await page.getByRole("button", { name: action }).click();
-  await expect(page.getByText(`Masuk sebagai ${email}`)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(`Signed in as ${email}`)).toBeVisible({ timeout: 30_000 });
 };
 const tablesOf = async (page: Page) => {
-  await page.getByRole("combobox", { name: "Bagian" }).selectOption("full");
-  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Unduh backup" }).click()]);
+  await page.getByRole("combobox", { name: "Section" }).selectOption("full");
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Download backup" }).click()]);
   return JSON.parse(strFromU8(unzipSync(new Uint8Array(readFileSync((await download.path())!)))["manifest.json"]!)).tables;
 };
 
@@ -34,28 +34,28 @@ test("cloud backup from device A is restored on device B with identical checksum
   test.setTimeout(400_000);
   const a = await (await browser.newContext()).newPage();
   await settings(a);
-  await a.getByRole("textbox", { name: "Nama season" }).fill("Musim Cloud"); // something of our own
-  await a.getByRole("button", { name: "Simpan season" }).click();
-  await login(a, "Daftar akun baru");
-  await a.getByRole("button", { name: "Backup ke cloud" }).click();
-  await expect(a.getByText(/Backup diunggah ke cloud/)).toBeVisible({ timeout: 120_000 });
+  await a.getByRole("textbox", { name: "Season name" }).fill("Musim Cloud"); // something of our own
+  await a.getByRole("button", { name: "Save season" }).click();
+  await login(a, "Create account");
+  await a.getByRole("button", { name: "Back up to cloud" }).click();
+  await expect(a.getByText(/Backup uploaded to the cloud/)).toBeVisible({ timeout: 120_000 });
   const original = await tablesOf(a);
 
   const b = await (await browser.newContext()).newPage(); // device B: its own browser profile and data
   await settings(b);
-  await login(b, "Masuk");
-  const list = b.getByRole("list", { name: "Backup di cloud" });
+  await login(b, "Sign in");
+  const list = b.getByRole("list", { name: "Cloud backups" });
   await expect(list.getByRole("listitem")).toHaveCount(1);
-  await list.getByRole("button", { name: "Pulihkan…" }).click();
-  const dialog = b.getByRole("dialog", { name: "Impor backup .sabung" });
-  await expect(dialog.getByText(/ditambah ·/)).toBeVisible({ timeout: 120_000 });
+  await list.getByRole("button", { name: "Restore…" }).click();
+  const dialog = b.getByRole("dialog", { name: "Import .sabung backup" });
+  await expect(dialog.getByText(/added ·/)).toBeVisible({ timeout: 120_000 });
   await dialog.getByRole("radio", { name: /Replace/ }).check();
   await dialog.getByRole("button", { name: "Confirm & Apply" }).click();
-  await expect(b.getByText(/Backup diimpor \(Replace\)/)).toBeVisible({ timeout: 60_000 });
+  await expect(b.getByText(/Backup imported \(Replace\)/)).toBeVisible({ timeout: 60_000 });
   await expect(b.getByTestId("season-chip")).toHaveText("Musim Cloud · Draft");
   expect(await tablesOf(b)).toEqual(original);
 
-  await list.getByRole("button", { name: "Hapus" }).click(); // tidy up the test backup
-  await b.getByRole("button", { name: "Hapus permanen" }).click();
-  await expect(b.getByText("Belum ada backup di cloud.")).toBeVisible();
+  await list.getByRole("button", { name: "Delete" }).click(); // tidy up the test backup
+  await b.getByRole("button", { name: "Delete for good" }).click();
+  await expect(b.getByText("No cloud backups yet.")).toBeVisible();
 });

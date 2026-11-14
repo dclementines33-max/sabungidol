@@ -115,8 +115,8 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
     const raw = delta + champ + upsets + move;
     const factor = raw > 0 ? Math.max(0.2, Math.min(1.5, (100 - old) / 30)) : 1;
     const value = Math.max(1, Math.min(100, Math.round(old + raw * factor)));
-    const reason = [`performa ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`, champ && `juara +${champ.toFixed(1)}`, upsets && `upset +${upsets}`,
-      move && (move > 0 ? "promosi +2" : "degradasi −2"), factor !== 1 && `× ${factor.toFixed(2)} (rating ${old})`].filter(Boolean).join(", ");
+    const reason = [`form ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`, champ && `titles +${champ.toFixed(1)}`, upsets && `upset +${upsets}`,
+      move && (move > 0 ? "promotion +2" : "relegation −2"), factor !== 1 && `× ${factor.toFixed(2)} (rating ${old})`].filter(Boolean).join(", ");
     return { idolId: id, old, new: value, score: score.get(id)!, expected, reason };
   });
 }

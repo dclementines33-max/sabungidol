@@ -9,7 +9,7 @@ describe("Input Data batch (PRD §8)", () => {
     const rows = previewBatch(pasteToFields("Karina | aespa | 90 | 1 | kr | 2000-04-11\n\nYuna|ITZY\nIU |  | 88"), existing);
     expect(statuses(rows)).toEqual(["Karina:new", "Yuna:warning", "IU:new"]);
     expect(rows[0]!.input).toEqual({ name: "Karina", groupName: "aespa", rating: 90, seed: 1, nationality: "KR", birthday: "2000-04-11" });
-    expect(rows[1]!.reasons).toEqual(["Rating kosong, dipakai 75"]);
+    expect(rows[1]!.reasons).toEqual(["No rating, using 75"]);
     expect(rows[1]!.input!.rating).toBe(75);
     expect(rows[2]!.groupName).toBeNull(); // empty group = Soloist
   });
@@ -24,8 +24,8 @@ describe("Input Data batch (PRD §8)", () => {
   it("red for rows that cannot be saved, with the reason", () => {
     const rows = previewBatch(pasteToFields(" | aespa | 80\nGiselle | aespa | sembilan\nKarina | aespa | 90 | 7\nX | | 80 | | Korea"), existing);
     expect(rows.map((r) => r.status)).toEqual(["invalid", "invalid", "invalid", "invalid"]);
-    expect(rows[0]!.reasons).toContain("Nama wajib diisi");
-    expect(rows[3]!.reasons).toContain("Kode negara 2 huruf, mis. KR");
+    expect(rows[0]!.reasons).toContain("Name is required");
+    expect(rows[3]!.reasons).toContain("2-letter country code, e.g. KR");
   });
 
   it("reads CSV with a header and quotes, and JSON arrays, into the same rows", () => {
@@ -33,6 +33,6 @@ describe("Input Data batch (PRD §8)", () => {
     expect(statuses(previewBatch(csv, []))).toEqual(["Kim, Minji:new", "Hanni:warning"]);
     const json = jsonToFields('[{"name":"Minji","group":"NewJeans","rating":88,"seed":null}]');
     expect(previewBatch(json, [])[0]!.input).toMatchObject({ name: "Minji", groupName: "NewJeans", rating: 88, seed: null });
-    expect(() => jsonToFields('{"name":"x"}')).toThrow("JSON harus berupa daftar");
+    expect(() => jsonToFields('{"name":"x"}')).toThrow("The JSON must be a list");
   });
 });

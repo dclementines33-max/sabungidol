@@ -23,7 +23,7 @@ export function RaceGrid() {
         return (
           <figure key={comp} className={`m-0 w-full md:w-[calc(50%-1.25rem)] ${i % 2 ? "md:mt-12" : ""}`}>
             <figcaption className="mb-1 flex items-baseline gap-3"><span className="font-gothic text-3xl text-accent-bright">{comp.slice(2)}</span><span className="font-display text-lg">{brand(comp).name}</span></figcaption>
-            {view ? <LineRace label={`Title race ${brand(comp).name}`} series={top.map((id) => ({ id, values: race[id] ?? [0] }))} /> : <p className="m-0 text-sm text-text-secondary">Membaca…</p>}
+            {view ? <LineRace label={`Title race ${brand(comp).name}`} series={top.map((id) => ({ id, values: race[id] ?? [0] }))} /> : <p className="m-0 text-sm text-text-secondary">Loading…</p>}
           </figure>
         );
       })}

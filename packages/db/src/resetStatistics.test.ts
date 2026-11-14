@@ -10,7 +10,7 @@ import { startSeason } from "./seasonPlay";
 import { createDraftSeason, currentSeason, leagueRosters } from "./seasons";
 import { idols, matches, ratingHistory, seasons } from "./schema";
 
-describe("reset statistik", () => {
+describe("statistics reset", () => {
   it("keeps idols with their ratings and the league rosters as Season 1 draft; everything played goes", async () => {
     const db = await openDb();
     const ids = (await addIdols(db, Array.from({ length: 240 }, (_, i) => ({ name: `I${i}`, groupName: null, rating: 70, seed: null, nationality: null, birthday: null })))).added;

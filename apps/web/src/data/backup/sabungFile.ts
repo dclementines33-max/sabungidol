@@ -41,20 +41,20 @@ export async function readSabung(bytes: Uint8Array, schemaVersion: number): Prom
   try {
     files = unzipSync(bytes);
   } catch {
-    throw new Error("File ini bukan backup .sabung (bukan ZIP yang valid).");
+    throw new Error("This isn't a .sabung backup (not a valid ZIP).");
   }
   const manifest = files["manifest.json"] && (JSON.parse(strFromU8(files["manifest.json"])) as Manifest);
-  if (!manifest || manifest.app !== "sabung-idol") throw new Error("File ini bukan backup Sabung Idol (manifest.json tidak ada).");
+  if (!manifest || manifest.app !== "sabung-idol") throw new Error("This isn't a Sabung Idol backup (no manifest.json).");
   if (manifest.schemaVersion > schemaVersion || manifest.format > FORMAT) {
-    throw new Error(`Backup ini dari versi aplikasi yang lebih baru (skema ${manifest.schemaVersion}, di sini ${schemaVersion}). Perbarui aplikasi dulu.`);
+    throw new Error(`This backup comes from a newer app version (schema ${manifest.schemaVersion}, here ${schemaVersion}). Update the app first.`);
   }
   let tables: BackupTables = {};
   for (const [name, { rows, sha256: expected }] of Object.entries(manifest.tables)) {
     const file = files[`data/${name}.ndjson`];
-    if (!file || (await sha256(file)) !== expected) throw new Error(`Backup rusak: data ${name} tidak cocok dengan checksum-nya.`);
+    if (!file || (await sha256(file)) !== expected) throw new Error(`Backup damaged: ${name} doesn't match its checksum.`);
     const text = strFromU8(file);
     tables[name] = text ? text.split("\n").map((line) => JSON.parse(line)) : [];
-    if (tables[name]!.length !== rows) throw new Error(`Backup rusak: ${name} berisi ${tables[name]!.length} baris, manifest bilang ${rows}.`);
+    if (tables[name]!.length !== rows) throw new Error(`Backup damaged: ${name} has ${tables[name]!.length} rows, the manifest says ${rows}.`);
   }
   for (let v = manifest.schemaVersion; v < schemaVersion; v++) tables = UPGRADES[v]?.(tables) ?? tables;
   const photos = Object.fromEntries(Object.entries(files).filter(([p]) => p.startsWith("photos/") && !p.endsWith("/")).map(([p, b]) => [p.slice(7), b]));

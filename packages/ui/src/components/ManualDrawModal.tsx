@@ -22,19 +22,19 @@ function ManualDrawModal({ open, onOpenChange, title, labels, initial, check, on
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      description="Pilih dua idol (klik atau Enter) atau seret satu ke yang lain untuk menukar posisi."
+      description="Pick two idols (click or Enter), or drag one onto another, to swap them."
       className="max-w-5xl"
       footer={
         <>
-          <Button onClick={() => setColumns(initial)}>Kembalikan</Button>
-          <Button onClick={() => onOpenChange(false)}>Batal</Button>
+          <Button onClick={() => setColumns(initial)}>Reset</Button>
+          <Button onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button variant="primary" disabled={problems.length > 0} onClick={() => { onApply(columns); onOpenChange(false); }}>Apply</Button>
         </>
       }
     >
       <SwapBoard labels={labels} columns={columns} onChange={setColumns} />
       <div role="status" className="mt-4 text-sm">
-        {problems.length === 0 && warnings.length === 0 && <p className="m-0 text-cool">Semua aturan terpenuhi.</p>}
+        {problems.length === 0 && warnings.length === 0 && <p className="m-0 text-cool">All rules met.</p>}
         {problems.length > 0 && <ul className="m-0 pl-5 text-danger">{problems.map((p) => <li key={p}>{p}</li>)}</ul>}
         {warnings.length > 0 && <ul className="m-0 pl-5 text-accent-bright">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
       </div>
@@ -46,14 +46,14 @@ type Props = { open: boolean; onOpenChange: (open: boolean) => void; check: (col
 const LETTERS = "ABCDEFGHIJKLMNOP";
 
 export function ManualGroupModal({ groups, onApply, ...props }: Props & { groups: string[][]; onApply: (groups: string[][]) => void }) {
-  return <ManualDrawModal {...props} title="Atur grup Unzure Cup" labels={groups.map((_, g) => `Grup ${LETTERS[g]}`)} initial={groups} onApply={onApply} />;
+  return <ManualDrawModal {...props} title="Set the Unzure Cup groups" labels={groups.map((_, g) => `Group ${LETTERS[g]}`)} initial={groups} onApply={onApply} />;
 }
 
 export function ManualBracketModal({ pairs, onApply, ...props }: Props & { pairs: [string, string][]; onApply: (pairs: [string, string][]) => void }) {
   return (
     <ManualDrawModal
       {...props}
-      title="Atur bracket babak 32"
+      title="Set the round-of-32 bracket"
       labels={pairs.map((_, i) => `Match ${i + 1}`)}
       initial={pairs}
       onApply={(columns) => onApply(columns as [string, string][])}

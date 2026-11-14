@@ -17,19 +17,19 @@ export function SyncTheIdols({ disabled }: { disabled: boolean }) {
   const count = changes.in.length;
   const sync = async () => {
     const result = await engine().syncTheIdols();
-    notify(result.ok ? { level: "success", message: `Roster The Idols disesuaikan: ${count} masuk, ${count} keluar` } : { level: "warning", message: result.reason! });
+    notify(result.ok ? { level: "success", message: `The Idols roster synced: ${count} in, ${count} out` } : { level: "warning", message: result.reason! });
     await queryClient.invalidateQueries({ queryKey: SEASON_QUERY });
   };
   return (
     <>
       <Button disabled={disabled || changes.played || count === 0} onClick={() => setConfirm(true)}
-        title={changes.played ? "Match The Idols sudah dimainkan" : count === 0 ? "Roster sudah sesuai rating" : undefined}>
-        Sync rating{count ? ` (${count} berubah)` : ""}
+        title={changes.played ? "The Idols matches already played" : count === 0 ? "Roster already matches the ratings" : undefined}>
+        Sync rating{count ? ` (${count} changes)` : ""}
       </Button>
-      {changes.played && <span className="text-xs text-text-secondary">Roster terkunci: match The Idols sudah dimainkan</span>}
+      {changes.played && <span className="text-xs text-text-secondary">Roster locked: The Idols matches already played</span>}
       {confirm && (
         <ConfirmDialog open onOpenChange={setConfirm} title="Sync rating The Idols"
-          message={`Masuk: ${names(changes.in)}. Keluar: ${names(changes.out)}.`} confirmLabel="Sync" onConfirm={sync} />
+          message={`In: ${names(changes.in)}. Out: ${names(changes.out)}.`} confirmLabel="Sync" onConfirm={sync} />
       )}
     </>
   );

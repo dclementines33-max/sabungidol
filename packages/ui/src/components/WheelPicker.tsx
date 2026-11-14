@@ -116,18 +116,18 @@ export function WheelPicker({ idolA, idolB, bestOf, games, onChange, random = Ma
         {photo("B", idolB, b.name, "cool")}
       </div>
       {games.length > 0 && (
-        <ol aria-label="Hasil tiap spin" className="m-0 flex list-none flex-wrap justify-center gap-1 p-0 font-mono text-xs">
+        <ol aria-label="Result of each spin" className="m-0 flex list-none flex-wrap justify-center gap-1 p-0 font-mono text-xs">
           {games.map((g, i) => <li key={i} className={`px-2 py-0.5 ${g === "A" ? "bg-accent/60" : "bg-surface-hover"}`}>G{i + 1} {g === "A" ? a.name : b.name}</li>)}
         </ol>
       )}
       <p className="m-0 text-center font-display text-5xl leading-none tabular-nums" aria-live="polite">
         {scoreA}–{scoreB}
-        {result && <span className="mt-2 block text-center text-lg uppercase text-brand-gold">{seriesWinner ? `${seriesWinner} menang` : "Seri"}</span>}
+        {result && <span className="mt-2 block text-center text-lg uppercase text-brand-gold">{seriesWinner ? `${seriesWinner} wins` : "Draw"}</span>}
       </p>
       <div className="flex flex-wrap justify-center gap-2">
         <Button variant="primary" disabled={!!result || busy} onClick={spin}>Spin game {games.length + 1}</Button>
         <Button disabled={!!result || busy} onClick={() => setAuto(true)}>Spin all</Button>
-        <Button disabled={games.length === 0 || busy} onClick={() => onChange([])}>Ulang</Button>
+        <Button disabled={games.length === 0 || busy} onClick={() => onChange([])}>Reset</Button>
       </div>
     </div>
   );

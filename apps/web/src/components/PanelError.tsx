@@ -17,13 +17,13 @@ export function PanelError({ error, reset }: ErrorComponentProps) {
   const message = error instanceof Error ? error.message : String(error);
   const report = useMemo(() => errorReport({ code: PANEL_ERROR_CODE, error, route }), [error, route]);
   useEffect(() => {
-    record({ level: "error", code: PANEL_ERROR_CODE, message: `Panel ${route} gagal dimuat`, context: message });
+    record({ level: "error", code: PANEL_ERROR_CODE, message: `Panel ${route} failed to load`, context: message });
   }, [message, route, record]);
   return (
     <div className="mx-auto max-w-xl py-8">
       <ErrorPanel
         code={PANEL_ERROR_CODE}
-        message="Panel ini gagal dimuat"
+        message="This panel failed to load"
         context={message}
         report={report}
         retryLabel="Reload panel"

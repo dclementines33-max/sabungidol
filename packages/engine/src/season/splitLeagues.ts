@@ -14,7 +14,7 @@ const PER_DIVISION = 6 * PER_LEAGUE;
 
 export function splitLeagues(idols: SplitIdol[]): LeagueSplit {
   if (idols.length < 2 * PER_DIVISION) {
-    throw new Error(`Pembagian liga butuh minimal ${2 * PER_DIVISION} idol aktif, sekarang ada ${idols.length}`);
+    throw new Error(`Splitting the leagues needs at least ${2 * PER_DIVISION} active idols, there are ${idols.length}`);
   }
   const ranked = [...idols].sort((a, b) => b.rating - a.rating || a.name.localeCompare(b.name));
   // Inside a division, seeds 1–4 are dealt first (seed 1 first), so each seed is spread over the leagues.

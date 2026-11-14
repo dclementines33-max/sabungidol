@@ -11,7 +11,7 @@ function Podium({ t }: { t: Champion }) {
   return (
     <p className="m-0 text-xs text-text-secondary">
       {t.runnerUp && <>Runner-up <IdolLink id={t.runnerUp} className="text-text-primary" /></>}
-      {t.third && <> · Ke-3 <IdolLink id={t.third} className="text-text-primary" /></>}
+      {t.third && <> · 3rd <IdolLink id={t.third} className="text-text-primary" /></>}
     </p>
   );
 }
@@ -22,7 +22,7 @@ export function ChampionList({ titles }: { titles: Champion[] }) {
   const seasons = [...new Set(titles.map((t) => t.season))];
   const many = seasons.some((s) => titles.filter((t) => t.season === s).length > 1);
   return (
-    <ol className="m-0 list-none space-y-12 p-0" aria-label="Juara per season">
+    <ol className="m-0 list-none space-y-12 p-0" aria-label="Champions by season">
       {seasons.map((season, i) => {
         const list = titles.filter((t) => t.season === season);
         return (

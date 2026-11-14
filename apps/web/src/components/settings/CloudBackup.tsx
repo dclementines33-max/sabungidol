@@ -26,11 +26,11 @@ function Login({ onDone }: { onDone: () => void }) {
   return (
     <form className="grid max-w-sm gap-3" onSubmit={(e) => { e.preventDefault(); void go(signIn)(); }}>
       <label className="text-sm text-text-secondary">Email<input type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className={FIELD} /></label>
-      <label className="text-sm text-text-secondary">Password (min. 8 karakter)<input type="password" required minLength={8} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className={FIELD} /></label>
+      <label className="text-sm text-text-secondary">Password (min. 8 characters)<input type="password" required minLength={8} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className={FIELD} /></label>
       {error && <p role="alert" className="m-0 text-sm text-danger">{error}</p>}
       <div className="flex gap-3">
-        <Button type="submit" variant="primary" disabled={busy}>Masuk</Button>
-        <Button type="button" disabled={busy || !email || password.length < 8} onClick={go(signUp)}>Daftar akun baru</Button>
+        <Button type="submit" variant="primary" disabled={busy}>Sign in</Button>
+        <Button type="button" disabled={busy || !email || password.length < 8} onClick={go(signUp)}>Create account</Button>
       </div>
     </form>
   );
@@ -48,44 +48,44 @@ export function CloudBackup({ onRestore }: { onRestore: (file: File) => void }) 
     try {
       const { bytes, name } = await engine().exportBackup("full");
       await uploadCloudBackup(bytes, name);
-      notify({ level: "success", message: `Backup diunggah ke cloud (${mb(bytes.byteLength)})` });
+      notify({ level: "success", message: `Backup uploaded to the cloud (${mb(bytes.byteLength)})` });
       await backups.refetch();
     } catch (error) {
-      fail("Upload backup ke cloud gagal.")(error);
+      fail("Cloud upload failed.")(error);
     }
     setBusy(false);
   };
-  const remove = (b: Backup) => deleteCloudBackup(b.id).then(() => backups.refetch(), fail("Backup cloud tidak bisa dihapus."));
-  const restore = (b: Backup) => downloadCloudBackup(b).then(onRestore, fail("Backup cloud tidak bisa diunduh."));
+  const remove = (b: Backup) => deleteCloudBackup(b.id).then(() => backups.refetch(), fail("The cloud backup couldn't be deleted."));
+  const restore = (b: Backup) => downloadCloudBackup(b).then(onRestore, fail("The cloud backup couldn't be downloaded."));
 
   return (
     <div className="space-y-3" aria-labelledby="set-cloud">
-      <h3 id="set-cloud" className="m-0 text-sm font-medium">Backup cloud (opsional)</h3>
-      {session.isPending ? <p className="m-0 text-sm text-text-secondary">Memeriksa login…</p>
-        : session.isError ? <p className="m-0 text-sm text-text-secondary">Cloud tidak bisa dihubungi (offline?). Backup lokal di atas tetap bisa dipakai.</p>
+      <h3 id="set-cloud" className="m-0 text-sm font-medium">Cloud backup (optional)</h3>
+      {session.isPending ? <p className="m-0 text-sm text-text-secondary">Checking sign-in…</p>
+        : session.isError ? <p className="m-0 text-sm text-text-secondary">Can't reach the cloud (offline?). The local backup above still works.</p>
         : !user ? <Login onDone={() => void session.refetch()} />
         : (
           <>
             <div className="flex flex-wrap items-center gap-3 text-sm">
-              <span className="text-text-secondary">Masuk sebagai <span className="text-text-primary">{user.email}</span></span>
-              <Button className="px-2 py-1" onClick={() => signOut().then(() => session.refetch(), fail("Keluar gagal."))}>Keluar</Button>
-              <Button variant="primary" disabled={busy} onClick={upload}>{busy ? "Mengunggah…" : "Backup ke cloud"}</Button>
+              <span className="text-text-secondary">Signed in as <span className="text-text-primary">{user.email}</span></span>
+              <Button className="px-2 py-1" onClick={() => signOut().then(() => session.refetch(), fail("Sign-out failed."))}>Sign out</Button>
+              <Button variant="primary" disabled={busy} onClick={upload}>{busy ? "Uploading…" : "Back up to cloud"}</Button>
             </div>
-            {backups.data?.length === 0 ? <p className="m-0 text-sm text-text-secondary">Belum ada backup di cloud.</p> : (
-              <ul className="m-0 list-none space-y-1 p-0 text-sm" aria-label="Backup di cloud">
+            {backups.data?.length === 0 ? <p className="m-0 text-sm text-text-secondary">No cloud backups yet.</p> : (
+              <ul className="m-0 list-none space-y-1 p-0 text-sm" aria-label="Cloud backups">
                 {backups.data?.map((b) => (
                   <li key={b.id} className="flex items-center gap-3">
-                    <span className="min-w-0 flex-1 truncate font-mono text-text-secondary">{b.name} · {mb(b.size)} · {new Date(b.createdAt).toLocaleString("id-ID")}</span>
-                    <Button className="px-2 py-1" onClick={() => restore(b)}>Pulihkan…</Button>
-                    <Button className="px-2 py-1" variant="danger" onClick={() => setDeleting(b)}>Hapus</Button>
+                    <span className="min-w-0 flex-1 truncate font-mono text-text-secondary">{b.name} · {mb(b.size)} · {new Date(b.createdAt).toLocaleString("en-GB")}</span>
+                    <Button className="px-2 py-1" onClick={() => restore(b)}>Restore…</Button>
+                    <Button className="px-2 py-1" variant="danger" onClick={() => setDeleting(b)}>Delete</Button>
                   </li>
                 ))}
               </ul>
             )}
           </>
         )}
-      <ConfirmDialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)} danger title="Hapus backup cloud?" confirmLabel="Hapus permanen"
-        message={`${deleting?.name ?? ""} dihapus dari cloud dan tidak bisa dikembalikan. Data di perangkat ini tidak berubah.`} onConfirm={() => deleting && void remove(deleting)} />
+      <ConfirmDialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)} danger title="Delete cloud backup?" confirmLabel="Delete for good"
+        message={`${deleting?.name ?? ""} is deleted from the cloud for good. Data on this device doesn't change.`} onConfirm={() => deleting && void remove(deleting)} />
     </div>
   );
 }

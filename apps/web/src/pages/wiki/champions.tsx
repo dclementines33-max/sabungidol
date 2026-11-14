@@ -16,11 +16,11 @@ const keyOf = (titleKey: string) => competitionKeyOf(titleKey.split("-")[0]!);
 
 function HallOfChampions() {
   const { data, isPending } = useQuery({ queryKey: ["champions"], queryFn: () => engine().champions(), staleTime: 0, enabled: typeof Worker !== "undefined" });
-  if (isPending) return <p className="text-text-secondary">Membaca juara…</p>;
-  if (!data?.length) return <EmptyState icon={Crown} title="Belum ada juara" description="Juara muncul di sini setelah season pertama selesai." />;
+  if (isPending) return <p className="text-text-secondary">Loading champions…</p>;
+  if (!data?.length) return <EmptyState icon={Crown} title="No champions yet" description="Champions show up here once the first season is done." />;
   const comps = SEASON_COMPETITIONS.filter((c) => c.key !== "SWS" && c.key !== "LCQ");
   return (
-    <Tabs label="Kompetisi" tabs={comps.map((c) => {
+    <Tabs label="Competition" tabs={comps.map((c) => {
       const titles = data.filter((t) => keyOf(t.key) === c.key);
       return {
         id: c.key, label: c.name,
@@ -29,7 +29,7 @@ function HallOfChampions() {
             <WallOfFame champions={titles.map((t) => t.champion)} />
             <ChampionList titles={titles} />
           </div>
-        ) : <p className="text-text-secondary">Belum ada juara {c.name}.</p>),
+        ) : <p className="text-text-secondary">No {c.name} champion yet.</p>),
       };
     })} />
   );

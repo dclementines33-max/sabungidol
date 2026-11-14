@@ -43,10 +43,10 @@ export function GalleryImport({ idols }: { idols: IdolRow[] }) {
         (await engine().setGallery(f.idolId!, f.files)).forEach(forgetPhoto);
         setSaved(++done);
       } catch (error) {
-        notify({ level: "error", code: "E-PHOTO-003", message: `Galeri ${f.name} gagal disimpan. Galeri lain tetap tersimpan.`, context: String(error) });
+        notify({ level: "error", code: "E-PHOTO-003", message: `Gallery ${f.name} couldn't be saved. The other galleries are safe.`, context: String(error) });
       }
     }
-    notify({ level: "success", message: `Galeri ${done} idol disimpan` });
+    notify({ level: "success", message: `Galleries saved for ${done} idols` });
     setFolders([]);
     setSaved(null);
     await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
@@ -54,9 +54,9 @@ export function GalleryImport({ idols }: { idols: IdolRow[] }) {
 
   return (
     <section className="studio-section space-y-4" aria-labelledby="gallery">
-      <h2 id="gallery" className="m-0 font-display">Galeri foto</h2>
-      <p className="m-0 text-sm text-text-secondary">Foto tambahan yang tampil di samping match. Pilih folder galeri: tiap subfolder bernama "Nama GROUP" dicocokkan ke idolnya. Galeri lama idol itu diganti.</p>
-      <Button onClick={() => input.current?.click()}><FolderOpen aria-hidden="true" size={16} strokeWidth={1.5} /> Pilih folder galeri…</Button>
+      <h2 id="gallery" className="m-0 font-display">Photo gallery</h2>
+      <p className="m-0 text-sm text-text-secondary">Extra photos shown beside a match. Pick a gallery folder: each subfolder named "Name GROUP" is matched to its idol. That idol's old gallery is replaced.</p>
+      <Button onClick={() => input.current?.click()}><FolderOpen aria-hidden="true" size={16} strokeWidth={1.5} /> Choose gallery folder…</Button>
       <input ref={input} type="file" multiple hidden {...{ webkitdirectory: "" }} onChange={(e) => {
         setFolders(groupByFolder([...(e.target.files ?? [])], idols));
         e.target.value = ""; // the same folder can be picked again
@@ -64,27 +64,27 @@ export function GalleryImport({ idols }: { idols: IdolRow[] }) {
       {folders.length > 0 && (
         <>
           <p className="m-0 text-sm text-text-secondary" aria-live="polite">
-            {folders.length} folder · {folders.reduce((n, f) => n + f.files.length, 0)} foto · {folders.filter((f) => f.sure && f.idolId).length} cocok · {folders.filter((f) => !f.sure && f.idolId).length} saran, periksa · {folders.filter((f) => !f.idolId).length} belum dipilih
+            {folders.length} folders · {folders.reduce((n, f) => n + f.files.length, 0)} photos · {folders.filter((f) => f.sure && f.idolId).length} matched · {folders.filter((f) => !f.sure && f.idolId).length} suggested, check · {folders.filter((f) => !f.idolId).length} not picked
           </p>
           <ul className="m-0 grid list-none gap-3 p-0 md:grid-cols-2">
             {folders.map((f, i) => (
               <li key={f.name} className="flex items-start gap-3 panel bg-surface p-3">
                 <img src={previews[i]} alt="" className="aspect-[4/5] w-16 rounded-control object-cover" />
                 <div className="min-w-0 flex-1">
-                  <p className="m-0 truncate font-mono text-xs text-text-secondary">{f.name} · {f.files.length} foto</p>
+                  <p className="m-0 truncate font-mono text-xs text-text-secondary">{f.name} · {f.files.length} photos</p>
                   <p className={`m-0 text-xs ${f.idolId ? (f.sure ? "text-cool" : "text-accent-bright") : "text-text-secondary"}`}>
-                    {f.idolId ? (f.sure ? "Cocok" : "Saran: periksa") : "Belum dipilih"}
+                    {f.idolId ? (f.sure ? "Match" : "Suggested: check") : "Not picked"}
                   </p>
-                  <SearchableIdolSelect label={`Idol untuk folder ${f.name}`} idolIds={ids} value={f.idolId} onChange={(id) => set(i, id)} />
+                  <SearchableIdolSelect label={`Idol for folder ${f.name}`} idolIds={ids} value={f.idolId} onChange={(id) => set(i, id)} />
                 </div>
-                <Button className="px-2" aria-label={`Buang folder ${f.name}`} onClick={() => setFolders((all) => all.filter((_, n) => n !== i))}>
+                <Button className="px-2" aria-label={`Remove folder ${f.name}`} onClick={() => setFolders((all) => all.filter((_, n) => n !== i))}>
                   <X aria-hidden="true" size={16} strokeWidth={1.5} />
                 </Button>
               </li>
             ))}
           </ul>
           <Button variant="primary" disabled={saved !== null || ready.length === 0} onClick={save}>
-            {saved !== null ? `Menyimpan ${saved}/${ready.length}…` : `Simpan galeri ${ready.length} idol`}
+            {saved !== null ? `Saving ${saved}/${ready.length}…` : `Save galleries for ${ready.length} idols`}
           </Button>
         </>
       )}

@@ -18,17 +18,17 @@ describe("checkGroups", () => {
     const edited = groups.map((g) => [...g]);
     edited[0].push(edited[1].pop()!); // A has 5, B has 3
     const { problems } = checkGroups(edited, potOf);
-    expect(problems).toContain("Grup A berisi 5 idol, harus 4");
-    expect(problems).toContain("Grup B berisi 3 idol, harus 4");
-    expect(problems).toContain("Grup A punya dua idol dari pot yang sama");
+    expect(problems).toContain("Group A has 5 idols, needs 4");
+    expect(problems).toContain("Group B has 3 idols, needs 4");
+    expect(problems).toContain("Group A has two idols from the same pot");
 
     const clash = [[{ id: "i0", league: "D1A", groupId: "x" }, { id: "i16", league: "D1B", groupId: "x" }, idol(32), idol(48)]];
-    expect(checkGroups(clash, potOf).problems).toEqual(["Grup A punya dua idol dari girl group yang sama"]);
+    expect(checkGroups(clash, potOf).problems).toEqual(["Group A has two idols from the same girl group"]);
   });
 
   it("league mates are a warning only", () => {
     const sameLeague = [[idol(0), idol(22), idol(38), idol(54)]]; // all D1A, pots 0–3, different girl groups
-    expect(checkGroups(sameLeague, potOf)).toEqual({ problems: [], warnings: ["Grup A punya rekan satu liga"] });
+    expect(checkGroups(sameLeague, potOf)).toEqual({ problems: [], warnings: ["Group A has league teammates"] });
   });
 });
 
@@ -45,8 +45,8 @@ describe("checkKnockout", () => {
 
   it("finds two winners together and a group rematch", () => {
     expect(checkKnockout([["w1", "w2"], ["w3", "r3"]], about).problems).toEqual([
-      "Match 1 harus juara grup melawan runner-up",
-      "Match 2 mempertemukan dua idol dari Grup D",
+      "Match 1 must be a group winner against a runner-up",
+      "Match 2 pairs two idols from Group D",
     ]);
   });
 });

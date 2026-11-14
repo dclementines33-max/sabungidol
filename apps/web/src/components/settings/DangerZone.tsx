@@ -18,16 +18,16 @@ export function DangerZone({ season }: { season: SeasonRow }) {
   const running = SEASON_COMPETITIONS.filter((c) => !readSeasonConfig(season.config).off.includes(c.key)).length;
   const reset = async ({ redraw }: { redraw: boolean }) => {
     await engine().resetSeason(season.id, redraw);
-    notify({ level: "success", message: `${season.name} direset ke draft${redraw ? ", liga dibagi ulang" : ""}` });
+    notify({ level: "success", message: `${season.name} reset to draft${redraw ? ", leagues redrawn" : ""}` });
     await refreshSeason();
   };
   const resetStats = async () => {
     await engine().resetStatistics();
-    notify({ level: "success", message: "Statistik direset: tinggal idol, rating, liga dan roster sebagai Season 1" });
+    notify({ level: "success", message: "Statistics reset: idols, ratings, leagues and rosters remain as Season 1" });
     await queryClient.invalidateQueries(); // every page's numbers changed
   };
   const wipe = async () => {
-    await engine().saveSnapshot("hapus semua data"); // kept: snapshots live outside the database folder
+    await engine().saveSnapshot("delete all data"); // kept: snapshots live outside the database folder
     await requestWipe(await navigator.storage.getDirectory(), MAIN_DATABASE);
     location.reload();
   };
@@ -36,18 +36,18 @@ export function DangerZone({ season }: { season: SeasonRow }) {
       <h2 id="set-danger" className="m-0 font-display text-danger">Danger Zone</h2>
       <div className="flex flex-wrap gap-3">
         <Button variant="danger" onClick={() => setOpen("reset")}>Reset season…</Button>
-        <Button variant="danger" onClick={() => setOpen("stats")}>Reset statistik…</Button>
-        <Button variant="danger" onClick={() => setOpen("wipe")}>Hapus semua data…</Button>
+        <Button variant="danger" onClick={() => setOpen("stats")}>Reset statistics…</Button>
+        <Button variant="danger" onClick={() => setOpen("wipe")}>Delete all data…</Button>
       </div>
       <ConfirmDialog open={open === "stats"} onOpenChange={(o) => setOpen(o ? "stats" : null)} danger typeToConfirm="RESET"
-        title="Reset semua statistik?" confirmLabel="Reset statistik"
-        message="Semua season (termasuk arsip), match, gelar, rekor, statistik dan riwayat rating dihapus. Yang tersisa: idol dengan rating sekarang, grup, foto, settings, branding, liga dan roster — sebagai Season 1 draft. Snapshot otomatis dibuat dulu."
+        title="Reset all statistics?" confirmLabel="Reset statistics"
+        message="Every season (archives too), match, title, record, statistic and rating history is deleted. What stays: idols at their current ratings, groups, photos, settings, branding, leagues and rosters — as a Season 1 draft. An automatic snapshot is taken first."
         onConfirm={resetStats} />
       <ResetSeasonModal open={open === "reset"} onOpenChange={(o) => setOpen(o ? "reset" : null)} seasonName={season.name}
         matchCount={matchCount} competitionCount={running} onReset={reset} />
-      <ConfirmDialog open={open === "wipe"} onOpenChange={(o) => setOpen(o ? "wipe" : null)} danger typeToConfirm="HAPUS SEMUA"
-        title="Hapus semua data?" confirmLabel="Hapus semua"
-        message="Semua idol, foto, season dan match di browser ini dihapus, lalu data idol bawaan dimuat lagi. Ini tidak bisa dibatalkan; buat backup dulu kalau masih butuh datanya."
+      <ConfirmDialog open={open === "wipe"} onOpenChange={(o) => setOpen(o ? "wipe" : null)} danger typeToConfirm="DELETE ALL"
+        title="Delete all data?" confirmLabel="Delete all"
+        message="Every idol, photo, season and match in this browser is deleted, then the default idols load again. This can't be undone; back up first if you still need the data."
         onConfirm={wipe} />
     </section>
   );

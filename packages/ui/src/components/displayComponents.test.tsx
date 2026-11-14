@@ -65,11 +65,11 @@ describe("IdolCard", () => {
     render(<SampleIdols><IdolCard idolId="jiwoo" /></SampleIdols>);
     expect(screen.getByText("Soloist")).toBeTruthy();
     expect(screen.queryByLabelText(/titles/)).toBeNull();
-    expect(screen.queryByText("Nonaktif")).toBeNull();
+    expect(screen.queryByText("Inactive")).toBeNull();
   });
   it("marks an inactive idol", () => {
     render(<SampleIdols><IdolCard idolId="rina" /></SampleIdols>);
-    expect(screen.getByText("Nonaktif")).toBeTruthy();
+    expect(screen.getByText("Inactive")).toBeTruthy();
   });
 });
 
@@ -83,8 +83,8 @@ describe("StatTile", () => {
 
 describe("EmptyState", () => {
   it("shows the title, the hint and the next action", () => {
-    render(<EmptyState icon={Users} title="Belum ada idol" description="Tambah idol lewat Input Data." action={<button type="button">Input Data</button>} />);
-    expect(screen.getByText("Belum ada idol")).toBeTruthy();
+    render(<EmptyState icon={Users} title="No idols yet" description="Add idols lewat Input Data." action={<button type="button">Input Data</button>} />);
+    expect(screen.getByText("No idols yet")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Input Data" })).toBeTruthy();
   });
 });

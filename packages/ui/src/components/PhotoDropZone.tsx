@@ -4,7 +4,7 @@ import { ImagePlus } from "lucide-react";
 import { type DragEvent, useRef, useState } from "react";
 import { Button } from "./Button";
 
-export function PhotoDropZone({ onFiles, label = "Seret foto ke sini" }: { onFiles: (files: File[]) => void; label?: string }) {
+export function PhotoDropZone({ onFiles, label = "Drop photos here" }: { onFiles: (files: File[]) => void; label?: string }) {
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const images = (list: FileList | null) => [...(list ?? [])].filter((f) => f.type.startsWith("image/"));
@@ -22,8 +22,8 @@ export function PhotoDropZone({ onFiles, label = "Seret foto ke sini" }: { onFil
       className={`${over ? "bg-surface-hover" : "bg-surface"} corner-marks flex flex-col items-center gap-3 rounded-card p-8 text-center`}
     >
       <ImagePlus aria-hidden="true" size={32} strokeWidth={1.5} className="text-text-secondary" />
-      <p className="m-0 text-sm text-text-secondary">{label}, atau</p>
-      <Button onClick={() => input.current?.click()}>Pilih foto…</Button>
+      <p className="m-0 text-sm text-text-secondary">{label}, or</p>
+      <Button onClick={() => input.current?.click()}>Choose photos…</Button>
       <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => {
         const files = images(e.target.files);
         if (files.length) onFiles(files);

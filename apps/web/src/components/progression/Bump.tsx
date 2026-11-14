@@ -16,13 +16,13 @@ export function Bump({ codes = D1_LEAGUES }: { codes?: readonly string[] }) {
   const top = view?.standings.slice(0, 6).map((r) => r.idolId) ?? [];
   return (
     <div className="space-y-4">
-      {codes.length > 1 && <div role="group" aria-label="Liga untuk grafik posisi" className="flex flex-wrap gap-1">
+      {codes.length > 1 && <div role="group" aria-label="League for the position chart" className="flex flex-wrap gap-1">
         {codes.map((c, k) => (
           <button key={c} type="button" aria-pressed={k === i} onClick={() => setI(k)}
             className={`px-2 py-1 text-xs font-bold ${k === i ? "bg-cool text-on-fill" : "bg-surface-hover/60 text-text-secondary"} focus-visible:outline-2 focus-visible:outline-accent-bright`}>{brand(c).name}</button>
         ))}
       </div>}
-      {view ? <LineRace invert label={`Posisi ${brand(codes[i]!).name}`} unit="." series={top.map((id) => ({ id, values: view.positions[id] ?? [] }))} /> : <p className="m-0 text-sm text-text-secondary">Membaca…</p>}
+      {view ? <LineRace invert label={`Positions ${brand(codes[i]!).name}`} unit="." series={top.map((id) => ({ id, values: view.positions[id] ?? [] }))} /> : <p className="m-0 text-sm text-text-secondary">Loading…</p>}
     </div>
   );
 }

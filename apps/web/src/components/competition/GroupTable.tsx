@@ -8,7 +8,7 @@ export function GroupTable({ name, rows, through }: { name: string; rows: GroupR
   return (
     <table className="w-full border-collapse text-sm tabular-nums">
       <caption className="pb-2 text-left font-display text-lg">{name}</caption>
-      <thead><tr className="text-left text-[10px] tracking-[0.18em] text-text-secondary uppercase">{["#", "Idol", "M", "Mn-S-K", "±", "Poin", ""].map((h, i) => <th key={i} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
+      <thead><tr className="text-left text-[10px] tracking-[0.18em] text-text-secondary uppercase">{["#", "Idol", "M", "Mn-S-K", "±", "Pts", ""].map((h, i) => <th key={i} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
       <tbody>
         {rows.map((r) => {
           const idol = lookup(r.idolId);
@@ -26,7 +26,7 @@ export function GroupTable({ name, rows, through }: { name: string; rows: GroupR
               <td className="px-1 font-mono">{r.wins}-{r.draws}-{r.losses}</td>
               <td className="px-1 font-mono">{r.gameDiff > 0 ? `+${r.gameDiff}` : r.gameDiff}</td>
               <td className="px-1 font-display text-base">{r.points}</td>
-              <td className="px-1 text-xs font-bold text-cool uppercase">{lolos ? "lolos" : ""}</td>
+              <td className="px-1 text-xs font-bold text-cool uppercase">{lolos ? "through" : ""}</td>
             </tr>
           );
         })}

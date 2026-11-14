@@ -27,12 +27,12 @@ function Home() {
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
   const { data: o } = useQuery({ queryKey: ["overview"], queryFn: () => engine().overview(), staleTime: 0, enabled: on && !!season && !first });
   const { data: stories } = useQuery({ queryKey: ["season-story", season?.id], queryFn: () => engine().seasonStory(season!.id), staleTime: 0, enabled: on && season?.status === "live" });
-  if (!season) return <p className="text-text-secondary">Membaca season…</p>;
+  if (!season) return <p className="text-text-secondary">Loading season…</p>;
   if (first) {
     const placed = new Set(Object.values(rosters).flat());
     return <Welcome seasonName={season.name} idols={idols.length} leagues={Object.keys(rosters).length} reserves={idols.filter((i) => i.active && !placed.has(i.id)).length} />;
   }
-  if (!o) return <p className="text-text-secondary">Membaca season…</p>;
+  if (!o) return <p className="text-text-secondary">Loading season…</p>;
   return (
     <div className="space-y-10">
       {o.allTimeTop && <AllTimeTop row={o.allTimeTop} />}
@@ -44,8 +44,8 @@ function Home() {
       <HomeFact facts={o.facts} />
       <HomeLeaders leaders={o.leaders} />
       <p className="m-0 text-sm text-text-secondary">
-        {o.lastBackup ? `Backup terakhir ${daysAgo(o.lastBackup)} hari lalu.` : "Belum pernah backup."}{" "}
-        <Link to="/studio/settings" search={{ s: "backup" }} className="text-accent-bright underline underline-offset-4">Buka Backup</Link>
+        {o.lastBackup ? `Last backup ${daysAgo(o.lastBackup)} days ago.` : "No backup yet."}{" "}
+        <Link to="/studio/settings" search={{ s: "backup" }} className="text-accent-bright underline underline-offset-4">Open Backup</Link>
       </p>
     </div>
   );

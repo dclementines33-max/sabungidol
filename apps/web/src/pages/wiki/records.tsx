@@ -18,7 +18,7 @@ function AllTimeRecords() {
   const [search, setSearch] = useState("");
   const lookup = useIdolLookup();
   const { data, isPending } = useQuery({ queryKey: ["records", minMatches], queryFn: () => engine().records(Number(minMatches)), staleTime: 0, enabled: typeof Worker !== "undefined" });
-  if (isPending || !data) return <p className="text-text-secondary">Menghitung rekor…</p>;
+  if (isPending || !data) return <p className="text-text-secondary">Crunching the records…</p>;
   const q = search.trim().toLowerCase();
   const hit = (...ids: string[]) => !q || ids.some((id) => lookup(id)?.name.toLowerCase().includes(q));
   const cards: { title: string; rows: RecordRow[] }[] = [
@@ -27,11 +27,11 @@ function AllTimeRecords() {
       rows: c.entries.filter((e) => hit(e.idolId)).map((e) => ({ key: e.idolId, rank: rankLabel(e), who: <IdolLink id={e.idolId} />, value: c.kind === "percent" ? `${(e.value * 100).toFixed(1)}%` : String(e.value) })),
     })),
     {
-      title: "Upset terbesar (selisih rating)",
+      title: "Biggest upset (rating gap)",
       rows: data.upsets.filter((u) => hit(u.winner, u.loser)).map((u) => ({ key: u.matchId, rank: rankLabel(u), who: <><IdolLink id={u.winner} /> <span className="text-text-secondary">vs</span> <IdolLink id={u.loser} /> <span className="text-text-secondary">S{u.season}</span></>, value: `+${u.value}` })),
     },
     {
-      title: "Pertemuan H2H terbanyak",
+      title: "Most H2H meetings",
       rows: data.meetings.filter((m) => hit(...m.idolId.split("|"))).map((m) => {
         const [a, b] = m.idolId.split("|") as [string, string];
         return { key: m.idolId, rank: rankLabel(m), who: <><IdolLink id={a} /> <span className="text-text-secondary">vs</span> <IdolLink id={b} /></>, value: String(m.value) };
@@ -40,13 +40,13 @@ function AllTimeRecords() {
   ];
   return (
     <div className="space-y-6">
-      <PageHeader tag="Records" title="Rekor sepanjang masa" note="Setiap kategori diperingkat; cari nama tanpa mengubah peringkat." />
+      <PageHeader tag="Records" title="All-time records" note="Every category is ranked; search a name without changing the ranks." />
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
-          Cari nama
+          Search a name
           <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} className="mt-1 block rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary" />
         </label>
-        <Select label="Minimal match (rekor %)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
+        <Select label="Minimum matches (% records)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {cards.map((c) => <RecordCard key={c.title} title={c.title} rows={c.rows} />)}

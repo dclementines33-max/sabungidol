@@ -4,10 +4,10 @@ import type { PreviewRow } from "@sabung/shared";
 import { LEVEL } from "@sabung/ui";
 
 const LOOK = {
-  new: { ...LEVEL.success, label: "Baru" },
-  warning: { ...LEVEL.warning, label: "Peringatan" },
-  duplicate: { ...LEVEL.error, label: "Ditolak" },
-  invalid: { ...LEVEL.error, label: "Ditolak" },
+  new: { ...LEVEL.success, label: "New" },
+  warning: { ...LEVEL.warning, label: "Warning" },
+  duplicate: { ...LEVEL.error, label: "Rejected" },
+  invalid: { ...LEVEL.error, label: "Rejected" },
 };
 
 export function PasteBatchPreview({ rows }: { rows: PreviewRow[] }) {
@@ -15,9 +15,9 @@ export function PasteBatchPreview({ rows }: { rows: PreviewRow[] }) {
   return (
     <div className="space-y-2">
       <p className="m-0 text-sm text-text-secondary" aria-live="polite">
-        {count(["new"])} baru · {count(["warning"])} peringatan · {count(["duplicate", "invalid"])} ditolak
+        {count(["new"])} new · {count(["warning"])} warnings · {count(["duplicate", "invalid"])} rejected
       </p>
-      <ol className="m-0 max-h-96 list-none space-y-1 overflow-auto p-0" aria-label="Pratinjau">
+      <ol className="m-0 max-h-96 list-none space-y-1 overflow-auto p-0" aria-label="Preview">
         {rows.map((r) => {
           const { icon: Icon, color, label } = LOOK[r.status];
           return (
@@ -27,7 +27,7 @@ export function PasteBatchPreview({ rows }: { rows: PreviewRow[] }) {
               </span>
               <span className="w-8 shrink-0 font-mono text-text-secondary tabular-nums">{r.line}</span>
               <span className="min-w-0 flex-1">
-                <span className="font-medium">{r.name || "(tanpa nama)"}</span>
+                <span className="font-medium">{r.name || "(no name)"}</span>
                 <span className="text-text-secondary"> · {r.groupName ?? "Soloist"}{r.input ? ` · ${r.input.rating}` : ""}</span>
                 {r.reasons.length > 0 && <span className="block text-text-secondary">{r.reasons.join("; ")}</span>}
               </span>

@@ -1,4 +1,4 @@
-// "Unduh Season Recap" (PRD §16): loads the champions' photos, draws the 1080 × 1350 card and saves it as a PNG.
+// "Download Season Recap" (PRD §16): loads the champions' photos, draws the 1080 × 1350 card and saves it as a PNG.
 import type { Title } from "@sabung/engine";
 import { Button, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
@@ -33,5 +33,5 @@ export function RecapButton({ seasonName, titles }: { seasonName: string; titles
       setBusy(false);
     }
   };
-  return <Button variant="primary" disabled={busy || Object.keys(titles).length === 0} onClick={make}>{busy ? "Menggambar…" : "Unduh Season Recap"}</Button>;
+  return <Button variant="primary" disabled={busy || Object.keys(titles).length === 0} onClick={make}>{busy ? "Drawing…" : "Download Season Recap"}</Button>;
 }

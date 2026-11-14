@@ -17,12 +17,12 @@ import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
 import { PageHeader } from "../../components/PageHeader";
 
 const VIEWS = [
-  { id: "season", label: "Season & aturan", note: "Nama, kompetisi, Best of N, Engine Tuning" },
-  { id: "liga", label: "Liga & roster", note: "Roster 12 liga, Data Maker" },
-  { id: "branding", label: "Branding", note: "Logo dan warna kompetisi" },
-  { id: "backup", label: "Backup", note: "File .sabung dan cloud" },
-  { id: "data", label: "Data", note: "Penyimpanan, integritas, Rebuild Stats" },
-  { id: "danger", label: "Danger Zone", note: "Reset dan hapus" },
+  { id: "season", label: "Season & rules", note: "Name, competitions, Best of N, Engine Tuning" },
+  { id: "leagues", label: "Leagues & rosters", note: "12 league rosters, Data Maker" },
+  { id: "branding", label: "Branding", note: "Competition logos and colours" },
+  { id: "backup", label: "Backup", note: ".sabung files and cloud" },
+  { id: "data", label: "Data", note: "Storage, integrity, Rebuild Stats" },
+  { id: "danger", label: "Danger Zone", note: "Reset and delete" },
 ] as const;
 type View = (typeof VIEWS)[number]["id"];
 
@@ -36,13 +36,13 @@ function Settings() {
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
   const season = useCurrentSeason();
   const rosters = useLeagueRosters(season?.id) ?? {};
-  if (!season) return <p className="text-text-secondary">Belum ada season.</p>;
+  if (!season) return <p className="text-text-secondary">No season yet.</p>;
   const draft = season.status === "draft";
   return (
     <div className="space-y-8">
-      <PageHeader tag="Settings" title="Pengaturan season dan data" note="Season, roster liga, branding, aturan, backup dan data." />
+      <PageHeader tag="Settings" title="Season and data settings" note="Season, league rosters, branding, rules, backup and data." />
       <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <nav aria-label="Bagian settings" className="lg:sticky lg:top-6 lg:self-start">
+        <nav aria-label="Settings sections" className="lg:sticky lg:top-6 lg:self-start">
           <ol className="m-0 flex list-none gap-1 overflow-x-auto p-0 pb-2 lg:flex-col lg:overflow-visible">
             {VIEWS.map((v, i) => {
               const on = v.id === view;
@@ -63,7 +63,7 @@ function Settings() {
         </nav>
         <div className="studio-flow min-w-0 space-y-8">
           {view === "season" && <><SeasonSettings key={season.id} season={season} /><EngineTuning key={`t-${season.id}`} season={season} /></>}
-          {view === "liga" && <><RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} /><DataMaker seasonId={season.id} draft={draft} idols={idols} /></>}
+          {view === "leagues" && <><RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} /><DataMaker seasonId={season.id} draft={draft} idols={idols} /></>}
           {view === "branding" && <BrandingSettings seasonId={season.id} />}
           {view === "backup" && <BackupSettings seasonId={season.id} />}
           {view === "data" && <DataSettings />}

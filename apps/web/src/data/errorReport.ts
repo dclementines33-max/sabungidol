@@ -21,12 +21,12 @@ export function errorReport({ code, error, route }: { code: string; error: unkno
   const err = error instanceof Error ? error : new Error(String(error));
   return [
     `${code}: ${err.message}`,
-    `Rute: ${route}`,
-    `Versi: ${version}`,
-    `Aksi terakhir: ${lastAction}`,
-    `Waktu: ${new Date().toISOString()}`,
+    `Route: ${route}`,
+    `Version: ${version}`,
+    `Last action: ${lastAction}`,
+    `Time: ${new Date().toISOString()}`,
     `Browser: ${typeof navigator === "undefined" ? "?" : navigator.userAgent}`,
     "",
-    err.stack ?? "(tanpa stack)",
+    err.stack ?? "(no stack)",
   ].join("\n");
 }

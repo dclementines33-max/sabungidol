@@ -24,8 +24,8 @@ async function photoState(db: Db, database: string) {
 export async function integrityCheck(db: Db, database: string): Promise<Issue[]> {
   const issues = await checkIntegrity(db);
   const { missing, orphans } = await photoState(db, database);
-  if (missing.length) issues.push({ code: "W-INT-005", level: "warning", count: missing.length, fix: "remove-missing-photos", message: `${missing.length} foto tercatat tapi filenya tidak ada (idol akan tampil dengan inisial)` });
-  if (orphans.length) issues.push({ code: "W-INT-006", level: "warning", count: orphans.length, fix: "remove-orphan-photo-files", message: `${orphans.length} folder foto tidak dipakai siapa pun` });
+  if (missing.length) issues.push({ code: "W-INT-005", level: "warning", count: missing.length, fix: "remove-missing-photos", message: `${missing.length} photos are listed but their files are missing (those idols show initials)` });
+  if (orphans.length) issues.push({ code: "W-INT-006", level: "warning", count: orphans.length, fix: "remove-orphan-photo-files", message: `${orphans.length} photo folders aren't used by anyone` });
   return issues;
 }
 

@@ -23,14 +23,14 @@ export function homeLeaders(rows: CareerRow[]): Leader[] {
   const topLeague = [...league].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
   const pick = (label: string, row: CareerRow | undefined, value: (r: CareerRow) => string): Leader[] => (row ? [{ label, idolId: row.idolId, value: value(row) }] : []);
   return [
-    ...pick("Gelar terbanyak (semua)", best(all, (r) => r.titles), (r) => `${r.titles} gelar`),
-    ...pick("Gelar Unzure Cup", best(comp("UZC"), (r) => r.titles), (r) => `${r.titles} gelar`),
-    ...(topLeague && topLeague[1] > 0 ? [{ label: "Gelar liga", idolId: topLeague[0], value: `${topLeague[1]} gelar` }] : []),
-    ...pick("Gelar The Idols", best(comp("IDL"), (r) => r.titles), (r) => `${r.titles} gelar`),
-    ...pick("Match terbanyak", best(all, (r) => r.matches), (r) => `${r.matches} match`),
-    ...pick("Menang terbanyak", best(all, (r) => r.wins), (r) => `${r.wins} menang`),
-    ...pick("Kalah terbanyak", best(all, (r) => r.losses), (r) => `${r.losses} kalah`),
-    ...pick("Win rate tertinggi", best(all.filter((r) => r.matches >= MIN_MATCHES), (r) => r.winRate), (r) => `${(r.winRate * 100).toFixed(1)}%`),
+    ...pick("Most titles (all)", best(all, (r) => r.titles), (r) => `${r.titles} titles`),
+    ...pick("Unzure Cup titles", best(comp("UZC"), (r) => r.titles), (r) => `${r.titles} titles`),
+    ...(topLeague && topLeague[1] > 0 ? [{ label: "League titles", idolId: topLeague[0], value: `${topLeague[1]} titles` }] : []),
+    ...pick("The Idols titles", best(comp("IDL"), (r) => r.titles), (r) => `${r.titles} titles`),
+    ...pick("Most matches", best(all, (r) => r.matches), (r) => `${r.matches} matches`),
+    ...pick("Most wins", best(all, (r) => r.wins), (r) => `${r.wins} wins`),
+    ...pick("Most losses", best(all, (r) => r.losses), (r) => `${r.losses} losses`),
+    ...pick("Best win rate", best(all.filter((r) => r.matches >= MIN_MATCHES), (r) => r.winRate), (r) => `${(r.winRate * 100).toFixed(1)}%`),
   ];
 }
 
@@ -38,14 +38,14 @@ export function homeFacts(rows: CareerRow[], pairs: Record<string, PairRecord>, 
   const all = rows.filter((r) => r.comp === "ALL");
   const facts: Fact[] = [];
   const rivalry = Object.entries(pairs).sort((x, y) => y[1].meetings - x[1].meetings || x[0].localeCompare(y[0]))[0];
-  if (rivalry) facts.push({ label: "Rivalitas paling sering bertemu", ids: rivalry[0].split("|"), value: `${rivalry[1].meetings} kali bertemu · ${rivalry[1].winsLo}–${rivalry[1].draws}–${rivalry[1].winsHi}` });
+  if (rivalry) facts.push({ label: "Most frequent rivalry", ids: rivalry[0].split("|"), value: `${rivalry[1].meetings} meetings · ${rivalry[1].winsLo}–${rivalry[1].draws}–${rivalry[1].winsHi}` });
   const upset = [...upsets].sort((a, b) => b.gap - a.gap)[0];
-  if (upset) facts.push({ label: "Kejutan terbesar sepanjang masa", ids: [upset.winner, upset.loser], value: `menang meski rating ${upset.gap} lebih rendah (Season ${upset.season})` });
+  if (upset) facts.push({ label: "Biggest upset of all time", ids: [upset.winner, upset.loser], value: `won despite a ${upset.gap}-point rating gap (Season ${upset.season})` });
   const add = (label: string, row: CareerRow | undefined, value: (r: CareerRow) => string) => { if (row) facts.push({ label, ids: [row.idolId], value: value(row) }); };
-  add("Rekor menang beruntun", best(all, (r) => r.bestWinStreak), (r) => `${r.bestWinStreak} kemenangan beruntun`);
-  add("Rekor tak terkalahkan", best(all, (r) => r.bestUnbeatenStreak), (r) => `${r.bestUnbeatenStreak} match tanpa kalah`);
-  add("Raja reverse sweep", best(all, (r) => r.reverseSweeps), (r) => `${r.reverseSweeps}× menang setelah tertinggal jauh`);
-  add("Pembunuh raksasa", best(all, (r) => r.giantKills), (r) => `${r.giantKills}× mengalahkan idol berating 15+ lebih tinggi`);
-  add("Langganan final", best(all, (r) => r.finals), (r) => `${r.finals} final dimainkan`);
+  add("Longest win streak", best(all, (r) => r.bestWinStreak), (r) => `${r.bestWinStreak} wins in a row`);
+  add("Longest unbeaten run", best(all, (r) => r.bestUnbeatenStreak), (r) => `${r.bestUnbeatenStreak} matches unbeaten`);
+  add("Reverse sweep king", best(all, (r) => r.reverseSweeps), (r) => `${r.reverseSweeps}× won from far behind`);
+  add("Giant killer", best(all, (r) => r.giantKills), (r) => `${r.giantKills}× beat an idol rated 15+ higher`);
+  add("Finals regular", best(all, (r) => r.finals), (r) => `${r.finals} finals played`);
   return facts;
 }

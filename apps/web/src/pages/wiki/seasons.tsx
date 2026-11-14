@@ -30,27 +30,27 @@ function SeasonArchive() {
   const [picked, setPicked] = useState<string>();
   const seasonId = picked ?? played[0]?.id;
   const { data: archive, isPending } = useQuery({ queryKey: ["season-archive", seasonId], queryFn: () => engine().seasonArchive(seasonId!) as Promise<ArchiveData>, staleTime: 0, enabled: !!seasonId });
-  if (!seasons) return <p className="text-text-secondary">Membaca season…</p>;
-  if (!played.length) return <EmptyState icon={Archive} title="Belum ada season" description="Season muncul di arsip setelah dimulai." />;
+  if (!seasons) return <p className="text-text-secondary">Loading season…</p>;
+  if (!played.length) return <EmptyState icon={Archive} title="No seasons yet" description="A season shows in the archive once it starts." />;
   return (
     <div className="space-y-10">
-      <PageHeader tag="Archive" title="Arsip setiap season" note="Pilih season untuk membaca kembali juara, klasemen akhir dan perubahan rating." />
-      <Select label="Season" value={seasonId!} onChange={setPicked} options={played.map((s): [string, string] => [s.id, `${s.name}${s.status === "live" ? " (berjalan)" : ""}`])} />
-      {isPending || !archive ? <p className="text-text-secondary">Membaca season…</p>
-        : !archive.done ? <p className="text-text-secondary">{archive.season.name} belum selesai — arsipnya lengkap setelah semua kompetisi selesai.</p>
+      <PageHeader tag="Archive" title="Every season, archived" note="Pick a season to revisit its champions, final standings and rating changes." />
+      <Select label="Season" value={seasonId!} onChange={setPicked} options={played.map((s): [string, string] => [s.id, `${s.name}${s.status === "live" ? " (live)" : ""}`])} />
+      {isPending || !archive ? <p className="text-text-secondary">Loading season…</p>
+        : !archive.done ? <p className="text-text-secondary">{archive.season.name} isn't finished — the archive fills in once every competition is done.</p>
         : (
           <>
             <SeasonHonours titles={archive.titles} top={archive.seasonTop} />
             <RecapButton seasonName={archive.season.name} titles={archive.titles} />
             <div className="grid max-w-xl grid-cols-3 gap-3">
               <StatTile label="Match" value={archive.numbers.matches} />
-              <StatTile label="Seri" value={archive.numbers.draws} />
+              <StatTile label="Draws" value={archive.numbers.draws} />
               <StatTile label="Sweep" value={archive.numbers.sweeps} />
             </div>
-            <Section title="Klasemen akhir"><ArchiveTables tables={archive.tables} /></Section>
+            <Section title="Final standings"><ArchiveTables tables={archive.tables} /></Section>
             <Section title="Cup"><ArchiveCups cups={archive.cups} /></Section>
-            <Section title="Bracket, Swiss dan grup"><ArchiveBrackets key={seasonId} seasonId={seasonId!} /></Section>
-            <Section title="Promosi, degradasi, rating"><ArchiveMovement promoted={archive.promoted} relegated={archive.relegated} ratingChanges={archive.ratingChanges} /></Section>
+            <Section title="Brackets, Swiss and groups"><ArchiveBrackets key={seasonId} seasonId={seasonId!} /></Section>
+            <Section title="Promotion, relegation, ratings"><ArchiveMovement promoted={archive.promoted} relegated={archive.relegated} ratingChanges={archive.ratingChanges} /></Section>
           </>
         )}
     </div>

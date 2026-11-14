@@ -5,7 +5,7 @@ import { IdolPhoto, useIdol } from "@sabung/ui";
 
 export function ChampionCover({ seasonName, champion, championSeason }: { seasonName: string; champion: string | null; championSeason?: number }) {
   return (
-    <section aria-label="Sorotan" className="relative isolate min-h-[26rem] overflow-hidden rounded-card px-5 pt-5 sm:px-10 sm:pt-8"
+    <section aria-label="Spotlight" className="relative isolate min-h-[26rem] overflow-hidden rounded-card px-5 pt-5 sm:px-10 sm:pt-8"
       style={{ background: "radial-gradient(50rem 30rem at 75% 110%, rgb(255 77 99 / 0.35), transparent 65%), linear-gradient(120deg, var(--color-accent), var(--color-surface-hover) 45%, var(--color-bg-base))" }}>
       <p aria-hidden="true" className="outline-text pointer-events-none absolute inset-x-0 bottom-2 -z-10 m-0 text-center font-display text-[clamp(5rem,19vw,16rem)] leading-none whitespace-nowrap opacity-70">
         {champion ? "UNZURE" : "SABUNG"}
@@ -13,7 +13,7 @@ export function ChampionCover({ seasonName, champion, championSeason }: { season
       <span aria-hidden="true" className="kicker absolute top-1/2 right-3 hidden -translate-y-1/2 text-text-secondary [writing-mode:vertical-rl] sm:block">Sabung Idol · {seasonName}</span>
       <div className="flex flex-wrap items-center gap-3">
         <span className="tag">Issue Nº {seasonName.replace(/\D/g, "") || "1"}</span>
-        <span className="kicker text-on-accent">{champion ? `Juara Unzure Cup · Season ${championSeason}` : "Sabung Idol"}</span>
+        <span className="kicker text-on-accent">{champion ? `Unzure Cup champion · Season ${championSeason}` : "Sabung Idol"}</span>
       </div>
       <div className="mt-6 grid items-end gap-6 md:grid-cols-[1fr_auto]">
         <div className="space-y-3 pb-10">

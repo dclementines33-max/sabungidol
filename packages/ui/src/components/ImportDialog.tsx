@@ -58,7 +58,7 @@ export function ImportDialog({ open, onOpenChange, title, accept, readFile, onAp
       title={title}
       footer={
         <>
-          <Button onClick={() => close(false)}>Batal</Button>
+          <Button onClick={() => close(false)}>Cancel</Button>
           <Button
             variant={mode === "replace" ? "danger" : "primary"}
             disabled={state.step !== "preview"}
@@ -85,22 +85,22 @@ export function ImportDialog({ open, onOpenChange, title, accept, readFile, onAp
         />
       </label>}
 
-      {state.step === "reading" && <p role="status" className="mt-4 text-sm text-text-secondary">Membaca file…</p>}
+      {state.step === "reading" && <p role="status" className="mt-4 text-sm text-text-secondary">Reading file…</p>}
       {state.step === "failed" && <p role="alert" className="mt-4 text-sm text-danger">{state.message}</p>}
       {state.step === "preview" && (
         <div className="mt-4">
           <p className="m-0 text-sm">
-            <span className="font-mono tabular-nums">{state.preview.added}</span> ditambah ·{" "}
-            <span className="font-mono tabular-nums">{state.preview.replaced}</span> diganti
+            <span className="font-mono tabular-nums">{state.preview.added}</span> added ·{" "}
+            <span className="font-mono tabular-nums">{state.preview.replaced}</span> replaced
           </p>
-          <List title="Konflik" items={state.preview.conflicts} />
-          <List title="Tidak dikenal" items={state.preview.unknown} />
+          <List title="Conflicts" items={state.preview.conflicts} />
+          <List title="Not recognised" items={state.preview.unknown} />
           <fieldset className="mt-4 border-0 p-0">
             <legend className="text-sm text-text-secondary">Mode</legend>
             {(["merge", "replace"] as const).map((m) => (
               <label key={m} className="mr-4 inline-flex items-center gap-2 text-sm">
                 <input type="radio" name="import-mode" checked={mode === m} onChange={() => setMode(m)} className="accent-accent-bright" />
-                {m === "merge" ? "Merge" : "Replace (data lama ditimpa)"}
+                {m === "merge" ? "Merge" : "Replace (overwrites current data)"}
               </label>
             ))}
           </fieldset>

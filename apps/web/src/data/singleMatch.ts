@@ -10,9 +10,9 @@ import { seasonMatches } from "./seasonMatches";
 async function playable(db: Db, id: string, salt = 0) {
   const input = await seasonInput(db);
   const saved = await seasonMatches(db, input.seasonId);
-  if (saved.some((m) => m.id === id)) throw new Error(`Match ${id} sudah dimainkan.`);
+  if (saved.some((m) => m.id === id)) throw new Error(`Match ${id} has already been played.`);
   const match = runSeason({ ...input, saved, target: (m) => m.id === id, salt: { [id]: salt } }).matches.find((m) => m.id === id);
-  if (!match) throw new Error(`Match ${id} belum bisa dimainkan.`);
+  if (!match) throw new Error(`Match ${id} can't be played yet.`);
   return { seasonId: input.seasonId, match, saved, bestOf: seasonBestOf(input.config, match.comp, match.stage, match.round) };
 }
 
@@ -45,7 +45,7 @@ export async function acceptMatch(db: Db, id: string, games: Side[], method: "si
   const state = seriesState(bestOf, games);
   // The series must end exactly on the last game, with only A/B games.
   if (!state.result || seriesState(bestOf, games.slice(0, -1)).result || games.some((g) => g !== "A" && g !== "B")) {
-    throw new Error(`Hasil game tidak sah untuk Bo${bestOf}.`);
+    throw new Error(`Those games aren't a valid Bo${bestOf} result.`);
   }
   await saveMatches(db, seasonId, [{ ...match, games, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result }], method);
   return { scoreA: state.scoreA, scoreB: state.scoreB, result: state.result };

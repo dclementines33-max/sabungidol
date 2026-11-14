@@ -41,18 +41,18 @@ export function CommandPalette({ open, onOpenChange, onCommand }: {
           aria-describedby={undefined}
           className="fixed inset-0 z-50 flex flex-col bg-bg-raised text-text-primary sm:inset-auto sm:top-[10vh] sm:left-1/2 sm:max-h-[70vh] sm:w-[min(560px,calc(100%-32px))] sm:-translate-x-1/2 sm:rounded-card sm:border sm:border-border"
         >
-          <Dialog.Title className="sr-only">Cari panel atau perintah</Dialog.Title>
+          <Dialog.Title className="sr-only">Search panels or commands</Dialog.Title>
           <div className="flex items-center gap-3 border-b border-border px-4">
             <Search aria-hidden="true" size={18} strokeWidth={1.5} className="text-text-secondary" />
             <input
               role="combobox"
-              aria-label="Cari panel atau perintah"
+              aria-label="Search panels or commands"
               aria-expanded
               aria-controls={`${id}-list`}
               aria-autocomplete="list"
               aria-activedescendant={results[active] ? `${id}-${active}` : undefined}
               value={query}
-              placeholder="Cari panel atau perintah…"
+              placeholder="Search panels or commands…"
               onChange={(e) => {
                 setQuery(e.target.value);
                 setActive(0);
@@ -72,7 +72,7 @@ export function CommandPalette({ open, onOpenChange, onCommand }: {
               className="w-full bg-transparent py-4 text-base placeholder:text-text-secondary focus:outline-none"
             />
           </div>
-          <ul id={`${id}-list`} role="listbox" aria-label="Hasil" className="m-0 flex-1 list-none overflow-y-auto p-2">
+          <ul id={`${id}-list`} role="listbox" aria-label="Results" className="m-0 flex-1 list-none overflow-y-auto p-2">
             {results.map((item, i) => {
               const Icon = item.icon;
               return (
@@ -93,9 +93,9 @@ export function CommandPalette({ open, onOpenChange, onCommand }: {
               );
             })}
           </ul>
-          {results.length === 0 && <p className="m-0 px-4 pb-4 text-sm text-text-secondary">Tidak ada hasil untuk “{query.trim()}”.</p>}
+          {results.length === 0 && <p className="m-0 px-4 pb-4 text-sm text-text-secondary">No results for “{query.trim()}”.</p>}
           <p className="m-0 border-t border-border px-4 py-2 text-xs text-text-secondary">
-            Pencarian idol dan group hadir setelah data idol dimasukkan (Fase 2).
+            Idol and group search arrives once idol data is in.
           </p>
         </Dialog.Content>
       </Dialog.Portal>

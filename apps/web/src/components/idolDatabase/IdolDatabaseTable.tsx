@@ -7,14 +7,14 @@ export function IdolDatabaseTable({ idols, leagueOf }: { idols: IdolRow[]; leagu
     <VirtualTable
       rows={idols}
       rowKey={(i) => i.id}
-      label="Tabel idol"
+      label="Idol table"
       columns={[
-        { header: "Foto", cell: (i) => <IdolPhoto idolId={i.id} size={64} className="w-8" />, className: "w-14" },
-        { header: "Nama", cell: (i) => i.name, className: "font-medium" },
+        { header: "Photo", cell: (i) => <IdolPhoto idolId={i.id} size={64} className="w-8" />, className: "w-14" },
+        { header: "Name", cell: (i) => i.name, className: "font-medium" },
         { header: "Group", cell: (i) => i.groupName ?? "Soloist", className: "text-text-secondary" },
         { header: "Rating", cell: (i) => <RatingBadge rating={i.rating} /> },
-        { header: "Liga", cell: (i) => leagueOf.get(i.id) ?? "Cadangan", className: "font-mono" },
-        { header: "Status", cell: (i) => (i.active ? "Aktif" : "Nonaktif"), className: "text-text-secondary" },
+        { header: "League", cell: (i) => leagueOf.get(i.id) ?? "Reserve", className: "font-mono" },
+        { header: "Status", cell: (i) => (i.active ? "Active" : "Inactive"), className: "text-text-secondary" },
       ]}
     />
   );

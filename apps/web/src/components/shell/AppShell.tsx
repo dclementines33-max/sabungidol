@@ -45,16 +45,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
       <a
-        href="#konten"
+        href="#content"
         className="sr-only rounded-control bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50"
       >
-        Langsung ke konten
+        Skip to content
       </a>
       <div className="flex min-h-dvh">
         <NavRail collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
         <div className="flex min-w-0 flex-1 flex-col">
           <Header onSearch={openPalette} />
-          <main id="konten" tabIndex={-1} className="flex-1 px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
+          <main id="content" tabIndex={-1} className="flex-1 px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
             <PinnedNotices />
             <DatabaseResetOffer />
             {children}

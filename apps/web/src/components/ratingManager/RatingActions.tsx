@@ -34,23 +34,23 @@ export function RatingActions({ idols, onChange }: { idols: IdolRow[]; onChange:
       <div>
         <p className="kicker m-0 mb-1">Preset</p>
         <ul className="m-0 list-none p-0">
-          <Action note="Rating dari seed tiap idol">
-            <label className="flex items-center gap-1 text-xs text-text-secondary"><input type="checkbox" checked={jitter} onChange={(e) => setJitter(e.target.checked)} /> ± acak 3</label>
+          <Action note="Each idol's rating from their seed">
+            <label className="flex items-center gap-1 text-xs text-text-secondary"><input type="checkbox" checked={jitter} onChange={(e) => setJitter(e.target.checked)} /> ± random 3</label>
             <Button onClick={() => onChange(seedPresets(active, jitter), "Seed Presets")}>Apply Seed Presets</Button>
           </Action>
-          <Action note="Sebaran rating yang terasa nyata"><Button onClick={() => onChange(realisticVariety(active), "Realistic Variety")}>Realistic Variety</Button></Action>
-          <Action note="Semua idol aktif mulai sama"><Button onClick={() => onChange(resetAll(active), "Reset All to 75")}>Reset All to 75</Button></Action>
+          <Action note="A rating spread that feels real"><Button onClick={() => onChange(realisticVariety(active), "Realistic Variety")}>Realistic Variety</Button></Action>
+          <Action note="Every active idol starts level"><Button onClick={() => onChange(resetAll(active), "Reset All to 75")}>Reset All to 75</Button></Action>
         </ul>
       </div>
       <div>
-        <p className="kicker m-0 mb-1">Dari hasil season</p>
+        <p className="kicker m-0 mb-1">From season results</p>
         <ul className="m-0 list-none p-0">
-          <Action note="Naik/turun dari prestasi season terakhir">
-            <Button disabled={busy} onClick={() => fromWorker(async () => (await engine().lastSeasonProgression()).proposals, "Season Progression", "Belum ada season yang selesai.")}>Apply Season Progression</Button>
+          <Action note="Up or down on last season's form">
+            <Button disabled={busy} onClick={() => fromWorker(async () => (await engine().lastSeasonProgression()).proposals, "Season Progression", "No season finished yet.")}>Apply Season Progression</Button>
           </Action>
           {(["replace", "blend"] as const).map((mode) => (
-            <Action key={mode} note={mode === "replace" ? "Rating = performa karier" : "Setengah rating sekarang, setengah karier"}>
-              <Button disabled={busy} onClick={() => fromWorker(() => engine().careerSync(Object.fromEntries(idols.map((i) => [i.id, i.rating])), mode), `Sync Career Stats (${mode})`, "Belum ada season yang selesai.")}>
+            <Action key={mode} note={mode === "replace" ? "Rating = career performance" : "Half current rating, half career"}>
+              <Button disabled={busy} onClick={() => fromWorker(() => engine().careerSync(Object.fromEntries(idols.map((i) => [i.id, i.rating])), mode), `Sync Career Stats (${mode})`, "No season finished yet.")}>
                 Sync from Career Stats · {mode === "replace" ? "Replace" : "Blend 50/50"}
               </Button>
             </Action>

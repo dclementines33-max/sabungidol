@@ -189,7 +189,7 @@ const api = {
   // Reset statistik (Update 4): back to the setup as Season 1 draft; a snapshot first, like every dangerous action.
   resetStatistics: async () => {
     const db = await open();
-    await saveSnapshot(db, DATABASE, "reset statistik");
+    await saveSnapshot(db, DATABASE, "statistics reset");
     return resetStatistics(db);
   },
   resetSeason: async (seasonId: string, redraw: boolean) => {
@@ -224,7 +224,7 @@ const api = {
     const simulateMs = performance.now() - started;
 
     await db.insert(idols).values(input.idols.map((i) => ({ id: i.id, name: i.id, rating: i.rating }))).onConflictDoNothing();
-    await db.insert(seasons).values({ id: "S01", number: 1, name: "Season contoh", seed: input.seed, status: "live" }).onConflictDoNothing();
+    await db.insert(seasons).values({ id: "S01", number: 1, name: "Sample season", seed: input.seed, status: "live" }).onConflictDoNothing();
 
     const rounds = new Map<string, typeof season.matches>();
     for (const m of season.matches) {

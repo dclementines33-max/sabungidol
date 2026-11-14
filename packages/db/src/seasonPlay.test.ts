@@ -22,7 +22,7 @@ beforeEach(async () => {
 describe("playing a season in the database", () => {
   it("starts only with complete leagues and nobody inactive, saying why not", async () => {
     await setActive(db, [ids[0]!], false);
-    expect(await startSeason(db, "S01", ids.slice(0, 20))).toEqual({ ok: false, problems: ["D1A berisi idol nonaktif: I0"] });
+    expect(await startSeason(db, "S01", ids.slice(0, 20))).toEqual({ ok: false, problems: ["D1A has inactive idols: I0"] });
     expect((await checkIntegrity(db)).map((i) => i.code)).toEqual(["E-INT-002", "W-INT-004"]);
     await setActive(db, [ids[0]!], true);
     expect(await startSeason(db, "S01", ids.slice(0, 20))).toEqual({ ok: true });

@@ -24,7 +24,7 @@ describe("MatchModal (PRD §9)", () => {
     open({ h2h: { winsA: 3, draws: 1, winsB: 2 } });
     expect(screen.getByText("Mina Kim")).toBeTruthy();
     expect(screen.getByText("Bo5")).toBeTruthy();
-    expect(screen.getByText(/Peluang menang: Mina Kim \d+%, Yuna \d+%/)).toBeTruthy();
+    expect(screen.getByText(/Win odds: Mina Kim \d+%, Yuna \d+%/)).toBeTruthy();
     expect(screen.getByText("3–1–2")).toBeTruthy();
   });
 
@@ -37,22 +37,22 @@ describe("MatchModal (PRD §9)", () => {
     expect(onAccept).toHaveBeenCalledWith({ method: "sim", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
   });
 
-  it("Simulate plays when pressed and 'Simulate ulang' rolls again (Update 3)", async () => {
+  it("Simulate plays when pressed and 'Simulate again' rolls again (Update 3)", async () => {
     const rolls = [["A", "A", "A"], ["B", "B", "B"]] as const;
     const simulate = vi.fn(async () => [...rolls[simulate.mock.calls.length - 1]!]);
     const onAccept = open({ simulate });
     expect(simulate).not.toHaveBeenCalled(); // nothing decided before the button
     fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Simulate ulang" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Simulate again" }));
     await waitFor(() => expect(simulate).toHaveBeenCalledTimes(2));
     fireEvent.click(accept());
     expect(onAccept).toHaveBeenCalledWith(expect.objectContaining({ result: "B", games: ["B", "B", "B"] }));
   });
 
   it("preset = one click on a final score; games alternate with the winner last", () => {
-    const onAccept = open({ facts: [{ label: "Season ini", a: "5-1", b: "2-4" }] });
-    expect(screen.getByRole("rowheader", { name: "Season ini" })).toBeTruthy();
-    fireEvent.click(screen.getByRole("radio", { name: "Preset skor" }));
+    const onAccept = open({ facts: [{ label: "This season", a: "5-1", b: "2-4" }] });
+    expect(screen.getByRole("rowheader", { name: "This season" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "Score presets" }));
     expect(screen.getAllByRole("button", { name: /^[0-9]–[0-9] / })).toHaveLength(6); // Bo5: 3–0 3–1 3–2 2–3 1–3 0–3
     fireEvent.click(screen.getByRole("button", { name: "2–3 Yuna" }));
     fireEvent.click(accept());
@@ -62,13 +62,13 @@ describe("MatchModal (PRD §9)", () => {
   it("manual = set the score directly; only a final score can be accepted", () => {
     const onAccept = open();
     fireEvent.click(screen.getByRole("radio", { name: "Manual" }));
-    const plus = (name: string, n: number) => { for (let i = 0; i < n; i++) fireEvent.click(screen.getByRole("button", { name: `Tambah skor ${name}` })); };
+    const plus = (name: string, n: number) => { for (let i = 0; i < n; i++) fireEvent.click(screen.getByRole("button", { name: `Raise ${name}'s score` })); };
     plus("Mina Kim", 2);
     plus("Yuna", 1);
     expect(accept().disabled).toBe(true); // 2–1 is not over in Bo5
-    expect(screen.getByText("Skor belum sah untuk Bo5")).toBeTruthy();
+    expect(screen.getByText("Not a valid Bo5 score yet")).toBeTruthy();
     plus("Mina Kim", 1);
-    expect((screen.getByRole("button", { name: "Tambah skor Mina Kim" }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole("button", { name: "Raise Mina Kim's score" }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(accept());
     expect(onAccept).toHaveBeenCalledWith({ method: "manual", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
   });

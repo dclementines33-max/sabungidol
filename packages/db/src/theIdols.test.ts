@@ -22,7 +22,7 @@ describe("The Idols sync rating", () => {
     await saveMatches(db, "S01", [{ id: "S01-IDL-LG-MD01-M01", comp: "IDL", stage: "LG", round: "MD01", idolA: picked[0]!, idolB: picked[1]!,
       games: ["A", "A", "A"], scoreA: 3, scoreB: 0, result: "A", ratingA: 70, ratingB: 70, formA: "Steady", formB: "Steady" }]);
     expect((await theIdolsChanges(db, "S01", ids.slice(0, 20))).played).toBe(true);
-    expect(await replaceTheIdols(db, "S01", ids.slice(0, 20))).toEqual({ ok: false, reason: "Match The Idols sudah dimainkan, roster tidak bisa diubah lagi" });
+    expect(await replaceTheIdols(db, "S01", ids.slice(0, 20))).toEqual({ ok: false, reason: "The Idols matches are already played, the roster can't change now" });
     expect((await leagueRosters(db, "S01")).IDL).toEqual(picked);
   });
 });

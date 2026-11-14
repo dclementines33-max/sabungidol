@@ -15,7 +15,7 @@ export function PhotoLightbox({ photos, index, name, onIndex, onClose }: {
 }) {
   const src = useGalleryPhoto(photos[index]!, 1024);
   const step = (by: number) => onIndex((index + by + photos.length) % photos.length);
-  const alt = `${name}, foto ${index + 1}`;
+  const alt = `${name}, photo ${index + 1}`;
   return (
     <Modal open onOpenChange={(open) => { if (!open) onClose(); }} title={`${name} · ${index + 1}/${photos.length}`} className="max-w-3xl">
       <div className="relative flex h-[70vh] items-center justify-center" onKeyDown={(e) => { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); }}>
@@ -24,8 +24,8 @@ export function PhotoLightbox({ photos, index, name, onIndex, onClose }: {
           : <div role="img" aria-label={alt} className="aspect-[4/5] h-full rounded-control bg-surface" />}
         {photos.length > 1 && (
           <>
-            <button type="button" aria-label="Foto sebelumnya" className={`${ARROW} left-0`} onClick={() => step(-1)}><ChevronLeft aria-hidden="true" size={24} /></button>
-            <button type="button" aria-label="Foto berikutnya" className={`${ARROW} right-0`} onClick={() => step(1)}><ChevronRight aria-hidden="true" size={24} /></button>
+            <button type="button" aria-label="Previous photo" className={`${ARROW} left-0`} onClick={() => step(-1)}><ChevronLeft aria-hidden="true" size={24} /></button>
+            <button type="button" aria-label="Next photo" className={`${ARROW} right-0`} onClick={() => step(1)}><ChevronRight aria-hidden="true" size={24} /></button>
           </>
         )}
       </div>

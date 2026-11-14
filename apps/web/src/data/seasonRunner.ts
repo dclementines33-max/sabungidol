@@ -26,7 +26,7 @@ export const requestPause = () => { pauseRequested = true; };
 // The current live season, or a given (archived) one for rating sources.
 export async function seasonInput(db: Db, given?: SeasonRow): Promise<SeasonInput & { seasonId: string }> {
   const season = given ?? await currentSeason(db);
-  if (!season || (!given && season.status !== "live")) throw new Error("Belum ada season yang berjalan. Mulai season dulu.");
+  if (!season || (!given && season.status !== "live")) throw new Error("No season is running. Start the season first.");
   const config = readSeasonConfig(season.config);
   // Ratings are fixed within a season: an idol who already played keeps the rating stored with those
   // matches, so a later rating change (progression, Rating Manager) never reseeds what was played.

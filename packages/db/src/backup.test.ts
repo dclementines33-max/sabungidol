@@ -41,7 +41,7 @@ describe("backup (PRD §12.3)", () => {
     await saveMatches(b, "S01", [{ id: "S01-D1A-LG-MD01-M09", comp: "D1A", stage: "LG", round: "MD01", idolA: mina!, idolB: mina!, games: ["A", "A", "A"],
       scoreA: 3, scoreB: 0, result: "A", ratingA: 80, ratingB: 80, formA: "Steady", formB: "Steady" }]);
     const result = await importBackup(b, asFile(await readBackupTables(a, "full")), "merge", false);
-    expect(result.conflicts).toEqual(["Mina (Aurora): rating di sini 80, di backup 92 — tetap 80", "Season 1 sudah ada — dilewati (pakai Replace untuk menimpa)"]);
+    expect(result.conflicts).toEqual(["Mina (Aurora): rating here 80, in the backup 92 — keeping 80", "Season 1 already exists — skipped (use Replace to overwrite)"]);
     expect((await listIdols(b)).map((i) => `${i.name}:${i.rating}`)).toEqual(["mina:80", "Yuna:84"]);
     expect(await leagueRosters(b, "S01")).toEqual({}); // the skipped season's rows were not added
   });

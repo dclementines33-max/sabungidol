@@ -39,9 +39,9 @@ export async function startProblems(db: Db, seasonId: string): Promise<string[]>
   const problems: string[] = [];
   for (const code of [...D1_LEAGUES, ...D2_LEAGUES]) {
     const ids = rosters[code] ?? [];
-    if (ids.length !== 20) problems.push(`${code} berisi ${ids.length} idol, harus 20`);
+    if (ids.length !== 20) problems.push(`${code} has ${ids.length} idols, needs 20`);
     const off = ids.filter((id) => inactive.has(id)).map((id) => inactive.get(id));
-    if (off.length) problems.push(`${code} berisi idol nonaktif: ${off.join(", ")}`);
+    if (off.length) problems.push(`${code} has inactive idols: ${off.join(", ")}`);
   }
   return problems;
 }
@@ -50,7 +50,7 @@ export async function startProblems(db: Db, seasonId: string): Promise<string[]>
 // the season cannot change who plays in it. One transaction with the status change.
 export async function startSeason(db: Db, seasonId: string, theIdols: string[]): Promise<{ ok: true } | { ok: false; problems: string[] }> {
   const problems = await startProblems(db, seasonId);
-  if (theIdols.length !== 20) problems.push(`The Idols butuh 20 idol aktif, ada ${theIdols.length}`);
+  if (theIdols.length !== 20) problems.push(`The Idols needs 20 active idols, has ${theIdols.length}`);
   if (problems.length) return { ok: false, problems };
   await db.transaction(async (tx) => {
     await tx.insert(entries).values(theIdols.map((idolId, i) => ({ seasonId, comp: "IDL", stage: "LG", idolId, slot: i + 1, source: "rating" }))).onConflictDoNothing();

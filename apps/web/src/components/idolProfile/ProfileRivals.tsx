@@ -6,10 +6,10 @@ import { IdolLink } from "../wiki/IdolLink";
 type Rival = { opponent: string; meetings: number; wins: number; draws: number; losses: number };
 
 export function ProfileRivals({ idolId, rivals }: { idolId: string; rivals: Rival[] }) {
-  if (!rivals.length) return <p className="text-sm text-text-secondary">Belum ada match.</p>;
+  if (!rivals.length) return <p className="text-sm text-text-secondary">No matches yet.</p>;
   return (
     <table className="w-full max-w-2xl border-collapse text-sm">
-      <thead><tr className="text-left text-text-secondary"><th className="py-2 font-medium">Lawan</th><th className="font-medium">Match</th><th className="font-medium">M-S-K</th><th className="font-medium">Label</th><th><span className="sr-only">Head to Head</span></th></tr></thead>
+      <thead><tr className="text-left text-text-secondary"><th className="py-2 font-medium">Opponent</th><th className="font-medium">Match</th><th className="font-medium">W-D-L</th><th className="font-medium">Label</th><th><span className="sr-only">Head to Head</span></th></tr></thead>
       <tbody>
         {rivals.map((r) => (
           <tr key={r.opponent} className="border-t border-border">

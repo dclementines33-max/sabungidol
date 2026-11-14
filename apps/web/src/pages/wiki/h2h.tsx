@@ -28,8 +28,8 @@ function HeadToHead() {
   return (
     <div className="space-y-10">
       <div key={`${idols.length}|${a}|${b}`} className="grid gap-4 sm:grid-cols-2">
-        <SearchableIdolSelect label="Idol pertama" idolIds={ids} value={a ?? null} onChange={pick("a")} />
-        <SearchableIdolSelect label="Idol kedua" idolIds={ids} value={b ?? null} onChange={pick("b")} />
+        <SearchableIdolSelect label="First idol" idolIds={ids} value={a ?? null} onChange={pick("a")} />
+        <SearchableIdolSelect label="Second idol" idolIds={ids} value={b ?? null} onChange={pick("b")} />
       </div>
       {a && b && data && (
         <>
@@ -37,10 +37,10 @@ function HeadToHead() {
           <section aria-labelledby="direct" className="space-y-3">
             <h2 id="direct" className="m-0 font-display text-xl uppercase">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
             <div className="flex flex-wrap gap-3">
-              <Select label="Kompetisi" value={comp} onChange={setComp} options={[["", "Semua"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
-              <Select label="Season" value={season} onChange={setSeason} options={[["", "Semua"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />
+              <Select label="Competition" value={comp} onChange={setComp} options={[["", "All"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
+              <Select label="Season" value={season} onChange={setSeason} options={[["", "All"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />
             </div>
-            <MatchLog label="Match langsung" filter={{ idolId: a, vsId: b, seasonId: season || undefined, comps: SEASON_COMPETITIONS.find((c) => c.key === comp)?.codes }} />
+            <MatchLog label="Head-to-head matches" filter={{ idolId: a, vsId: b, seasonId: season || undefined, comps: SEASON_COMPETITIONS.find((c) => c.key === comp)?.codes }} />
           </section>
         </>
       )}

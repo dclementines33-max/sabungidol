@@ -35,7 +35,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
     for (const line of pasted.split("\n").map((l) => l.trim()).filter(Boolean)) {
       const hits = idolIds.filter((id) => lookup(id)?.name.toLowerCase() === line.toLowerCase());
       if (hits.length === 1) found.push(hits[0]);
-      else missing.push(hits.length === 0 ? `${line} — tidak dikenal` : `${line} — ${hits.length} idol bernama sama, pilih lewat pencarian`);
+      else missing.push(hits.length === 0 ? `${line} — not found` : `${line} — ${hits.length} idols share this name, pick one from search`);
     }
     const base = replace ? [] : draft; // replace = paste a whole new roster, the old one is dropped
     setDraft([...base, ...[...new Set(found)].filter((id) => !base.includes(id))]);
@@ -51,7 +51,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
       className="max-w-2xl"
       footer={
         <>
-          <Button onClick={() => onOpenChange(false)}>Batal</Button>
+          <Button onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button variant="primary" disabled={!check.ok} onClick={() => { onApply(draft); onOpenChange(false); }}>Apply</Button>
         </>
       }
@@ -59,7 +59,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
       <div className="flex items-center gap-3">
         {logo}
         <p className={`m-0 font-mono text-sm tabular-nums ${check.count === LEAGUE_SIZE ? "text-cool" : "text-danger"}`} role="status">
-          {check.count} / {LEAGUE_SIZE} idol{check.duplicates.length > 0 && ` · ${check.duplicates.length} ganda`}
+          {check.count} / {LEAGUE_SIZE} idols{check.duplicates.length > 0 && ` · ${check.duplicates.length} duplicates`}
         </p>
       </div>
       <ul className="m-0 mt-2 grid max-h-64 list-none grid-cols-1 gap-1 overflow-auto p-0 sm:grid-cols-2">
@@ -68,11 +68,11 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
             <IdolPhoto idolId={id} size={64} className="w-6" />
             <span className="flex-1 truncate">{name(id)}</span>
             {elsewhere.has(id) && (
-              <TriangleAlert size={16} strokeWidth={1.5} className="text-accent-bright" aria-label={`juga di ${elsewhere.get(id)}`} />
+              <TriangleAlert size={16} strokeWidth={1.5} className="text-accent-bright" aria-label={`also in ${elsewhere.get(id)}`} />
             )}
             <button
               type="button"
-              aria-label={`Hapus ${name(id)} dari ${league}`}
+              aria-label={`Remove ${name(id)} from ${league}`}
               onClick={() => setDraft(draft.filter((_, j) => j !== i))}
               className="rounded-control p-1 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright"
             >
@@ -83,12 +83,12 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
       </ul>
       <div className="mt-4 flex items-end gap-2">
         <div className="flex-1">
-          <SearchableIdolSelect label="Tambah idol" idolIds={idolIds.filter((id) => !draft.includes(id))} value={pick} onChange={setPick} />
+          <SearchableIdolSelect label="Add idol" idolIds={idolIds.filter((id) => !draft.includes(id))} value={pick} onChange={setPick} />
         </div>
-        <Button disabled={!pick} onClick={() => { if (pick) setDraft([...draft, pick]); setPick(null); }}>Tambah</Button>
+        <Button disabled={!pick} onClick={() => { if (pick) setDraft([...draft, pick]); setPick(null); }}>Add</Button>
       </div>
       <label className="mt-4 block text-sm text-text-secondary">
-        Tempel nama, satu per baris
+        Paste names, one per line
         <textarea
           value={pasted}
           onChange={(e) => setPasted(e.target.value)}
@@ -97,8 +97,8 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
         />
       </label>
       <div className="mt-2 flex gap-2">
-        <Button disabled={!pasted.trim()} onClick={() => addPasted(false)}>Tambahkan dari teks</Button>
-        <Button disabled={!pasted.trim()} onClick={() => addPasted(true)}>Ganti roster dengan teks</Button>
+        <Button disabled={!pasted.trim()} onClick={() => addPasted(false)}>Add from text</Button>
+        <Button disabled={!pasted.trim()} onClick={() => addPasted(true)}>Replace roster with text</Button>
       </div>
       {notFound.length > 0 && (
         <ul role="alert" className="m-0 mt-2 pl-5 text-sm text-danger">{notFound.map((line) => <li key={line}>{line}</li>)}</ul>

@@ -22,38 +22,38 @@ describe("isComeback", () => {
 
 describe("LiveMatchVisualizer (PRD §9)", () => {
   const games = ["B", "B", "A", "A", "A"] as const;
-  const status = () => screen.getByText(/^(Game \d berlangsung|Selesai)/).textContent;
+  const status = () => screen.getByText(/^(Game \d in play|Full time)/).textContent;
 
   it("reveals one game per step without telling how many games there will be, then the comeback", () => {
     vi.useFakeTimers();
     const onDone = vi.fn();
     render(<LiveMatchVisualizer games={[...games]} nameA="Mina" nameB="Yuna" target={3} stepMs={500} onDone={onDone} />);
     const step = () => act(() => vi.advanceTimersByTime(500)); // React sets the next timer after each step renders
-    expect(status()).toBe("Game 1 berlangsung");
+    expect(status()).toBe("Game 1 in play");
     expect(document.body.textContent).not.toContain("/ 5"); // Update 3: no spoiler of the final score
     step();
     step();
-    expect(status()).toContain("Game 3 berlangsung");
+    expect(status()).toContain("Game 3 in play");
     expect(screen.getByText("Match point")).toBeTruthy(); // Yuna leads 0–2 in a Bo5
     expect(screen.queryByText("Comeback!")).toBeNull();
     step();
     step();
     step();
     expect(screen.getByText("Comeback!")).toBeTruthy();
-    expect(screen.getByText("Mina menang")).toBeTruthy();
+    expect(screen.getByText("Mina wins")).toBeTruthy();
     expect(onDone).toHaveBeenCalled();
   });
 
-  it("Lewati jumps to the end", () => {
+  it("Skip jumps to the end", () => {
     render(<LiveMatchVisualizer games={[...games]} nameA="Mina" nameB="Yuna" />);
-    fireEvent.click(screen.getByRole("button", { name: "Lewati" }));
-    expect(status()).toBe("Selesai");
+    fireEvent.click(screen.getByRole("button", { name: "Skip" }));
+    expect(status()).toBe("Full time");
   });
 
   it("with reduced motion shows the final score straight away", () => {
     vi.stubGlobal("matchMedia", () => ({ matches: true }));
     render(<LiveMatchVisualizer games={[...games]} nameA="Mina" nameB="Yuna" />);
-    expect(status()).toBe("Selesai");
-    expect(screen.queryByRole("button", { name: "Lewati" })).toBeNull();
+    expect(status()).toBe("Full time");
+    expect(screen.queryByRole("button", { name: "Skip" })).toBeNull();
   });
 });

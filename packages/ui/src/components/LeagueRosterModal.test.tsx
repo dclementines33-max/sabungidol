@@ -37,29 +37,29 @@ describe("LeagueRosterModal (PRD §9)", () => {
 
   it("blocks Apply below 20", () => {
     open();
-    fireEvent.click(screen.getByRole("button", { name: "Hapus Idol 0 dari D1A" }));
+    fireEvent.click(screen.getByRole("button", { name: "Remove Idol 0 from D1A" }));
     expect(screen.getByRole("status").textContent).toContain("19 / 20");
     expect(apply().disabled).toBe(true);
   });
 
   it("pasting adds known names and lists unknown or ambiguous ones instead of guessing", () => {
     open();
-    fireEvent.click(screen.getByRole("button", { name: "Hapus Idol 0 dari D1A" }));
-    fireEvent.change(screen.getByRole("textbox", { name: /Tempel nama/ }), { target: { value: "rina\nMina\nNobody" } });
-    fireEvent.click(screen.getByRole("button", { name: "Tambahkan dari teks" }));
+    fireEvent.click(screen.getByRole("button", { name: "Remove Idol 0 from D1A" }));
+    fireEvent.change(screen.getByRole("textbox", { name: /Paste names/ }), { target: { value: "rina\nMina\nNobody" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add from text" }));
     expect(screen.getByRole("status").textContent).toContain("20 / 20");
     const problems = screen.getByRole("alert").textContent;
-    expect(problems).toContain("Nobody — tidak dikenal");
-    expect(problems).toContain("Mina — 2 idol bernama sama");
-    expect(screen.getByLabelText("juga di D2C")).toBeTruthy(); // the icon; the full list lives outside the popup
+    expect(problems).toContain("Nobody — not found");
+    expect(problems).toContain("Mina — 2 idols share this name");
+    expect(screen.getByLabelText("also in D2C")).toBeTruthy(); // the icon; the full list lives outside the popup
     expect(apply().disabled).toBe(false); // another league is a warning, not a block
   });
 
   it("replacing from text drops the old roster", () => {
     open();
-    fireEvent.change(screen.getByRole("textbox", { name: /Tempel nama/ }), { target: { value: "rina\nIdol 3\nrina" } });
-    fireEvent.click(screen.getByRole("button", { name: "Ganti roster dengan teks" }));
+    fireEvent.change(screen.getByRole("textbox", { name: /Paste names/ }), { target: { value: "rina\nIdol 3\nrina" } });
+    fireEvent.click(screen.getByRole("button", { name: "Replace roster with text" }));
     expect(screen.getByRole("status").textContent).toContain("2 / 20");
-    expect(screen.queryByRole("button", { name: "Hapus Idol 0 dari D1A" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Remove Idol 0 from D1A" })).toBeNull();
   });
 });

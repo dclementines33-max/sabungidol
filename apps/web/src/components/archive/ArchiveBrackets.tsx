@@ -11,7 +11,7 @@ import { GroupStage } from "../competition/GroupStage";
 
 const LETTERS = "ABCDEFGHIJKLMNOP";
 const VIEWS: { id: string; comps: string[]; label: string }[] = [
-  { id: "SW", comps: ["SWS"], label: "Swiss Play-in" }, { id: "LQ", comps: ["LCQ"], label: "LCQ" }, { id: "GS", comps: ["UZC"], label: "Grup Unzure" },
+  { id: "SW", comps: ["SWS"], label: "Swiss Play-in" }, { id: "LQ", comps: ["LCQ"], label: "LCQ" }, { id: "GS", comps: ["UZC"], label: "Unzure groups" },
   { id: "UZC", comps: ["UZC"], label: "Knockout Unzure" }, { id: "IDL", comps: ["IDL"], label: "Playoff The Idols" }, { id: "INK", comps: ["INK"], label: "Inkigayo" },
   { id: "NUG", comps: ["NUG"], label: "Nugu" }, ...B_SIDE_CUPS.map((c) => ({ id: c, comps: [c], label: `B-Side ${c.slice(2)}` })),
   { id: "DSG", comps: ["DSG"], label: "Daesang" }, { id: "MBK", comps: ["MBK"], label: "Music Bank" },
@@ -30,17 +30,17 @@ export function ArchiveBrackets({ seasonId }: { seasonId: string }) {
   }));
   return (
     <div className="space-y-5">
-      <div role="group" aria-label="Pilih bracket" className="flex flex-wrap gap-1">
+      <div role="group" aria-label="Pick a bracket" className="flex flex-wrap gap-1">
         {VIEWS.map((v) => (
           <button key={v.id} type="button" aria-pressed={v.id === id} onClick={() => setId(v.id)}
             className={`px-2 py-1 text-xs font-bold ${v.id === id ? "bg-accent text-on-accent" : "bg-surface-hover/60 text-text-secondary hover:text-text-primary"} focus-visible:outline-2 focus-visible:outline-accent-bright`}>{v.label}</button>
         ))}
       </div>
-      {!data ? <p className="m-0 text-sm text-text-secondary">Membaca…</p>
+      {!data ? <p className="m-0 text-sm text-text-secondary">Loading…</p>
         : id === "SW" ? <div className="space-y-8">{swiss.map((s, g) => <SwissPlayInBracket key={g} group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} />)}</div>
         : id === "LQ" ? <GroupStage tables={data.lcqTables} cells={data.cells} stage="LQ" through={4} busy onOpen={none} />
         : id === "GS" ? <GroupStage tables={data.groupTables} cells={data.cells} stage="GS" through={2} busy onOpen={none} />
-        : id === "DSG" || id === "MBK" ? (data.cells.length ? <GalaStage cells={data.cells} busy onOpen={none} title={(c) => (id === "DSG" ? "Daesang" : `Music Bank · ${label(c.round)}`)} /> : <p className="m-0 text-sm text-text-secondary">Tidak dimainkan di season ini.</p>)
+        : id === "DSG" || id === "MBK" ? (data.cells.length ? <GalaStage cells={data.cells} busy onOpen={none} title={(c) => (id === "DSG" ? "Daesang" : `Music Bank · ${label(c.round)}`)} /> : <p className="m-0 text-sm text-text-secondary">Not played this season.</p>)
         : <TournamentBracketTree cells={data.cells.filter((c) => c.stage !== "GS")} />}
     </div>
   );

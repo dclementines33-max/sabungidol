@@ -7,9 +7,9 @@ import { useIdolLookup } from "./idolSource";
 
 const ROUNDS = 5;
 const OUTCOME = (wins: number, losses: number) =>
-  wins === 3 && losses <= 1 ? { label: "Lolos", color: "text-cool", fill: "bg-cool/15" }
+  wins === 3 && losses <= 1 ? { label: "Through", color: "text-cool", fill: "bg-cool/15" }
     : wins === 3 ? { label: "LCQ", color: "text-accent-bright", fill: "bg-accent/20" }
-      : { label: "Gugur", color: "text-danger", fill: "bg-danger/10" };
+      : { label: "Out", color: "text-danger", fill: "bg-danger/10" };
 const choose = (n: number, k: number): number => (k === 0 || k === n ? 1 : choose(n - 1, k - 1) + choose(n - 1, k));
 
 // Matches per record bucket before round r (0-based) in a group of `size`: wins + losses = r, nobody on 3 yet.
@@ -26,7 +26,7 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
   const finalOrder = [...final].sort(([, x], [, y]) => y.wins - x.wins || x.losses - y.losses);
 
   return (
-    <section aria-label={`Swiss grup ${group}`} tabIndex={0} className="overflow-x-auto pb-2 focus-visible:outline-2 focus-visible:outline-accent-bright">
+    <section aria-label={`Swiss group ${group}`} tabIndex={0} className="overflow-x-auto pb-2 focus-visible:outline-2 focus-visible:outline-accent-bright">
       <div className="flex gap-5">
         {Array.from({ length: ROUNDS }, (_, r) => {
           const before = swissRecords(seededIds, rounds.slice(0, r).flat());
@@ -35,7 +35,7 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
           const waiting = open.filter((m) => m.round === r);
           return (
             <div key={r} className="w-48 shrink-0">
-              <h3 className="m-0 mb-2 bg-surface-hover/60 px-2 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">Ronde {r + 1}</h3>
+              <h3 className="m-0 mb-2 bg-surface-hover/60 px-2 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">Round {r + 1}</h3>
               {buckets(seededIds.length, r).map((b) => {
                 const mine = (m: { a: string }) => rec(m.a).wins === b.wins && rec(m.a).losses === b.losses;
                 const done = played.filter(mine);
@@ -57,7 +57,7 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
                       {next.map((m) => (
                         <li key={`${m.a}-${m.b}`}>
                           <button type="button" onClick={m.onOpen} className="block w-full bg-surface-hover/70 p-0.5 text-left text-xs hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-                            <span className="sr-only">Main </span>
+                            <span className="sr-only">Play </span>
                             {[m.a, m.b].map((id, i) => <span key={id} className="flex items-center gap-1.5"><IdolPhoto idolId={id} size={64} className="h-6 w-5 shrink-0" /><span className="truncate">{name(id)}</span>{i === 0 && <span className="sr-only"> vs </span>}</span>)}
                           </button>
                         </li>
@@ -71,8 +71,8 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
           );
         })}
         <div className="w-52 shrink-0">
-          <h3 className="m-0 mb-2 bg-surface-hover/60 px-2 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">Hasil</h3>
-          <ul className="m-0 list-none space-y-1 p-0" aria-label="Hasil Swiss">
+          <h3 className="m-0 mb-2 bg-surface-hover/60 px-2 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">Results</h3>
+          <ul className="m-0 list-none space-y-1 p-0" aria-label="Swiss results">
             {finalOrder.map(([id, r]) => {
               const outcome = OUTCOME(r.wins, r.losses);
               const decided = r.wins === 3 || r.losses === 3;

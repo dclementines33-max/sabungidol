@@ -29,16 +29,16 @@ function CareerStats() {
     <div className="space-y-6">
       <header>
         <p className="m-0"><span className="tag">Career Stats</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Catatan karier</h2>
-        <p className="m-0 text-text-secondary">Statistik tiap tab mengikuti formatnya: Swiss dan LCQ tanpa gelar, Unzure dengan lolos/gugur grup, cup knockout dengan posisi terbaik.</p>
+        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Career numbers</h2>
+        <p className="m-0 text-text-secondary">Each tab follows its format: Swiss and LCQ have no titles, Unzure shows group through/out, knockout cups show best finish.</p>
       </header>
       <div role="group" aria-label="Scope" className="flex flex-wrap items-end gap-3">
-        <Select label="Status" value={scope.status} onChange={set("status")} options={[["", "Semua"], ["active", "Aktif"], ["inactive", "Nonaktif"]]} />
-        <Select label="Group" value={scope.group} onChange={set("group")} options={[["", "Semua"], ...groups, ["solo", "Soloist"]]} />
-        <Select label="Liga" value={scope.league} onChange={set("league")} options={[["", "Semua"], ...[...D1_LEAGUES, ...D2_LEAGUES].map((c): [string, string] => [c, c]), ["reserve", "Cadangan"]]} />
-        <Select label="Urutkan" value={sort} onChange={(v) => setSort(v as keyof CareerRow)} options={CAREER_SORTS} />
+        <Select label="Status" value={scope.status} onChange={set("status")} options={[["", "All"], ["active", "Active"], ["inactive", "Inactive"]]} />
+        <Select label="Group" value={scope.group} onChange={set("group")} options={[["", "All"], ...groups, ["solo", "Soloist"]]} />
+        <Select label="League" value={scope.league} onChange={set("league")} options={[["", "All"], ...[...D1_LEAGUES, ...D2_LEAGUES].map((c): [string, string] => [c, c]), ["reserve", "Reserve"]]} />
+        <Select label="Sort by" value={sort} onChange={(v) => setSort(v as keyof CareerRow)} options={CAREER_SORTS} />
       </div>
-      <Tabs label="Kompetisi" tabs={tabs.map((t) => ({ id: t.key, label: t.name, content: () => <CareerTable key={t.key} comp={t.key} label={t.name} allowed={allowed} sort={sort} /> }))} />
+      <Tabs label="Competition" tabs={tabs.map((t) => ({ id: t.key, label: t.name, content: () => <CareerTable key={t.key} comp={t.key} label={t.name} allowed={allowed} sort={sort} /> }))} />
     </div>
   );
 }

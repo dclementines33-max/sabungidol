@@ -11,9 +11,9 @@ export function TitleShare({ titles }: { titles: Record<string, { champion: stri
   }
   const rows = [...by].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   const max = Math.max(1, ...rows.map(([, n]) => n.length));
-  if (rows.length === 0) return <p className="m-0 text-sm text-text-secondary">Belum ada gelar season ini.</p>;
+  if (rows.length === 0) return <p className="m-0 text-sm text-text-secondary">No titles this season yet.</p>;
   return (
-    <ul className="m-0 list-none space-y-3 p-0" aria-label="Gelar per girl group">
+    <ul className="m-0 list-none space-y-3 p-0" aria-label="Titles by girl group">
       {rows.map(([group, names]) => (
         <li key={group}>
           <p className="m-0 flex items-baseline gap-3"><span className="font-display text-lg">{group}</span><span className="font-gothic text-2xl text-accent-bright">{names.length}</span></p>

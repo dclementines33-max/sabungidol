@@ -20,21 +20,21 @@ export function CareerScope({ rows }: { rows: CareerRow[] }) {
   const sorted = [...rows].sort((a, b) => (a.comp === "ALL" ? -1 : b.comp === "ALL" ? 1 : b.matches - a.matches));
   const [comp, setComp] = useState("ALL");
   const r = sorted.find((x) => x.comp === comp) ?? sorted[0];
-  if (!r) return <p className="m-0 text-sm text-text-secondary">Belum ada match.</p>;
+  if (!r) return <p className="m-0 text-sm text-text-secondary">No matches yet.</p>;
   const cupOnly = r.comp === "SWS" || r.comp === "LCQ";
   const big: [string, string][] = [
     ["Win rate", pct(r.winRate)], ["Match", String(r.matches)],
-    ...(cupOnly ? [] : [["Gelar", String(r.titles)], ["Podium", String(r.titles + r.runnerUp + r.third)]] as [string, string][]),
-    ["Selisih game", signed(r.gameDiff)], ["Game / match", r.avgGames.toFixed(1)],
+    ...(cupOnly ? [] : [["Titles", String(r.titles)], ["Podium", String(r.titles + r.runnerUp + r.third)]] as [string, string][]),
+    ["Game diff", signed(r.gameDiff)], ["Game / match", r.avgGames.toFixed(1)],
   ];
   const format: [string, string][] = r.comp === "D1" || r.comp === "D2" || r.comp === "IDL"
-    ? [["Poin liga", String(r.leaguePoints)], ["Poin terbaik semusim", String(r.bestLeagueSeasonPoints)], ["Posisi terbaik", String(r.bestPlacement ?? "–")], ["Season tak terkalahkan", String(r.invincibleSeasons)]]
-    : r.comp === "UZC" ? [["Lolos grup", String(r.groupAdvance)], ["Gugur di grup", String(r.groupExit)], ["Final", String(r.finals)], ["Posisi terbaik", String(r.bestPlacement ?? "–")]]
-      : cupOnly ? [["Lolos", String(r.groupAdvance)], ["Gugur", String(r.groupExit)], ["Season ikut", String(r.seasons)]]
-        : [["Final", String(r.finals)], ["Runner-up", String(r.runnerUp)], ["Posisi terbaik", String(r.bestPlacement ?? "–")], ["Season ikut", String(r.seasons)]];
+    ? [["League points", String(r.leaguePoints)], ["Best season points", String(r.bestLeagueSeasonPoints)], ["Best finish", String(r.bestPlacement ?? "–")], ["Unbeaten seasons", String(r.invincibleSeasons)]]
+    : r.comp === "UZC" ? [["Out of groups", String(r.groupAdvance)], ["Out in groups", String(r.groupExit)], ["Final", String(r.finals)], ["Best finish", String(r.bestPlacement ?? "–")]]
+      : cupOnly ? [["Through", String(r.groupAdvance)], ["Out", String(r.groupExit)], ["Seasons entered", String(r.seasons)]]
+        : [["Final", String(r.finals)], ["Runner-up", String(r.runnerUp)], ["Best finish", String(r.bestPlacement ?? "–")], ["Seasons entered", String(r.seasons)]];
   return (
     <div className="space-y-8">
-      <div role="group" aria-label="Scope karier" className="flex flex-wrap gap-1">
+      <div role="group" aria-label="Career scope" className="flex flex-wrap gap-1">
         {sorted.map((x) => (
           <button key={x.comp} type="button" aria-pressed={x.comp === r.comp} onClick={() => setComp(x.comp)}
             className={`px-3 py-1.5 text-xs font-bold uppercase ${x.comp === r.comp ? "bg-accent text-on-accent" : "bg-surface-hover/60 text-text-secondary hover:text-text-primary"} focus-visible:outline-2 focus-visible:outline-accent-bright`}>
@@ -51,9 +51,9 @@ export function CareerScope({ rows }: { rows: CareerRow[] }) {
         ))}
       </dl>
       <div className="flex flex-wrap gap-8">
-        <Summary title="Hasil" rows={[["Menang / seri / kalah", `${r.wins} / ${r.draws} / ${r.losses}`], ["Game menang / kalah", `${r.gamesFor} / ${r.gamesAgainst}`], ["Reverse sweep", String(r.reverseSweeps)], ["Giant kill", String(r.giantKills)]]} />
+        <Summary title="Results" rows={[["Won / drawn / lost", `${r.wins} / ${r.draws} / ${r.losses}`], ["Games won / lost", `${r.gamesFor} / ${r.gamesAgainst}`], ["Reverse sweep", String(r.reverseSweeps)], ["Giant kill", String(r.giantKills)]]} />
         <Summary title={compLabel(r.comp)} rows={format} />
-        <Summary title="Streak & puncak" rows={[["Menang beruntun terpanjang", String(r.bestWinStreak)], ["Tak terkalahkan terpanjang", String(r.bestUnbeatenStreak)], ["Kalah beruntun terpanjang", String(r.bestLoseStreak)], ["Rating tertinggi", String(r.highestRating)]]} />
+        <Summary title="Streaks & peaks" rows={[["Longest win streak", String(r.bestWinStreak)], ["Longest unbeaten run", String(r.bestUnbeatenStreak)], ["Longest losing streak", String(r.bestLoseStreak)], ["Peak rating", String(r.highestRating)]]} />
       </div>
     </div>
   );

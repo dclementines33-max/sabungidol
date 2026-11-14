@@ -8,10 +8,10 @@ export const PANEL_OF: Record<CompetitionKey, string> = {
 };
 
 export function titleLabel(key: string): string {
-  if (/^D[12][A-F]$/.test(key)) return `Liga ${key}`;
+  if (/^D[12][A-F]$/.test(key)) return `League ${key}`;
   if (/^BS[A-F]$/.test(key)) return `B-Side Cup ${key.slice(2)}`;
   if (key.startsWith("MBK-")) return `Music Bank Cup ${key.slice(4)}`;
-  return { IDL: "The Idols (liga)", "IDL-PO": "The Idols Playoff", UZC: "Unzure Cup", NUG: "Nugu Cup", INK: "Inkigayo Cup", DSG: "Daesang Cup" }[key] ?? key;
+  return { IDL: "The Idols (league)", "IDL-PO": "The Idols Playoff", UZC: "Unzure Cup", NUG: "Nugu Cup", INK: "Inkigayo Cup", DSG: "Daesang Cup" }[key] ?? key;
 }
 
 // Branding (Settings → Branding): D1X has its own name, colour and logo; D2X follows D1X as its Divisi 2.
@@ -22,7 +22,7 @@ export function brandOf(saved: SavedCompetition[], code: string): Brand {
   const league = /^D([12])([A-F])$/.exec(code);
   const s = saved.find((c) => c.code === (league ? `D1${league[2]}` : code));
   const { color, logoId } = (s?.branding ?? {}) as { color?: string; logoId?: string | null };
-  const name = league ? (s ? (league[1] === "1" ? s.name : `${s.name} · Divisi 2`) : `Liga ${code}`) : (s?.name ?? titleLabel(code));
+  const name = league ? (s ? (league[1] === "1" ? s.name : `${s.name} · Division 2`) : `League ${code}`) : (s?.name ?? titleLabel(code));
   return { name, color, logoId };
 }
 

@@ -26,7 +26,7 @@ function Side({ id, align }: { id: string; align: "left" | "right" }) {
 
 function FormRow({ form }: { form: Form }) {
   return (
-    <span className="inline-flex gap-1" role="img" aria-label={`5 terakhir: ${form.join(" ") || "belum main"}`}>
+    <span className="inline-flex gap-1" role="img" aria-label={`Last 5: ${form.join(" ") || "no games yet"}`}>
       {form.map((f, i) => <span key={i} aria-hidden="true" className={`${FORM[f]} inline-flex size-5 items-center justify-center text-[10px] font-bold`}>{f}</span>)}
     </span>
   );
@@ -44,27 +44,27 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
   const record = (x: CareerRow | null) => (x ? `${Math.round(x.winRate * 100)}% (${x.wins}-${x.draws}-${x.losses})` : "0%");
   const rows: [string, ReactNode, ReactNode][] = [
     ["Rating", ia.rating, ib.rating],
-    ["Gelar", lineA?.titles ?? 0, lineB?.titles ?? 0],
-    ["Win rate karier", record(lineA), record(lineB)],
-    ["Match karier", lineA?.matches ?? 0, lineB?.matches ?? 0],
-    ["Game dimenangkan", lineA?.gamesFor ?? 0, lineB?.gamesFor ?? 0],
-    ["Menang beruntun terpanjang", lineA?.bestWinStreak ?? 0, lineB?.bestWinStreak ?? 0],
-    ["5 match terakhir", <FormRow key="a" form={formA} />, <FormRow key="b" form={formB} />],
+    ["Titles", lineA?.titles ?? 0, lineB?.titles ?? 0],
+    ["Career win rate", record(lineA), record(lineB)],
+    ["Career matches", lineA?.matches ?? 0, lineB?.matches ?? 0],
+    ["Games won", lineA?.gamesFor ?? 0, lineB?.gamesFor ?? 0],
+    ["Longest win streak", lineA?.bestWinStreak ?? 0, lineB?.bestWinStreak ?? 0],
+    ["Last 5 matches", <FormRow key="a" form={formA} />, <FormRow key="b" form={formB} />],
   ];
   return (
-    <section aria-label="Perbandingan" className="space-y-8">
+    <section aria-label="Comparison" className="space-y-8">
       <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 sm:gap-6">
         <Side id={a} align="left" />
         <div className="pb-6 text-center">
           <p aria-hidden="true" className="m-0 font-gothic text-[clamp(3rem,9vw,6rem)] leading-none text-accent">vs</p>
-          <p className="kicker m-0 mt-2 text-text-secondary">Rekor langsung</p>
-          <p className="m-0 font-display text-[clamp(1.5rem,4vw,2.5rem)] tabular-nums" aria-label={`Menang ${w}, seri ${d}, kalah ${l}`}>
+          <p className="kicker m-0 mt-2 text-text-secondary">Head-to-head record</p>
+          <p className="m-0 font-display text-[clamp(1.5rem,4vw,2.5rem)] tabular-nums" aria-label={`Won ${w}, drawn ${d}, lost ${l}`}>
             <span className="text-accent-bright">{w}</span>–{d}–<span className="text-cool">{l}</span>
           </p>
           <span aria-hidden="true" className="mx-auto mt-2 flex h-2 w-40 overflow-hidden bg-surface-hover/50">
             <span className="bg-accent-bright" style={{ width: `${(w / total) * 100}%` }} /><span className="bg-muted" style={{ width: `${(d / total) * 100}%` }} /><span className="bg-cool" style={{ width: `${(l / total) * 100}%` }} />
           </span>
-          <p className="m-0 mt-2 font-mono text-xs text-text-secondary">{pair?.meetings ?? 0} match · game {games[0]}–{games[1]}</p>
+          <p className="m-0 mt-2 font-mono text-xs text-text-secondary">{pair?.meetings ?? 0} matches · games {games[0]}–{games[1]}</p>
           {rivalryLabel(w, d, l) && <p className="tag m-0 mt-3">{rivalryLabel(w, d, l)}</p>}
         </div>
         <Side id={b} align="right" />

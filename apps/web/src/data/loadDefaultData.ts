@@ -28,6 +28,6 @@ export async function loadDefaultData(db: Db, database: string): Promise<{ loade
   });
   // Update 3: birthday, nationality and role from the web (the same file Input Data → "Perbarui data idol" takes).
   await updateIdolDetails(db, (await (await fetch(detailsUrl)).json()) as IdolDetails[], false);
-  await logEvent(db, { level: "success", code: SEED_LOADED, message: `${result.added.length} idol dari data bawaan dimuat` });
+  await logEvent(db, { level: "success", code: SEED_LOADED, message: `${result.added.length} default idols loaded` });
   return { loaded: result.added.length, refused: result.refused.length };
 }

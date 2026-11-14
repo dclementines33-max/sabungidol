@@ -24,10 +24,10 @@ const state = () => useNotices.getState();
 
 describe("notification store (PRD §14.1)", () => {
   it("routes each level to its place and counts unread", () => {
-    notify({ level: "info", message: "Matchday 12 selesai di 13 liga" });
-    notify({ level: "warning", code: "W-ROSTER", message: "Mina ada di dua liga" });
+    notify({ level: "info", message: "Matchday 12 selesai di 13 leagues" });
+    notify({ level: "warning", code: "W-ROSTER", message: "Mina ada di dua leagues" });
     notify({ level: "blocker", message: "Start New Season diblokir: Nugu Cup belum selesai (R6)" });
-    notify({ level: "error", code: "E-DRAW-002", message: "Grup H hanya 3 idol" });
+    notify({ level: "error", code: "E-DRAW-002", message: "Group H hanya 3 idol" });
     expect(state().toasts.map((n) => n.level)).toEqual(["info"]);
     expect(state().pinned.map((n) => n.level)).toEqual(["warning", "error"]);
     expect(state().blocker?.message).toContain("diblokir");
@@ -73,10 +73,10 @@ describe("notification store (PRD §14.1)", () => {
   });
 
   it("log: false shows a notice without writing it to event_log again", async () => {
-    notify({ level: "success", message: "242 idol dari data bawaan dimuat" }, { log: false });
+    notify({ level: "success", message: "242 default idols loaded" }, { log: false });
     await flush();
     expect(state().toasts).toHaveLength(1);
-    expect(state().notices[0].message).toContain("242 idol");
+    expect(state().notices[0].message).toContain("242 default idols");
     expect(persister.log).not.toHaveBeenCalled();
   });
 

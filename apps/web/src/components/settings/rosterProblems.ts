@@ -11,13 +11,13 @@ export function rosterProblems(rosters: Record<string, string[]>, activeIds: str
   return [...D1_LEAGUES, ...D2_LEAGUES].flatMap((league) => {
     const ids = rosters[league] ?? [];
     const out: RosterProblem[] = [];
-    if (ids.length !== LEAGUE_SIZE) out.push({ league, text: `${ids.length}/${LEAGUE_SIZE} idol (${ids.length > LEAGUE_SIZE ? "kelebihan" : "kurang"} ${Math.abs(ids.length - LEAGUE_SIZE)})` });
+    if (ids.length !== LEAGUE_SIZE) out.push({ league, text: `${ids.length}/${LEAGUE_SIZE} idols (${ids.length > LEAGUE_SIZE ? "over by" : "short by"} ${Math.abs(ids.length - LEAGUE_SIZE)})` });
     const twice = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
-    if (twice.length) out.push({ league, text: `Ganda: ${twice.map(name).join(", ")}` });
+    if (twice.length) out.push({ league, text: `Listed twice: ${twice.map(name).join(", ")}` });
     const shared = [...new Set(ids)].filter((id) => leaguesOf.get(id)!.length > 1);
-    if (shared.length) out.push({ league, text: `Juga di liga lain: ${shared.map((id) => `${name(id)} (${leaguesOf.get(id)!.filter((l) => l !== league).join(", ")})`).join(", ")}` });
+    if (shared.length) out.push({ league, text: `Also in another league: ${shared.map((id) => `${name(id)} (${leaguesOf.get(id)!.filter((l) => l !== league).join(", ")})`).join(", ")}` });
     const inactive = ids.filter((id) => !active.has(id));
-    if (inactive.length) out.push({ league, text: `Tidak aktif: ${inactive.map(name).join(", ")}` });
+    if (inactive.length) out.push({ league, text: `Inactive: ${inactive.map(name).join(", ")}` });
     return out;
   });
 }

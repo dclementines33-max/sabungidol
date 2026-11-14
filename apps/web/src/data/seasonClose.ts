@@ -32,7 +32,7 @@ export async function closePreview(db: Db) {
 
 export async function saveProgression(db: Db) {
   const { blockers, progression } = await closePreview(db);
-  if (blockers.length) throw new Error(`Belum selesai: ${blockers.join(", ")}`);
+  if (blockers.length) throw new Error(`Not finished yet: ${blockers.join(", ")}`);
   const season = await currentSeason(db);
   return applyRatings(db, progression.map((r) => ({ idolId: r.idolId, new: r.new, reason: r.reason })), "progression", season!.id);
 }

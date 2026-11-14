@@ -12,12 +12,12 @@ import { useIdolLookup } from "./idolSource";
 const SECTION_LABEL: Record<string, string> = { UB: "Upper bracket", LB: "Lower bracket", FN: "Final", KO: "" };
 const CARD_PX = 92; // reserved height of one match card
 const ZOOMS = [0.5, 0.75, 1, 1.25, 1.5];
-const NAMED: Record<string, string> = { F: "Final", GF: "Grand final", SF: "Semifinal", QF: "Perempat final", "3RD": "Juara 3" };
+const NAMED: Record<string, string> = { F: "Final", GF: "Grand final", SF: "Semifinal", QF: "Quarterfinal", "3RD": "Third place" };
 const FINALS = new Set(["F", "GF", "3RD"]);
 const roundName = (round: string, count: number, section: string) =>
-  section === "LB" ? (round === "LF" ? "Final lower" : round === "SF" ? "Semifinal lower" : `Lower ronde ${round.slice(2)}`)
-    : section === "UB" ? ({ UF: "Final upper", R1: "Ronde 1" }[round] ?? NAMED[round] ?? round)
-      : NAMED[round] ?? (count > 1 ? `${count * 2} besar` : round);
+  section === "LB" ? (round === "LF" ? "Lower final" : round === "SF" ? "Lower semifinal" : `Lower round ${round.slice(2)}`)
+    : section === "UB" ? ({ UF: "Upper final", R1: "Round 1" }[round] ?? NAMED[round] ?? round)
+      : NAMED[round] ?? (count > 1 ? `Round of ${count * 2}` : round);
 
 function Side({ idolId, score, won, highlight, big }: { idolId?: string; score?: string; won: boolean; highlight: boolean; big?: boolean }) {
   const idol = useIdolLookup()(idolId ?? "");
@@ -39,7 +39,7 @@ function MatchCard({ cell, highlightIdol, onClick, big }: { cell: BracketCell; h
   const body = (
     <>
       <span className="flex justify-between px-1 pb-0.5 text-[9px] font-bold tracking-[0.18em] text-text-secondary uppercase">
-        <span>{big ? <span className="flex items-center gap-1 text-brand-gold"><Trophy aria-hidden="true" size={12} />{NAMED[cell.round]}</span> : `#${cell.slot}`}</span><span className={cell.winner ? "text-cool" : open ? "text-accent-bright" : ""}>{cell.winner ? "Selesai" : open ? "Main" : ""}</span>
+        <span>{big ? <span className="flex items-center gap-1 text-brand-gold"><Trophy aria-hidden="true" size={12} />{NAMED[cell.round]}</span> : `#${cell.slot}`}</span><span className={cell.winner ? "text-cool" : open ? "text-accent-bright" : ""}>{cell.winner ? "Done" : open ? "Play" : ""}</span>
       </span>
       <Side idolId={cell.a} score={sa} won={!!cell.winner && cell.winner === cell.a} highlight={involved && cell.a === highlightIdol} big={big} />
       <Side idolId={cell.b} score={sb} won={!!cell.winner && cell.winner === cell.b} highlight={involved && cell.b === highlightIdol} big={big} />
@@ -77,15 +77,15 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
   return (
     <div>
       <div className="mb-2 flex items-center gap-2">
-        <Button className="px-2 py-1" aria-label="Perkecil" disabled={zoom === ZOOMS[0]} onClick={() => setZoom(ZOOMS[ZOOMS.indexOf(zoom) - 1])}><Minus aria-hidden="true" size={16} /></Button>
+        <Button className="px-2 py-1" aria-label="Zoom out" disabled={zoom === ZOOMS[0]} onClick={() => setZoom(ZOOMS[ZOOMS.indexOf(zoom) - 1])}><Minus aria-hidden="true" size={16} /></Button>
         <span className="w-12 text-center font-mono text-xs tabular-nums" aria-live="polite">{Math.round(zoom * 100)}%</span>
-        <Button className="px-2 py-1" aria-label="Perbesar" disabled={zoom === ZOOMS.at(-1)} onClick={() => setZoom(ZOOMS[ZOOMS.indexOf(zoom) + 1])}><Plus aria-hidden="true" size={16} /></Button>
+        <Button className="px-2 py-1" aria-label="Zoom in" disabled={zoom === ZOOMS.at(-1)} onClick={() => setZoom(ZOOMS[ZOOMS.indexOf(zoom) + 1])}><Plus aria-hidden="true" size={16} /></Button>
         <Button className="px-2 py-1" onClick={() => setZoom(1)}>Reset</Button>
       </div>
       <div
         ref={area}
         tabIndex={0}
-        aria-label="Bracket, geser untuk melihat semua ronde"
+        aria-label="Bracket, scroll to see every round"
         className="max-h-[80vh] cursor-grab overflow-auto p-4 focus-visible:outline-2 focus-visible:outline-accent-bright"
         style={{ background: "radial-gradient(40rem 20rem at 100% 50%, rgb(255 77 99 / 0.12), transparent 70%)" }}
         onPointerDown={(e) => { if (e.pointerType === "mouse" && e.target === e.currentTarget) drag.current = { x: e.clientX, y: e.clientY }; }}
@@ -114,7 +114,7 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
                     return (
                       <div key={round} className="flex flex-col">
                         <h4 className="m-0 mb-3 bg-surface-hover/60 px-3 py-1 text-center text-[10px] font-bold tracking-[0.2em] uppercase">{roundName(round, matches.length, section)}</h4>
-                        <ol className="m-0 flex flex-1 list-none flex-col justify-around p-0" style={{ minHeight: tallest * CARD_PX }} aria-label={`Ronde ${round}`}>
+                        <ol className="m-0 flex flex-1 list-none flex-col justify-around p-0" style={{ minHeight: tallest * CARD_PX }} aria-label={`Round ${round}`}>
                           {pairs.map((pair, p) => (
                             <li key={p} className="relative flex flex-1 flex-col justify-around">
                               {pair.length === 2 && <span aria-hidden="true" className="absolute top-1/4 -right-4 bottom-1/4 w-4 border-y-2 border-r-2 border-accent-bright/50" />}
@@ -141,11 +141,11 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
               {double && <span aria-hidden="true" className="absolute top-1/4 bottom-1/4 left-0 w-0.5 bg-accent-bright/50" />}
               <div className="relative">
                 <h4 className="m-0 mb-3 text-center font-gothic text-3xl text-brand-gold">{NAMED[finals[0]!.round]}</h4>
-                <ol className="m-0 list-none p-0" aria-label={`Ronde ${finals[0]!.round}`}>
+                <ol className="m-0 list-none p-0" aria-label={`Round ${finals[0]!.round}`}>
                   {finals.map((cell) => <li key={cell.key}><MatchCard cell={cell} highlightIdol={highlightIdol} onClick={onMatchClick} big /></li>)}
                 </ol>
                 {thirds.length > 0 && (
-                  <ol className="absolute top-full left-0 m-0 mt-6 list-none p-0" aria-label="Ronde 3RD">
+                  <ol className="absolute top-full left-0 m-0 mt-6 list-none p-0" aria-label="Round 3RD">
                     <li className="mb-1 text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{NAMED["3RD"]}</li>
                     {thirds.map((cell) => <li key={cell.key}><MatchCard cell={cell} highlightIdol={highlightIdol} onClick={onMatchClick} /></li>)}
                   </ol>

@@ -39,7 +39,7 @@ export async function leagueRosters(db: Db | Tx, seasonId: string): Promise<Reco
 export async function replaceInRoster(db: Db | Tx, seasonId: string, outId: string, inId: string) {
   const taken = await db.select({ comp: entries.comp }).from(entries)
     .where(and(eq(entries.seasonId, seasonId), eq(entries.stage, "LG"), eq(entries.idolId, inId)));
-  if (taken.length) throw new Error(`Pengganti sudah ada di roster ${taken[0]!.comp}`);
+  if (taken.length) throw new Error(`The replacement is already in the ${taken[0]!.comp} roster`);
   await db.update(entries).set({ idolId: inId, source: "replacement" })
     .where(and(eq(entries.seasonId, seasonId), eq(entries.stage, "LG"), eq(entries.idolId, outId)));
 }
@@ -54,7 +54,7 @@ export async function updateSeason(db: Db, id: string, change: { name?: string; 
 export async function setLeagueRosters(db: Db, seasonId: string, leagues: Record<string, string[]>) {
   await db.transaction(async (tx) => {
     const [season] = await tx.select({ status: seasons.status }).from(seasons).where(eq(seasons.id, seasonId));
-    if (season?.status !== "draft") throw new Error("Roster hanya bisa diubah saat season masih draft");
+    if (season?.status !== "draft") throw new Error("Rosters can only change while the season is a draft");
     for (const [comp, ids] of Object.entries(leagues)) {
       await tx.delete(entries).where(and(eq(entries.seasonId, seasonId), eq(entries.stage, "LG"), eq(entries.comp, comp)));
       if (ids.length) await tx.insert(entries).values(ids.map((idolId, i) => ({ seasonId, comp, stage: "LG", idolId, slot: i + 1, source: "settings" })));

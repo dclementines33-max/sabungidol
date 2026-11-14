@@ -13,23 +13,23 @@ test("Perbarui data idol: preview, apply, role on the profile", async ({ page })
   await page.goto("/");
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   await page.goto("/studio/input");
-  await page.getByLabel("Pilih file .json").setInputFiles({ name: "ive.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(rows)) });
-  await expect(page.getByText("1 idol akan diperbarui, 1 tidak ditemukan.")).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByText("Tidak ditemukan: Nobody (IVE)")).toBeVisible();
+  await page.getByLabel("Choose .json file").setInputFiles({ name: "ive.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(rows)) });
+  await expect(page.getByText("1 idols will be updated, 1 not found.")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText("Not found: Nobody (IVE)")).toBeVisible();
   expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => v.id)).toEqual([]);
-  await page.getByRole("button", { name: "Terapkan" }).click();
-  await expect(page.getByText("Data 1 idol diperbarui")).toBeVisible();
+  await page.getByRole("button", { name: "Apply" }).click();
+  await expect(page.getByText("Details updated for 1 idols")).toBeVisible();
   await page.goto("/wiki/idols");
   await page.getByRole("list", { name: "Idol" }).getByRole("link").filter({ has: page.getByText("Rei", { exact: true }) }).first().click();
   await expect(page.getByText(/Main Rapper, Sub-Vocalist/).first()).toBeVisible({ timeout: 60_000 });
   await expect(page.getByText(/· JP ·/).first()).toBeVisible();
 
-  // The same file put into "Tambah idol → File CSV/JSON" (the user did that): existing idols are refused as new ones,
+  // The same file put into "Add idols → File CSV/JSON" (the user did that): existing idols are refused as new ones,
   // but a button updates their birthday and nationality.
   await page.goto("/studio/input");
   await page.getByRole("button", { name: "File CSV/JSON" }).click();
   await page.getByLabel(/File CSV/).setInputFiles({ name: "idol-details.json", mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify([{ name: "Rei", group: "IVE", birthday: "2004-02-03", nationality: "kr" }])) });
-  await page.getByRole("button", { name: "Perbarui lahir & negara 1 idol" }).click();
-  await expect(page.getByText("Tanggal lahir & negara 1 idol diperbarui")).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Update birthday & nationality for 1 idols" }).click();
+  await expect(page.getByText("Birthday & nationality updated for 1 idols")).toBeVisible({ timeout: 30_000 });
 });

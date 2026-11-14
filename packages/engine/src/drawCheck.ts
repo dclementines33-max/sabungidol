@@ -9,13 +9,13 @@ export function checkGroups(groups: DrawIdol[][], potOf: (idolId: string) => num
   const problems: string[] = [];
   const warnings: string[] = [];
   groups.forEach((group, g) => {
-    const label = `Grup ${LETTERS[g]}`;
-    if (group.length !== 4) problems.push(`${label} berisi ${group.length} idol, harus 4`);
+    const label = `Group ${LETTERS[g]}`;
+    if (group.length !== 4) problems.push(`${label} has ${group.length} idols, needs 4`);
     const pots = group.map((x) => potOf(x.id));
-    if (new Set(pots).size !== pots.length) problems.push(`${label} punya dua idol dari pot yang sama`);
+    if (new Set(pots).size !== pots.length) problems.push(`${label} has two idols from the same pot`);
     const girlGroups = group.map((x) => x.groupId).filter((id) => id !== null);
-    if (new Set(girlGroups).size !== girlGroups.length) problems.push(`${label} punya dua idol dari girl group yang sama`);
-    if (new Set(group.map((x) => x.league)).size !== group.length) warnings.push(`${label} punya rekan satu liga`);
+    if (new Set(girlGroups).size !== girlGroups.length) problems.push(`${label} has two idols from the same girl group`);
+    if (new Set(group.map((x) => x.league)).size !== group.length) warnings.push(`${label} has league teammates`);
   });
   return { problems, warnings };
 }
@@ -30,9 +30,9 @@ export function checkKnockout(
   pairs.forEach(([a, b], i) => {
     const label = `Match ${i + 1}`;
     const [x, y] = [about(a), about(b)];
-    if (x.isWinner === y.isWinner) problems.push(`${label} harus juara grup melawan runner-up`);
-    if (x.group === y.group) problems.push(`${label} mempertemukan dua idol dari Grup ${LETTERS[x.group]}`);
-    if (x.league === y.league) warnings.push(`${label} mempertemukan rekan satu liga`);
+    if (x.isWinner === y.isWinner) problems.push(`${label} must be a group winner against a runner-up`);
+    if (x.group === y.group) problems.push(`${label} pairs two idols from Group ${LETTERS[x.group]}`);
+    if (x.league === y.league) warnings.push(`${label} pairs league teammates`);
   });
   return { problems, warnings };
 }

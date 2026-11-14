@@ -66,7 +66,7 @@ function WorkerCheck() {
       <Button variant="primary" onClick={run} disabled={running || setupMs === null}>Simulasikan season contoh</Button>
       {progress && !result && !error && (
         <div>
-          <p className="m-0 mb-2 text-sm">{progress.phase === "simulating" ? "Mensimulasikan…" : `Menyimpan ${progress.done.toLocaleString("id-ID")} / ${progress.total.toLocaleString("id-ID")} match`}</p>
+          <p className="m-0 mb-2 text-sm">{progress.phase === "simulating" ? "Mensimulasikan…" : `Menyimpan ${progress.done.toLocaleString("en-GB")} / ${progress.total.toLocaleString("en-GB")} match`}</p>
           <div role="progressbar" aria-label="Progres" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} className="h-2 overflow-hidden rounded-full bg-surface">
             <div className="h-full origin-left bg-accent-bright transition-transform" style={{ transform: `scaleX(${percent / 100})` }} />
           </div>
@@ -77,8 +77,8 @@ function WorkerCheck() {
       {result && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3" data-testid="worker-result">
           <StatTile label="Penyimpanan" value={result.storage === "opfs" ? "OPFS" : "IndexedDB"} />
-          <StatTile label="Match dalam season" value={result.matches.toLocaleString("id-ID")} />
-          <StatTile label="Baru tersimpan" value={result.inserted.toLocaleString("id-ID")} />
+          <StatTile label="Match dalam season" value={result.matches.toLocaleString("en-GB")} />
+          <StatTile label="Baru tersimpan" value={result.inserted.toLocaleString("en-GB")} />
           <StatTile label="Simulasi" value={seconds(result.simulateMs)} />
           <StatTile label="Simpan ke database" value={seconds(result.saveMs)} />
           <StatTile label="Season: simulasi + simpan (target < 10 s)" value={seconds(result.totalMs)} />

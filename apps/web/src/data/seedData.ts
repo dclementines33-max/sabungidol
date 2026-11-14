@@ -10,7 +10,7 @@ const seedFileSchema = z.object({
     name: z.string(),
     girlGroup: z.string().nullable().optional(),
     rating: z.number(),
-    photoUrl: z.string().regex(/^data:image\/[\w+.-]+;base64,/, "Foto harus data URL base64"),
+    photoUrl: z.string().regex(/^data:image\/[\w+.-]+;base64,/, "Photo must be a base64 data URL"),
   })).min(1),
 });
 

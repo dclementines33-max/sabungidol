@@ -36,14 +36,14 @@ export function csvToFields(text: string): Fields[] {
 // JSON: an array of { name, group, rating, seed, nationality, birthday }.
 export function jsonToFields(text: string): Fields[] {
   const data: unknown = JSON.parse(text);
-  if (!Array.isArray(data)) throw new Error("JSON harus berupa daftar (array) idol");
+  if (!Array.isArray(data)) throw new Error("The JSON must be a list (array) of idols");
   return data.map((o) => Object.fromEntries(Object.entries(o as object).map(([k, v]) => [k, v == null ? "" : String(v)])) as Fields);
 }
 
 export function previewBatch(fields: Fields[], existing: IdolKey[]): PreviewRow[] {
   const parsed = fields.map((f) => {
     const notes: string[] = [];
-    const rating = blank(f.rating) ? (notes.push(`Rating kosong, dipakai ${DEFAULT_RATING}`), DEFAULT_RATING) : Number(f.rating);
+    const rating = blank(f.rating) ? (notes.push(`No rating, using ${DEFAULT_RATING}`), DEFAULT_RATING) : Number(f.rating);
     return {
       notes,
       key: { name: (f.name ?? "").trim(), groupName: blank(f.group) || /^soloist$/i.test(f.group!.trim()) ? null : f.group!.trim(), rating },

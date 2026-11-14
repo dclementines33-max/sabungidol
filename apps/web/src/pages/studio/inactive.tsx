@@ -20,7 +20,7 @@ function InactiveManager() {
   const rosters = useLeagueRosters(useCurrentSeason()?.id) ?? {};
   const [selected, setSelected] = useState(new Set<string>());
   const [pending, setPending] = useState<{ ids: string[]; rows: Replacement[] } | null>(null);
-  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
+  if (isPending) return <p className="text-text-secondary">Loading database…</p>;
 
   const toggle = (ids: string[], on: boolean) => setSelected((s) => { const next = new Set(s); ids.forEach((id) => (on ? next.add(id) : next.delete(id))); return next; });
   const done = async (message: string) => {
@@ -31,11 +31,11 @@ function InactiveManager() {
   };
   const activate = async (ids: string[]) => {
     await engine().setActive(ids, true);
-    await done(`${ids.length} idol diaktifkan`);
+    await done(`${ids.length} idols activated`);
   };
   const deactivate = async (ids: string[], rows: Replacement[]) => {
     await engine().deactivate(ids, Object.fromEntries(rows.flatMap((r) => (r.suggestion ? [[r.id, r.suggestion]] : []))));
-    await done(`${ids.length} idol dinonaktifkan${rows.length ? `, ${rows.filter((r) => r.suggestion).length} tempat liga diganti` : ""}`);
+    await done(`${ids.length} idols deactivated${rows.length ? `, ${rows.filter((r) => r.suggestion).length} league spots replaced` : ""}`);
   };
   const askDeactivate = (ids: string[]) => {
     const rows = suggestReplacements(ids, rosters, idols);
@@ -47,11 +47,11 @@ function InactiveManager() {
 
   return (
     <div className="space-y-8">
-      <PageHeader tag="Inactive Manager" title="Siapa main, siapa istirahat" note="Pindahkan idol antara aktif dan nonaktif; pengganti di liga diusulkan otomatis." />
+      <PageHeader tag="Inactive Manager" title="Who plays, who sits out" note="Move idols between active and inactive; league replacements are suggested for you." />
       <div className="flex flex-col gap-4 lg:flex-row">
-      <IdolColumn title="Aktif" idols={idols.filter((i) => i.active)} selected={selected} onToggle={toggle} actionLabel="Nonaktifkan"
+      <IdolColumn title="Active" idols={idols.filter((i) => i.active)} selected={selected} onToggle={toggle} actionLabel="Deactivate"
         onMove={(ids) => (idols.find((i) => i.id === ids[0])?.active ? askDeactivate(ids) : activate(ids))} />
-      <IdolColumn title="Nonaktif" idols={idols.filter((i) => !i.active)} selected={selected} onToggle={toggle} actionLabel="Aktifkan"
+      <IdolColumn title="Inactive" idols={idols.filter((i) => !i.active)} selected={selected} onToggle={toggle} actionLabel="Activate"
         onMove={(ids) => (idols.find((i) => i.id === ids[0])?.active ? askDeactivate(ids) : activate(ids))} />
       {pending && (
         <ReplacementDialog rows={pending.rows} reserves={reserves}

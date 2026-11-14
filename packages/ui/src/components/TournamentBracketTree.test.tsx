@@ -16,8 +16,8 @@ const played = (template: ReturnType<typeof knockoutTemplate>, n: number) =>
 describe("TournamentBracketTree (PRD §9)", () => {
   it("shows one column per round, with TBD for sides not decided yet", () => {
     show(<TournamentBracketTree cells={resolveBracket(knockoutTemplate([16]), ids(16), new Map())} />);
-    expect(screen.getAllByRole("list").map((l) => l.getAttribute("aria-label"))).toEqual(["Ronde R1", "Ronde QF", "Ronde SF", "Ronde F"]);
-    expect(within(screen.getByRole("list", { name: "Ronde F" })).getAllByText("TBD")).toHaveLength(2);
+    expect(screen.getAllByRole("list").map((l) => l.getAttribute("aria-label"))).toEqual(["Round R1", "Round QF", "Round SF", "Round F"]);
+    expect(within(screen.getByRole("list", { name: "Round F" })).getAllByText("TBD")).toHaveLength(2);
   });
 
   it("double elimination gets upper, lower and final sections", () => {
@@ -34,11 +34,11 @@ describe("TournamentBracketTree (PRD §9)", () => {
   it("zoom steps and resets, and a match can be opened", () => {
     const onMatchClick = vi.fn();
     show(<TournamentBracketTree cells={played(knockoutTemplate([16]), 16)} onMatchClick={onMatchClick} />);
-    fireEvent.click(screen.getByRole("button", { name: "Perbesar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Zoom in" }));
     expect(screen.getByText("125%")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.getByText("100%")).toBeTruthy();
-    fireEvent.click(within(screen.getByRole("list", { name: "Ronde F" })).getByRole("button"));
+    fireEvent.click(within(screen.getByRole("list", { name: "Round F" })).getByRole("button"));
     expect(onMatchClick).toHaveBeenCalledWith(expect.objectContaining({ key: "FN-F-1", winner: "s1" }));
   });
 });

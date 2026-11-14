@@ -7,7 +7,7 @@ const TIERS: [Tier, string][] = [["S", "90–100"], ["A", "80–89"], ["B", "70�
 export function TierStrip({ ratings }: { ratings: number[] }) {
   const count = (t: Tier) => ratings.filter((r) => tierOf(r) === t).length;
   return (
-    <ul aria-label="Sebaran tier" className="m-0 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-5">
+    <ul aria-label="Tier spread" className="m-0 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-5">
       {TIERS.map(([t, range]) => (
         <li key={t} className="bg-surface/70 px-3 py-2">
           <p className="m-0 flex items-center gap-2 text-xs">

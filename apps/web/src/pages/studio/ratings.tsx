@@ -20,9 +20,9 @@ export const Route = createFileRoute("/studio/ratings")({ component: RatingManag
 
 type Step = { draft: Map<string, number>; label: string };
 const CONFIRM = {
-  revert: { title: "Revert", message: "Batalkan aksi terakhir di draft?", label: "Revert" },
-  discard: { title: "Discard", message: "Buang semua perubahan di draft? Rating tersimpan tidak berubah.", label: "Discard" },
-  save: { title: "Save Now", message: "Simpan rating baru? Setiap perubahan dicatat di riwayat rating.", label: "Save Now" },
+  revert: { title: "Revert", message: "Undo the last change in the draft?", label: "Revert" },
+  discard: { title: "Discard", message: "Discard every change in the draft? Saved ratings stay as they are.", label: "Discard" },
+  save: { title: "Save Now", message: "Save the new ratings? Every change goes into the rating history.", label: "Save Now" },
 } as const;
 
 function RatingManager() {
@@ -32,7 +32,7 @@ function RatingManager() {
   const lookup = useIdolLookup();
   const [steps, setSteps] = useState<Step[]>([]);
   const [confirm, setConfirm] = useState<keyof typeof CONFIRM | null>(null);
-  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
+  if (isPending) return <p className="text-text-secondary">Loading database…</p>;
 
   const current = new Map(idols.map((i) => [i.id, i.rating]));
   const draft = steps.at(-1)?.draft ?? new Map<string, number>();
@@ -50,32 +50,32 @@ function RatingManager() {
       const reason = [...new Set(steps.map((s) => s.label))].join(", ");
       const { changed } = await engine().applyRatings(diff.map(([idolId, r]) => ({ idolId, new: r, reason })), "manager");
       setSteps([]);
-      notify({ level: "success", message: `Rating ${changed} idol disimpan` });
+      notify({ level: "success", message: `Ratings saved for ${changed} idols` });
       await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     }
   };
 
   return (
     <div className="studio-flow space-y-8">
-      <PageHeader tag="Rating Manager" title="Atur kekuatan setiap idol" note="Usulan rating untuk season berikutnya, preset, dan Engine Lab." />
+      <PageHeader tag="Rating Manager" title="Set every idol's strength" note="Rating proposals for next season, presets and the Engine Lab." />
       <section aria-labelledby="draft" className="studio-section space-y-3">
         <div className="flex flex-wrap items-end gap-3">
-          <h2 id="draft" className="m-0 flex-1 font-display">Draft: <span className={`font-gothic text-2xl ${diff.length ? "text-brand-gold" : "text-text-secondary"}`}>{diff.length}</span> perubahan</h2>
+          <h2 id="draft" className="m-0 flex-1 font-display">Draft: <span className={`font-gothic text-2xl ${diff.length ? "text-brand-gold" : "text-text-secondary"}`}>{diff.length}</span> changes</h2>
           <Button disabled={!steps.length} onClick={() => setConfirm("revert")}>Revert{steps.length ? ` (${steps.at(-1)!.label})` : ""}</Button>
           <Button disabled={!steps.length} onClick={() => setConfirm("discard")}>Discard</Button>
           <Button variant="primary" disabled={!diff.length} onClick={() => setConfirm("save")}>Save Now</Button>
         </div>
         {diff.length > 0 && (
           <details className="panel">
-            <summary className="cursor-pointer px-3 py-2">Preview diff (lama → baru)</summary>
-            <ul tabIndex={0} aria-label="Perubahan rating" className="m-0 max-h-64 list-none overflow-auto px-3 pb-3 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <summary className="cursor-pointer px-3 py-2">Preview diff (old → new)</summary>
+            <ul tabIndex={0} aria-label="Rating changes" className="m-0 max-h-64 list-none overflow-auto px-3 pb-3 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright">
               {diff.map(([id, r]) => <li key={id}>{lookup(id)?.name} <span className="font-mono tabular-nums">{current.get(id)} → {r}</span></li>)}
             </ul>
           </details>
         )}
       </section>
       <section aria-labelledby="actions" className="studio-section space-y-3">
-        <h2 id="actions" className="m-0 font-display">Aksi</h2>
+        <h2 id="actions" className="m-0 font-display">Actions</h2>
         <RatingActions idols={idols} onChange={change} />
       </section>
       <section aria-labelledby="table" className="studio-section space-y-3">

@@ -16,7 +16,7 @@ function Step({ idolId, place, height, delay, still }: { idolId: string; place: 
   const idol = useIdol(idolId);
   return (
     <li
-      aria-label={`Juara ${place}: ${idol.name}`}
+      aria-label={`Place ${place}: ${idol.name}`}
       className={`${still ? "animate-fade-in" : "animate-rise"} flex w-28 flex-col items-center sm:w-36`}
       style={{ animationDelay: `${delay}ms` }}
     >

@@ -26,7 +26,7 @@ export function BottomBar({ onSearch }: { onSearch?: () => void }) {
   const [play, wiki, studio] = SPACES;
   return (
     <>
-      <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-bg-raised pb-[env(safe-area-inset-bottom)] sm:hidden">
+      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-bg-raised pb-[env(safe-area-inset-bottom)] sm:hidden">
         <Link to="/" className={`${item} ${color("home")}`} activeOptions={{ exact: true }}>
           <House aria-hidden="true" size={20} strokeWidth={1.5} />
           Home

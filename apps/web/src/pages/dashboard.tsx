@@ -27,35 +27,35 @@ function Dashboard() {
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: on });
   const { data: combined = [] } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: on });
   const { data: storage } = useQuery({ queryKey: ["storage-estimate"], queryFn: () => navigator.storage.estimate(), staleTime: 0, enabled: on });
-  if (!o) return <p className="text-text-secondary">Membaca season…</p>;
+  if (!o) return <p className="text-text-secondary">Loading season…</p>;
   const active = idols.filter((i) => i.active);
   const phase = o.competitions.find((c) => c.status === "running" || c.status === "next");
   return (
     <div className="space-y-16">
       <header className="relative isolate">
         <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-14 right-0 -z-10 m-0 font-display text-[clamp(4rem,11vw,8rem)] leading-none opacity-30">{Math.round(o.progress * 100)}%</p>
-        <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">Dashboard</span><span className="kicker">{o.season.status === "live" ? "Sedang berjalan" : o.season.status}</span></p>
+        <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">Dashboard</span><span className="kicker">{o.season.status === "live" ? "Live" : o.season.status}</span></p>
         <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">{o.season.name}</h2>
-        <p className="m-0 text-lg text-text-secondary">{o.played.toLocaleString("id-ID")} match · {Math.round(o.progress * 100)}% kompetisi selesai{phase ? ` · sekarang: ${phase.name}` : ""}</p>
+        <p className="m-0 text-lg text-text-secondary">{o.played.toLocaleString("en-GB")} matches · {Math.round(o.progress * 100)}% competitions done{phase ? ` · now: ${phase.name}` : ""}</p>
       </header>
       <ChampionCover seasonName={o.season.name} champion={o.lastUnzure?.champion ?? null} championSeason={o.lastUnzure?.season} />
-      {o.season.status === "live" ? <D1Board /> : <p className="m-0 text-text-secondary">Klasemen Divisi 1 tampil setelah season dimulai.</p>}
+      {o.season.status === "live" ? <D1Board /> : <p className="m-0 text-text-secondary">Division 1 standings appear once the season starts.</p>}
       <TournamentMap />
       <div className="columns-1 gap-10 md:columns-2 xl:columns-3">
-        <DashboardCard title="Progress kompetisi"><CompetitionProgress competitions={o.competitions} /></DashboardCard>
+        <DashboardCard title="Competition progress"><CompetitionProgress competitions={o.competitions} /></DashboardCard>
         <DashboardCard title="Top 5 rating">
           <ol className={LIST}>{[...active].sort((a, b) => b.rating - a.rating).slice(0, 5).map((i) => <li key={i.id} className="flex items-center gap-2"><RatingBadge rating={i.rating} /><IdolLink id={i.id} className="flex-1" /><span className="text-text-secondary">Tier {tierOf(i.rating)}</span></li>)}</ol>
         </DashboardCard>
-        <DashboardCard title="Upset terbesar season ini">
-          {o.upset ? <p className="m-0 text-lg"><IdolLink id={o.upset.winner} className="font-display" /> menumbangkan <IdolLink id={o.upset.loser} /> · selisih rating <span className="font-gothic text-2xl text-accent-bright">{o.upset.gap}</span></p> : <p className="m-0 text-sm text-text-secondary">Belum ada upset.</p>}
+        <DashboardCard title="Biggest upset this season">
+          {o.upset ? <p className="m-0 text-lg"><IdolLink id={o.upset.winner} className="font-display" /> beat <IdolLink id={o.upset.loser} /> · rating gap <span className="font-gothic text-2xl text-accent-bright">{o.upset.gap}</span></p> : <p className="m-0 text-sm text-text-secondary">No upsets yet.</p>}
         </DashboardCard>
-        <DashboardCard title="Distribusi rating (idol aktif)"><RatingHistogram ratings={active.map((i) => i.rating)} /></DashboardCard>
-        <DashboardCard title="Girl group teratas">
-          <ol className={LIST}>{groupStats(idols, combined).slice(0, 5).map((g) => <li key={g.id} className="flex"><span className="flex-1">{g.name}</span><span className="font-mono">{g.titles} gelar · {(g.winRate * 100).toFixed(0)}%</span></li>)}</ol>
+        <DashboardCard title="Rating spread (active idols)"><RatingHistogram ratings={active.map((i) => i.rating)} /></DashboardCard>
+        <DashboardCard title="Top girl groups">
+          <ol className={LIST}>{groupStats(idols, combined).slice(0, 5).map((g) => <li key={g.id} className="flex"><span className="flex-1">{g.name}</span><span className="font-mono">{g.titles} titles · {(g.winRate * 100).toFixed(0)}%</span></li>)}</ol>
         </DashboardCard>
         <DashboardCard title="Data">
           <div className="grid grid-cols-2 gap-3">
-            <StatTile label="Match tersimpan" value={o.matches.toLocaleString("id-ID")} />
+            <StatTile label="Matches saved" value={o.matches.toLocaleString("en-GB")} />
             <StatTile label="Storage" value={storage?.usage !== undefined ? `${(storage.usage / 1e6).toFixed(0)} MB` : "–"} />
           </div>
         </DashboardCard>

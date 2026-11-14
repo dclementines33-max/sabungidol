@@ -33,7 +33,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
               <span aria-hidden="true" className="font-mono tabular-nums">{idol.titles}</span>
             </span>
           )}
-          {idol.active === false && <span className="tag">Nonaktif</span>}
+          {idol.active === false && <span className="tag">Inactive</span>}
         </div>
       </div>
     </article>

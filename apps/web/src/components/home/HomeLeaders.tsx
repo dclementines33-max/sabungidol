@@ -9,8 +9,8 @@ export function HomeLeaders({ leaders }: { leaders: Leader[] }) {
   if (!top) return null;
   return (
     <section aria-labelledby="leaders" className="relative">
-      <p className="kicker m-0">Sepanjang masa</p>
-      <h2 id="leaders" className="m-0 text-[clamp(2rem,5vw,3.5rem)]">Para penguasa</h2>
+      <p className="kicker m-0">All time</p>
+      <h2 id="leaders" className="m-0 text-[clamp(2rem,5vw,3.5rem)]">The rulers</h2>
       <div className="mt-6 flex flex-col gap-10 lg:flex-row lg:items-start">
         <figure className="relative m-0 shrink-0 lg:w-80">
           <IdolPhoto idolId={top.idolId} size={1024} className="photo-frame w-full max-w-80" />

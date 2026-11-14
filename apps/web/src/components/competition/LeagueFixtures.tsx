@@ -19,10 +19,10 @@ export function LeagueFixtures({ fixtures, busy, onPlay }: {
           <details key={round} open={round === firstOpen} className="panel">
             <summary className="flex cursor-pointer items-center gap-3 px-3 py-2">
               <span className="font-mono">Matchday {Number(round.slice(2))}</span>
-              <span className="text-sm text-text-secondary">{open ? `${open} belum dimainkan` : "selesai"}</span>
+              <span className="text-sm text-text-secondary">{open ? `${open} to play` : "done"}</span>
             </summary>
             <div className="space-y-1 px-3 pb-3">
-              {open > 0 && <Button className="px-2 py-1" disabled={busy} onClick={() => onPlay({ round })}>Main matchday {Number(round.slice(2))}</Button>}
+              {open > 0 && <Button className="px-2 py-1" disabled={busy} onClick={() => onPlay({ round })}>Play matchday {Number(round.slice(2))}</Button>}
               <ul className="m-0 list-none space-y-1 p-0">
                 {matches.map((m) => (
                   <li key={m.id}><MatchRow a={m.idolA} b={m.idolB} score={m.scoreA === undefined ? undefined : `${m.scoreA}–${m.scoreB}`} busy={busy} onOpen={() => onPlay({ id: m.id })} /></li>

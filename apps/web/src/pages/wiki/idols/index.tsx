@@ -25,16 +25,16 @@ function IdolDatabase() {
   const leagueOf = useMemo(() => new Map(Object.entries(rosters ?? {}).flatMap(([comp, ids]) => ids.map((id) => [id, comp] as const))), [rosters]);
   const shown = useMemo(() => filterIdols(idols, leagueOf, filter), [idols, leagueOf, filter]);
 
-  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
-  if (idols.length === 0) return <EmptyState icon={Users} title="Belum ada idol" description="Tambahkan idol lewat Input Data." />;
+  if (isPending) return <p className="text-text-secondary">Loading database…</p>;
+  if (idols.length === 0) return <EmptyState icon={Users} title="No idols yet" description="Add idols in Input Data." />;
   return (
     <div className="space-y-6">
-      <PageHeader tag="Idol Database" title="Semua idol dalam satu tempat" note="Saring, urutkan, lalu buka profil." />
+      <PageHeader tag="Idol Database" title="Every idol in one place" note="Filter, sort, then open a profile." />
       <IdolFilters idols={idols} filter={filter} onFilter={setFilter} view={view} onView={setView} />
-      <p className="m-0 text-sm text-text-secondary" aria-live="polite">{shown.length} dari {idols.length} idol</p>
+      <p className="m-0 text-sm text-text-secondary" aria-live="polite">{shown.length} of {idols.length} idols</p>
       <TierStrip ratings={shown.map((i) => i.rating)} />
       {shown.length === 0
-        ? <EmptyState icon={SearchX} title="Tidak ada idol yang cocok" action={<Button onClick={() => setFilter(NO_FILTER)}>Hapus filter</Button>} />
+        ? <EmptyState icon={SearchX} title="No matching idols" action={<Button onClick={() => setFilter(NO_FILTER)}>Clear filters</Button>} />
         : view === "grid" ? <IdolDatabaseGrid ids={shown.map((i) => i.id)} /> : <IdolDatabaseTable idols={shown} leagueOf={leagueOf} />}
     </div>
   );

@@ -24,8 +24,8 @@ test.describe("shell, desktop", () => {
   test("no violations with toasts, pinned notices, an error card and the bell open", async ({ page }) => {
     await page.goto("/dev/notices");
     for (const label of ["Info", "Success + Undo", "Warning", "Error"]) await page.getByRole("button", { name: label }).click();
-    await page.getByRole("button", { name: /^Notifikasi/ }).click();
-    await expect(page.getByRole("region", { name: "Riwayat notifikasi" })).toBeVisible();
+    await page.getByRole("button", { name: /^Notifications/ }).click();
+    await expect(page.getByRole("region", { name: "Notification history" })).toBeVisible();
     await expectNoViolations(page, "notification layers");
   });
 
@@ -38,9 +38,9 @@ test.describe("shell, desktop", () => {
 
   test("no violations with the command palette open", async ({ page }) => {
     await page.goto("/");
-    const search = page.getByRole("combobox", { name: "Cari panel atau perintah" });
+    const search = page.getByRole("combobox", { name: "Search panels or commands" });
     // A click before React is ready is replayed after hydration (Fase 3 step 9): one click is enough.
-    await page.getByRole("button", { name: /Cari…/ }).click();
+    await page.getByRole("button", { name: /Search…/ }).click();
     await expect(search).toBeVisible();
     await search.fill("cup");
     await expectNoViolations(page, "command palette");
@@ -60,7 +60,7 @@ test.describe("shell, mobile 375 px", () => {
     await page.goto("/wiki/career");
     await expectNoViolations(page, "mobile page");
     // Clicked as soon as it shows, maybe before React took over: the early click is replayed (Fase 3 step 9).
-    await page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("button", { name: "Play" }).click();
+    await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Play" }).click();
     await expect(page.getByRole("dialog", { name: "Play" })).toBeVisible();
     await expectNoViolations(page, "mobile Play sheet");
   });

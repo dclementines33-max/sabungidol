@@ -11,61 +11,61 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   await page.goto("/play");
-  await page.getByRole("button", { name: "Mulai Season 1" }).click();
-  await page.getByRole("button", { name: "Main matchday 1 semua liga" }).click(); // U1: one matchday in every league
-  await expect(page.getByText(/^1\d\d match dimainkan$/).first()).toBeVisible({ timeout: 60_000 });
-  await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
-  await expect(page.getByText(/4\.8\d\d match dimainkan/).first()).toBeVisible({ timeout: 120_000 });
+  await page.getByRole("button", { name: "Start Season 1" }).click();
+  await page.getByRole("button", { name: "Play matchday 1 in every league" }).click(); // U1: one matchday in every league
+  await expect(page.getByText(/^1\d\d matches played$/).first()).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "To the next phase" }).click();
+  await expect(page.getByText(/4,8\d\d matches played/).first()).toBeVisible({ timeout: 120_000 });
 
   await page.goto("/play/unzure");
-  await page.getByRole("button", { name: "Main Swiss R1" }).click();
-  await expect(page.getByText("32 match dimainkan")).toBeVisible({ timeout: 60_000 }); // round 1 in all 4 Swiss groups
-  await page.getByRole("button", { name: "Main sampai akhir Swiss" }).click();
-  await expect(page.getByRole("button", { name: "Main LCQ MD1" })).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByRole("region", { name: "Swiss grup A" })).toBeVisible(); // 4 Swiss groups
+  await page.getByRole("button", { name: "Play Swiss R1" }).click();
+  await expect(page.getByText("32 matches played")).toBeVisible({ timeout: 60_000 }); // round 1 in all 4 Swiss groups
+  await page.getByRole("button", { name: "Play to the end of Swiss" }).click();
+  await expect(page.getByRole("button", { name: "Play LCQ MD1" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("region", { name: "Swiss group A" })).toBeVisible(); // 4 Swiss groups
   expect(await axe(page)).toEqual([]);
-  await page.getByRole("button", { name: "Main sampai juara" }).click();
-  await expect(page.getByText(/^\d{3,}[\d.]* match dimainkan$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
-  await page.getByRole("tab", { name: "Pot & undian" }).click();
+  await page.getByRole("button", { name: "Play to the champion" }).click();
+  await expect(page.getByText(/^\d{1,3}(,\d{3})* matches played$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
+  await page.getByRole("tab", { name: "Pots & draw" }).click();
   await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
-  await page.getByRole("tab", { name: "Grup" }).click();
-  await expect(page.getByRole("group", { name: "Pilih grup" }).getByRole("button")).toHaveCount(16);
+  await page.getByRole("tab", { name: "Groups" }).click();
+  await expect(page.getByRole("group", { name: "Pick a group" }).getByRole("button")).toHaveCount(16);
   await page.getByRole("button", { name: "P", exact: true }).click();
-  await expect(page.getByRole("table", { name: "Grup P" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Group P" })).toBeVisible();
   await page.getByRole("tab", { name: "Knockout" }).click();
-  await expect(page.getByRole("list", { name: "Ronde F" }).getByText("Selesai")).toBeVisible(); // the whole bracket, final played
+  await expect(page.getByRole("list", { name: "Round F" }).getByText("Done")).toBeVisible(); // the whole bracket, final played
   expect(await axe(page)).toEqual([]);
-  await expect(page.getByRole("button", { name: "Main sampai juara" })).toBeDisabled(); // a drawn group match is played, not open
-  await page.getByRole("list", { name: "Ronde F" }).scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: "Play to the champion" })).toBeDisabled(); // a drawn group match is played, not open
+  await page.getByRole("list", { name: "Round F" }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: "test-results/unzure-panel.png" }); // for a human look
 
   await page.goto("/play/nugu");
   // Step 6: click an open bracket match → MatchModal → Simulate → Accept; the cup then goes on from it.
-  await page.getByRole("button", { name: /^Main .* vs / }).first().click(); // Nugu round 1 = plain fixtures (bracket from the last 16)
+  await page.getByRole("button", { name: /^Play .* vs / }).first().click(); // Nugu round 1 = plain fixtures (bracket from the last 16)
   const modal = page.getByRole("dialog");
   await modal.getByRole("button", { name: "Simulate", exact: true }).click();
-  await expect(modal.getByText(/^Game \d berlangsung|^Selesai/)).toBeVisible();
+  await expect(modal.getByText(/^Game \d in play|^Full time/)).toBeVisible();
   await expect(modal.getByText(/Game \d+ \/ \d/)).toHaveCount(0); // Update 3: the live sim never shows how many games
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/match-modal.png", fullPage: true }); // for a human look
   await modal.getByRole("radio", { name: "Wheel Picker" }).click();
   await modal.getByRole("button", { name: "Spin all" }).click();
-  await expect(modal.getByText(/ menang$|^Seri$/)).toBeVisible({ timeout: 30_000 }); // Update 3 bug: Spin all stuck after one spin
+  await expect(modal.getByText(/ wins$|^Draw$/)).toBeVisible({ timeout: 30_000 }); // Update 3 bug: Spin all stuck after one spin
   await modal.locator("..").screenshot({ path: "test-results/wheel.png" });
   await modal.getByRole("radio", { name: "Simulate" }).click();
   await modal.getByRole("button", { name: "Simulate", exact: true }).click();
   await modal.getByRole("button", { name: "Accept Result" }).click();
-  await expect(page.getByText(/^Hasil disimpan: \d–\d$/)).toBeVisible({ timeout: 30_000 });
-  await page.getByRole("button", { name: "Main sampai selesai" }).click();
-  await expect(page.getByText(/Juara Nugu Cup/i)).toBeVisible({ timeout: 120_000 });
+  await expect(page.getByText(/^Result saved: \d–\d$/)).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Play to the end" }).click();
+  await expect(page.getByText(/Champion Nugu Cup/i)).toBeVisible({ timeout: 120_000 });
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/play/b-side");
-  await page.getByRole("button", { name: "Main sampai selesai" }).click();
-  await expect(page.getByText(/Juara B-Side Cup A/i)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Play to the end" }).click();
+  await expect(page.getByText(/Champion B-Side Cup A/i)).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "BSC" }).click();
-  await page.getByRole("button", { name: "Main sampai selesai" }).click();
-  await expect(page.getByText(/Juara B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
-  await page.getByRole("button", { name: "Semua cup sampai selesai" }).click(); // U1: the other five B-Side cups at once
-  await expect(page.getByText(/^\d+ match dimainkan$/).first()).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Play to the end" }).click();
+  await expect(page.getByText(/Champion B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Every cup to the end" }).click(); // U1: the other five B-Side cups at once
+  await expect(page.getByText(/^\d+ matches played$/).first()).toBeVisible({ timeout: 60_000 });
 });

@@ -10,12 +10,12 @@ const label = (i: IdolKey) => `${i.name.trim()} (${i.groupName ?? "Soloist"})`;
 export function judgeIdol(candidate: IdolKey & { rating?: number }, others: IdolKey[]): Verdict {
   const sameName = others.filter((o) => norm(o.name) === norm(candidate.name));
   const exact = sameName.find((o) => norm(o.groupName) === norm(candidate.groupName));
-  if (exact) return { status: "duplicate", reasons: [`Duplikat persis: ${label(exact)} sudah ada`] };
+  if (exact) return { status: "duplicate", reasons: [`Exact duplicate: ${label(exact)} already exists`] };
 
-  const reasons = sameName.map((o) => `Nama sama dengan ${label(o)} — dianggap idol berbeda`);
+  const reasons = sameName.map((o) => `Same name as ${label(o)} — treated as a different idol`);
   let rating = candidate.rating;
   if (rating !== undefined && (rating < 0 || rating > 100)) {
-    reasons.push(`Rating ${rating} di luar 0–100, dipakai ${Math.min(100, Math.max(0, Math.round(rating)))}`);
+    reasons.push(`Rating ${rating} is outside 0–100, using ${Math.min(100, Math.max(0, Math.round(rating)))}`);
     rating = Math.min(100, Math.max(0, Math.round(rating)));
   }
   return { status: reasons.length ? "warning" : "new", reasons, rating };

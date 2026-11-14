@@ -33,7 +33,7 @@ describe("replacing an idol in a roster", () => {
     await createDraftSeason(db, { id: "S01", number: 1, name: "Season 1", seed: "x", leagues: { D1A: [a!, b!] } });
     await replaceInRoster(db, "S01", a!, c!);
     expect(await leagueRosters(db, "S01")).toEqual({ D1A: [c, b] });
-    await expect(replaceInRoster(db, "S01", c!, b!)).rejects.toThrow("Pengganti sudah ada di roster D1A");
+    await expect(replaceInRoster(db, "S01", c!, b!)).rejects.toThrow("The replacement is already in the D1A roster");
   });
 });
 
@@ -53,7 +53,7 @@ describe("season settings in the database", () => {
 
     await updateSeason(db, "S01", { config: { off: [] } });
     await db.update(seasons).set({ status: "live" });
-    await expect(setLeagueRosters(db, "S01", { D1A: [] })).rejects.toThrow("Roster hanya bisa diubah saat season masih draft");
+    await expect(setLeagueRosters(db, "S01", { D1A: [] })).rejects.toThrow("Rosters can only change while the season is a draft");
 
     await createDraftSeason(db, { id: "S02", number: 2, name: "Season 2", seed: "y", leagues: {} });
     expect(await listCompetitions(db, "S02")).toEqual([{ code: "UZC", name: "Unzure Cup", branding: { color: "brand-sky", logoId: null } }]);

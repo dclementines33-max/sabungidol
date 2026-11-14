@@ -66,6 +66,6 @@ export function drawRecap(canvas: HTMLCanvasElement, seasonName: string, entries
   if (rest.length > 12) {
     ctx.fillStyle = "#9fb0c2";
     ctx.font = font(500, 22);
-    ctx.fillText(`+${rest.length - 12} gelar lain`, 60, H - 50);
+    ctx.fillText(`+${rest.length - 12} more titles`, 60, H - 50);
   }
 }

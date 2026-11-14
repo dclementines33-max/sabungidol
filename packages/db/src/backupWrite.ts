@@ -89,7 +89,7 @@ async function merge(tx: Tx, tables: BackupTables): Promise<ImportResult> {
   for (const s of tables.seasons ?? []) {
     if (takenSeasons.some((t) => t.id === s.id || t.number === s.number)) {
       skipped.add(s.id);
-      result.conflicts.push(`${s.name} sudah ada — dilewati (pakai Replace untuk menimpa)`);
+      result.conflicts.push(`${s.name} already exists — skipped (use Replace to overwrite)`);
     } else result.added += (await tx.insert(seasons).values(s as never).returning()).length;
   }
   const unknownIds = new Set<string>();

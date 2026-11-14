@@ -36,7 +36,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <html lang="id">
+    <html lang="en">
       <head>
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: EARLY_INPUT_SCRIPT }} />
@@ -53,9 +53,9 @@ function NotFound() {
   return (
     <EmptyState
       icon={SearchX}
-      title="Halaman tidak ditemukan"
-      description="Alamat ini tidak ada di Sabung Idol."
-      action={<Link to="/" className="text-sm text-accent-bright underline underline-offset-4">Kembali ke Home</Link>}
+      title="Page not found"
+      description="This address doesn't exist in Sabung Idol."
+      action={<Link to="/" className="text-sm text-accent-bright underline underline-offset-4">Back to Home</Link>}
     />
   );
 }

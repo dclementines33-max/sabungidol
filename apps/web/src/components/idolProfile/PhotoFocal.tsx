@@ -18,15 +18,15 @@ export function PhotoFocal({ idol }: { idol: IdolRow & { photoId: string } }) {
   const set = async (x: number, y: number) => {
     await engine().setPhotoFocal(idol.photoId, x, y);
     await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
-    notify({ level: "success", message: "Titik fokus foto disimpan" });
+    notify({ level: "success", message: "Photo focus point saved" });
   };
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Atur fokus foto</Button>
-      <Modal open={open} onOpenChange={setOpen} title={`Fokus foto ${idol.name}`} description="Klik bagian foto yang harus selalu terlihat (biasanya wajah)." className="max-w-3xl">
+      <Button onClick={() => setOpen(true)}>Set photo focus</Button>
+      <Modal open={open} onOpenChange={setOpen} title={`Photo focus for ${idol.name}`} description="Click the part of the photo that must always show (usually the face)." className="max-w-3xl">
         <div className="flex flex-wrap items-start gap-6">
           {url && (
-            <button type="button" aria-label="Pilih titik fokus" className="relative block cursor-crosshair focus-visible:outline-2 focus-visible:outline-accent-bright"
+            <button type="button" aria-label="Pick the focus point" className="relative block cursor-crosshair focus-visible:outline-2 focus-visible:outline-accent-bright"
               onClick={(e) => { const r = e.currentTarget.getBoundingClientRect(); void set((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }}>
               <img src={url} alt="" className="block max-h-[60vh] max-w-full" />
               <span aria-hidden="true" className="absolute size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent-bright shadow-[0_0_0_2px_black]" style={{ left: `${point[0] * 100}%`, top: `${point[1] * 100}%` }} />
@@ -34,7 +34,7 @@ export function PhotoFocal({ idol }: { idol: IdolRow & { photoId: string } }) {
           )}
           <figure className="m-0">
             <IdolPhoto idolId={idol.id} size={256} className="w-32" />
-            <figcaption className="kicker mt-1 text-text-secondary">Hasil potongan</figcaption>
+            <figcaption className="kicker mt-1 text-text-secondary">Crop result</figcaption>
           </figure>
         </div>
       </Modal>

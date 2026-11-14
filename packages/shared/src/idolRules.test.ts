@@ -10,7 +10,7 @@ describe("idol rules (PRD §8, §14.3)", () => {
   });
 
   it("same name in the same group (any case, any spaces) is a red exact duplicate", () => {
-    expect(judgeIdol({ name: "  mina ", groupName: "twice" }, existing)).toEqual({ status: "duplicate", reasons: ["Duplikat persis: Mina (TWICE) sudah ada"] });
+    expect(judgeIdol({ name: "  mina ", groupName: "twice" }, existing)).toEqual({ status: "duplicate", reasons: ["Exact duplicate: Mina (TWICE) already exists"] });
   });
 
   it("two soloists with the same name are a duplicate too", () => {
@@ -19,12 +19,12 @@ describe("idol rules (PRD §8, §14.3)", () => {
 
   it("same name in another group is a yellow warning, not a refusal", () => {
     expect(judgeIdol({ name: "Mina", groupName: "Aurora" }, existing))
-      .toMatchObject({ status: "warning", reasons: ["Nama sama dengan Mina (TWICE) — dianggap idol berbeda"] });
+      .toMatchObject({ status: "warning", reasons: ["Same name as Mina (TWICE) — treated as a different idol"] });
   });
 
   it("a rating outside 0–100 is a warning with the value that will be used", () => {
     expect(judgeIdol({ name: "New", groupName: null, rating: 120 }, existing))
-      .toEqual({ status: "warning", reasons: ["Rating 120 di luar 0–100, dipakai 100"], rating: 100 });
+      .toEqual({ status: "warning", reasons: ["Rating 120 is outside 0–100, using 100"], rating: 100 });
     expect(judgeIdol({ name: "Newer", groupName: null, rating: -3 }, existing).rating).toBe(0);
   });
 

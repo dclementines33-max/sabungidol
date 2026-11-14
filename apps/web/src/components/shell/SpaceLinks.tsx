@@ -1,5 +1,5 @@
 // The links of one space (Play, Wiki or Studio), shared by the rail and the mobile sheet.
-// Play also holds the 9 competition panels under an expandable "Kompetisi".
+// Play also holds the 9 competition panels under an expandable "Competitions".
 import { Link, useLocation } from "@tanstack/react-router";
 import { ChevronRight, Trophy } from "lucide-react";
 import { COMPETITIONS, type NavItem, type NavSpace } from "./nav";
@@ -34,11 +34,11 @@ export function SpaceLinks({ space, label, onNavigate }: { space: NavSpace; labe
         <li>
           <details className="group" open={pathname.startsWith("/play/") || undefined /* show the active competition */}>
             <summary
-              title={label === "always" ? undefined : "Kompetisi"}
+              title={label === "always" ? undefined : "Competitions"}
               className="flex cursor-pointer list-none items-center gap-3 rounded-control px-3 py-2 text-sm text-text-secondary hover:bg-surface-hover hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright"
             >
               <Trophy aria-hidden="true" size={18} strokeWidth={1.5} className="shrink-0" />
-              <span className={`${labelClass[label]} flex-1`}>Kompetisi</span>
+              <span className={`${labelClass[label]} flex-1`}>Competitions</span>
               <ChevronRight aria-hidden="true" size={14} className={`${label === "never" ? "hidden" : label === "wide" ? "hidden md:block" : ""} transition-transform group-open:rotate-90`} />
             </summary>
             <ul className="m-0 list-none space-y-0.5 p-0 pl-2">

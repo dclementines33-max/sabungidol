@@ -18,10 +18,10 @@ export function usePlaySeason() {
     setProgress({ done: 0, total: 1 });
     try {
       const result = await engine().playSeason(target, onProgress(setProgress));
-      notify({ level: "success", message: `${result.added.toLocaleString("id-ID")} match dimainkan${result.paused ? " (dijeda)" : ""}${result.done ? ". Season selesai!" : ""}` });
+      notify({ level: "success", message: `${result.added.toLocaleString("en-GB")} matches played${result.paused ? " (paused)" : ""}${result.done ? ". Season complete!" : ""}` });
       result.notices.forEach((message) => notify({ level: "info", message: withNames(message, (id) => lookup(id)?.name) }, { log: false }));
     } catch (error) {
-      notify({ level: "error", code: "E-PLAY-001", message: "Simulasi berhenti. Match yang sudah tersimpan tetap aman.", context: error instanceof Error ? error.message : String(error) });
+      notify({ level: "error", code: "E-PLAY-001", message: "Simulation stopped. Saved matches are safe.", context: error instanceof Error ? error.message : String(error) });
     } finally {
       setProgress(null);
       await queryClient.invalidateQueries({ queryKey: SEASON_QUERY });

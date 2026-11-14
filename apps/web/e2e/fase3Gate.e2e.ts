@@ -9,18 +9,18 @@ test("GATE: 3 seasons in a row, no integrity errors, no duplicate matches", asyn
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   await page.goto("/play");
   for (const n of [1, 2, 3]) {
-    await page.getByRole("button", { name: `Mulai Season ${n}` }).click();
+    await page.getByRole("button", { name: `Start Season ${n}` }).click();
     await expect(page.getByTestId("season-chip")).toHaveText(`Season ${n} · live`);
     await page.getByRole("button", { name: "Simulate Whole Season" }).click();
-    await expect(page.getByText(/Season selesai!/).first()).toBeVisible({ timeout: 200_000 });
-    await expect(page.getByText(n === 1 ? /^5\.583 match dimainkan$/ : /^5\.590 match dimainkan$/)).toBeVisible(); // the whole season, nothing twice
-    await page.getByRole("button", { name: "Simpan rating" }).click();
-    await expect(page.getByText(/^Rating \d+ idol diperbarui$/).first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/Season complete!/).first()).toBeVisible({ timeout: 200_000 });
+    await expect(page.getByText(n === 1 ? /^5,583 matches played$/ : /^5,590 matches played$/)).toBeVisible(); // the whole season, nothing twice
+    await page.getByRole("button", { name: "Save ratings" }).click();
+    await expect(page.getByText(/^Ratings updated for \d+ idols$/).first()).toBeVisible({ timeout: 30_000 });
     if (n === 3) break;
     await page.getByRole("button", { name: "Start New Season" }).click();
     await page.getByRole("dialog").getByRole("button", { name: "Start New Season" }).click();
     await expect(page.getByTestId("season-chip")).toHaveText(`Season ${n + 1} · Draft`, { timeout: 30_000 });
   }
   await page.goto("/studio/settings?s=data");
-  await expect(page.getByText("Tidak ada masalah.")).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("No problems found.")).toBeVisible({ timeout: 60_000 });
 });

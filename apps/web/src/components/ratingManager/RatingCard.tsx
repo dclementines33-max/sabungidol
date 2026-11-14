@@ -40,29 +40,29 @@ export function RatingCard({ idol, league, value, line, selected, onSelect, onSe
             <span className={`${TIER_FILL[tier]} mt-0.5 px-1.5 text-[10px] font-extrabold tracking-widest`}>{tier}</span>
           </div>
         </div>
-        {changed && <p className="m-0 -mt-1 text-right font-mono text-[11px] text-text-secondary">dari {idol.rating} ({value > idol.rating ? "+" : ""}{value - idol.rating})</p>}
+        {changed && <p className="m-0 -mt-1 text-right font-mono text-[11px] text-text-secondary">from {idol.rating} ({value > idol.rating ? "+" : ""}{value - idol.rating})</p>}
         <div className="flex items-center gap-2">
           <input type="range" min={1} max={100} value={shown} aria-label={`Slider rating ${idol.name}`} className="min-w-0 flex-1" style={{ accentColor: `var(--color-tier-${tier.toLowerCase()})` }}
             onChange={(e) => setSlide(Number(e.target.value))} onPointerUp={() => slide !== null && set(slide)} onKeyUp={() => slide !== null && set(slide)} onBlur={() => slide !== null && set(slide)} />
-          <input type="number" min={1} max={100} aria-label={`Rating baru ${idol.name}`} value={value}
+          <input type="number" min={1} max={100} aria-label={`New rating for ${idol.name}`} value={value}
             className="w-12 border-0 border-b-2 border-border-strong bg-transparent px-1 font-mono tabular-nums text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright"
             onChange={(e) => { const v = Number(e.target.value); if (Number.isInteger(v) && v >= 1 && v <= 100) set(v); }} />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-y-1">
-          <div role="group" aria-label={`Ubah rating ${idol.name}`} className="flex bg-bg-base/50">
+          <div role="group" aria-label={`Change ${idol.name}'s rating`} className="flex bg-bg-base/50">
             {STEPS.map((s) => (
               <button key={s} type="button" aria-label={`${idol.name} ${s > 0 ? "+" : "−"}${Math.abs(s)}`} onClick={() => set(value + s)}
                 className={`${CHIP} ${s > 0 ? "text-cool" : "text-accent-bright"}`}>{s > 0 ? "+" : "−"}{Math.abs(s)}</button>
             ))}
           </div>
           <div className="flex">
-            {QUICK.map((q) => <button key={q} type="button" aria-label={`Set ${idol.name} ke ${q}`} className={`${CHIP} text-text-secondary`} onClick={() => set(q)}>{q}</button>)}
+            {QUICK.map((q) => <button key={q} type="button" aria-label={`Set ${idol.name} to ${q}`} className={`${CHIP} text-text-secondary`} onClick={() => set(q)}>{q}</button>)}
           </div>
         </div>
         <div className="flex items-center justify-between gap-2 border-t border-border pt-2 text-xs text-text-secondary">
-          <span className="font-mono">{line ? `${line.wins}M-${line.draws}S-${line.losses}K · ${Math.round(line.winRate * 100)}%` : "Belum main"}</span>
-          <span>{line?.titles ?? 0} gelar</span>
-          <label className="flex cursor-pointer items-center gap-1"><input type="checkbox" aria-label={`Pilih ${idol.name}`} checked={selected} onChange={(e) => onSelect(e.target.checked)} />Pilih</label>
+          <span className="font-mono">{line ? `${line.wins}M-${line.draws}S-${line.losses}K · ${Math.round(line.winRate * 100)}%` : "No games yet"}</span>
+          <span>{line?.titles ?? 0} titles</span>
+          <label className="flex cursor-pointer items-center gap-1"><input type="checkbox" aria-label={`Select ${idol.name}`} checked={selected} onChange={(e) => onSelect(e.target.checked)} />Select</label>
         </div>
       </div>
     </li>

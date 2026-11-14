@@ -11,23 +11,23 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await page.goto("/");
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   await page.goto("/play");
-  await page.getByRole("button", { name: "Mulai Season 1" }).click();
+  await page.getByRole("button", { name: "Start Season 1" }).click();
   await expect(page.getByTestId("season-chip")).toHaveText(/Season 1 · live/);
 
-  const phases = page.getByRole("list", { name: "Fase season" });
-  await expect(phases.getByRole("link", { name: /Liga Divisi 1.*Siap dimainkan/ })).toBeVisible();
+  const phases = page.getByRole("list", { name: "Season phases" });
+  await expect(phases.getByRole("link", { name: /Division 1.*Ready to play/ })).toBeVisible();
   expect(await axe(page)).toEqual([]);
-  await page.getByRole("button", { name: "Sampai fase berikutnya" }).click();
-  await expect(page.getByText(/4\.940 match dimainkan/).first()).toBeVisible({ timeout: 120_000 }); // 12 leagues + The Idols
-  await expect(phases.getByRole("link", { name: /Liga Divisi 1.*Selesai/ })).toBeVisible();
-  await expect(phases.getByRole("link", { name: /Unzure Cup.*(Siap dimainkan|Menunggu)/ })).toBeVisible();
+  await page.getByRole("button", { name: "To the next phase" }).click();
+  await expect(page.getByText(/4,940 matches played/).first()).toBeVisible({ timeout: 120_000 }); // 12 leagues + The Idols
+  await expect(phases.getByRole("link", { name: /Division 1.*Done/ })).toBeVisible();
+  await expect(phases.getByRole("link", { name: /Unzure Cup.*(Ready to play|Waiting)/ })).toBeVisible();
 
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
-  await expect(page.getByText(/Season selesai!/)).toBeVisible({ timeout: 150_000 });
+  await expect(page.getByText(/Season complete!/)).toBeVisible({ timeout: 150_000 });
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
-  await expect(page.getByRole("figure").filter({ hasText: "Top 3 season" })).toBeVisible();
+  await expect(page.getByRole("figure").filter({ hasText: "Season top 3" })).toBeVisible();
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/studio/settings?s=data");
-  await expect(page.getByText("Tidak ada masalah.")).toBeVisible({ timeout: 30_000 }); // no integrity errors
+  await expect(page.getByText("No problems found.")).toBeVisible({ timeout: 30_000 }); // no integrity errors
 });

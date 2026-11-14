@@ -43,7 +43,7 @@ describe("idols and groups (PRD §3, §8)", () => {
     const { added: [mina, sana] } = await addIdols(db, [idol("Mina", "TWICE"), idol("Sana", "TWICE")]);
     expect(await updateIdol(db, sana, idol("Sana", "TWICE", 88))).toEqual({ ok: true });
     expect((await listIdols(db)).find((r) => r.id === sana)?.rating).toBe(88);
-    expect(await updateIdol(db, sana, idol("mina", "TWICE"))).toEqual({ ok: false, reason: "Duplikat persis: Mina (TWICE) sudah ada" });
+    expect(await updateIdol(db, sana, idol("mina", "TWICE"))).toEqual({ ok: false, reason: "Exact duplicate: Mina (TWICE) already exists" });
     expect(await updateIdol(db, mina, idol("Mina", "TWICE", 75))).toEqual({ ok: true }); // unchanged name is not a duplicate of itself
   });
 

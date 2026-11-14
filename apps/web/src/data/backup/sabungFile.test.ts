@@ -17,11 +17,11 @@ describe(".sabung file", () => {
 
   it("refuses a newer backup, a tampered table and a file that is not a backup", async () => {
     const { bytes } = await writeSabung("idols", tables, {}, 3);
-    await expect(readSabung(bytes, 2)).rejects.toThrow("versi aplikasi yang lebih baru");
+    await expect(readSabung(bytes, 2)).rejects.toThrow("a newer app version");
     const files = unzipSync((await writeSabung("idols", tables, {}, 2)).bytes);
     files["data/idols.ndjson"] = strToU8('{"id":"a","name":"Mina","rating":99}\n{"id":"b","name":"Yuna","rating":84}');
-    await expect(readSabung(zipSync(files), 2)).rejects.toThrow("Backup rusak: data idols");
-    await expect(readSabung(strToU8("hello"), 2)).rejects.toThrow("bukan backup .sabung");
+    await expect(readSabung(zipSync(files), 2)).rejects.toThrow("Backup damaged: idols");
+    await expect(readSabung(strToU8("hello"), 2)).rejects.toThrow("a .sabung backup (not a valid ZIP)");
   });
 
   it("reads an older backup (schema upgrades run in order)", async () => {

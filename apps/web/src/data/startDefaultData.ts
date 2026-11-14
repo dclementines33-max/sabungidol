@@ -14,7 +14,7 @@ export function startDefaultData(): void {
   engine().loadDefaultData().then((result) => {
     if (result) {
       // The Worker already wrote this to event_log (it is the "loaded" marker), so only show it.
-      notify({ level: "success", message: `${result.loaded} idol dari data bawaan dimuat` }, { log: false });
+      notify({ level: "success", message: `${result.loaded} default idols loaded` }, { log: false });
       queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     }
     startFirstSeason();
@@ -22,18 +22,18 @@ export function startDefaultData(): void {
     checkIntegrityOnStart();
   }, (error) => {
     console.error("Default idol data not loaded", error);
-    notify({ level: "error", code: "E-SEED-001", message: "Data idol bawaan gagal dimuat. Muat ulang halaman untuk mencoba lagi.", context: error instanceof Error ? error.message : String(error) });
+    notify({ level: "error", code: "E-SEED-001", message: "The default idols failed to load. Reload the page to try again.", context: error instanceof Error ? error.message : String(error) });
   });
 }
 
 function startFirstSeason(): void {
   engine().ensureFirstSeason().then((season) => {
     if (!season?.created) return; // a season exists already, or too few active idols for 12 leagues
-    notify({ level: "info", message: `Season 1 (draft) dibuat: 240 idol di 12 liga, ${season.reserves} cadangan` });
+    notify({ level: "info", message: `Season 1 (draft) created: 240 idols in 12 leagues, ${season.reserves} reserves` });
     queryClient.invalidateQueries({ queryKey: SEASON_QUERY });
   }, (error) => {
     console.error("Season 1 not created", error);
-    notify({ level: "error", code: "E-SEASON-001", message: "Season 1 gagal dibuat. Muat ulang halaman untuk mencoba lagi.", context: error instanceof Error ? error.message : String(error) });
+    notify({ level: "error", code: "E-SEASON-001", message: "Season 1 couldn't be created. Reload the page to try again.", context: error instanceof Error ? error.message : String(error) });
   });
 }
 
@@ -41,7 +41,7 @@ function startFirstSeason(): void {
 export function remindBackup(): void {
   if (typeof Worker === "undefined") return;
   engine().backupDue().then((due) => {
-    if (due) notify({ level: "warning", code: "W-BACKUP-001", message: "Sudah lebih dari 7 hari tanpa backup. Buat backup di Settings → Backup." }, { oncePerDay: true });
+    if (due) notify({ level: "warning", code: "W-BACKUP-001", message: "It's been over 7 days without a backup. Make one in Settings → Backup." }, { oncePerDay: true });
   }, () => {}); // the database error is reported elsewhere
 }
 
@@ -50,6 +50,6 @@ export function checkIntegrityOnStart(): void {
   if (typeof Worker === "undefined") return;
   engine().integrityCheck().then((issues) => {
     const errors = issues.filter((i) => i.level === "error");
-    if (errors.length) notify({ level: "warning", code: "W-INT-000", message: `Cek integritas menemukan ${errors.length} masalah. Lihat Settings → Data.`, context: errors.map((e) => `${e.code}: ${e.message}`).join("\n") }, { oncePerDay: true });
+    if (errors.length) notify({ level: "warning", code: "W-INT-000", message: `The integrity check found ${errors.length} problems. See Settings → Data.`, context: errors.map((e) => `${e.code}: ${e.message}`).join("\n") }, { oncePerDay: true });
   }, () => {}); // a database that cannot open is reported elsewhere
 }

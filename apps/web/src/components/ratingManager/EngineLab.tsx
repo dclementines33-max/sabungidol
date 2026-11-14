@@ -47,15 +47,15 @@ export function EngineLab({ idolIds, ratingOf, tuning }: { idolIds: string[]; ra
           <p className="m-0 text-sm">
             Per game: <span className="font-mono text-accent-bright">{pct(gameWinProbability(ratingOf(a), ratingOf(b), tuning.scale))}</span> {lookup(a)?.name} ·
             Bo{bestOf}: {lookup(a)?.name} <span className="font-mono text-accent-bright">{pct(odds.A)}</span>
-            {bestOf === 4 && <> · seri <span className="font-mono">{pct(odds.D)}</span></>} · {lookup(b)?.name} <span className="font-mono text-cool">{pct(odds.B)}</span>
-            <span className="text-text-secondary"> (sebelum variance dan form)</span>
+            {bestOf === 4 && <> · draw <span className="font-mono">{pct(odds.D)}</span></>} · {lookup(b)?.name} <span className="font-mono text-cool">{pct(odds.B)}</span>
+            <span className="text-text-secondary"> (before variance and form)</span>
           </p>
-          <div className="flex gap-2"><Button onClick={() => run(100)}>Simulasi 100</Button><Button onClick={() => run(1000)}>Simulasi 1.000</Button></div>
+          <div className="flex gap-2"><Button onClick={() => run(100)}>Simulate 100</Button><Button onClick={() => run(1000)}>Simulate 1,000</Button></div>
         </>
       )}
       {scores && (
         <figure className="m-0">
-          <figcaption className="mb-2 text-sm text-text-secondary">Skor akhir dari {total.toLocaleString("id-ID")} match ({lookup(a!)?.name} – {lookup(b!)?.name})</figcaption>
+          <figcaption className="mb-2 text-sm text-text-secondary">Final scores from {total.toLocaleString("en-GB")} matches ({lookup(a!)?.name} – {lookup(b!)?.name})</figcaption>
           <ul className="m-0 list-none space-y-1 p-0">
             {rows.map(([score, count]) => {
               const [sa, sb] = score.split("–").map(Number);

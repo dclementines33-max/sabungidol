@@ -15,11 +15,11 @@ describe("rosterProblems", () => {
     rosters.D1A = [...full("D1A"), "D1A0", "D2B3"]; // 22: one twice, one also in D2B
     const active = Object.values(rosters).flat().filter((id) => id !== "D1C5");
     expect(rosterProblems(rosters, active, (id) => id)).toEqual([
-      { league: "D1A", text: "22/20 idol (kelebihan 2)" },
-      { league: "D1A", text: "Ganda: D1A0" },
-      { league: "D1A", text: "Juga di liga lain: D2B3 (D2B)" },
-      { league: "D1C", text: "Tidak aktif: D1C5" },
-      { league: "D2B", text: "Juga di liga lain: D2B3 (D1A)" },
+      { league: "D1A", text: "22/20 idols (over by 2)" },
+      { league: "D1A", text: "Listed twice: D1A0" },
+      { league: "D1A", text: "Also in another league: D2B3 (D2B)" },
+      { league: "D1C", text: "Inactive: D1C5" },
+      { league: "D2B", text: "Also in another league: D2B3 (D1A)" },
     ]);
   });
 });

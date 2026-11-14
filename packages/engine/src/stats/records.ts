@@ -7,19 +7,19 @@ import type { CareerRow } from "./careerStats";
 export type RecordEntry = { idolId: string; value: number; matches: number; rank: number; tied: boolean };
 type Category = { id: string; label: string; comp: string; kind: "total" | "percent"; value: (r: CareerRow) => number };
 
-const TITLE_COMPS: [string, string][] = [["UZC", "Unzure Cup"], ["IDL", "The Idols"], ["INK", "Inkigayo Cup"], ["D1", "Liga Divisi 1"], ["DSG", "Daesang Cup"], ["MBK", "Music Bank Cup"], ["NUG", "Nugu Cup"], ["BS", "B-Side Cup"], ["D2", "Liga Divisi 2"]];
+const TITLE_COMPS: [string, string][] = [["UZC", "Unzure Cup"], ["IDL", "The Idols"], ["INK", "Inkigayo Cup"], ["D1", "Division 1"], ["DSG", "Daesang Cup"], ["MBK", "Music Bank Cup"], ["NUG", "Nugu Cup"], ["BS", "B-Side Cup"], ["D2", "Division 2"]];
 
 export const RECORD_CATEGORIES: Category[] = [
-  { id: "titles", label: "Gelar terbanyak", comp: "ALL", kind: "total", value: (r) => r.titles },
-  ...TITLE_COMPS.map(([comp, name]): Category => ({ id: `titles-${comp}`, label: `Gelar ${name}`, comp, kind: "total", value: (r) => r.titles })),
-  { id: "wins", label: "Kemenangan terbanyak", comp: "ALL", kind: "total", value: (r) => r.wins },
-  { id: "win-rate", label: "Win rate terbaik", comp: "ALL", kind: "percent", value: (r) => r.winRate },
-  { id: "win-streak", label: "Rentetan menang terpanjang", comp: "ALL", kind: "total", value: (r) => r.bestWinStreak },
-  { id: "unbeaten-streak", label: "Rentetan tak terkalahkan terpanjang", comp: "ALL", kind: "total", value: (r) => r.bestUnbeatenStreak },
-  { id: "reverse-sweeps", label: "Reverse sweep terbanyak", comp: "ALL", kind: "total", value: (r) => r.reverseSweeps },
-  { id: "finals", label: "Final terbanyak", comp: "ALL", kind: "total", value: (r) => r.finals },
-  { id: "league-season-points", label: "Poin terbanyak dalam satu season liga", comp: "ALL", kind: "total", value: (r) => r.bestLeagueSeasonPoints },
-  { id: "invincible", label: "Season liga tanpa kalah", comp: "ALL", kind: "total", value: (r) => r.invincibleSeasons },
+  { id: "titles", label: "Most titles", comp: "ALL", kind: "total", value: (r) => r.titles },
+  ...TITLE_COMPS.map(([comp, name]): Category => ({ id: `titles-${comp}`, label: `${name} titles`, comp, kind: "total", value: (r) => r.titles })),
+  { id: "wins", label: "Most wins", comp: "ALL", kind: "total", value: (r) => r.wins },
+  { id: "win-rate", label: "Best win rate", comp: "ALL", kind: "percent", value: (r) => r.winRate },
+  { id: "win-streak", label: "Longest win streak", comp: "ALL", kind: "total", value: (r) => r.bestWinStreak },
+  { id: "unbeaten-streak", label: "Longest unbeaten run", comp: "ALL", kind: "total", value: (r) => r.bestUnbeatenStreak },
+  { id: "reverse-sweeps", label: "Most reverse sweeps", comp: "ALL", kind: "total", value: (r) => r.reverseSweeps },
+  { id: "finals", label: "Most finals", comp: "ALL", kind: "total", value: (r) => r.finals },
+  { id: "league-season-points", label: "Most points in one league season", comp: "ALL", kind: "total", value: (r) => r.bestLeagueSeasonPoints },
+  { id: "invincible", label: "Unbeaten league seasons", comp: "ALL", kind: "total", value: (r) => r.invincibleSeasons },
 ];
 
 export function rankRecords(rows: { idolId: string; value: number; matches: number }[], kind: "total" | "percent"): RecordEntry[] {

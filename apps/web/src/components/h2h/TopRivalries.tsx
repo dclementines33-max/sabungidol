@@ -11,8 +11,8 @@ export function TopRivalries({ top }: { top: Rivalry[] }) {
   return (
     <section aria-labelledby="rivalries" className="space-y-2">
       <h2 id="rivalries" className="m-0 text-[clamp(1.75rem,4vw,3rem)]">Heated Rivalries</h2>
-      <p className="kicker m-0 text-text-secondary">Top 10 pasangan paling sering bertemu</p>
-      {top.length === 0 ? <p className="text-sm text-text-secondary">Belum ada match.</p> : (
+      <p className="kicker m-0 text-text-secondary">Top 10 most frequent matchups</p>
+      {top.length === 0 ? <p className="text-sm text-text-secondary">No matches yet.</p> : (
         <ol className="m-0 list-none p-0 text-sm">
           {top.map((r, i) => (
             <li key={`${r.a}|${r.b}`} className="border-b border-border/50" style={{ marginLeft: `${(i % 3) * 1.25}rem` }}>
@@ -22,7 +22,7 @@ export function TopRivalries({ top }: { top: Rivalry[] }) {
                 <span className="flex min-w-0 items-center justify-end gap-2"><span className="truncate">{name(r.a)}</span><IdolPhoto idolId={r.a} size={64} className="h-9 w-7 shrink-0" /></span>
                 <span className="font-display tabular-nums">{r.winsA}–{r.draws}–{r.winsB}</span>
                 <span className="flex min-w-0 items-center gap-2"><IdolPhoto idolId={r.b} size={64} className="h-9 w-7 shrink-0" /><span className="truncate">{name(r.b)}</span></span>
-                <span className="font-mono text-xs text-text-secondary">{r.meetings} match</span>
+                <span className="font-mono text-xs text-text-secondary">{r.meetings} matches</span>
               </Link>
             </li>
           ))}

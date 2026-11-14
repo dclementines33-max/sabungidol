@@ -41,7 +41,7 @@ export function SwapBoard({ labels, columns, onChange }: {
                 type="button"
                 draggable
                 aria-pressed={same(picked, spot)}
-                aria-label={picked && !same(picked, spot) ? `Tukar dengan ${name}` : `Pilih ${name}`}
+                aria-label={picked && !same(picked, spot) ? `Swap with ${name}` : `Pick ${name}`}
                 onClick={() => choose(spot)}
                 onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify(spot))}
                 onDragOver={(e) => e.preventDefault()}

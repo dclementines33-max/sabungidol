@@ -11,6 +11,6 @@ describe("database errors the user sees (PRD §14.1–14.2)", () => {
   it("any other failure says nothing saved was touched, with the detail for the report", () => {
     const notice = databaseErrorNotice(new Error("Failed query: CREATE SCHEMA"));
     expect(notice).toMatchObject({ level: "error", code: "E-DB-001", context: "Failed query: CREATE SCHEMA" });
-    expect(notice.message).toContain("tidak disentuh");
+    expect(notice.message).toContain("is untouched");
   });
 });

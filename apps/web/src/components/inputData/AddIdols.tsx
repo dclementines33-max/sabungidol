@@ -11,7 +11,7 @@ import { queryClient } from "../../data/queryClient";
 import { IdolForm } from "./IdolForm";
 import { PasteBatchPreview } from "./PasteBatchPreview";
 
-const SOURCES = { paste: "Paste", file: "File CSV/JSON", form: "Satu idol" } as const;
+const SOURCES = { paste: "Paste", file: "File CSV/JSON", form: "One idol" } as const;
 
 export function AddIdols({ idols }: { idols: IdolRow[] }) {
   const [source, setSource] = useState<keyof typeof SOURCES>("paste");
@@ -28,11 +28,11 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
     setSaving(true);
     try {
       const { updated } = await engine().updateIdolDetails(existing, false);
-      notify({ level: "success", message: `Tanggal lahir & negara ${updated} idol diperbarui` });
+      notify({ level: "success", message: `Birthday & nationality updated for ${updated} idols` });
       setFields([]);
       await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     } catch (error) {
-      notify({ level: "error", code: "E-INPUT-003", message: "Data idol gagal diperbarui. Tidak ada yang berubah.", context: String(error) });
+      notify({ level: "error", code: "E-INPUT-003", message: "Idol data couldn't be updated. Nothing changed.", context: String(error) });
     } finally {
       setSaving(false);
     }
@@ -44,19 +44,19 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
       const content = await file.text();
       setFields(file.name.toLowerCase().endsWith(".json") ? jsonToFields(content) : csvToFields(content));
     } catch (error) {
-      notify({ level: "error", code: "E-INPUT-001", message: `File ${file.name} tidak bisa dibaca. Pakai CSV dengan header (name,group,rating,…) atau JSON berupa daftar.`, context: String(error) });
+      notify({ level: "error", code: "E-INPUT-001", message: `File ${file.name} can't be read. Use a CSV with a header (name,group,rating,…) or a JSON list.`, context: String(error) });
     }
   };
   const save = async () => {
     setSaving(true);
     try {
       const { added } = await engine().addIdols(toSave);
-      notify({ level: "success", message: `${added.length} idol disimpan` });
+      notify({ level: "success", message: `${added.length} idols saved` });
       setText("");
       setFields([]);
       await queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     } catch (error) {
-      notify({ level: "error", code: "E-INPUT-002", message: "Idol gagal disimpan. Tidak ada yang berubah; coba lagi.", context: String(error) });
+      notify({ level: "error", code: "E-INPUT-002", message: "Idols couldn't be saved. Nothing changed; try again.", context: String(error) });
     } finally {
       setSaving(false);
     }
@@ -64,8 +64,8 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
 
   return (
     <section className="studio-section space-y-4" aria-labelledby="add-idols">
-      <h2 id="add-idols" className="m-0 font-display">Tambah idol</h2>
-      <div className="flex flex-wrap gap-1" role="group" aria-label="Cara menambah">
+      <h2 id="add-idols" className="m-0 font-display">Add idols</h2>
+      <div className="flex flex-wrap gap-1" role="group" aria-label="How to add">
         {Object.entries(SOURCES).map(([key, label]) => (
           <Button key={key} aria-pressed={source === key} className={`px-3 ${source === key ? "bg-surface-hover" : ""}`}
             onClick={() => { setSource(key as keyof typeof SOURCES); setFields([]); }}>{label}</Button>
@@ -73,7 +73,7 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
       </div>
       {source === "paste" && (
         <label className="block text-sm text-text-secondary">
-          Satu idol per baris: <span className="font-mono">Nama | Group | Rating | Seed | Nationality | YYYY-MM-DD</span>
+          One idol per line: <span className="font-mono">Name | Group | Rating | Seed | Nationality | YYYY-MM-DD</span>
           <textarea value={text} rows={6} onChange={(e) => { setText(e.target.value); setFields(pasteToFields(e.target.value)); }}
             className="mt-1 block w-full rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 font-mono text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
         </label>
@@ -90,13 +90,13 @@ export function AddIdols({ idols }: { idols: IdolRow[] }) {
         <>
           {existing.length > 0 && (
             <p className="m-0 bg-surface/60 p-3 text-sm">
-              {existing.length} idol sudah ada, jadi tidak ditambah. Tanggal lahir dan negaranya dari file ini bisa dipakai untuk memperbarui mereka.{" "}
-              <Button variant="primary" className="mt-2" disabled={saving} onClick={() => void updateExisting()}>Perbarui lahir & negara {existing.length} idol</Button>
+              {existing.length} idols already exist, so they weren't added. This file's birthdays and nationalities can update them.{" "}
+              <Button variant="primary" className="mt-2" disabled={saving} onClick={() => void updateExisting()}>Update birthday & nationality for {existing.length} idols</Button>
             </p>
           )}
           <PasteBatchPreview rows={rows} />
           <Button variant="primary" disabled={saving || toSave.length === 0} onClick={save}>
-            {saving ? "Menyimpan…" : `Simpan ${toSave.length} idol`}
+            {saving ? "Saving…" : `Save ${toSave.length} idols`}
           </Button>
         </>
       )}

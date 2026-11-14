@@ -8,7 +8,7 @@ import type { Title } from "./types";
 
 const pair = (a: string, second: Title, label: string, notices: string[]): [string, string] => {
   if (second.champion !== a) return [a, second.champion];
-  notices.push(`${label}: ${a} juara di kedua sisi, jadi runner-up yang main`);
+  notices.push(`${label}: ${a} won both sides, so the runner-up plays`);
   return [a, second.runnerUp];
 };
 

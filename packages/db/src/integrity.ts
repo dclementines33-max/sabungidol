@@ -15,18 +15,18 @@ export async function checkIntegrity(db: Db): Promise<Issue[]> {
   if (season && season.status !== "completed" && season.status !== "archived") {
     const rosters = await leagueRosters(db, season.id);
     const wrong = [...D1_LEAGUES, ...D2_LEAGUES].filter((c) => (rosters[c]?.length ?? 0) !== 20);
-    if (wrong.length) issues.push({ code: "E-INT-001", level: "error", count: wrong.length, fix: "roster-settings", message: `Liga tidak berisi tepat 20 idol: ${wrong.join(", ")}` });
+    if (wrong.length) issues.push({ code: "E-INT-001", level: "error", count: wrong.length, fix: "roster-settings", message: `Leagues without exactly 20 idols: ${wrong.join(", ")}` });
     const inRoster = Object.values(rosters).flat();
     const inactive = inRoster.length ? await db.select({ name: idols.name }).from(idols).where(and(inArray(idols.id, inRoster), eq(idols.active, false))) : [];
-    if (inactive.length) issues.push({ code: "E-INT-002", level: "error", count: inactive.length, fix: "inactive-manager", message: `Idol nonaktif di roster ${season.name}: ${inactive.map((i) => i.name).join(", ")}` });
+    if (inactive.length) issues.push({ code: "E-INT-002", level: "error", count: inactive.length, fix: "inactive-manager", message: `Inactive idols in the ${season.name} rosters: ${inactive.map((i) => i.name).join(", ")}` });
   }
   // A league match between idols that are not both in that league's roster: an orphan.
   const [orphans] = await db.select({ n: sql<number>`count(*)::int` }).from(matches).where(and(eq(matches.stage, "LG"), sql`not exists (
     select 1 from ${entries} a join ${entries} b on a.season_id = b.season_id and a.comp = b.comp and a.stage = b.stage
     where a.season_id = ${matches.seasonId} and a.comp = ${matches.comp} and a.stage = 'LG' and a.idol_id = ${matches.idolA} and b.idol_id = ${matches.idolB})`));
-  if (orphans!.n) issues.push({ code: "E-INT-003", level: "error", count: orphans!.n, fix: "remove-orphan-matches", message: `${orphans!.n} match liga antara idol yang tidak ada di roster liga itu` });
+  if (orphans!.n) issues.push({ code: "E-INT-003", level: "error", count: orphans!.n, fix: "remove-orphan-matches", message: `${orphans!.n} league matches between idols not in that league's roster` });
   const [noPhoto] = await db.select({ n: sql<number>`count(*)::int` }).from(idols).where(and(isNull(idols.photoId), eq(idols.active, true)));
-  if (noPhoto!.n) issues.push({ code: "W-INT-004", level: "warning", count: noPhoto!.n, message: `${noPhoto!.n} idol aktif belum punya foto` });
+  if (noPhoto!.n) issues.push({ code: "W-INT-004", level: "warning", count: noPhoto!.n, message: `${noPhoto!.n} active idols have no photo yet` });
   return issues;
 }
 

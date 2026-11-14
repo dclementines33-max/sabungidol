@@ -9,7 +9,7 @@ export const Route = createFileRoute("/wiki/profile")({ component: ProfileEntry 
 
 function ProfileEntry() {
   const { data: idols } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
-  if (!idols) return <p className="text-text-secondary">Membaca database…</p>;
+  if (!idols) return <p className="text-text-secondary">Loading database…</p>;
   const top = [...idols].filter((i) => i.active).sort((a, b) => b.rating - a.rating)[0] ?? idols[0];
-  return top ? <Navigate to="/wiki/idols/$id" params={{ id: top.id }} replace /> : <p className="text-text-secondary">Belum ada idol.</p>;
+  return top ? <Navigate to="/wiki/idols/$id" params={{ id: top.id }} replace /> : <p className="text-text-secondary">No idols yet.</p>;
 }

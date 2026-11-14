@@ -8,8 +8,8 @@ export function WildcardPlayInBracket({ rounds }: { rounds: WildcardRound[] }) {
   const lookup = useIdolLookup();
   const name = (id: string) => lookup(id)?.name ?? id;
   return (
-    <section aria-label="Wildcard play-in (arsip lama)" className="overflow-x-auto">
-      <p className="m-0 mb-2 text-xs text-text-secondary">Format lama · hanya arsip</p>
+    <section aria-label="Wildcard play-in (old archive)" className="overflow-x-auto">
+      <p className="m-0 mb-2 text-xs text-text-secondary">Old format · archive only</p>
       <div className="flex gap-4">
         {rounds.map((round) => (
           <div key={round.label} className="w-44 shrink-0">

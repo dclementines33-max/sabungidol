@@ -33,7 +33,7 @@ export function ConfirmDialog({ open, onOpenChange, title, message, confirmLabel
       }}
       footer={
         <>
-          <Button ref={cancel} onClick={() => close(false)}>Batal</Button>
+          <Button ref={cancel} onClick={() => close(false)}>Cancel</Button>
           <Button
             variant={danger ? "danger" : "primary"}
             disabled={typeToConfirm !== undefined && typed !== typeToConfirm}
@@ -50,7 +50,7 @@ export function ConfirmDialog({ open, onOpenChange, title, message, confirmLabel
       {children}
       {typeToConfirm !== undefined && (
         <label className="mt-4 block text-sm">
-          Ketik <strong className="font-mono">{typeToConfirm}</strong> untuk konfirmasi
+          Type <strong className="font-mono">{typeToConfirm}</strong> to confirm
           <input
             value={typed}
             onChange={(e) => setTyped(e.target.value)}

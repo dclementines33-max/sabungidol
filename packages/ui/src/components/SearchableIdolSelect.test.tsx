@@ -55,7 +55,7 @@ describe("SearchableIdolSelect (PRD §9)", () => {
     render(<Harness onChange={() => {}} />);
     const input = screen.getByRole("combobox");
     fireEvent.change(input, { target: { value: "zzz" } });
-    expect(screen.getByText("Tidak ada idol yang cocok")).toBeTruthy();
+    expect(screen.getByText("No matching idols")).toBeTruthy();
     fireEvent.keyDown(input, { key: "Escape" });
     expect(screen.queryByRole("listbox")).toBeNull();
   });

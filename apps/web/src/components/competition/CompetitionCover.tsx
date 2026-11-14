@@ -11,7 +11,7 @@ function HeroName({ id, role }: { id: string; role: string }) {
   return <p className="m-0 mt-1 text-sm"><span className="kicker">{role}</span> <span className="font-display text-base">{useIdol(id).name}</span></p>;
 }
 
-export function CompetitionCover({ name, code, issue, color, logoId, stats = [], hero, heroRole = "Pemimpin" }: {
+export function CompetitionCover({ name, code, issue, color, logoId, stats = [], hero, heroRole = "Leader" }: {
   name: string;
   code: string;
   issue: string; // e.g. "Season 3 · MD 24/38"

@@ -10,7 +10,7 @@ const ORDER = [1, 0, 2]; // second, first, third
 export function Podium({ rows, column }: { rows: CareerRow[]; column: { header: string; value: (r: CareerRow) => ReactNode } }) {
   if (rows.length === 0) return null;
   return (
-    <ol aria-label={`Tiga teratas · ${column.header}`} className="m-0 flex list-none items-end gap-4 p-0 sm:gap-8">
+    <ol aria-label={`Top three · ${column.header}`} className="m-0 flex list-none items-end gap-4 p-0 sm:gap-8">
       {ORDER.filter((i) => rows[i]).map((i) => {
         const r = rows[i]!;
         return (

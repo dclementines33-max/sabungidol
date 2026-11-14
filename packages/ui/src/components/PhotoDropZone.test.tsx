@@ -9,7 +9,7 @@ describe("PhotoDropZone", () => {
   it("passes on dropped images only, and has a button for the keyboard", () => {
     const onFiles = vi.fn();
     const { container } = render(<PhotoDropZone onFiles={onFiles} />);
-    expect(screen.getByRole("button", { name: "Pilih foto…" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Choose photos…" })).toBeTruthy();
     const photo = new File(["x"], "a.webp", { type: "image/webp" });
     const text = new File(["x"], "notes.txt", { type: "text/plain" });
     fireEvent.drop(container.firstChild!, { dataTransfer: { files: [photo, text] } });

@@ -9,16 +9,16 @@ import { offerResetIfNeverOpened } from "./resetOffer";
 import { MAIN_DATABASE, SLOW_STORAGE_NOTICE } from "./storageChoice";
 
 export const STORAGE_REFUSED =
-  "Browser belum mengizinkan penyimpanan permanen, jadi data bisa terhapus saat ruang penyimpanan penuh. Buat backup secara rutin.";
+  "The browser hasn't allowed persistent storage, so data may be cleared when space runs low. Back up regularly.";
 
-export const OTHER_TAB_MESSAGE = "Sabung Idol sudah terbuka di tab lain. Tutup tab itu, lalu muat ulang halaman ini.";
+export const OTHER_TAB_MESSAGE = "Sabung Idol is already open in another tab. Close it, then reload this page.";
 
 // What the user is told when the database cannot be opened (PRD §14.1: what failed, where, what next).
 export function databaseErrorNotice(error: unknown) {
   const detail = error instanceof Error ? error.message : String(error);
   return detail.startsWith(DB_IN_OTHER_TAB)
     ? { level: "error" as const, code: DB_IN_OTHER_TAB, message: OTHER_TAB_MESSAGE }
-    : { level: "error" as const, code: "E-DB-001", message: "Database tidak bisa dibuka. Data yang sudah tersimpan tidak disentuh; coba muat ulang halaman.", context: detail };
+    : { level: "error" as const, code: "E-DB-001", message: "The database won't open. Saved data is untouched; try reloading the page.", context: detail };
 }
 
 export function startNotifications(): void {

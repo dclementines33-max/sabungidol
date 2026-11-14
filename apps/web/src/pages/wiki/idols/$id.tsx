@@ -29,8 +29,8 @@ function IdolProfile() {
   const rosters = useLeagueRosters(useCurrentSeason()?.id);
   const idol = idols?.find((i) => i.id === id);
 
-  if (isPending) return <p className="text-text-secondary">Membaca database…</p>;
-  if (!idol) return <EmptyState icon={UserX} title="Idol tidak ditemukan" description="Idol ini tidak ada (mungkin sudah dihapus)." />;
+  if (isPending) return <p className="text-text-secondary">Loading database…</p>;
+  if (!idol) return <EmptyState icon={UserX} title="Idol not found" description="This idol doesn't exist (maybe it was deleted)." />;
   const league = Object.entries(rosters ?? {}).find(([, ids]) => ids.includes(id))?.[0];
   const all = profile?.rows.find((r) => r.comp === "ALL");
   return (
@@ -38,21 +38,21 @@ function IdolProfile() {
       <ProfileHero idol={idol} idolIds={idols!.map((i) => i.id)} league={league}
         record={{ titles: all?.titles ?? 0, podiums: (all?.titles ?? 0) + (all?.runnerUp ?? 0) + (all?.third ?? 0), matches: all?.matches ?? 0, wins: all?.wins ?? 0, draws: all?.draws ?? 0, losses: all?.losses ?? 0, winRate: all?.winRate ?? 0 }} />
       <ProfileEdit idol={idol} />
-      {!profile ? <p className="text-text-secondary">Menghitung statistik…</p> : (
-        <Tabs label="Profil idol" tabs={[
+      {!profile ? <p className="text-text-secondary">Crunching the numbers…</p> : (
+        <Tabs label="Idol profile" tabs={[
           { id: "overview", label: "Overview", content: () => <ProfileOverview badges={profile.badges} titles={profile.placements.filter((p) => p.finalRank === 1)} history={profile.ratingHistory} rating={idol.rating} /> },
           { id: "career", label: "Career", content: () => (
             <div className="space-y-10">
             <CareerScope rows={profile.rows} />
-            <VirtualTable rows={[...profile.rows].sort((a, b) => (a.comp === "ALL" ? -1 : b.comp === "ALL" ? 1 : b.matches - a.matches))} rowKey={(r) => r.comp} label="Career per kompetisi" height="none"
-              columns={[{ header: "Kompetisi", cell: (r) => compLabel(r.comp), className: "whitespace-nowrap font-medium" }, ...CAREER_COLUMNS.map((c) => ({ header: c.header, cell: c.value, className: "font-mono tabular-nums whitespace-nowrap" }))]} />
+            <VirtualTable rows={[...profile.rows].sort((a, b) => (a.comp === "ALL" ? -1 : b.comp === "ALL" ? 1 : b.matches - a.matches))} rowKey={(r) => r.comp} label="Career by competition" height="none"
+              columns={[{ header: "Competition", cell: (r) => compLabel(r.comp), className: "whitespace-nowrap font-medium" }, ...CAREER_COLUMNS.map((c) => ({ header: c.header, cell: c.value, className: "font-mono tabular-nums whitespace-nowrap" }))]} />
             </div>
           ) },
           { id: "seasons", label: "Seasons", content: () => <ProfileSeasons placements={profile.placements} /> },
           { id: "matches", label: "Matches", content: () => <MatchLog filter={{ idolId: id }} label={`Match ${idol.name}`} /> },
           { id: "rivals", label: "Rivals", content: () => <ProfileRivals idolId={id} rivals={profile.rivals} /> },
           { id: "records", label: "Records", content: () => <ProfileRecords records={profile.records} /> },
-          { id: "gallery", label: `Galeri (${idol.gallery.length})`, content: () => <ProfileGallery name={idol.name} photos={idol.gallery} /> },
+          { id: "gallery", label: `Gallery (${idol.gallery.length})`, content: () => <ProfileGallery name={idol.name} photos={idol.gallery} /> },
         ]} />
       )}
     </div>

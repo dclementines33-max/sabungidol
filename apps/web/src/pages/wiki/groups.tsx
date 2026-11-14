@@ -24,21 +24,21 @@ function GirlGroupStats() {
   const career = useMemo(() => new Map((combined ?? []).map((r) => [r.idolId, r])), [combined]);
   const [open, setOpen] = useState<string | null>(null);
   const logoOf = new Map(groups.map((g) => [g.id, g.logoId]));
-  if (!combined) return <p className="text-text-secondary">Menghitung statistik…</p>;
+  if (!combined) return <p className="text-text-secondary">Crunching the numbers…</p>;
   return (
     <div className="space-y-8">
       <header>
-        <p className="m-0 flex items-center gap-3"><span className="tag">Girl Group Stats</span><span className="kicker">{groups.length} grup</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Peringkat girl group</h2>
-        <p className="m-0 text-text-secondary">Diurutkan menurut jumlah gelar member. Klik nama grup untuk performa tiap member.</p>
+        <p className="m-0 flex items-center gap-3"><span className="tag">Girl Group Stats</span><span className="kicker">{groups.length} groups</span></p>
+        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Girl group rankings</h2>
+        <p className="m-0 text-text-secondary">Ranked by the members' total titles. Click a group for each member's numbers.</p>
       </header>
       <Tabs label="Girl group" tabs={[
-        { id: "rank", label: "Peringkat", content: () => (
+        { id: "rank", label: "Rankings", content: () => (
           <ol className="m-0 list-none p-0">
             {stats.map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} logoId={logoOf.get(g.id)} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} />)}
           </ol>
         ) },
-        { id: "all", label: "Semua grup", content: () => <AllGroups groups={groups} idols={idols} /> },
+        { id: "all", label: "All groups", content: () => <AllGroups groups={groups} idols={idols} /> },
       ]} />
     </div>
   );

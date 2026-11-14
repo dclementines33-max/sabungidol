@@ -21,14 +21,14 @@ export function ProfileOverview({ badges, titles, history, rating }: Props) {
           <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
             {badges.map((b) => <li key={`${b.badge}-${b.season}`} className="rounded-control bg-surface-hover/60 px-2 py-1 text-sm">{BADGES[b.badge] ?? b.badge} <span className="text-text-secondary">S{b.season}</span></li>)}
           </ul>
-        ) : <p className="m-0 text-sm text-text-secondary">Belum ada badge.</p>}
+        ) : <p className="m-0 text-sm text-text-secondary">No badges yet.</p>}
       </section>
       <section aria-labelledby="titles" className="space-y-2">
-        <h3 id="titles" className={H3}>Lemari piala</h3>
+        <h3 id="titles" className={H3}>Trophy cabinet</h3>
         <TrophyCabinet titles={titles} />
       </section>
       <section aria-labelledby="rating-history" className="space-y-2 lg:col-span-2">
-        <h3 id="rating-history" className={H3}>Riwayat rating</h3>
+        <h3 id="rating-history" className={H3}>Rating history</h3>
         <RatingChart history={history} current={rating} />
       </section>
     </div>

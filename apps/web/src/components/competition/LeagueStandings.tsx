@@ -9,9 +9,9 @@ export const ZONES: Record<string, Zone[]> = {
   D1: [
     { from: 1, to: 6, label: "Unzure Cup", className: "border-l-accent-bright" },
     { from: 7, to: 16, label: "Swiss Play-in", className: "border-l-cool" },
-    { from: 18, to: 20, label: "Degradasi", className: "border-l-danger" },
+    { from: 18, to: 20, label: "Relegation", className: "border-l-danger" },
   ],
-  D2: [{ from: 1, to: 3, label: "Promosi", className: "border-l-cool" }],
+  D2: [{ from: 1, to: 3, label: "Promotion", className: "border-l-cool" }],
   IDL: [{ from: 1, to: 10, label: "Playoff", className: "border-l-cool" }],
 };
 const RESULT = { W: "bg-cool text-on-fill", D: "bg-muted text-on-fill", L: "bg-danger text-on-fill" };
@@ -20,7 +20,7 @@ function Sparkline({ ranks }: { ranks: number[] }) {
   if (ranks.length < 2) return null;
   const points = ranks.map((r, i) => `${(i / (ranks.length - 1)) * 60},${((r - 1) / 19) * 16}`).join(" ");
   return (
-    <svg width="60" height="16" viewBox="-1 -1 62 18" role="img" aria-label={`Posisi dari ${ranks[0]} ke ${ranks.at(-1)}`}>
+    <svg width="60" height="16" viewBox="-1 -1 62 18" role="img" aria-label={`Position from ${ranks[0]} to ${ranks.at(-1)}`}>
       <polyline points={points} fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-secondary" />
     </svg>
   );
@@ -35,7 +35,7 @@ export function LeagueStandings({ zoneKey, rows, form, positions }: { zoneKey: s
       <table className="w-full border-collapse text-sm tabular-nums">
         <thead>
           <tr className="text-left text-text-secondary">
-            {["#", "Idol", "M", "Mn", "S", "K", "Game", "±", "Poin", "Form", "Tren", "Zona"].map((h) => <th key={h} scope="col" className="px-2 py-1 font-medium">{h}</th>)}
+            {["#", "Idol", "P", "W", "D", "L", "Games", "±", "Pts", "Form", "Trend", "Zone"].map((h) => <th key={h} scope="col" className="px-2 py-1 font-medium">{h}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@ export function LeagueStandings({ zoneKey, rows, form, positions }: { zoneKey: s
                 <td className="px-2 py-1 font-mono">{r.gameDiff > 0 ? `+${r.gameDiff}` : r.gameDiff}</td>
                 <td className="px-2 py-1 font-mono font-semibold">{r.points}</td>
                 <td className="px-2 py-1">
-                  <span className="flex gap-0.5" role="img" aria-label={`Form: ${(form[r.idolId] ?? []).join(" ") || "belum main"}`}>
+                  <span className="flex gap-0.5" role="img" aria-label={`Form: ${(form[r.idolId] ?? []).join(" ") || "no games yet"}`}>
                     {(form[r.idolId] ?? []).map((f, i) => <span key={i} aria-hidden="true" className={`${RESULT[f]} inline-flex size-4 items-center justify-center rounded-sm text-[10px] font-semibold`}>{f}</span>)}
                   </span>
                 </td>

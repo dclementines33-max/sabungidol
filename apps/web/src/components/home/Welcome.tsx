@@ -7,24 +7,24 @@ import { ArrowRight, DatabaseBackup, Image, Settings, Users } from "lucide-react
 import type { ReactNode } from "react";
 
 const STEPS: { to: "/wiki/idols" | "/studio/input" | "/studio/settings"; icon: typeof Users; title: string; text: string; backup?: true }[] = [
-  { to: "/wiki/idols", icon: Users, title: "Periksa idol", text: "Lihat semua idol, rating dan liganya." },
-  { to: "/studio/input", icon: Image, title: "Tambah idol & foto", text: "Paste daftar idol, atau seret foto yang lebih tajam." },
-  { to: "/studio/settings", icon: Settings, title: "Atur season & liga", text: "Nama season, kompetisi, Best of N, roster dan branding." },
-  { to: "/studio/settings", icon: DatabaseBackup, title: "Restore dari backup", backup: true, text: "Punya file .sabung? Impor di Settings → Backup." },
+  { to: "/wiki/idols", icon: Users, title: "Check the idols", text: "See every idol, their rating and league." },
+  { to: "/studio/input", icon: Image, title: "Add idols & photos", text: "Paste a list of idols, or drop in sharper photos." },
+  { to: "/studio/settings", icon: Settings, title: "Set up season & leagues", text: "Season name, competitions, Best of N, rosters and branding." },
+  { to: "/studio/settings", icon: DatabaseBackup, title: "Restore from backup", backup: true, text: "Got a .sabung file? Import it in Settings → Backup." },
 ];
 
 export function Welcome({ seasonName, idols, leagues, reserves }: { seasonName: string; idols: number; leagues: number; reserves: number }): ReactNode {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <p className="m-0 text-xs tracking-widest text-text-secondary uppercase">Selamat datang</p>
-        <p className="m-0 font-display text-3xl leading-tight font-semibold uppercase md:text-[64px]">{seasonName} siap disusun.</p>
-        <p className="m-0 max-w-2xl text-text-secondary">Data idol bawaan sudah dimuat dan dibagi ke 12 liga. Periksa dulu, ubah yang perlu, lalu mainkan season di Play (Fase 3).</p>
+        <p className="m-0 text-xs tracking-widest text-text-secondary uppercase">Welcome</p>
+        <p className="m-0 font-display text-3xl leading-tight font-semibold uppercase md:text-[64px]">{seasonName} is ready to build.</p>
+        <p className="m-0 max-w-2xl text-text-secondary">The default idols are loaded and split into 12 leagues. Check them, change what you need, then play the season in Play.</p>
       </header>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatTile label="Idol" value={idols} />
-        <StatTile label="Liga" value={leagues} />
-        <StatTile label="Cadangan" value={reserves} />
+        <StatTile label="Idols" value={idols} />
+        <StatTile label="Leagues" value={leagues} />
+        <StatTile label="Reserves" value={reserves} />
         <StatTile label="Status" value="Draft" />
       </div>
       <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">

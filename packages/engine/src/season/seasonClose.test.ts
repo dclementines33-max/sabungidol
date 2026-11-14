@@ -38,7 +38,7 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
       expect(r.old - r.new).toBeLessThanOrEqual(6 + 2 + 1); // a loss: performance + relegation + rounding
     }
     const champ = rows.find((r) => r.idolId === season.titles.UZC!.champion)!;
-    expect(champ.reason).toMatch(/juara \+\d/);
+    expect(champ.reason).toMatch(/titles \+\d/);
     // Update 3: a gain shrinks as the rating rises (× (100 − rating) / 30, between 0.2 and 1.5)
     const gains = rows.filter((r) => r.reason.includes("×")).map((r) => ({ old: r.old, factor: Number(/× ([\d.]+)/.exec(r.reason)![1]) }));
     for (const g of gains) expect(g.factor).toBeCloseTo(Math.max(0.2, Math.min(1.5, (100 - g.old) / 30)), 2);

@@ -11,9 +11,9 @@ export function PanelPlaceholder() {
     <EmptyState
       icon={panel.icon}
       title={panel.label}
-      description={`Panel ini dibangun di Fase ${panel.phase}.`}
+      description={`This panel arrives in phase ${panel.phase}.`}
       action={pathname !== "/studio/input" && panel.phase > 2
-        ? <Link to="/studio/input" className="text-sm text-accent-bright underline underline-offset-4">Mulai dari Input Data</Link>
+        ? <Link to="/studio/input" className="text-sm text-accent-bright underline underline-offset-4">Start with Input Data</Link>
         : undefined}
     />
   );

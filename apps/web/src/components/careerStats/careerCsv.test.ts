@@ -6,5 +6,5 @@ import { careerCsv } from "./careerCsv";
 it("writes the chosen columns and quotes names with commas", () => {
   const row = { idolId: "x", titles: 2, wins: 5, draws: 1, losses: 0 } as CareerRow;
   const columns = CAREER_COLUMNS.filter((c) => c.id === "titles" || c.id === "wdl");
-  expect(careerCsv([row], columns, () => ({ name: 'Kim, "J"', groupName: null }))).toBe('Nama,Group,Gelar,M-S-K\n"Kim, ""J""",Soloist,2,5-1-0');
+  expect(careerCsv([row], columns, () => ({ name: 'Kim, "J"', groupName: null }))).toBe('Name,Group,Titles,W-D-L\n"Kim, ""J""",Soloist,2,5-1-0');
 });

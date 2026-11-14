@@ -18,15 +18,15 @@ export function SeasonSettings({ season }: { season: SeasonRow }) {
   const save = async () => {
     // Only this section's fields, over the latest saved config (Engine Tuning saves into it too).
     await engine().updateSeason(season.id, { name: name.trim() || season.name, config: { ...readSeasonConfig(season.config), off: config.off, bestOf: config.bestOf } });
-    notify({ level: "success", message: "Pengaturan season disimpan" });
+    notify({ level: "success", message: "Season settings saved" });
     await refreshSeason();
   };
   return (
     <section className={SECTION} aria-labelledby="set-season">
       <h2 id="set-season" className="m-0 font-display">Season</h2>
-      <label className="block max-w-sm text-sm text-text-secondary">Nama season<input value={name} maxLength={60} onChange={(e) => setName(e.target.value)} className={FIELD} /></label>
+      <label className="block max-w-sm text-sm text-text-secondary">Season name<input value={name} maxLength={60} onChange={(e) => setName(e.target.value)} className={FIELD} /></label>
       <table className="w-full border-collapse text-sm">
-        <thead><tr className="text-left text-text-secondary"><th className="py-1 font-medium">Kompetisi</th><th className="py-1 font-medium">Best of N per stage</th></tr></thead>
+        <thead><tr className="text-left text-text-secondary"><th className="py-1 font-medium">Competitions</th><th className="py-1 font-medium">Best of N per stage</th></tr></thead>
         <tbody>
           {SEASON_COMPETITIONS.map((c) => {
             const on = !config.off.includes(c.key);
@@ -57,11 +57,11 @@ export function SeasonSettings({ season }: { season: SeasonRow }) {
       <div role="status">
         {broken.length > 0 && (
           <ul className="m-0 list-none space-y-1 p-0 text-sm text-accent-bright">
-            {broken.map((b) => <li key={b.key}>{nameOf(b.key)} butuh {b.missing.map(nameOf).join(" dan ")}, yang sedang nonaktif.</li>)}
+            {broken.map((b) => <li key={b.key}>{nameOf(b.key)} needs {b.missing.map(nameOf).join(" and ")}, which is switched off.</li>)}
           </ul>
         )}
       </div>
-      <Button variant="primary" onClick={save}>Simpan season</Button>
+      <Button variant="primary" onClick={save}>Save season</Button>
     </section>
   );
 }

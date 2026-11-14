@@ -20,7 +20,7 @@ type Mode = "sim" | "preset" | "manual" | "wheel";
 
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "sim", label: "Simulate" },
-  { mode: "preset", label: "Preset skor" },
+  { mode: "preset", label: "Score presets" },
   { mode: "manual", label: "Manual" },
   { mode: "wheel", label: "Wheel Picker" },
 ];
@@ -31,9 +31,9 @@ function Stepper({ name, value, max, onChange }: { name: string; value: number; 
     <div className="flex flex-col items-center gap-1">
       <span className="max-w-32 truncate text-sm text-text-secondary">{name}</span>
       <div className="flex items-center gap-2">
-        <Button aria-label={`Kurangi skor ${name}`} className="p-2" disabled={value === 0} onClick={() => onChange(value - 1)}><Minus size={16} aria-hidden="true" /></Button>
-        <output aria-label={`Skor ${name}`} className="w-10 text-center font-mono text-3xl tabular-nums">{value}</output>
-        <Button aria-label={`Tambah skor ${name}`} className="p-2" disabled={value === max} onClick={() => onChange(value + 1)}><Plus size={16} aria-hidden="true" /></Button>
+        <Button aria-label={`Lower ${name}'s score`} className="p-2" disabled={value === 0} onClick={() => onChange(value - 1)}><Minus size={16} aria-hidden="true" /></Button>
+        <output aria-label={`${name}'s score`} className="w-10 text-center font-mono text-3xl tabular-nums">{value}</output>
+        <Button aria-label={`Raise ${name}'s score`} className="p-2" disabled={value === max} onClick={() => onChange(value + 1)}><Plus size={16} aria-hidden="true" /></Button>
       </div>
     </div>
   );
@@ -65,7 +65,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   const state = seriesState(bestOf, games);
   const method: MatchMethod = mode === "sim" ? "sim" : mode === "wheel" ? "wheel" : "manual";
   const pending: AcceptedResult | null = state.result ? { method, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result, games } : null;
-  const outcome = state.result && (state.result === "D" ? "Seri" : `${state.result === "A" ? a.name : b.name} menang`);
+  const outcome = state.result && (state.result === "D" ? "Draw" : `${state.result === "A" ? a.name : b.name} wins`);
 
   const switchTo = (next: Mode) => {
     setMode(next);
@@ -85,7 +85,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
       className={hasGallery ? "max-w-3xl lg:max-w-6xl" : "max-w-3xl"}
       footer={
         <>
-          <Button onClick={() => onOpenChange(false)}>Batal</Button>
+          <Button onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button variant="primary" disabled={!pending} onClick={() => { if (pending) onAccept(pending); onOpenChange(false); }}>
             Accept Result
           </Button>
@@ -111,7 +111,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
           </tbody>
         </table>
       )}
-      <div role="radiogroup" aria-label="Cara menentukan hasil" className="mt-6 flex flex-wrap gap-2">
+      <div role="radiogroup" aria-label="How to decide the result" className="mt-6 flex flex-wrap gap-2">
         {MODES.map((m) => (
           <button key={m.mode} type="button" role="radio" aria-checked={mode === m.mode} onClick={() => switchTo(m.mode)}
             className={`${mode === m.mode ? "bg-surface-hover text-text-primary" : "text-text-secondary"} ${CHIP}`}>
@@ -125,14 +125,14 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
           ? <div className="flex justify-center"><Button variant="primary" className="px-10 py-3 text-base" onClick={() => void runSim()}>Simulate</Button></div>
           : <div className="space-y-3">
               <LiveMatchVisualizer key={roll} games={games} nameA={a.name} nameB={b.name} target={seriesTarget(bestOf)} />
-              <div className="flex justify-center"><Button onClick={() => void runSim()}>Simulate ulang</Button></div>
+              <div className="flex justify-center"><Button onClick={() => void runSim()}>Simulate again</Button></div>
             </div>)}
 
         {mode === "preset" && (
-          <div role="group" aria-label="Preset skor" className="flex flex-wrap justify-center gap-2">
+          <div role="group" aria-label="Score presets" className="flex flex-wrap justify-center gap-2">
             {scores.map(([x, y]) => (
               <button key={`${x}-${y}`} type="button" aria-pressed={state.scoreA === x && state.scoreB === y && !!state.result}
-                aria-label={`${x}–${y} ${x > y ? a.name : x < y ? b.name : "seri"}`} onClick={() => setGames(gamesForScore(x, y))}
+                aria-label={`${x}–${y} ${x > y ? a.name : x < y ? b.name : "draw"}`} onClick={() => setGames(gamesForScore(x, y))}
                 className={`${CHIP} min-w-20 font-mono text-lg tabular-nums ${x > y ? "text-accent-bright" : x < y ? "text-cool" : "text-muted"} aria-pressed:bg-surface-hover`}>
                 {x}–{y}
               </button>
@@ -152,7 +152,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
 
         {mode !== "wheel" && mode !== "sim" && (
           <p className="m-0 mt-3 text-center text-sm text-text-secondary" aria-live="polite">
-            {outcome ? `${state.scoreA}–${state.scoreB} · ${outcome}` : mode === "manual" ? `Skor belum sah untuk Bo${bestOf}` : "Pilih skor"}
+            {outcome ? `${state.scoreA}–${state.scoreB} · ${outcome}` : mode === "manual" ? `Not a valid Bo${bestOf} score yet` : "Pick a score"}
           </p>
         )}
       </div>

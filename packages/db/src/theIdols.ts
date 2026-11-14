@@ -17,8 +17,8 @@ export async function theIdolsChanges(db: Db, seasonId: string, picked: string[]
 }
 
 export async function replaceTheIdols(db: Db, seasonId: string, picked: string[]): Promise<{ ok: boolean; reason?: string }> {
-  if (picked.length !== 20) return { ok: false, reason: `The Idols butuh 20 idol aktif, ada ${picked.length}` };
-  if (await theIdolsPlayed(db, seasonId)) return { ok: false, reason: "Match The Idols sudah dimainkan, roster tidak bisa diubah lagi" };
+  if (picked.length !== 20) return { ok: false, reason: `The Idols needs 20 active idols, has ${picked.length}` };
+  if (await theIdolsPlayed(db, seasonId)) return { ok: false, reason: "The Idols matches are already played, the roster can't change now" };
   await db.transaction(async (tx) => {
     await tx.delete(entries).where(and(eq(entries.seasonId, seasonId), eq(entries.comp, "IDL"), eq(entries.stage, "LG")));
     await tx.insert(entries).values(picked.map((idolId, i) => ({ seasonId, comp: "IDL", stage: "LG", idolId, slot: i + 1, source: "rating" })));

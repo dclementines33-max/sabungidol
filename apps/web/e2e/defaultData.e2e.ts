@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
 test("a fresh install loads the default idols once, with their photos", async ({ page }) => {
   test.setTimeout(120_000);
   await page.goto("/");
-  await expect(page.getByText("242 idol dari data bawaan dimuat")).toBeVisible({ timeout: 90_000 });
+  await expect(page.getByText("242 default idols loaded")).toBeVisible({ timeout: 90_000 });
 
   await page.goto("/dev/data");
   const count = (label: string) => page.getByTestId("data-counts").locator("dl", { hasText: label }).locator("dd");
@@ -29,5 +29,5 @@ test("a fresh install loads the default idols once, with their photos", async ({
   await expect(count("Idol")).toHaveText("242"); // not loaded a second time
   await expect(page.getByTestId("season-chip")).toHaveText("Season 1 · Draft"); // and the season kept
   await page.waitForTimeout(3000);
-  await expect(page.getByText("242 idol dari data bawaan dimuat")).toHaveCount(0);
+  await expect(page.getByText("242 default idols loaded")).toHaveCount(0);
 });

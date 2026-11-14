@@ -1,8 +1,8 @@
 // Progress per competition (PRD §8 Dashboard): each competition's status and matches played this season.
-const STATUS = { off: "Mati", none: "Season depan", waiting: "Menunggu", next: "Siap", running: "Berjalan", finished: "Selesai" } as const;
+const STATUS = { off: "Off", none: "Next season", waiting: "Waiting", next: "Ready", running: "Live", finished: "Done" } as const;
 
 export function CompetitionProgress({ competitions }: { competitions: { key: string; name: string; played: number; status: keyof typeof STATUS }[] }) {
-  if (!competitions.length) return <p className="m-0 text-sm text-text-secondary">Season belum dimulai.</p>;
+  if (!competitions.length) return <p className="m-0 text-sm text-text-secondary">The season hasn't started.</p>;
   return (
     <ul className="m-0 list-none space-y-1 p-0 text-sm">
       {competitions.map((c) => (

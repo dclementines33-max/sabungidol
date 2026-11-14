@@ -27,28 +27,28 @@ function Progression() {
   const season = useCurrentSeason();
   const live = season?.status === "live";
   const { data: o } = useQuery({ queryKey: [...SEASON_QUERY, "overview", season?.id, season?.status], queryFn: () => engine().seasonOverview(), enabled: live });
-  if (!season) return <p className="text-text-secondary">Membaca season…</p>;
-  if (!live) return <p className="text-text-secondary">Season Progression tampil saat season sedang berjalan.</p>;
+  if (!season) return <p className="text-text-secondary">Loading season…</p>;
+  if (!live) return <p className="text-text-secondary">Season Progression shows while a season is live.</p>;
   return (
     <div className="space-y-20">
       <header>
         <p className="m-0 flex items-center gap-3"><span className="tag">Season Progression</span><span className="kicker">{season.name}</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">Jalan cerita season</h2>
+        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">The season's storyline</h2>
       </header>
-      <Chapter n="01" title="Title race Divisi 1" note="Poin tiga teratas tiap liga setelah setiap matchday.">
+      <Chapter n="01" title="Division 1 title race" note="The top three's points in each league after every matchday.">
         <RaceGrid />
       </Chapter>
-      <Chapter n="02" title="Naik turun klasemen" note="Posisi enam teratas saat ini dari matchday ke matchday. Garis paling atas = peringkat 1.">
+      <Chapter n="02" title="Standings movement" note="Where the current top six stood, matchday by matchday. Top line = 1st place.">
         <Bump />
       </Chapter>
       <div className="flex flex-col gap-16 lg:flex-row">
         <div className="flex-1">
-          <Chapter n="03" title="Naik turun The Idols" note="Posisi enam teratas The Idols dari matchday ke matchday. Garis paling atas = peringkat 1.">
+          <Chapter n="03" title="The Idols movement" note="Where The Idols' top six stood, matchday by matchday. Top line = 1st place.">
             <Bump codes={["IDL"]} />
           </Chapter>
         </div>
         <div className="flex-1 lg:mt-24">
-          <Chapter n="04" title="Gelar per girl group" note="Juara setiap kompetisi season ini, dikelompokkan per grup.">
+          <Chapter n="04" title="Titles by girl group" note="This season's champions in every competition, grouped by girl group.">
             {o && <TitleShare titles={o.titles as Record<string, { champion: string } | undefined>} />}
           </Chapter>
         </div>

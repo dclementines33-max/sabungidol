@@ -29,7 +29,7 @@ export function ErrorPanel({ code, message, context, report, onRetry, retryLabel
             setCopied(true);
           }}
         >
-          {copied ? "Laporan tersalin" : "Salin laporan"}
+          {copied ? "Report copied" : "Copy report"}
         </Button>
       </div>
     </div>

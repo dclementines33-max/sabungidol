@@ -12,7 +12,7 @@ const source = { idol: (id: string) => ({ id, name: id, groupName: null, rating:
 const wrap = (ui: React.ReactNode) => render(<IdolSourceProvider source={source}>{ui}</IdolSourceProvider>);
 // Test rule: Ana and Bo must not share a group.
 const check = (columns: string[][]) => ({
-  problems: columns.some((c) => c.includes("Ana") && c.includes("Bo")) ? ["Ana dan Bo satu grup"] : [],
+  problems: columns.some((c) => c.includes("Ana") && c.includes("Bo")) ? ["Ana dan Bo satu group"] : [],
   warnings: [],
 });
 
@@ -27,31 +27,31 @@ describe("ManualGroupModal (PRD §9)", () => {
     const onApply = vi.fn();
     wrap(<ManualGroupModal open onOpenChange={() => {}} groups={[names.slice(0, 4), names.slice(4)]} check={check} onApply={onApply} />);
     const apply = () => screen.getByRole("button", { name: "Apply" }) as HTMLButtonElement;
-    expect(screen.getByRole("status").textContent).toContain("Ana dan Bo satu grup");
+    expect(screen.getByRole("status").textContent).toContain("Ana dan Bo satu group");
     expect(apply().disabled).toBe(true);
 
-    fireEvent.click(screen.getByRole("button", { name: "Pilih Bo" }));
-    expect(screen.getByRole("button", { name: "Pilih Bo" }).getAttribute("aria-pressed")).toBe("true");
-    fireEvent.click(screen.getByRole("button", { name: "Tukar dengan Ed" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pick Bo" }));
+    expect(screen.getByRole("button", { name: "Pick Bo" }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: "Swap with Ed" }));
 
-    expect(screen.getByRole("status").textContent).toContain("Semua aturan terpenuhi");
+    expect(screen.getByRole("status").textContent).toContain("All rules met");
     fireEvent.click(apply());
     expect(onApply).toHaveBeenCalledWith([["Ana", "Ed", "Cy", "Di"], ["Bo", "Fa", "Gi", "Ha"]]);
   });
 
-  it("Kembalikan puts the draw back", () => {
+  it("Reset puts the draw back", () => {
     wrap(<ManualGroupModal open onOpenChange={() => {}} groups={[names.slice(0, 4), names.slice(4)]} check={check} onApply={() => {}} />);
-    fireEvent.click(screen.getByRole("button", { name: "Pilih Bo" }));
-    fireEvent.click(screen.getByRole("button", { name: "Tukar dengan Ed" }));
-    fireEvent.click(screen.getByRole("button", { name: "Kembalikan" }));
-    expect(screen.getByRole("status").textContent).toContain("Ana dan Bo satu grup");
+    fireEvent.click(screen.getByRole("button", { name: "Pick Bo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Swap with Ed" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+    expect(screen.getByRole("status").textContent).toContain("Ana dan Bo satu group");
   });
 });
 
 describe("ManualBracketModal", () => {
   it("labels each pair as a match", () => {
-    wrap(<ManualBracketModal open onOpenChange={() => {}} pairs={[["Ana", "Cy"], ["Bo", "Di"]]} check={() => ({ problems: [], warnings: ["Match 2 mempertemukan rekan satu liga"] })} onApply={() => {}} />);
+    wrap(<ManualBracketModal open onOpenChange={() => {}} pairs={[["Ana", "Cy"], ["Bo", "Di"]]} check={() => ({ problems: [], warnings: ["Match 2 pairs league teammates"] })} onApply={() => {}} />);
     expect(screen.getByRole("region", { name: "Match 1" })).toBeTruthy();
-    expect(screen.getByRole("status").textContent).toContain("rekan satu liga");
+    expect(screen.getByRole("status").textContent).toContain("league teammates");
   });
 });

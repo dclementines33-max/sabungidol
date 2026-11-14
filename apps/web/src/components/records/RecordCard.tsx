@@ -11,7 +11,7 @@ export function RecordCard({ title, rows }: { title: string; rows: RecordRow[] }
   return (
     <section className="flex flex-col panel p-4" aria-label={title}>
       <h3 className="m-0 mb-3 text-xs tracking-widest text-text-secondary uppercase">{title}</h3>
-      {rows.length === 0 ? <p className="m-0 text-sm text-text-secondary">Belum ada.</p> : (
+      {rows.length === 0 ? <p className="m-0 text-sm text-text-secondary">None yet.</p> : (
         <ol className="m-0 max-h-[32rem] list-none space-y-1 overflow-auto p-0 text-sm">
           {shown.map((r) => (
             <li key={r.key} className="flex items-center gap-2">
@@ -22,7 +22,7 @@ export function RecordCard({ title, rows }: { title: string; rows: RecordRow[] }
           ))}
         </ol>
       )}
-      {rows.length > 10 && <Button className="mt-3 self-start px-2 py-1 text-xs" onClick={() => setAll(!all)}>{all ? "Top 10 saja" : `Lihat semua (${rows.length})`}</Button>}
+      {rows.length > 10 && <Button className="mt-3 self-start px-2 py-1 text-xs" onClick={() => setAll(!all)}>{all ? "Top 10 only" : `See all (${rows.length})`}</Button>}
     </section>
   );
 }

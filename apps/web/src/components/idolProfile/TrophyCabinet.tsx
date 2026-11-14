@@ -7,10 +7,10 @@ const GOLD = new Set(["UZC", "IDL-PO", "DSG", "INK"]);
 
 export function TrophyCabinet({ titles }: { titles: { comp: string; season: number }[] }) {
   const { label } = useBranding();
-  if (titles.length === 0) return <p className="m-0 text-sm text-text-secondary">Lemari piala masih kosong.</p>;
+  if (titles.length === 0) return <p className="m-0 text-sm text-text-secondary">The trophy cabinet is still empty.</p>;
   const shelves = [...new Set(titles.map((t) => t.comp))].sort((a, b) => Number(GOLD.has(b)) - Number(GOLD.has(a)) || a.localeCompare(b));
   return (
-    <ul className="m-0 list-none space-y-5 p-0" aria-label="Lemari piala">
+    <ul className="m-0 list-none space-y-5 p-0" aria-label="Trophy cabinet">
       {shelves.map((comp) => {
         const won = titles.filter((t) => t.comp === comp);
         return (

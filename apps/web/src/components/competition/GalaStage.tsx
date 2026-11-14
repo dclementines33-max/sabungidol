@@ -10,7 +10,7 @@ function Fighter({ id, won, lost, align }: { id: string; won: boolean; lost: boo
       <IdolPhoto idolId={id} size={1024} className={`photo-frame w-32 sm:w-44 ${won ? "drop-shadow-[0_0_30px_var(--color-accent-bright)]" : ""}`} />
       <p className={`m-0 font-display text-xl ${align === "left" ? "text-accent-bright" : "text-cool"}`}>{idol?.name}</p>
       <p className="kicker m-0 text-text-secondary">{idol?.groupName ?? "Solo"} · {idol?.rating}</p>
-      {won && <p className="tag m-0">Juara</p>}
+      {won && <p className="tag m-0">Champion</p>}
     </div>
   );
 }
@@ -30,7 +30,7 @@ export function GalaStage({ cells, title, busy, onOpen }: { cells: CupCell[]; ti
                 {c.score
                   ? <p className="m-0 font-display text-[clamp(2.5rem,7vw,5rem)] leading-none tabular-nums">{sa}<span className="text-text-secondary">–</span>{sb}</p>
                   : <p className="m-0 font-gothic text-[clamp(3rem,8vw,6rem)] leading-none text-accent">vs</p>}
-                {open && <p className="kicker m-0 mt-2 text-text-primary">Klik untuk main</p>}
+                {open && <p className="kicker m-0 mt-2 text-text-primary">Click to play</p>}
               </div>
               <Fighter id={c.b} won={c.winner === c.b} lost={!!c.winner && c.winner !== c.b} align="right" />
             </div>
@@ -39,7 +39,7 @@ export function GalaStage({ cells, title, busy, onOpen }: { cells: CupCell[]; ti
         const cls = "relative isolate block w-full overflow-hidden px-4 py-8 text-left";
         const bg = { background: "radial-gradient(30rem 16rem at 50% 0%, rgb(255 200 80 / 0.22), transparent 70%), radial-gradient(40rem 20rem at 50% 120%, rgb(255 77 99 / 0.3), transparent 70%)" };
         return open
-          ? <button key={c.key} type="button" disabled={busy} onClick={() => onOpen(c.id)} style={bg} className={`${cls} hover:brightness-125 focus-visible:outline-2 focus-visible:outline-accent-bright disabled:cursor-wait`}><span className="sr-only">Main </span>{body}</button>
+          ? <button key={c.key} type="button" disabled={busy} onClick={() => onOpen(c.id)} style={bg} className={`${cls} hover:brightness-125 focus-visible:outline-2 focus-visible:outline-accent-bright disabled:cursor-wait`}><span className="sr-only">Play </span>{body}</button>
           : <section key={c.key} aria-label={title(c)} style={bg} className={cls}>{body}</section>;
       })}
     </div>

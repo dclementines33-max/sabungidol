@@ -32,13 +32,13 @@ export function MatchGallery({ idolId, side }: { idolId: string; side: "A" | "B"
   const [open, setOpen] = useState<number | null>(null);
   if (!shown.length) return null;
   return (
-    <section aria-label={`Galeri ${idol.name}`} className="min-w-0 lg:sticky lg:top-0">
+    <section aria-label={`${idol.name} gallery`} className="min-w-0 lg:sticky lg:top-0">
       <p className={`m-0 mb-2 truncate text-xs font-bold tracking-[0.2em] uppercase ${side === "A" ? "text-accent-bright" : "text-cool"}`}>
         Galeri · {idol.name}
       </p>
       <ul className="m-0 grid list-none grid-cols-3 gap-2 p-0 lg:grid-cols-1">
         {shown.map((photoId, i) => (
-          <li key={photoId}><GalleryThumb photoId={photoId} label={`Lihat foto ${i + 1} dari ${shown.length}, ${idol.name}`} onOpen={() => setOpen(i)} /></li>
+          <li key={photoId}><GalleryThumb photoId={photoId} label={`View photo ${i + 1} of ${shown.length}, ${idol.name}`} onOpen={() => setOpen(i)} /></li>
         ))}
       </ul>
       {open !== null && <PhotoLightbox photos={shown} index={open} name={idol.name} onIndex={setOpen} onClose={() => setOpen(null)} />}

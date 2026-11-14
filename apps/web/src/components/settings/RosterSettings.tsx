@@ -1,4 +1,4 @@
-// Settings → Roster liga (PRD §8): a card per league with its branding and count, every problem of all
+// Settings → League rosters (PRD §8): a card per league with its branding and count, every problem of all
 // 12 leagues in one list under the cards; editing goes through the LeagueRosterModal. Only while the season is a draft.
 import { D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
 import { LeagueRosterModal, useIdolLookup } from "@sabung/ui";
@@ -19,16 +19,16 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
   const apply = async (code: string, roster: string[]) => {
     try {
       await engine().setLeagueRosters(seasonId, { [code]: roster });
-      notify({ level: "success", message: `Roster ${brand(code).name} disimpan` });
+      notify({ level: "success", message: `Roster ${brand(code).name} saved` });
       await refreshSeason();
     } catch (error) {
-      notify({ level: "error", code: "E-ROSTER-001", message: "Roster tidak disimpan.", context: String(error) });
+      notify({ level: "error", code: "E-ROSTER-001", message: "Roster not saved.", context: String(error) });
     }
   };
   return (
     <section className={SECTION} aria-labelledby="set-roster">
-      <h2 id="set-roster" className="m-0 font-display">Roster liga</h2>
-      {!draft && <p className="m-0 text-sm text-text-secondary">Season sudah berjalan: roster diubah lewat alur season (Fase 3).</p>}
+      <h2 id="set-roster" className="m-0 font-display">League rosters</h2>
+      {!draft && <p className="m-0 text-sm text-text-secondary">The season is live: rosters change through the season flow.</p>}
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {[...D1_LEAGUES, ...D2_LEAGUES].map((code) => {
           const n = rosters[code]?.length ?? 0;
@@ -43,7 +43,7 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
                 <span className="block truncate font-medium">{b.name}</span>
                 <span className="font-mono text-xs text-text-secondary">{code}</span>
               </span>
-              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20 idol{bad && <span className="sr-only">, ada masalah</span>}</span>
+              <span className={`font-mono text-sm tabular-nums ${bad ? "text-danger" : "text-text-secondary"}`}>{n}/20 idol{bad && <span className="sr-only">, has problems</span>}</span>
             </button>
           );
         })}
@@ -51,11 +51,11 @@ export function RosterSettings({ seasonId, draft, rosters, activeIds }: { season
       {problems.length > 0
         ? (
           <div role="alert" className="rounded-card bg-danger/10 p-3">
-            <h3 className="m-0 mb-1 text-sm font-medium text-danger">{problems.length} masalah roster</h3>
+            <h3 className="m-0 mb-1 text-sm font-medium text-danger">{problems.length} roster problems</h3>
             <ul className="m-0 space-y-1 pl-5 text-sm">{problems.map((p) => <li key={`${p.league}-${p.text}`}><span className="font-mono">{p.league}</span> {brand(p.league).name}: {p.text}</li>)}</ul>
           </div>
         )
-        : <p className="m-0 text-sm text-text-secondary">Semua 12 roster beres.</p>}
+        : <p className="m-0 text-sm text-text-secondary">All 12 rosters are good.</p>}
       {league && (
         <LeagueRosterModal open onOpenChange={(open) => !open && setLeague(null)} league={league} title={brand(league).name}
           logo={<CompetitionLogo logoId={brand(league).logoId} className="size-8" />} roster={rosters[league] ?? []}

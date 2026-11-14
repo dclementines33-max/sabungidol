@@ -23,4 +23,4 @@ export function storageFor(name: string, opfs = supportsOpfs()): { dataDir: stri
 }
 
 export const SLOW_STORAGE_NOTICE =
-  "Browser ini tidak mendukung penyimpanan cepat (OPFS), jadi data disimpan di IndexedDB. Data tetap aman, tapi menyimpan satu season bisa butuh belasan detik.";
+  "This browser doesn't support fast storage (OPFS), so data lives in IndexedDB. It's safe, but saving a season can take ten-plus seconds.";

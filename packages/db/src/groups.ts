@@ -30,6 +30,6 @@ export async function setGroupLogo(db: Db | Tx, id: string, logoId: string | nul
 // A new girl group by name (Update 3: Girl Groups panel); an existing name (any case) gives the existing group.
 export async function addGroup(db: Db | Tx, name: string): Promise<string> {
   const trimmed = name.trim();
-  if (!trimmed) throw new Error("Nama grup kosong");
+  if (!trimmed) throw new Error("Group name is empty");
   return (await ensureGroups(db, [trimmed])).get(trimmed.toLowerCase())!;
 }

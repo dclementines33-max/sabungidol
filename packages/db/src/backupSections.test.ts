@@ -60,7 +60,7 @@ describe("backup sections", () => {
     const merged = await device(true);
     const result = await restore(from, "base", merged, "merge");
     expect(await summary(merged)).toEqual({ season: 1, status: "live", seasons: 1, matches: 1 });
-    expect(result.conflicts.some((c) => c.includes("sudah berjalan"))).toBe(true);
+    expect(result.conflicts.some((c) => c.includes("is already live"))).toBe(true);
   });
 
   it("Idol Replace updates idols matched by name + group and deletes nobody, even with matches played", async () => {
@@ -76,7 +76,7 @@ describe("backup sections", () => {
     expect((await restore(from, "roster", draft, "replace")).conflicts).toEqual([]);
     expect(await summary(draft)).toEqual({ season: 1, status: "draft", seasons: 1, matches: 0 });
     const live = await device(true);
-    expect((await restore(from, "roster", live, "replace")).conflicts[0]).toMatch(/sudah berjalan/);
+    expect((await restore(from, "roster", live, "replace")).conflicts[0]).toMatch(/is already live/);
   });
 
   it("Season and Full put played seasons in with this device's idol ids, without leaving an empty draft beside them", async () => {

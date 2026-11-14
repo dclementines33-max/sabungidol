@@ -10,10 +10,10 @@ beforeEach(async () => {
 describe("event log (PRD §14.1)", () => {
   it("writes an event and lists newest first", async () => {
     await logEvent(db, { level: "info", message: "Matchday 1 selesai" });
-    const error = await logEvent(db, { level: "error", code: "E-DRAW-002", message: "Grup H hanya 3 idol", context: { group: "H" } });
+    const error = await logEvent(db, { level: "error", code: "E-DRAW-002", message: "Group H hanya 3 idol", context: { group: "H" } });
     expect(error).toMatchObject({ level: "error", code: "E-DRAW-002", context: { group: "H" } });
     expect(new Date(error!.at).getTime()).toBeGreaterThan(0);
-    expect((await listEvents(db)).map((e) => e.message)).toEqual(["Grup H hanya 3 idol", "Matchday 1 selesai"]);
+    expect((await listEvents(db)).map((e) => e.message)).toEqual(["Group H hanya 3 idol", "Matchday 1 selesai"]);
   });
 
   it("oncePerDay skips a coded event already written today", async () => {

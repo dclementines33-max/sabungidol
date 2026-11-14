@@ -15,11 +15,11 @@ for (const delay of [1000, 1500, 2000]) {
       page.getByText("E-DB-001").first().waitFor({ timeout: 150_000 }).then(() => true),
     ]);
     if (broke) {
-      await page.getByRole("button", { name: "Mulai ulang database…" }).click();
-      const dialog = page.getByRole("dialog", { name: "Mulai ulang database?" });
-      const confirm = dialog.getByRole("button", { name: "Hapus dan mulai ulang" });
-      await expect(confirm).toBeDisabled(); // nothing is deleted before HAPUS is typed
-      await dialog.getByRole("textbox").fill("HAPUS");
+      await page.getByRole("button", { name: "Restart database…" }).click();
+      const dialog = page.getByRole("dialog", { name: "Restart the database?" });
+      const confirm = dialog.getByRole("button", { name: "Delete and restart" });
+      await expect(confirm).toBeDisabled(); // nothing is deleted before DELETE is typed
+      await dialog.getByRole("textbox").fill("DELETE");
       await confirm.click();
       await expect(chip).toHaveText("Season 1 · Draft", { timeout: 150_000 });
     }
@@ -35,5 +35,5 @@ test("a second tab is told the app is open in another tab", async ({ context }) 
   await expect(first.getByTestId("season-chip")).toHaveText("Season 1 · Draft", { timeout: 150_000 });
   const second = await context.newPage();
   await second.goto("/");
-  await expect(second.getByText("Sabung Idol sudah terbuka di tab lain").first()).toBeVisible({ timeout: 20_000 });
+  await expect(second.getByText("Sabung Idol is already open in another tab").first()).toBeVisible({ timeout: 20_000 });
 });

@@ -19,7 +19,7 @@ export function MatchRow({ a, b, score, busy, onOpen }: { a: string; b: string; 
   return (
     <button type="button" disabled={busy} onClick={onOpen}
       className={`${ROW} cursor-pointer bg-surface-hover/60 hover:border-accent-bright hover:bg-surface-hover disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-accent-bright`}>
-      <span className="sr-only">Main </span>{body}
+      <span className="sr-only">Play </span>{body}
     </button>
   );
 }

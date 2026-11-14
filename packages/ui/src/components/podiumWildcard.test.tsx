@@ -16,7 +16,7 @@ describe("KahootPodium (PRD §9)", () => {
   it("stands 2 – 1 – 3 from left to right, and rises 3 → 2 → 1", () => {
     render(<SampleIdols><KahootPodium first="mina" second="yuna" third="sora" title="Unzure Cup" /></SampleIdols>);
     const places = within(screen.getByRole("list")).getAllByRole("listitem");
-    expect(places.map((p) => p.getAttribute("aria-label"))).toEqual(["Juara 2: Yuna", "Juara 1: Mina Kim", "Juara 3: Han Sora"]);
+    expect(places.map((p) => p.getAttribute("aria-label"))).toEqual(["Place 2: Yuna", "Place 1: Mina Kim", "Place 3: Han Sora"]);
     const [second, first, third] = places.map(delayOf);
     expect([third, second, first]).toEqual([0, RISE_GAP_MS, 2 * RISE_GAP_MS]);
   });
@@ -40,7 +40,7 @@ describe("KahootPodium (PRD §9)", () => {
 describe("WildcardPlayInBracket", () => {
   it("shows old rounds read-only, with the winner marked", () => {
     render(<SampleIdols><WildcardPlayInBracket rounds={[{ label: "WC1", matches: [{ a: "mina", b: "rina", winner: "rina", score: "2–1" }] }]} /></SampleIdols>);
-    expect(screen.getByRole("region", { name: "Wildcard play-in (arsip lama)" })).toBeTruthy();
+    expect(screen.getByRole("region", { name: "Wildcard play-in (old archive)" })).toBeTruthy();
     expect(screen.getByText("Rina").className).toContain("text-accent-bright");
     expect(screen.getByText("2–1")).toBeTruthy();
   });

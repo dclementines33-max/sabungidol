@@ -109,7 +109,7 @@ export function exportNotices(shown: Notice[]): void {
   const blob = new Blob([JSON.stringify(shown.map(({ undo: _undo, ...n }) => n), null, 2)], { type: "application/json" });
   const link = Object.assign(document.createElement("a"), {
     href: URL.createObjectURL(blob),
-    download: `sabung-notifikasi-${new Date().toISOString().slice(0, 10)}.json`,
+    download: `sabung-notifications-${new Date().toISOString().slice(0, 10)}.json`,
   });
   link.click();
   URL.revokeObjectURL(link.href);

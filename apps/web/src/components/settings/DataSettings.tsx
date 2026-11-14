@@ -16,9 +16,9 @@ export function DataSettings() {
     setRebuilding(true);
     try {
       const seasons = await engine().rebuildStats();
-      notify({ level: "success", message: `Statistik dibangun ulang dari ${seasons} season` });
+      notify({ level: "success", message: `Statistics rebuilt from ${seasons} seasons` });
     } catch (error) {
-      notify({ level: "error", code: "E-STATS-001", message: "Rebuild Stats gagal. Match tidak berubah.", context: error instanceof Error ? error.message : String(error) });
+      notify({ level: "error", code: "E-STATS-001", message: "Rebuild Stats failed. Matches unchanged.", context: error instanceof Error ? error.message : String(error) });
     } finally { setRebuilding(false); }
   };
   const { data } = useQuery({
@@ -38,13 +38,13 @@ export function DataSettings() {
       <h2 id="set-data" className="m-0 font-display">Data</h2>
       {data && (
         <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
-          <dt className="text-text-secondary">Penyimpanan</dt><dd className="m-0">{data.storage === "opfs" ? "OPFS (cepat)" : "IndexedDB (lambat)"}</dd>
-          <dt className="text-text-secondary">Terpakai</dt><dd className="m-0 font-mono">{mb(data.estimate?.usage)} dari {mb(data.estimate?.quota)}</dd>
-          <dt className="text-text-secondary">Penyimpanan permanen</dt><dd className="m-0">{data.persisted ? "Diizinkan" : "Belum diizinkan: buat backup rutin"}</dd>
-          <dt className="text-text-secondary">Match tersimpan</dt><dd className="m-0 font-mono">{data.matches}</dd>
+          <dt className="text-text-secondary">Storage</dt><dd className="m-0">{data.storage === "opfs" ? "OPFS (fast)" : "IndexedDB (slow)"}</dd>
+          <dt className="text-text-secondary">Used</dt><dd className="m-0 font-mono">{mb(data.estimate?.usage)} of {mb(data.estimate?.quota)}</dd>
+          <dt className="text-text-secondary">Persistent storage</dt><dd className="m-0">{data.persisted ? "Allowed" : "Not allowed yet: back up regularly"}</dd>
+          <dt className="text-text-secondary">Matches saved</dt><dd className="m-0 font-mono">{data.matches}</dd>
         </dl>
       )}
-      <Button disabled={rebuilding} onClick={rebuild}>{rebuilding ? "Membangun ulang…" : "Rebuild Stats"}</Button>
+      <Button disabled={rebuilding} onClick={rebuild}>{rebuilding ? "Rebuilding…" : "Rebuild Stats"}</Button>
       <IntegrityList />
     </section>
   );

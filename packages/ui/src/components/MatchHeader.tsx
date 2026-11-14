@@ -60,7 +60,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
       </div>
       <div className="mt-4">
         <p className="sr-only">
-          Peluang menang: {a.name} {pct(odds.A)}{bestOf === 4 ? `, seri ${pct(odds.D)}` : ""}, {b.name} {pct(odds.B)}
+          Win odds: {a.name} {pct(odds.A)}{bestOf === 4 ? `, draw ${pct(odds.D)}` : ""}, {b.name} {pct(odds.B)}
         </p>
         <div aria-hidden="true" className="flex h-2 overflow-hidden">
           <div className="bg-accent-bright" style={{ width: pct(odds.A) }} />
@@ -69,7 +69,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
         </div>
         <div aria-hidden="true" className="mt-1 flex justify-between font-mono text-xs tabular-nums">
           <span className="text-accent-bright">{pct(odds.A)}</span>
-          {bestOf === 4 && <span className="text-muted">seri {pct(odds.D)}</span>}
+          {bestOf === 4 && <span className="text-muted">draw {pct(odds.D)}</span>}
           <span className="text-cool">{pct(odds.B)}</span>
         </div>
         {h2h && (

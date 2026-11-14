@@ -16,10 +16,10 @@ export function MatchLog({ filter, newest = true, label = "Match" }: { filter: M
   });
   const total = query.data?.pages[0]?.total;
   const rows = query.data?.pages.flatMap((p) => p.rows) ?? [];
-  if (query.isPending) return <p className="text-text-secondary">Membaca match…</p>;
+  if (query.isPending) return <p className="text-text-secondary">Loading matches…</p>;
   return (
     <div className="space-y-3">
-      <p className="m-0 text-sm text-text-secondary" aria-live="polite">{label}: {total ?? 0} match</p>
+      <p className="m-0 text-sm text-text-secondary" aria-live="polite">{label}: {total ?? 0} matches</p>
       {rows.length > 0 && (
         <ul className="m-0 list-none divide-y divide-border panel p-0 text-sm" aria-label={label}>
           {rows.map((m) => (
@@ -32,7 +32,7 @@ export function MatchLog({ filter, newest = true, label = "Match" }: { filter: M
           ))}
         </ul>
       )}
-      {query.hasNextPage && <Button disabled={query.isFetchingNextPage} onClick={() => query.fetchNextPage()}>Muat 50 lagi</Button>}
+      {query.hasNextPage && <Button disabled={query.isFetchingNextPage} onClick={() => query.fetchNextPage()}>Load 50 more</Button>}
     </div>
   );
 }

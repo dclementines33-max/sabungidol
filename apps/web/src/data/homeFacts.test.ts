@@ -14,8 +14,8 @@ describe("home numbers", () => {
 
   it("names one leader per category, league titles summed over both divisions", () => {
     const by = Object.fromEntries(homeLeaders(rows).map((l) => [l.label, l.idolId]));
-    expect(by).toMatchObject({ "Gelar terbanyak (semua)": "a", "Gelar Unzure Cup": "b", "Gelar liga": "b", "Match terbanyak": "b", "Kalah terbanyak": "b", "Win rate tertinggi": "a" });
-    expect(by["Gelar The Idols"]).toBeUndefined(); // nobody has one yet
+    expect(by).toMatchObject({ "Most titles (all)": "a", "Unzure Cup titles": "b", "League titles": "b", "Most matches": "b", "Most losses": "b", "Best win rate": "a" });
+    expect(by["The Idols titles"]).toBeUndefined(); // nobody has one yet
   });
 
   it("all-time #1 = most titles, ties broken by more matches (Career Stats order)", () => {
@@ -26,7 +26,7 @@ describe("home numbers", () => {
 
   it("facts: the pair met most often and the biggest upset", () => {
     const facts = homeFacts(rows, { "a|b": { meetings: 7, winsLo: 4, winsHi: 2, draws: 1 } }, [{ matchId: "m", season: 2, winner: "c", loser: "a", gap: 21 }]);
-    expect(facts[0]).toMatchObject({ ids: ["a", "b"], value: "7 kali bertemu · 4–1–2" });
+    expect(facts[0]).toMatchObject({ ids: ["a", "b"], value: "7 meetings · 4–1–2" });
     expect(facts[1]?.ids).toEqual(["c", "a"]);
   });
 });

@@ -16,7 +16,7 @@ export function ResetSeasonModal({ open, onOpenChange, seasonName, matchCount, c
       open={open}
       onOpenChange={onOpenChange}
       title={`Reset ${seasonName}?`}
-      message={`${matchCount.toLocaleString("id-ID")} match dari ${competitionCount} kompetisi akan dihapus. Ini tidak bisa dibatalkan.`}
+      message={`${matchCount.toLocaleString("en-GB")} matches from ${competitionCount} competitions will be deleted. This can't be undone.`}
       confirmLabel="Reset season"
       danger
       typeToConfirm={seasonName}
@@ -24,7 +24,7 @@ export function ResetSeasonModal({ open, onOpenChange, seasonName, matchCount, c
     >
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={redraw} onChange={(e) => setRedraw(e.target.checked)} className="size-4 accent-accent-bright" />
-        Undi ulang grup dan bracket
+        Redraw groups and brackets
       </label>
     </ConfirmDialog>
   );

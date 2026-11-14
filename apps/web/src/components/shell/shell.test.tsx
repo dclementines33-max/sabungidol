@@ -50,26 +50,26 @@ describe("a crashing panel (PRD §14.2)", () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });
     const root = createRootRoute({ component: () => <AppShell><Outlet /></AppShell> });
-    const boom = createRoute({ getParentRoute: () => root, path: "/boom", component: () => { throw new Error("tabel klasemen kosong"); } });
+    const boom = createRoute({ getParentRoute: () => root, path: "/boom", component: () => { throw new Error("tabel klasemen empty"); } });
     const router = createRouter({ routeTree: root.addChildren([boom]), history: createMemoryHistory({ initialEntries: ["/boom"] }), defaultErrorComponent: PanelError });
     vi.spyOn(console, "error").mockImplementation(() => {}); // React logs the thrown error
     await act(async () => { render(<RouterProvider router={router} />); });
 
-    expect(screen.getAllByRole("navigation", { name: "Navigasi utama" })).toHaveLength(2); // the shell still stands
+    expect(screen.getAllByRole("navigation", { name: "Main navigation" })).toHaveLength(2); // the shell still stands
     const card = screen.getByRole("alert");
     expect(card.textContent).toContain(PANEL_ERROR_CODE);
-    expect(card.textContent).toContain("Panel ini gagal dimuat");
+    expect(card.textContent).toContain("This panel failed to load");
     expect(screen.getByRole("button", { name: "Reload panel" })).toBeTruthy();
     expect(useNotices.getState().notices.some((n) => n.code === PANEL_ERROR_CODE)).toBe(true);
 
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin laporan" })); });
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Copy report" })); });
     const report = writeText.mock.calls[0][0] as string;
-    expect(report).toContain("Rute: /boom");
+    expect(report).toContain("Route: /boom");
     // The report is made when the panel fails: its last action is what led there, not the copy click.
-    expect(report).toMatch(/^Aksi terakhir: /m);
-    expect(report).not.toContain("Salin laporan");
-    expect(report).toMatch(/^Versi: /m);
-    expect(report).toContain("tabel klasemen kosong");
+    expect(report).toMatch(/^Last action: /m);
+    expect(report).not.toContain("Copy report");
+    expect(report).toMatch(/^Version: /m);
+    expect(report).toContain("tabel klasemen empty");
     vi.restoreAllMocks();
   });
 
@@ -83,7 +83,7 @@ describe("a crashing panel (PRD §14.2)", () => {
     await act(async () => { render(<RouterProvider router={router} />); });
     await act(async () => { await router.navigate({ to: "/studio/settings" }); });
     const failures = useNotices.getState().notices.filter((n) => n.code === PANEL_ERROR_CODE).map((n) => n.message);
-    expect(failures).toEqual(["Panel /boom gagal dimuat"]);
+    expect(failures).toEqual(["Panel /boom failed to load"]);
     vi.restoreAllMocks();
   });
 });
@@ -92,35 +92,35 @@ describe("AppShell (agreed shell)", () => {
   it("titles the page and marks the active link", async () => {
     await showShellAt("/wiki/career");
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Career Stats");
-    const rail = screen.getAllByRole("navigation", { name: "Navigasi utama" })[0];
+    const rail = screen.getAllByRole("navigation", { name: "Main navigation" })[0];
     expect(within(rail).getByRole("link", { name: "Career Stats" }).getAttribute("aria-current")).toBe("page");
-    expect(screen.getByText("Panel ini dibangun di Fase 4.")).toBeTruthy();
+    expect(screen.getByText("This panel arrives in phase 4.")).toBeTruthy();
   });
 
-  it("opens Kompetisi when a competition is the current page", async () => {
+  it("opens Competition when a competition is the current page", async () => {
     await showShellAt("/play/unzure");
-    const rail = screen.getAllByRole("navigation", { name: "Navigasi utama" })[0];
+    const rail = screen.getAllByRole("navigation", { name: "Main navigation" })[0];
     expect(rail.querySelector("details")?.open).toBe(true);
     expect(within(rail).getByRole("link", { name: "Unzure Cup" }).getAttribute("aria-current")).toBe("page");
   });
 
   it("has a skip link to the content", async () => {
     await showShellAt("/");
-    expect(screen.getByRole("link", { name: "Langsung ke konten" }).getAttribute("href")).toBe("#konten");
-    expect(document.getElementById("konten")?.tagName).toBe("MAIN");
+    expect(screen.getByRole("link", { name: "Skip to content" }).getAttribute("href")).toBe("#content");
+    expect(document.getElementById("content")?.tagName).toBe("MAIN");
   });
 
   it("remembers a collapsed rail", async () => {
     await showShellAt("/");
-    fireEvent.click(screen.getByRole("button", { name: "Ciutkan menu" }));
+    fireEvent.click(screen.getByRole("button", { name: "Collapse menu" }));
     expect(localStorage.getItem("sabung.railCollapsed")).toBe("1");
-    expect(screen.getByRole("button", { name: "Ciutkan menu" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "Collapse menu" }).getAttribute("aria-pressed")).toBe("true");
   });
 
   it("Ctrl+K opens the palette; Enter on a result goes to that panel", async () => {
     await showShellAt("/");
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
-    const input = screen.getByRole("combobox", { name: "Cari panel atau perintah" });
+    const input = screen.getByRole("combobox", { name: "Search panels or commands" });
     fireEvent.change(input, { target: { value: "nugu" } });
     expect(screen.getAllByRole("option")[0].textContent).toContain("Nugu Cup");
     await act(async () => { fireEvent.keyDown(input, { key: "Enter" }); });
@@ -130,21 +130,21 @@ describe("AppShell (agreed shell)", () => {
 
   it("palette commands run, and the header and mobile Search buttons open it", async () => {
     await showShellAt("/");
-    fireEvent.click(screen.getByRole("button", { name: /Cari…/ }));
-    const input = screen.getByRole("combobox", { name: "Cari panel atau perintah" });
-    fireEvent.change(input, { target: { value: "ciutkan" } });
+    fireEvent.click(screen.getByRole("button", { name: /Search…/ }));
+    const input = screen.getByRole("combobox", { name: "Search panels or commands" });
+    fireEvent.change(input, { target: { value: "collapse" } });
     fireEvent.keyDown(input, { key: "Enter" });
     expect(localStorage.getItem("sabung.railCollapsed")).toBe("1");
-    const bar = screen.getAllByRole("navigation", { name: "Navigasi utama" })[1];
+    const bar = screen.getAllByRole("navigation", { name: "Main navigation" })[1];
     fireEvent.click(within(bar).getByRole("button", { name: "Search" }));
-    expect(screen.getByRole("dialog", { name: "Cari panel atau perintah" })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Search panels or commands" })).toBeTruthy();
     fireEvent.change(screen.getByRole("combobox"), { target: { value: "zzz" } });
-    expect(screen.getByText("Tidak ada hasil untuk “zzz”.")).toBeTruthy();
+    expect(screen.getByText("No results for “zzz”.")).toBeTruthy();
   });
 
   it("the mobile Play button opens a sheet with the competitions, and a link closes it", async () => {
     await showShellAt("/");
-    const bar = screen.getAllByRole("navigation", { name: "Navigasi utama" })[1];
+    const bar = screen.getAllByRole("navigation", { name: "Main navigation" })[1];
     fireEvent.click(within(bar).getByRole("button", { name: "Play" }));
     const sheet = screen.getByRole("dialog", { name: "Play" });
     expect(within(sheet).getByRole("link", { name: "Nugu Cup" })).toBeTruthy();

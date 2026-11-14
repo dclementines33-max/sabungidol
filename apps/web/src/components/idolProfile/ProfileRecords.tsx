@@ -4,10 +4,10 @@ import { type RecordEntry, rankLabel } from "@sabung/engine";
 type Held = RecordEntry & { id: string; label: string; kind: "total" | "percent" };
 
 export function ProfileRecords({ records }: { records: Held[] }) {
-  if (!records.length) return <p className="text-sm text-text-secondary">Belum masuk 10 besar rekor mana pun.</p>;
+  if (!records.length) return <p className="text-sm text-text-secondary">Not in any record top 10 yet.</p>;
   return (
     <>
-    <p className="m-0 mb-3 text-xs text-text-secondary">Peringkat idol ini di rekor sepanjang masa (10 besar). &quot;Bersama&quot; = nilainya sama dengan idol lain.</p>
+    <p className="m-0 mb-3 text-xs text-text-secondary">This idol's place in the all-time records (top 10). Tied places share a number.</p>
     <ul className="m-0 list-none space-y-1 p-0 text-sm">
       {records.map((r) => (
         <li key={r.id} className="flex gap-3">

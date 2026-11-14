@@ -12,13 +12,13 @@ export function IdolForm({ groups, onFields }: { groups: string[]; onFields: (fi
   };
   return (
     <form onSubmit={submit} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <label className="text-sm text-text-secondary">Nama<input name="name" required maxLength={60} className={FIELD} /></label>
+      <label className="text-sm text-text-secondary">Name<input name="name" required maxLength={60} className={FIELD} /></label>
       <label className="text-sm text-text-secondary">
         Group (kosong = Soloist)
         <input name="group" list="known-groups" maxLength={60} className={FIELD} />
         <datalist id="known-groups">{groups.map((g) => <option key={g} value={g} />)}</datalist>
       </label>
-      <label className="text-sm text-text-secondary">Rating (kosong = 75)<input name="rating" type="number" min={0} max={100} className={FIELD} /></label>
+      <label className="text-sm text-text-secondary">Rating (empty = 75)<input name="rating" type="number" min={0} max={100} className={FIELD} /></label>
       <label className="text-sm text-text-secondary">
         Seed
         <select name="seed" className={FIELD} defaultValue="">
@@ -26,9 +26,9 @@ export function IdolForm({ groups, onFields }: { groups: string[]; onFields: (fi
           {[1, 2, 3, 4].map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
       </label>
-      <label className="text-sm text-text-secondary">Nationality (mis. KR)<input name="nationality" maxLength={2} className={FIELD} /></label>
-      <label className="text-sm text-text-secondary">Tanggal lahir<input name="birthday" type="date" className={FIELD} /></label>
-      <div className="sm:col-span-2 lg:col-span-3"><Button type="submit">Pratinjau</Button></div>
+      <label className="text-sm text-text-secondary">Nationality (e.g. KR)<input name="nationality" maxLength={2} className={FIELD} /></label>
+      <label className="text-sm text-text-secondary">Birthday<input name="birthday" type="date" className={FIELD} /></label>
+      <div className="sm:col-span-2 lg:col-span-3"><Button type="submit">Preview</Button></div>
     </form>
   );
 }

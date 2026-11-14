@@ -5,23 +5,23 @@ import { PANEL_OF } from "./competitionLinks";
 
 type Competition = { key: CompetitionKey; name: string; played: number; status: "off" | "none" | "waiting" | "next" | "running" | "finished" };
 const PHASES: [string, CompetitionKey[]][] = [
-  ["Pembuka (juara season lalu)", ["DSG", "MBK"]],
-  ["Fase liga", ["D1", "D2", "IDL"]],
-  ["Fase cup", ["SWS", "LCQ", "UZC", "BS", "NUG", "INK"]],
+  ["Opener (last season's champions)", ["DSG", "MBK"]],
+  ["League phase", ["D1", "D2", "IDL"]],
+  ["Cup phase", ["SWS", "LCQ", "UZC", "BS", "NUG", "INK"]],
 ];
 const STATUS = {
-  off: { label: "Nonaktif", className: "text-text-secondary line-through" },
-  none: { label: "Mulai season depan", className: "text-text-secondary" },
-  waiting: { label: "Menunggu", className: "text-text-secondary" },
-  next: { label: "Siap dimainkan", className: "text-cool" },
-  running: { label: "Berjalan", className: "text-accent-bright" },
-  finished: { label: "Selesai", className: "text-cool" },
+  off: { label: "Off", className: "text-text-secondary line-through" },
+  none: { label: "Starts next season", className: "text-text-secondary" },
+  waiting: { label: "Waiting", className: "text-text-secondary" },
+  next: { label: "Ready to play", className: "text-cool" },
+  running: { label: "Live", className: "text-accent-bright" },
+  finished: { label: "Done", className: "text-cool" },
 };
 
 export function SeasonTimeline({ competitions }: { competitions: readonly Competition[] }) {
   const byKey = new Map(competitions.map((c) => [c.key, c]));
   return (
-    <ol className="m-0 grid list-none gap-8 p-0 lg:grid-cols-3" aria-label="Fase season">
+    <ol className="m-0 grid list-none gap-8 p-0 lg:grid-cols-3" aria-label="Season phases">
       {PHASES.map(([phase, keys], i) => (
         <li key={phase} className="relative pt-14">
           <span aria-hidden="true" className="absolute top-0 left-0 font-display text-[3.5rem] leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>

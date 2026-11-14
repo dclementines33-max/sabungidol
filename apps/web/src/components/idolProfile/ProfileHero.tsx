@@ -15,24 +15,24 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
   const navigate = useNavigate();
   const { brand } = useBranding();
   const years = age(idol.birthday);
-  const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality, years !== null ? `${years} tahun` : null, idol.active ? null : "Nonaktif"].filter(Boolean);
-  const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Gelar", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("id-ID")]];
+  const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality, years !== null ? `${years} yrs` : null, idol.active ? null : "Inactive"].filter(Boolean);
+  const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Titles", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("en-GB")]];
   return (
     <section aria-labelledby="idol-name" className="relative isolate space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <p className="kicker m-0 text-text-secondary">Player dossier / career archive</p>
         <div className="w-full max-w-xs">
-          <SearchableIdolSelect key={idol.id} label="Cari idol" idolIds={idolIds} value={idol.id} onChange={(id) => id && navigate({ to: "/wiki/idols/$id", params: { id } })} />
+          <SearchableIdolSelect key={idol.id} label="Find an idol" idolIds={idolIds} value={idol.id} onChange={(id) => id && navigate({ to: "/wiki/idols/$id", params: { id } })} />
         </div>
       </div>
       <p aria-hidden="true" className="outline-text pointer-events-none absolute top-16 right-0 -z-10 m-0 max-w-full truncate font-display text-[clamp(4rem,13vw,10rem)] leading-none opacity-40">{idol.name}</p>
       <div className="flex flex-col gap-8 md:flex-row md:items-end">
         <IdolPhoto idolId={idol.id} size={1024} className="photo-frame w-56 shrink-0 sm:w-72" />
         <div className="min-w-0 flex-1 space-y-4">
-          <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Cadangan"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
+          <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Reserve"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
           <h2 id="idol-name" className="m-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words">{idol.name}</h2>
           <p className="kicker m-0 text-text-secondary">{facts.join(" · ")}</p>
-          <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Rekor karier ${record.wins} menang, ${record.draws} seri, ${record.losses} kalah`}>
+          <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Career record ${record.wins} wins, ${record.draws} draws, ${record.losses} losses`}>
             <span className="text-[clamp(2rem,5vw,3.5rem)] text-cool">{record.wins}<small className="text-sm">M</small></span>
             <span className="text-[clamp(2rem,5vw,3.5rem)]">{record.draws}<small className="text-sm">S</small></span>
             <span className="text-[clamp(2rem,5vw,3.5rem)] text-danger">{record.losses}<small className="text-sm">K</small></span>

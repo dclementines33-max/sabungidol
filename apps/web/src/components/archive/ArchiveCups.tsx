@@ -6,7 +6,7 @@ export function ArchiveCups({ cups }: { cups: { comp: string; idolId: string; fi
   const { label } = useBranding();
   const keys = [...new Set(cups.map((c) => c.comp))];
   return (
-    <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-3 p-0" aria-label="Hasil cup">
+    <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-3 p-0" aria-label="Cup results">
       {keys.map((key) => (
         <li key={key} className="panel p-3 text-sm">
           <p className="m-0 mb-1 text-xs tracking-widest text-text-secondary uppercase">{label(key)}</p>

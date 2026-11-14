@@ -27,7 +27,7 @@ export async function exportBackup(db: Db, database: string, section: BackupSect
   const tables = await readBackupTables(db, section, seasonId);
   const photos = tables.photos ? await readPhotos(database, tables.photos.map((p) => p.id as string)) : {};
   const { bytes, manifest } = await writeSabung(section, tables, photos, await schemaVersion());
-  if (log) await db.insert(eventLog).values({ level: "success", code: BACKUP_DONE, message: `Backup ${SECTION_LABELS[section]} dibuat` });
+  if (log) await db.insert(eventLog).values({ level: "success", code: BACKUP_DONE, message: `Backup ${SECTION_LABELS[section]} created` });
   return { bytes, name: `sabung-${section}-${manifest.createdAt.slice(0, 10)}.sabung` };
 }
 

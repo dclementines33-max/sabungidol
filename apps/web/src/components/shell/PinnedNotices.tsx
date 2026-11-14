@@ -17,10 +17,10 @@ export function PinnedNotices() {
               context={notice.context}
               report={[notice.code, notice.message, notice.context, notice.at].filter(Boolean).join("\n")}
             />
-            <Button className="px-2 py-1" onClick={() => unpin(notice.id)}>Tutup</Button>
+            <Button className="px-2 py-1" onClick={() => unpin(notice.id)}>Dismiss</Button>
           </div>
         )
-        : <Banner key={notice.id} notice={notice} action={<Button className="px-2 py-1" onClick={() => unpin(notice.id)}>Tutup</Button>} />)}
+        : <Banner key={notice.id} notice={notice} action={<Button className="px-2 py-1" onClick={() => unpin(notice.id)}>Dismiss</Button>} />)}
     </div>
   );
 }

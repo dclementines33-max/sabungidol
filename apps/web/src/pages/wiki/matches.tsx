@@ -21,20 +21,20 @@ function MatchDatabase() {
   const { data: idols = [] } = useQuery({ queryKey: IDOLS_QUERY, queryFn: () => engine().listIdols(), enabled: typeof Worker !== "undefined" });
   const { data: seasons = [] } = useQuery({ queryKey: ["season-list"], queryFn: () => engine().seasonList(), staleTime: 0, enabled: typeof Worker !== "undefined" });
   const set = (key: keyof typeof NONE) => (value: string | null) => setF({ ...f, [key]: value, ...(key === "idol" && !value && f.result !== "D" ? { result: "" } : {}) });
-  const results: [string, string][] = [["", "Semua"], ["D", "Seri"], ...(f.idol ? [["W", "Menang"], ["L", "Kalah"]] as [string, string][] : [])];
+  const results: [string, string][] = [["", "All"], ["D", "Draw"], ...(f.idol ? [["W", "Won"], ["L", "Lost"]] as [string, string][] : [])];
   return (
     <div className="space-y-4">
-      <PageHeader tag="Match Database" title="Semua match yang pernah dimainkan" note="Saring per kompetisi, season, idol dan hasil." />
-      <div role="group" aria-label="Filter match" className="flex flex-wrap items-end gap-3">
-        <Select label="Season" value={f.season} onChange={set("season")} options={[["", "Semua"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />
-        <Select label="Kompetisi" value={f.comp} onChange={set("comp")} options={[["", "Semua"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
-        <Select label="Stage" value={f.stage} onChange={set("stage")} options={[["", "Semua"], ...Object.entries(STAGE_CODES).map(([code, name]): [string, string] => [code, name])]} />
+      <PageHeader tag="Match Database" title="Every match ever played" note="Filter by competition, season, idol and result." />
+      <div role="group" aria-label="Match filters" className="flex flex-wrap items-end gap-3">
+        <Select label="Season" value={f.season} onChange={set("season")} options={[["", "All"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />
+        <Select label="Competition" value={f.comp} onChange={set("comp")} options={[["", "All"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
+        <Select label="Stage" value={f.stage} onChange={set("stage")} options={[["", "All"], ...Object.entries(STAGE_CODES).map(([code, name]): [string, string] => [code, name])]} />
         <div key={f.idol === null ? "none" : "idol"} className="w-64"><SearchableIdolSelect label="Idol" idolIds={idols.map((i) => i.id)} value={f.idol} onChange={set("idol")} /></div>
-        <Select label="Hasil" value={f.result} onChange={set("result")} options={results} />
-        <Select label="Urutan" value={f.order} onChange={set("order")} options={[["newest", "Season terbaru dulu"], ["oldest", "Season terlama dulu"]]} />
+        <Select label="Result" value={f.result} onChange={set("result")} options={results} />
+        <Select label="Order" value={f.order} onChange={set("order")} options={[["newest", "Newest season first"], ["oldest", "Oldest season first"]]} />
         <Button onClick={() => setF(NONE)}>Reset Filters</Button>
       </div>
-      <MatchLog label="Hasil" newest={f.order === "newest"} filter={{
+      <MatchLog label="Results" newest={f.order === "newest"} filter={{
         seasonId: f.season || undefined, comps: SEASON_COMPETITIONS.find((c) => c.key === f.comp)?.codes, stage: f.stage || undefined,
         idolId: f.idol ?? undefined, result: (f.result || undefined) as "W" | "D" | "L" | undefined,
       }} />

@@ -10,8 +10,8 @@ const ready = async (page: Page) => {
   await page.goto("/studio/settings?s=backup");
 };
 const fullBackup = async (page: Page) => {
-  await page.getByRole("combobox", { name: "Bagian" }).selectOption("full");
-  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Unduh backup" }).click()]);
+  await page.getByRole("combobox", { name: "Section" }).selectOption("full");
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Download backup" }).click()]);
   return readFileSync((await download.path())!);
 };
 const manifestOf = (zip: Buffer) => {
@@ -23,9 +23,9 @@ test("full backup → restore in another browser → identical checksums", async
   test.setTimeout(300_000);
   const a = await (await browser.newContext()).newPage();
   await ready(a);
-  await a.getByRole("link", { name: /^Season & aturan/ }).click();
-  await a.getByRole("textbox", { name: "Nama season" }).fill("Musim Backup"); // something of our own
-  await a.getByRole("button", { name: "Simpan season" }).click();
+  await a.getByRole("link", { name: /^Season & rules/ }).click();
+  await a.getByRole("textbox", { name: "Season name" }).fill("Musim Backup"); // something of our own
+  await a.getByRole("button", { name: "Save season" }).click();
   await expect(a.getByTestId("season-chip")).toHaveText("Musim Backup · Draft");
   await a.getByRole("link", { name: /^Backup/ }).click();
   const fromA = await fullBackup(a);
@@ -35,13 +35,13 @@ test("full backup → restore in another browser → identical checksums", async
 
   const b = await (await browser.newContext()).newPage(); // another browser profile: its own ids
   await ready(b);
-  await b.getByRole("button", { name: "Impor backup…" }).click();
-  const dialog = b.getByRole("dialog", { name: "Impor backup .sabung" });
+  await b.getByRole("button", { name: "Import backup…" }).click();
+  const dialog = b.getByRole("dialog", { name: "Import .sabung backup" });
   await dialog.getByLabel("File").setInputFiles({ name: "backup.sabung", mimeType: "application/zip", buffer: fromA });
-  await expect(dialog.getByText(/ditambah ·/)).toBeVisible({ timeout: 60_000 });
+  await expect(dialog.getByText(/added ·/)).toBeVisible({ timeout: 60_000 });
   await dialog.getByRole("radio", { name: /Replace/ }).check();
   await dialog.getByRole("button", { name: "Confirm & Apply" }).click();
-  await expect(b.getByText(/Backup diimpor \(Replace\)/)).toBeVisible({ timeout: 60_000 });
+  await expect(b.getByText(/Backup imported \(Replace\)/)).toBeVisible({ timeout: 60_000 });
   await expect(b.getByTestId("season-chip")).toHaveText("Musim Backup · Draft");
   await expect(b.getByText("snapshot", { exact: false }).first()).toBeVisible(); // the auto-snapshot before Replace
 

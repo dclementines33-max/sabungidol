@@ -7,7 +7,7 @@ import { useIdolLookup } from "./idolSource";
 
 const MAX_SHOWN = 50; // enough to pick from; typing narrows the rest
 
-export function SearchableIdolSelect({ label, idolIds, value, onChange, placeholder = "Cari nama atau group…" }: {
+export function SearchableIdolSelect({ label, idolIds, value, onChange, placeholder = "Search name or group…" }: {
   label: string;
   idolIds: string[];
   value: string | null;
@@ -71,7 +71,7 @@ export function SearchableIdolSelect({ label, idolIds, value, onChange, placehol
       />
       {open && (
         <ul id={`${id}-list`} role="listbox" aria-label={label} className="absolute z-30 mt-1 max-h-72 w-full list-none overflow-auto panel p-1">
-          {matches.length === 0 && <li className="px-3 py-2 text-sm text-text-secondary">Tidak ada idol yang cocok</li>}
+          {matches.length === 0 && <li className="px-3 py-2 text-sm text-text-secondary">No matching idols</li>}
           {matches.map((idolId, i) => {
             const idol = lookup(idolId)!;
             return (

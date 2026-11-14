@@ -11,16 +11,16 @@ export function DatabaseResetOffer() {
   if (!database) return null;
   return (
     <div className="mb-4 rounded-card bg-surface-hover/60 bg-surface p-4">
-      <p className="m-0 text-sm">Database di browser ini tidak bisa dibuka, dan tidak ada tanda bahwa data pernah tersimpan di sini (belum pernah selesai dibuat, atau isinya dihapus oleh browser). Kalau memuat ulang tidak membantu, mulai lagi dengan database kosong; punya backup .sabung? Impor sesudahnya.</p>
-      <Button variant="danger" className="mt-3" onClick={() => setOpen(true)}>Mulai ulang database…</Button>
+      <p className="m-0 text-sm">The database in this browser won't open, and there's no sign any data was ever saved here (it was never finished, or the browser cleared it). If reloading doesn't help, start again with an empty database; got a .sabung backup? Import it afterwards.</p>
+      <Button variant="danger" className="mt-3" onClick={() => setOpen(true)}>Restart database…</Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Mulai ulang database?"
-        message="Database Sabung Idol di browser ini dihapus dan dibuat ulang, lalu data idol bawaan dimuat lagi. Ini tidak bisa dibatalkan."
-        confirmLabel="Hapus dan mulai ulang"
+        title="Restart the database?"
+        message="The Sabung Idol database in this browser is deleted and rebuilt, then the default idols load again. This can't be undone."
+        confirmLabel="Delete and restart"
         danger
-        typeToConfirm="HAPUS"
+        typeToConfirm="DELETE"
         onConfirm={() => confirmReset(database)}
       />
     </div>

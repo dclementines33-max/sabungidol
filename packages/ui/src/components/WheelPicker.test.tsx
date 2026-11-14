@@ -39,7 +39,7 @@ describe("WheelPicker (PRD §9)", () => {
     act(() => vi.advanceTimersByTime(SPIN_MS));
     expect(screen.getByText("0–1")).toBeTruthy(); // one game per spin, not all at once
     for (let i = 0; i < 4; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));
-    expect(screen.getByText(/2–3/).textContent).toContain("Yuna menang");
+    expect(screen.getByText(/2–3/).textContent).toContain("Yuna wins");
     expect((screen.getByRole("button", { name: /Spin game/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 
@@ -48,6 +48,6 @@ describe("WheelPicker (PRD §9)", () => {
     render(<Harness bestOf={4} sequence={[0.2, 0.7]} />); // A, B, A, B
     fireEvent.click(screen.getByRole("button", { name: "Spin all" }));
     for (let i = 0; i < 4; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));
-    expect(screen.getByText(/2–2/).textContent).toContain("Seri");
+    expect(screen.getByText(/2–2/).textContent).toContain("Draw");
   });
 });

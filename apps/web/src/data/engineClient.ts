@@ -9,7 +9,7 @@ import type { WorkerApi } from "./worker";
 const workers = new Map<string, Comlink.Remote<WorkerApi>>();
 
 export const WORKER_CRASH_MESSAGE =
-  "Mesin simulasi berhenti mendadak. Match yang sudah tersimpan tetap aman; muat ulang halaman untuk melanjutkan.";
+  "The simulation engine stopped suddenly. Saved matches are safe; reload the page to carry on.";
 
 export function engine(database = MAIN_DATABASE): Comlink.Remote<WorkerApi> {
   if (!workers.has(database)) {

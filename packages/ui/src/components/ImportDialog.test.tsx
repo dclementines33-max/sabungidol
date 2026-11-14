@@ -21,9 +21,9 @@ describe("ImportDialog (PRD §9, §12.3)", () => {
     const onApply = vi.fn();
     render(<ImportDialog open onOpenChange={() => {}} title="Import roster" accept=".csv" readFile={async () => preview} onApply={onApply} />);
     await pick(async () => preview);
-    expect(screen.getByText(/ditambah/).textContent).toContain("238");
-    expect(screen.getByText("Konflik (1)")).toBeTruthy();
-    expect(screen.getByText("Tidak dikenal (1)")).toBeTruthy();
+    expect(screen.getByText(/added/).textContent).toContain("238");
+    expect(screen.getByText("Conflicts (1)")).toBeTruthy();
+    expect(screen.getByText("Not recognised (1)")).toBeTruthy();
     fireEvent.click(screen.getByRole("radio", { name: /Replace/ }));
     const apply = screen.getByRole("button", { name: "Confirm & Apply" });
     expect(apply.className).toContain("bg-danger/15");
@@ -32,7 +32,7 @@ describe("ImportDialog (PRD §9, §12.3)", () => {
   });
 
   it("shows why a file is refused", async () => {
-    const readFile = async () => { throw new Error("Backup dari versi lebih baru (skema 5); aplikasi ini skema 3."); };
+    const readFile = async () => { throw new Error("Backup of versi lebih baru (skema 5); aplikasi ini skema 3."); };
     render(<ImportDialog open onOpenChange={() => {}} title="Restore" accept=".sabung" readFile={readFile} onApply={() => {}} />);
     await pick(readFile);
     expect(screen.getByRole("alert").textContent).toContain("versi lebih baru");

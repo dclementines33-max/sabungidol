@@ -9,9 +9,9 @@ export function BlockerDialog({ notice, onClose }: { notice: Notice | null; onCl
     <Modal
       open={notice !== null}
       onOpenChange={(open) => !open && onClose()}
-      title="Tidak bisa dilanjutkan"
+      title="Can't continue yet"
       description={notice?.message}
-      footer={<Button variant="primary" onClick={onClose}>Mengerti</Button>}
+      footer={<Button variant="primary" onClick={onClose}>Got it</Button>}
     />
   );
 }

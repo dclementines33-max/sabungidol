@@ -37,7 +37,7 @@ describe("league split (Data Maker, approved rule)", () => {
   });
 
   it("refuses fewer than 240 idols with a clear message", () => {
-    expect(() => splitLeagues(idols.slice(0, 239))).toThrow("minimal 240 idol aktif, sekarang ada 239");
+    expect(() => splitLeagues(idols.slice(0, 239))).toThrow("at least 240 active idols, there are 239");
   });
 });
 

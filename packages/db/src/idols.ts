@@ -81,7 +81,7 @@ export async function deleteIdol(db: Db, id: string): Promise<{ deleted: boolean
 export async function setIdolPhoto(db: Db, id: string, photoId: string): Promise<string | null> {
   return db.transaction(async (tx) => {
     const [row] = await tx.select({ photoId: idols.photoId }).from(idols).where(eq(idols.id, id));
-    if (!row) throw new Error(`Idol ${id} tidak ditemukan`);
+    if (!row) throw new Error(`Idol ${id} not found`);
     await tx.update(idols).set({ photoId }).where(eq(idols.id, id));
     return row.photoId;
   });

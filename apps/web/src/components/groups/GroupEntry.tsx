@@ -15,7 +15,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
   rank: number; g: GroupStat; logoId?: string | null; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[];
 }) {
   const comps = Object.keys(g.byComp);
-  const numbers: [string, string, string][] = [["Menang", String(g.wins), "text-cool"], ["Seri", String(g.draws), ""], ["Kalah", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Selisih", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""]];
+  const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""]];
   return (
     <li className={`relative border-t border-border/60 py-6 ${rank <= 3 ? "pl-0" : "sm:pl-16"}`}>
       <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
@@ -25,9 +25,9 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
           <h2 className="m-0 text-[clamp(1.5rem,3.5vw,2.5rem)]">
             <button type="button" aria-expanded={open} onClick={onToggle} className="text-left hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g.name}</button>
           </h2>
-          <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} gelar</span> · {g.members.length} member · {g.matches.toLocaleString("id-ID")} match · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Halaman grup</Link></p>
+          <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} titles</span> · {g.members.length} members · {g.matches.toLocaleString("en-GB")} matches · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Group page</Link></p>
           {comps.length > 0 && (
-            <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`Gelar ${g.name}`}>
+            <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`${g.name} titles`}>
               {comps.map((c) => <li key={c} className="bg-surface-hover/60 px-2 py-0.5 text-xs">{NAME[c] ?? c} <b className="text-accent-bright">{g.byComp[c]}</b></li>)}
             </ul>
           )}
@@ -44,10 +44,10 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
       {open && (
         <div className="mt-5 overflow-x-auto">
           <table className="w-full border-collapse text-sm tabular-nums">
-            <caption className="kicker pb-2 text-left">Performa member {g.name}</caption>
+            <caption className="kicker pb-2 text-left">{g.name} member stats</caption>
             <thead>
               <tr className="text-left text-[10px] tracking-[0.15em] text-text-secondary uppercase">
-                {["#", "Member", ...comps.map((c) => NAME[c] ?? c), "Match", "M-S-K", "Win rate"].map((h) => <th key={h} scope="col" className="px-2 pb-1 font-bold whitespace-nowrap">{h}</th>)}
+                {["#", "Member", ...comps.map((c) => NAME[c] ?? c), "Matches", "W-D-L", "Win rate"].map((h) => <th key={h} scope="col" className="px-2 pb-1 font-bold whitespace-nowrap">{h}</th>)}
               </tr>
             </thead>
             <tbody>

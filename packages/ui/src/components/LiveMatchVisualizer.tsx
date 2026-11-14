@@ -61,14 +61,14 @@ export function LiveMatchVisualizer({ games, nameA, nameB, target, stepMs = 1400
         <span className="truncate font-display text-lg text-cool">{nameB}</span>
       </div>
       <p className="m-0 mt-2 text-center text-xs font-bold tracking-[0.3em] text-text-secondary uppercase">
-        {done ? "Selesai" : `Game ${shown + 1} berlangsung`}
+        {done ? "Full time" : `Game ${shown + 1} in play`}
         {matchPoint && <span className="ml-2 bg-accent px-2 py-0.5 tracking-widest text-on-accent">Match point</span>}
       </p>
       <div className="relative mt-3 h-3 overflow-hidden bg-cool" aria-hidden="true">
         <div className="h-full origin-left bg-accent-bright transition-transform duration-[var(--duration-slow)] ease-spring" style={{ transform: `scaleX(${shareA})` }} />
         {!done && <span className="absolute inset-y-0 left-1/2 w-1 bg-text-primary shadow-[0_0_12px_var(--color-text-primary)] animate-[tug_900ms_ease-in-out_infinite]" />}
       </div>
-      <ol className="m-0 mt-3 flex list-none flex-wrap justify-center gap-2 p-0" aria-label="Pemenang tiap game">
+      <ol className="m-0 mt-3 flex list-none flex-wrap justify-center gap-2 p-0" aria-label="Winner of each game">
         {played.map((g, i) => (
           <li key={i} className={`${g === "A" ? "bg-accent/60" : "bg-surface-hover"} animate-[pop_300ms_ease-out] px-2 py-0.5 text-xs`}>
             G{i + 1} · {g === "A" ? nameA : nameB}
@@ -76,9 +76,9 @@ export function LiveMatchVisualizer({ games, nameA, nameB, target, stepMs = 1400
         ))}
       </ol>
       <div className="mt-3 flex min-h-8 items-center justify-center gap-2">
-        {done && <span className="font-display text-xl uppercase">{winner ? `${winner} menang` : "Seri"}</span>}
+        {done && <span className="font-display text-xl uppercase">{winner ? `${winner} wins` : "Draw"}</span>}
         {done && isComeback(games) && <span className="bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">Comeback!</span>}
-        {!done && <Button className="px-2 py-1" onClick={() => setShown(games.length)}>Lewati</Button>}
+        {!done && <Button className="px-2 py-1" onClick={() => setShown(games.length)}>Skip</Button>}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ import { TierStrip } from "../TierStrip";
 import { RatingCard } from "./RatingCard";
 
 const input = "rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright";
-const ORDERS = { rating: "Rating tertinggi", low: "Rating terendah", name: "Nama", group: "Girl group" } as const;
+const ORDERS = { rating: "Highest rating", low: "Lowest rating", name: "Name", group: "Girl group" } as const;
 
 export function RatingCards({ idols, leagueOf, draft, onChange }: {
   idols: IdolRow[];
@@ -46,21 +46,21 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
     <div className="space-y-4">
       <TierStrip ratings={rows.map(value)} />
       <div className="flex flex-wrap items-end gap-3">
-        <label className="text-sm text-text-secondary">Cari
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Nama idol atau girl group" className={`${input} mt-1 block w-56`} />
+        <label className="text-sm text-text-secondary">Search
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Idol or girl group name" className={`${input} mt-1 block w-56`} />
         </label>
-        <Select label="Scope" value={scope} onChange={setScope} options={[["active", "Idol aktif"], ["all", "Semua idol"], ...leagues.map((l): [string, string] => [l, `Liga ${l}`])]} />
-        <Select label="Group" value={group} onChange={setGroup} options={[["", "Semua"], ...groups, ["solo", "Soloist"]]} />
-        <Select label="Urutan" value={order} onChange={(v) => setOrder(v as keyof typeof ORDERS)} options={Object.entries(ORDERS)} />
-        <Button onClick={() => setSelected(new Set(rows.map((i) => i.id)))}>Pilih semua ({rows.length})</Button>
-        <Button disabled={!selected.size} onClick={() => setSelected(new Set())}>Kosongkan pilihan</Button>
+        <Select label="Scope" value={scope} onChange={setScope} options={[["active", "Active idols"], ["all", "All idols"], ...leagues.map((l): [string, string] => [l, `League ${l}`])]} />
+        <Select label="Group" value={group} onChange={setGroup} options={[["", "All"], ...groups, ["solo", "Soloist"]]} />
+        <Select label="Order" value={order} onChange={(v) => setOrder(v as keyof typeof ORDERS)} options={Object.entries(ORDERS)} />
+        <Button onClick={() => setSelected(new Set(rows.map((i) => i.id)))}>Select all ({rows.length})</Button>
+        <Button disabled={!selected.size} onClick={() => setSelected(new Set())}>Clear selection</Button>
       </div>
-      <div className="flex flex-wrap items-end gap-2" role="group" aria-label="Edit massal">
+      <div className="flex flex-wrap items-end gap-2" role="group" aria-label="Bulk edit">
         <label className="text-sm text-text-secondary">Nilai
           <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className={`${input} mt-1 block w-20 font-mono`} />
         </label>
-        <Button disabled={!selected.size || !Number.isFinite(n)} onClick={() => bulk(() => n, `Set ${n}`)}>Set {selected.size} terpilih</Button>
-        <Button disabled={!selected.size || !Number.isFinite(n)} onClick={() => bulk((i) => value(i) + n, `${n >= 0 ? "+" : ""}${n}`)}>Tambah ke {selected.size} terpilih</Button>
+        <Button disabled={!selected.size || !Number.isFinite(n)} onClick={() => bulk(() => n, `Set ${n}`)}>Set {selected.size} selected</Button>
+        <Button disabled={!selected.size || !Number.isFinite(n)} onClick={() => bulk((i) => value(i) + n, `${n >= 0 ? "+" : ""}${n}`)}>Add to {selected.size} selected</Button>
       </div>
       <ul aria-label="Rating idol" className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] gap-3 p-0">
         {rows.slice(0, limit).map((i) => (
@@ -69,7 +69,7 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
             onSet={(v) => onChange(new Map([[i.id, v]]), `Edit ${i.name}`)} />
         ))}
       </ul>
-      {rows.length > limit && <Button onClick={() => setLimit(limit + 48)}>Tampilkan lebih ({rows.length - limit} lagi)</Button>}
+      {rows.length > limit && <Button onClick={() => setLimit(limit + 48)}>Show more ({rows.length - limit} left)</Button>}
     </div>
   );
 }

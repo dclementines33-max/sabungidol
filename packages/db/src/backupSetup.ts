@@ -42,7 +42,7 @@ export async function upsertIdols(tx: Tx, tables: BackupTables, overwrite: boole
       await tx.update(idols).set(Object.fromEntries(IDOL_COPY.filter((f) => f in i).map((f) => [f, i[f]])) as never).where(eq(idols.id, found.id));
       result.replaced++;
     } else {
-      if (found.rating !== i.rating) result.conflicts.push(`${i.name} (${group ?? "Soloist"}): rating di sini ${found.rating}, di backup ${i.rating} — tetap ${found.rating}`);
+      if (found.rating !== i.rating) result.conflicts.push(`${i.name} (${group ?? "Soloist"}): rating here ${found.rating}, in the backup ${i.rating} — keeping ${found.rating}`);
       const gallery = (i.gallery as string[] | undefined) ?? [];
       if (!found.gallery.length && gallery.length) await tx.update(idols).set({ gallery }).where(eq(idols.id, found.id));
     }
@@ -76,7 +76,7 @@ export async function applySetup(tx: Tx, tables: BackupTables, idolMap: Map<unkn
   } else if (target) {
     const [played] = await tx.select({ n: sql<number>`count(*)::int` }).from(matches).where(eq(matches.seasonId, target.id));
     if (target.status !== "draft" || played!.n > 0) {
-      result.conflicts.push(`${target.name} sudah berjalan — settings & roster dari backup tidak dipasang (pakai Replace pada Data dasar untuk mulai dari awal)`);
+      result.conflicts.push(`${target.name} is already live — the backup's settings & rosters weren't applied (use Replace with Base data to start over)`);
       return;
     }
     result.replaced += (await tx.delete(entries).where(and(eq(entries.seasonId, target.id), eq(entries.stage, "LG"))).returning()).length;

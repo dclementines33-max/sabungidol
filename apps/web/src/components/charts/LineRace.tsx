@@ -22,7 +22,7 @@ export function LineRace({ series, label, invert = false, unit = "" }: { series:
   let prev = -Infinity;
   for (const s of [...series].sort((a, b) => y(a.values.at(-1)!) - y(b.values.at(-1)!))) { const want = Math.max(y(s.values.at(-1)!), prev + 13); labelY.set(s.id, want); prev = want; }
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`${label}: ${leader ? `${lookup(leader.id)?.name} ${leader.values.at(-1)}${unit}` : "belum ada data"}`}>
+    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`${label}: ${leader ? `${lookup(leader.id)?.name} ${leader.values.at(-1)}${unit}` : "no data yet"}`}>
       {ticks.map((t) => (
         <g key={t}>
           <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} stroke="var(--color-border)" strokeOpacity="0.5" strokeDasharray="2 4" />

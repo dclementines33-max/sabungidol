@@ -20,18 +20,18 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
   const [careerA, titlesA] = line(h2h?.lineA);
   const [careerB, titlesB] = line(h2h?.lineB);
   const facts = [
-    { label: `Season ini · ${label(match.comp)}`, a: match.record.comp[0]!, b: match.record.comp[1]! },
-    { label: "Season ini · semua", a: match.record.all[0]!, b: match.record.all[1]! },
-    { label: "Karier M-S-K", a: careerA!, b: careerB! },
-    { label: "Gelar", a: titlesA!, b: titlesB! },
+    { label: `This season · ${label(match.comp)}`, a: match.record.comp[0]!, b: match.record.comp[1]! },
+    { label: "This season · all", a: match.record.all[0]!, b: match.record.all[1]! },
+    { label: "Career W-D-L", a: careerA!, b: careerB! },
+    { label: "Titles", a: titlesA!, b: titlesB! },
   ];
 
   const accept = async ({ method, games }: AcceptedResult) => {
     try {
       const r = await engine().acceptMatch(match.id, games, method);
-      notify({ level: "success", message: `Hasil disimpan: ${r.scoreA}–${r.scoreB}` });
+      notify({ level: "success", message: `Result saved: ${r.scoreA}–${r.scoreB}` });
     } catch (error) {
-      notify({ level: "error", code: "E-PLAY-002", message: "Hasil match tidak tersimpan.", context: error instanceof Error ? error.message : String(error) });
+      notify({ level: "error", code: "E-PLAY-002", message: "The match result wasn't saved.", context: error instanceof Error ? error.message : String(error) });
     } finally {
       await queryClient.invalidateQueries({ queryKey: SEASON_QUERY });
     }

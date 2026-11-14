@@ -12,15 +12,15 @@ import { careerCsv } from "./careerCsv";
 import { ColumnPicker } from "./ColumnPicker";
 import { Podium } from "./Podium";
 
-export const CAREER_SORTS: [keyof CareerRow, string][] = [["titles", "Gelar"], ["wins", "Menang"], ["matches", "Match"], ["winRate", "Win rate"], ["gameDiff", "Selisih game"], ["leaguePoints", "Poin liga"], ["bestWinStreak", "Streak menang"]];
+export const CAREER_SORTS: [keyof CareerRow, string][] = [["titles", "Titles"], ["wins", "Wins"], ["matches", "Match"], ["winRate", "Win rate"], ["gameDiff", "Game diff"], ["leaguePoints", "League points"], ["bestWinStreak", "Win streak"]];
 
 export function CareerTable({ comp, label, allowed, sort }: { comp: string; label: string; allowed: Set<string>; sort: keyof CareerRow }) {
   const lookup = useIdolLookup();
   const [shown, setShown] = useState(() => columnsFor(comp));
   const { data, isPending } = useQuery({ queryKey: ["career-table", comp], queryFn: () => engine().careerTable(comp), staleTime: 0 });
-  if (isPending) return <p className="text-text-secondary">Menghitung statistik…</p>;
+  if (isPending) return <p className="text-text-secondary">Crunching the numbers…</p>;
   const rows = (data ?? []).filter((r) => allowed.has(r.idolId)).sort(careerOrder(sort));
-  if (!rows.length) return <p className="text-text-secondary">Belum ada match di {label} untuk idol dalam scope ini.</p>;
+  if (!rows.length) return <p className="text-text-secondary">No matches in {label} for idols in this scope yet.</p>;
   const columns = CAREER_COLUMNS.filter((c) => shown.includes(c.id));
   const download = () => {
     const link = document.createElement("a");
@@ -34,8 +34,8 @@ export function CareerTable({ comp, label, allowed, sort }: { comp: string; labe
       <Podium rows={rows.slice(0, 3)} column={CAREER_COLUMNS.find((c) => c.id === (shown.includes(sort) ? sort : shown[0]))!} />
       <ColumnPicker shown={shown} onChange={setShown} />
       <div className="flex items-center gap-3">
-        <p className="m-0 flex-1 text-sm text-text-secondary" aria-live="polite">{rows.length} idol</p>
-        <Button onClick={download}><Download aria-hidden="true" size={16} /> Ekspor CSV</Button>
+        <p className="m-0 flex-1 text-sm text-text-secondary" aria-live="polite">{rows.length} idols</p>
+        <Button onClick={download}><Download aria-hidden="true" size={16} /> Export CSV</Button>
       </div>
       <VirtualTable rows={rows} rowKey={(r) => r.idolId} label={`Career Stats ${label}`}
         columns={[

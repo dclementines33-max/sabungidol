@@ -8,9 +8,9 @@ import {
 export type NavItem = { label: string; to: string; icon: LucideIcon; phase: number };
 export type NavSpace = { id: "play" | "wiki" | "studio"; label: string; items: NavItem[] };
 
-// The 9 competition panels (PRD §8). Liga Divisi 1/2 each hold their six leagues as tabs.
+// The 9 competition panels (PRD §8). Division 1/2 each hold their six leagues as tabs.
 export const COMPETITIONS: NavItem[] = [
-  ["Liga Divisi 1", "d1"], ["Liga Divisi 2", "d2"], ["The Idols", "the-idols"], ["Unzure Cup", "unzure"],
+  ["Division 1", "d1"], ["Division 2", "d2"], ["The Idols", "the-idols"], ["Unzure Cup", "unzure"],
   ["Inkigayo Cup", "inkigayo"], ["Nugu Cup", "nugu"], ["B-Side Cup", "b-side"], ["Daesang Cup", "daesang"], ["Music Bank Cup", "music-bank"],
 ].map(([label, slug]) => ({ label, to: `/play/${slug}`, icon: Trophy, phase: 3 }));
 
@@ -60,11 +60,11 @@ export function panelFor(pathname: string): NavItem | undefined {
   const path = pathname.replace(/\/$/, "") || "/";
   if (path.startsWith("/wiki/group/")) return { label: "Girl Group", to: path, icon: UsersRound, phase: 4 };
   if (path.startsWith("/wiki/idols/")) return { label: "Idol Profile", to: path, icon: Users, phase: 4 };
-  if (path === "/dev/worker") return { label: "Uji Worker", to: path, icon: Gauge, phase: 1 }; // Fase 1 checks, not in the menu
-  if (path === "/dev/notices") return { label: "Uji Notifikasi", to: path, icon: Gauge, phase: 1 };
-  if (path === "/dev/crash") return { label: "Uji Error", to: path, icon: Gauge, phase: 1 };
-  if (path === "/dev/photos") return { label: "Uji Foto", to: path, icon: Gauge, phase: 2 };
-  if (path === "/dev/data") return { label: "Isi Database", to: path, icon: Gauge, phase: 2 };
+  if (path === "/dev/worker") return { label: "Worker Test", to: path, icon: Gauge, phase: 1 }; // Fase 1 checks, not in the menu
+  if (path === "/dev/notices") return { label: "Notice Test", to: path, icon: Gauge, phase: 1 };
+  if (path === "/dev/crash") return { label: "Error Test", to: path, icon: Gauge, phase: 1 };
+  if (path === "/dev/photos") return { label: "Photo Test", to: path, icon: Gauge, phase: 2 };
+  if (path === "/dev/data") return { label: "Fill Database", to: path, icon: Gauge, phase: 2 };
   return ALL.find((item) => item.to === path);
 }
 
