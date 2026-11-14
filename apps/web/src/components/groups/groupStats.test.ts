@@ -11,6 +11,6 @@ it("sums titles, record and titles per competition per group, ranks members, ski
     [{ idolId: "a", comp: "UZC", titles: 1 }, { idolId: "a", comp: "D1", titles: 1 }, { idolId: "s", comp: "NUG", titles: 1 }]);
   expect(stats).toEqual([{
     id: "g", name: "G-g", members: ["a", "b"], active: 1, titles: 2, byComp: { UZC: 1, D1: 1 },
-    matches: 20, wins: 8, draws: 2, losses: 10, winRate: 0.45, gameDiff: 6, best: "a", avgRating: 85,
+    matches: 20, wins: 8, draws: 2, losses: 10, winRate: 0.45, gameDiff: 6, best: "a", avgRating: 85, tiers: { S: 1, B: 1 },
   }]);
 });

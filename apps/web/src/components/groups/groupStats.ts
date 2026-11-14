@@ -3,11 +3,13 @@
 // average rating. Soloists are not a group and are left out.
 import type { IdolRow } from "@sabung/db";
 import type { CareerRow } from "@sabung/engine";
+import { tierOf } from "@sabung/shared";
 
 export type TitleLine = { idolId: string; comp: string; titles: number };
 export type GroupStat = {
   id: string; name: string; members: string[]; active: number; titles: number; byComp: Record<string, number>;
   matches: number; wins: number; draws: number; losses: number; winRate: number; gameDiff: number; best: string; avgRating: number;
+  tiers: Record<string, number>; // members per rating tier
 };
 
 export function groupStats(idols: IdolRow[], combined: CareerRow[], titles: TitleLine[] = []): GroupStat[] {
@@ -31,6 +33,7 @@ export function groupStats(idols: IdolRow[], combined: CareerRow[], titles: Titl
       gameDiff: sum(lines, "gameDiff"),
       best: ranked[0]!.id,
       avgRating: members.reduce((n, m) => n + m.rating, 0) / members.length,
+      tiers: members.reduce<Record<string, number>>((t, m) => ({ ...t, [tierOf(m.rating)]: (t[tierOf(m.rating)] ?? 0) + 1 }), {}),
     };
   }).sort((a, b) => b.titles - a.titles || b.winRate - a.winRate || a.name.localeCompare(b.name));
 }

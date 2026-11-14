@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Tabs } from "../../components/competition/Tabs";
 import { AllGroups } from "../../components/groups/AllGroups";
+import { GroupHighlights } from "../../components/groups/GroupHighlights";
 import { GroupEntry } from "../../components/groups/GroupEntry";
 import { groupStats } from "../../components/groups/groupStats";
 import { engine } from "../../data/engineClient";
@@ -32,6 +33,7 @@ function GirlGroupStats() {
         <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Girl group rankings</h2>
         <p className="m-0 text-text-secondary">Ranked by the members' total titles. Click a group for each member's numbers.</p>
       </header>
+      <GroupHighlights stats={stats} />
       <Tabs label="Girl group" tabs={[
         { id: "rank", label: "Rankings", content: () => (
           <ol className="m-0 list-none p-0">

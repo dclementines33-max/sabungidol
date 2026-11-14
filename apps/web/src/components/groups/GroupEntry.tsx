@@ -6,6 +6,7 @@ import { IdolPhoto } from "@sabung/ui";
 import { Link } from "@tanstack/react-router";
 import { CompetitionLogo } from "../CompetitionLogo";
 import { IdolLink } from "../wiki/IdolLink";
+import { TierMix } from "./TierMix";
 import type { GroupStat, TitleLine } from "./groupStats";
 
 const NAME = Object.fromEntries(SEASON_COMPETITIONS.map((c) => [c.key, c.name]));
@@ -15,7 +16,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
   rank: number; g: GroupStat; logoId?: string | null; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[];
 }) {
   const comps = Object.keys(g.byComp);
-  const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""]];
+  const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""], ["Avg rating", g.avgRating.toFixed(1), ""]];
   return (
     <li className={`relative border-t border-border/60 py-6 ${rank <= 3 ? "pl-0" : "sm:pl-16"}`}>
       <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
@@ -26,6 +27,8 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
             <button type="button" aria-expanded={open} onClick={onToggle} className="text-left hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g.name}</button>
           </h2>
           <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} titles</span> · {g.members.length} members · {g.matches.toLocaleString("en-GB")} matches · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Group page</Link></p>
+          <p className="m-0 mt-1 text-sm text-text-secondary">Top member <IdolLink id={g.best} /></p>
+          <TierMix tiers={g.tiers} name={g.name} />
           {comps.length > 0 && (
             <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`${g.name} titles`}>
               {comps.map((c) => <li key={c} className="bg-surface-hover/60 px-2 py-0.5 text-xs">{NAME[c] ?? c} <b className="text-accent-bright">{g.byComp[c]}</b></li>)}
@@ -39,7 +42,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
         </dl>
       </div>
       <ul className="m-0 mt-4 flex list-none gap-1 p-0" aria-label={`Member ${g.name}`}>
-        {g.members.map((id) => <li key={id}><IdolPhoto idolId={id} size={64} className="h-12 w-10" /></li>)}
+        {g.members.map((id) => <li key={id} className={id === g.best ? "outline-2 outline-brand-gold" : ""}><IdolPhoto idolId={id} size={64} className="h-12 w-10" /></li>)}
       </ul>
       {open && (
         <div className="mt-5 overflow-x-auto">
