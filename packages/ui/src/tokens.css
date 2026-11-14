@@ -18,12 +18,15 @@
   --color-danger: #ff4d63; /* destructive actions: outlined buttons, error text */
   --color-on-fill: #010003; /* text on light fills (tiers S–C, branding colours, the bright accent) */
 
-  /* Rating tiers (PRD §3; Update 3: five clearly different colours): S gold, A red, B violet, C teal, D navy (light text on it). */
-  --color-tier-s: #e9b44c;
+  /* Rating tiers (user bands 2026-11-15): one ramp out of the app's own palette, warm at the top, cool at the bottom —
+     gold, coral, the bright crimson, three steps of the palette's steel blues, navy (light text on it). */
+  --color-tier-splus: #f0c75e;
+  --color-tier-s: #ff8a7a;
   --color-tier-a: #ff4d63;
-  --color-tier-b: #a99bf0;
-  --color-tier-c: #5fc4b8;
-  --color-tier-d: #25435d;
+  --color-tier-b: #b9d3e2;
+  --color-tier-c: #87a4b5;
+  --color-tier-d: #6b8a9e;
+  --color-tier-f: #25435d;
 
   /* Competition branding: the 12 curated colours users pick from (PRD §10.1). */
   --color-brand-gold: #e9b44c;
@@ -151,3 +154,7 @@
   .studio-section > h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); text-transform: uppercase; }
   .panel { background: linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65)); border-radius: var(--radius-card); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(185 211 226 / 0.06); }
 }
+
+/* Fields (user 2026-11-15): every typeable field, select and textarea has only a faint underline; unlayered, so it beats the
+   per-component border-border-strong classes. Focus stays an outline. Checkboxes, radios and file pickers are left alone. */
+input:not([type="checkbox"], [type="radio"], [type="file"], [type="range"]), select, textarea { border-color: var(--color-border); }
