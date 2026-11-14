@@ -14,6 +14,8 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
+**PREVIEW 2026-11-15: version 67a7a81e-aac1-48d8-8d5f-5d663aae2dd5 (alias test) = commits up to 57fddb9 (English UI, design pass, tiers, Rating Manager rows). NOT deployed to production.**
+
 **RATING MANAGER REBUILT (2026-11-15, router): calm rows (RatingList + RatingRow): checkbox, photo, name + group · league, slider (commits on release), number field, tier chip, "was N" when changed. Order: Draft → Ratings → Presets → Engine Lab. No W-D-L, no step/quick buttons, no career query.**
 
 **TIERS (2026-11-15, router): S+ ≥96, S ≥90, A ≥83, B ≥75, C ≥65, D ≥55, F below — one table `TIERS` in packages/shared/src/tier.ts (tierOf, TierStrip, Idol Database filter all read it). Colours tier-splus…tier-f in tokens.css: gold, coral, crimson, ice, steel, muted, navy (light text only on F).**
