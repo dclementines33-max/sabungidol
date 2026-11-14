@@ -8,7 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { EngineLab } from "../../components/ratingManager/EngineLab";
 import { RatingActions } from "../../components/ratingManager/RatingActions";
-import { RatingCards } from "../../components/ratingManager/RatingCards";
+import { RatingList } from "../../components/ratingManager/RatingList";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
@@ -74,13 +74,13 @@ function RatingManager() {
           </details>
         )}
       </section>
-      <section aria-labelledby="actions" className="studio-section space-y-3">
-        <h2 id="actions" className="m-0 font-display">Actions</h2>
-        <RatingActions idols={idols} onChange={change} />
-      </section>
       <section aria-labelledby="table" className="studio-section space-y-3">
-        <h2 id="table" className="m-0 font-display">Rating</h2>
-        <RatingCards idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
+        <h2 id="table" className="m-0 font-display">Ratings</h2>
+        <RatingList idols={idols} leagueOf={leagueOf} draft={draft} onChange={change} />
+      </section>
+      <section aria-labelledby="actions" className="studio-section space-y-3">
+        <h2 id="actions" className="m-0 font-display">Presets</h2>
+        <RatingActions idols={idols} onChange={change} />
       </section>
       <section aria-labelledby="lab" className="studio-section space-y-3">
         <h2 id="lab" className="m-0 font-display">Engine Lab</h2>

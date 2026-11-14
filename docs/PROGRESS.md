@@ -14,6 +14,8 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
+**RATING MANAGER REBUILT (2026-11-15, router): calm rows (RatingList + RatingRow): checkbox, photo, name + group · league, slider (commits on release), number field, tier chip, "was N" when changed. Order: Draft → Ratings → Presets → Engine Lab. No W-D-L, no step/quick buttons, no career query.**
+
 **TIERS (2026-11-15, router): S+ ≥96, S ≥90, A ≥83, B ≥75, C ≥65, D ≥55, F below — one table `TIERS` in packages/shared/src/tier.ts (tierOf, TierStrip, Idol Database filter all read it). Colours tier-splus…tier-f in tokens.css: gold, coral, crimson, ice, steel, muted, navy (light text only on F).**
 
 **ENGLISH UI (2026-11-15, router task 1): every UI text is English (semi-formal sports voice); news headlines + kickers stay Indonesian (StoryCard, lang="id"). Numbers/dates en-GB (5,583). Competitions "Division 1/2", settings view ?s=leagues (was liga), confirm words DELETE / DELETE ALL. /dev/* check pages left Indonesian. Scanner scripts were in the session scratchpad (not kept).**
@@ -389,7 +391,7 @@ V3 ✅ tokens.css .photo-frame (crimson→gold passe-partout) replaces .torn eve
    StoryCard = newspaper (lead story big, coloured rule per kind, framed photo, no crimson blocks); /wiki/progression
    chapter 03 = Bump codes={["IDL"]} (Bump takes codes); engine seasonScores + seasonTop → honours podium = season top 3
    (seasonOverview / archive .seasonTop, uzcThird gone); components/TierStrip (Rating Manager + Idol Database);
-   ratingManager/RatingCards + RatingCard (slider commits on release, number field, ±5, quick values, record, titles).
+   ratingManager/RatingList + RatingRow (rows since 2026-11-15) (slider commits on release, number field, ±5, quick values, record, titles).
 V4 ✅ /wiki/groups = Tabs "Peringkat" (GroupEntry now shows the group logo) + "Semua grup" (groups/AllGroups: every group,
    logo, members, link; form "Tambah grup" with optional logo → db addGroup (+test) / worker addGroup). /wiki/group/$id
    works for a group without members. H2H TopRivalries: the whole row is one link. Backup section "base" (shared
