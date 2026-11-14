@@ -410,7 +410,7 @@ V5 ✅ (golden snapshot updated twice: intended engine changes)
      20.0% → 26.8% (upsetCups.test). Form already counted every competition (last 5, ±3/−2).
    - Progression (seasonClose): PRESTIGE UZC/SWS/LCQ 1, IDL .9, D1 .8, INK .7, NUG .6, BS .5, DSG .4, MBK .35, D2 .25
      ("Crown Cup" = Inkigayo). Gain = performance (±6) + titles 3 × prestige (≤ 5) + giant kills 0.5 (≤ 2) ± 2 promotion,
-     × clamp((100 − rating) / 30, 0.2, 1.5) when positive; losses in full. The >92 regression is gone. Reason string says
+     × gainFactor(rating) when positive (2026-11-15 curve: 60→1.6, 70→1.4, 80→1, 86→0.45, 90→0.2, 95→0.08, 100→0.03; locked by progressionShape.test); losses in full. The >92 regression is gone. Reason string says
      the factor. seasonScores/seasonTop unchanged in shape.
 V6 ✅ part 1 (user: web data OVERWRITES; new idols: user sends a list; photos: test with IVE first)
    - idols.role (migration 0002_idol_role, nullable text; shared idolInputSchema role optional, max 80). updateIdol only

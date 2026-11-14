@@ -11,8 +11,10 @@ import type { SeasonInput, SeasonResult } from "./types";
 
 export type SyntheticSeason = { input: SeasonInput & { theIdols: string[] }; result: SeasonResult; placements: Placement[] };
 
-export function* syntheticSeasons(count: number, seed = "synthetic"): Generator<SyntheticSeason> {
-  let input: SeasonInput = testSeason(seed, 1);
+// ratings: optional starting ratings for the 240 idols in roster order (e.g. the default seed), else the test roster.
+export function* syntheticSeasons(count: number, seed = "synthetic", ratings?: number[]): Generator<SyntheticSeason> {
+  const roster = testSeason(seed, 1);
+  let input: SeasonInput = ratings ? { ...roster, idols: roster.idols.map((i, n) => ({ ...i, rating: ratings[n] ?? i.rating })) } : roster;
   for (let n = 1; n <= count; n++) {
     const theIdols = pickTheIdols(input);
     const full = { ...input, season: n, seed: `${seed}-${n}`, theIdols };

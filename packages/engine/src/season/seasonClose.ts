@@ -80,8 +80,19 @@ export const seasonTop = (scores: Map<string, number>, n = 3) => [...scores].sor
 
 // PRD §6.3 as changed in Update 3, from the ratings the season was played with (running it again gives the same result):
 // performance (W-D-L and places vs what the rating expected, ±6) + titles (3 × prestige each, at most +5) + giant kills
-// (+0.5 each, at most +2) ± 2 for promotion / relegation. A gain shrinks the higher the rating is and grows below 70
-// (× (100 − rating) / 30, between 0.2 and 1.5); a loss counts in full, so a bad season costs more the worse it is.
+// (+0.5 each, at most +2) ± 2 for promotion / relegation. A gain is scaled by gainFactor(rating); a loss counts in full,
+// so a bad season costs more the worse it is.
+// How much of a positive season counts, by the rating it was played with (user 2026-11-15: too many idols reached 90+).
+// Easy below 70, still a bit easy through the 70s, normal at 80, harder from there, harder still 86–90, hardest above 90. Piecewise linear.
+const GAIN_CURVE: [number, number][] = [[60, 1.6], [70, 1.4], [80, 1], [86, 0.45], [90, 0.2], [95, 0.08], [100, 0.03]];
+export function gainFactor(rating: number): number {
+  if (rating <= GAIN_CURVE[0]![0]) return GAIN_CURVE[0]![1];
+  const i = GAIN_CURVE.findIndex(([r]) => r >= rating);
+  if (i < 0) return GAIN_CURVE.at(-1)![1];
+  const [r0, f0] = GAIN_CURVE[i - 1]!, [r1, f1] = GAIN_CURVE[i]!;
+  return f0 + ((rating - r0) / (r1 - r0)) * (f1 - f0);
+}
+
 export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
   const start = startRatings(matches);
   const score = seasonScores(matches, titles, leagues);
@@ -113,7 +124,7 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
     const upsets = Math.min(2, 0.5 * (kills.get(id) ?? 0));
     const move = promoted.has(id) ? 2 : relegated.has(id) ? -2 : 0;
     const raw = delta + champ + upsets + move;
-    const factor = raw > 0 ? Math.max(0.2, Math.min(1.5, (100 - old) / 30)) : 1;
+    const factor = raw > 0 ? gainFactor(old) : 1;
     const value = Math.max(1, Math.min(100, Math.round(old + raw * factor)));
     const reason = [`form ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`, champ && `titles +${champ.toFixed(1)}`, upsets && `upset +${upsets}`,
       move && (move > 0 ? "promotion +2" : "relegation −2"), factor !== 1 && `× ${factor.toFixed(2)} (rating ${old})`].filter(Boolean).join(", ");

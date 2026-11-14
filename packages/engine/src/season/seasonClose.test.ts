@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { runSeason } from "./runSeason";
-import { promotionPlan, seasonPoints, seasonProgression } from "./seasonClose";
+import { gainFactor, promotionPlan, seasonPoints, seasonProgression } from "./seasonClose";
 import { testSeason } from "./testRoster";
 
 const input = testSeason();
@@ -34,14 +34,14 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
     for (const r of rows) {
       expect(r.new).toBeGreaterThanOrEqual(1);
       expect(r.new).toBeLessThanOrEqual(100);
-      expect(r.new - r.old).toBeLessThanOrEqual(Math.ceil((6 + 5 + 2 + 2) * 1.5)); // performance + titles + upsets + promotion, ×1.5 at most
+      expect(r.new - r.old).toBeLessThanOrEqual(Math.ceil((6 + 5 + 2 + 2) * 1.6)); // performance + titles + upsets + promotion, ×1.6 at most
       expect(r.old - r.new).toBeLessThanOrEqual(6 + 2 + 1); // a loss: performance + relegation + rounding
     }
     const champ = rows.find((r) => r.idolId === season.titles.UZC!.champion)!;
     expect(champ.reason).toMatch(/titles \+\d/);
-    // Update 3: a gain shrinks as the rating rises (× (100 − rating) / 30, between 0.2 and 1.5)
+    // A gain is scaled by the rating it was played with (gainFactor, 2026-11-15 curve)
     const gains = rows.filter((r) => r.reason.includes("×")).map((r) => ({ old: r.old, factor: Number(/× ([\d.]+)/.exec(r.reason)![1]) }));
-    for (const g of gains) expect(g.factor).toBeCloseTo(Math.max(0.2, Math.min(1.5, (100 - g.old) / 30)), 2);
+    for (const g of gains) expect(g.factor).toBe(Number(gainFactor(g.old).toFixed(2))); // the reason shows 2 decimals
     expect(gains.some((g) => g.old >= 85 && g.factor <= 0.5)).toBe(true);
     expect(gains.some((g) => g.old < 70 && g.factor > 1)).toBe(true);
     expect(seasonProgression(season.matches, season.titles, leagues, plan)).toEqual(rows);
