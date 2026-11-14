@@ -25,7 +25,7 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await expect(page.getByRole("region", { name: "Swiss group A" })).toBeVisible(); // 4 Swiss groups
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Play to the champion" }).click();
-  await expect(page.getByText(/^\d{1,3}(,\d{3})* matches played$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
+  await expect(page.getByText(/^(\d{3}|\d{1,3}(,\d{3})+) matches played$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
   await page.getByRole("tab", { name: "Pots & draw" }).click();
   await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
   await page.getByRole("tab", { name: "Groups" }).click();
@@ -48,10 +48,10 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await expect(modal.getByText(/Game \d+ \/ \d/)).toHaveCount(0); // Update 3: the live sim never shows how many games
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/match-modal.png", fullPage: true }); // for a human look
-  await modal.getByRole("radio", { name: "Wheel Picker" }).click();
+  await modal.getByRole("radio", { name: "Spotlight Picker" }).click();
   await modal.getByRole("button", { name: "Spin all" }).click();
   await expect(modal.getByText(/ wins$|^Draw$/)).toBeVisible({ timeout: 30_000 }); // Update 3 bug: Spin all stuck after one spin
-  await modal.locator("..").screenshot({ path: "test-results/wheel.png" });
+  await modal.screenshot({ path: "test-results/spotlight-picker.png" });
   await modal.getByRole("radio", { name: "Simulate" }).click();
   await modal.getByRole("button", { name: "Simulate", exact: true }).click();
   await modal.getByRole("button", { name: "Accept Result" }).click();

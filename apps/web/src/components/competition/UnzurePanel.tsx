@@ -45,7 +45,7 @@ export function UnzurePanel() {
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "comps", comps: [next!.comp], round: roundOf(next!) })}>Play {next ? `${STAGE_NAME[next.stage]} ${roundOf(next)}` : "next round"}</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp: next!.comp, stage: next!.stage })}>Play to the end of {next ? STAGE_NAME[next.stage] : "the phase"}</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: COMPS })}>Play to the champion</Button>
-        {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
+        {progress && <span role="status" className="text-sm text-text-secondary">Playing… {progress.done}</span>}
         {view.cells.length === 0 && <span className="text-sm text-text-secondary">Swiss starts once the league phase is done.</span>}
       </div>
       <Tabs label="Unzure Cup" tabs={[

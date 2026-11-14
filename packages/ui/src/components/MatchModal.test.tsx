@@ -75,7 +75,7 @@ describe("MatchModal (PRD §9)", () => {
 
   it("wheel results are accepted as method wheel", () => {
     const onAccept = open();
-    fireEvent.click(screen.getByRole("radio", { name: "Wheel Picker" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Spotlight Picker" }));
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole("button", { name: "Spin all" }));
     for (let i = 0; i < 3; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));

@@ -56,7 +56,7 @@ export function LeaguePanel({ codes, zoneKey, playoff, actions }: { codes: strin
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp, stage: "LG" })}>Play to the end of the league</Button>
         {codes.length > 1 && <Button disabled={running} onClick={() => play({ kind: "comps", comps: codes })}>Simulate every league</Button>}
         {actions?.(running)}
-        {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
+        {progress && <span role="status" className="text-sm text-text-secondary">Playing… {progress.done}</span>}
       </div>
       <Tabs label={`Panel ${comp}`} tabs={[
         { id: "overview", label: "Overview", content: () => (

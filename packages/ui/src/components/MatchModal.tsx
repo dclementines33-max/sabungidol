@@ -1,4 +1,4 @@
-// Play one match (PRD §9): Simulate, a preset score, a score set directly (Manual) or the Wheel Picker.
+// Play one match (PRD §9): Simulate, a preset score, a score set directly (Manual) or the Spotlight Picker (WheelPicker.tsx).
 // Preset and Manual build their games with gamesForScore (alternating, winner last). Facts (season
 // record, career…) sit under the header. Nothing is written until "Accept Result".
 import { type Side, finalScores, gamesForScore, seriesState, seriesTarget } from "@sabung/engine";
@@ -22,7 +22,7 @@ const MODES: { mode: Mode; label: string }[] = [
   { mode: "sim", label: "Simulate" },
   { mode: "preset", label: "Score presets" },
   { mode: "manual", label: "Manual" },
-  { mode: "wheel", label: "Wheel Picker" },
+  { mode: "wheel", label: "Spotlight Picker" },
 ];
 const CHIP = "rounded-control bg-surface-hover/60 px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright";
 

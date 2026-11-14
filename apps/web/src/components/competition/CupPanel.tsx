@@ -52,7 +52,7 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
         <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: [comp] })}>Play to the end</Button>
         {codes.length > 1 && <Button disabled={running || !next} onClick={() => play({ kind: "comps", comps: codes, round: next!.round })}>{next ? `Round ${next.round}` : "Next round"} in every cup</Button>}
         {codes.length > 1 && <Button disabled={running} onClick={() => play({ kind: "comps", comps: codes })}>Every cup to the end</Button>}
-        {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
+        {progress && <span role="status" className="text-sm text-text-secondary">Playing… {progress.done}</span>}
         {!next && view.cells.length === 0 && <span className="text-sm text-text-secondary">{comp === "DSG" || comp === "MBK" ? "Played as next season's opener, between this season's champions." : "Waiting for the previous phase to finish."}</span>}
       </div>
       {early.length > 0 && (

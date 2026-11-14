@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { useRef, useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SampleIdols } from "./sampleIdols";
-import { PAUSE_MS, SPIN_MS, WheelPicker } from "./WheelPicker";
+import { PAUSE_MS, SPIN_MS, WheelPicker, sweep } from "./WheelPicker";
 
 afterEach(() => {
   cleanup();
@@ -22,6 +22,17 @@ function Harness({ bestOf, sequence }: { bestOf: 3 | 4 | 5 | 7; sequence: number
 }
 
 describe("WheelPicker (PRD §9)", () => {
+  it("the spotlight always comes to rest on the drawn winner, slowing down, before the stop", () => {
+    for (const from of ["A", "B"] as const) for (const winner of ["A", "B"] as const) {
+      const at = sweep(from, winner);
+      const end = at.length % 2 === 0 ? from : from === "A" ? "B" : "A";
+      expect(end).toBe(winner);
+      expect(at.at(-1)!).toBeLessThan(SPIN_MS);
+      const gaps = at.map((t, i) => t - (at[i - 1] ?? 0));
+      expect(gaps.at(-1)!).toBeGreaterThan(gaps[1]!); // slower at the end
+    }
+  });
+
   it("each spin decides one game after the wheel stops", () => {
     vi.useFakeTimers();
     render(<Harness bestOf={3} sequence={[0.2]} />);
