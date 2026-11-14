@@ -9,7 +9,34 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" — stop only for real decisions.
 
-## Status (2026-11-13)
+## ▶ RESUME HERE (saved 2026-11-14, end of session)
+
+Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
+The user tests on another device. Nothing is half-built in the code.
+
+**Next task: better default photos via the user's own Chrome (Pinterest, or any site).**
+- The user asked: the photos found so far are "kurang menarik"; search Pinterest / Instagram / X, pick the most popular
+  and best-looking ones (good for "adu visual"). Rule: never kprofiles; face fully visible, no glasses, masks, hands or
+  props over it; this is the default base photo only.
+- Scope first: 6 IVE + the 40 new idols (tripleS 24, TUIDE 7, A2O LITE 9). Later the 242 default idols.
+- Blocked on: Claude in Chrome was not connected. The user must install the extension
+  (https://chromewebstore.google.com/detail/fcoeoabgfenejglbffodgkkbkcdhcgfn), sign in with the same account, and log in
+  to Pinterest in that Chrome. Then: tabs_context_mcp → new tab → search pins per idol → choose by saves + looks.
+- Tried and failed: the in-app browser pane renders Pinterest blank (React hydration error); calling Pinterest's internal
+  /resource/ API was denied by the auto-mode classifier — do not try that again. Instagram login page did load in the
+  pane (fallback). X/Instagram/Pinterest all need the user's login; the user types passwords, never Claude.
+- Tools: tools/photos (README) builds numbered contact sheets and saves picks as "Name GROUP.jpg" (JPEG ≤ 1200 px).
+
+**Files waiting in import/ (git-ignored, only on this PC) — the user imports them in Studio → Input Data:**
+- new-idols-paste.txt → "Tambah idol → Paste" (40 new idols; rating empty = 75).
+- idol-details.json (242 default idols: birthday, nationality, role) and new-idols-details.json (40 new) →
+  "Perbarui data idol". (Or put a details file into "Tambah idol → File": duplicates offer "Perbarui lahir & negara".)
+- ive-photos/ (6) + new-photos/{tripleS,TUIDE,A2O LITE}/ (40) → Photo Import; current picks are Commons / K-pop Wiki
+  concept photos, all checked by eye, 46/46 sure filename matches — the user wants better ones (task above).
+- The user once put idol-details.json into "Tambah idol" by mistake (all refused as duplicates); explained, fixed with
+  the update button. The user only needs birthday + nationality for the 242 (role came along in the same file).
+
+## Status (2026-11-14)
 
 | Phase | State |
 | --- | --- |
@@ -19,6 +46,8 @@ file only when the task touches it. Keep this file current: update it at the end
 | Fase 3 Play | done, gate passed, approved 2026-11-13 |
 | Fase 4 Wiki | done, gate passed, approved 2026-11-13 |
 | Fase 5 Backend | done, gate passed, approved 2026-11-13 — all PRD §15 phases done |
+| Fase 6 + Redesign + Update 2 | done, deployed |
+| Update 3 (V1–V6) | done, deployed 2026-11-14 (01ce8996); open: better default photos (see RESUME HERE) |
 
 ### Fase 3 plan (approved) — gate: 3 seasons in a row, no integrity errors, no duplicate matches
 
