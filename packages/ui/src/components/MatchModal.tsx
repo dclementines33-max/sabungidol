@@ -1,4 +1,4 @@
-// Play one match (PRD §9): Simulate, a preset score, a score set directly (Manual) or the Spotlight Picker (WheelPicker.tsx).
+// Play one match (PRD §9; 2026-11-15: Simulate is gone): the Wheel (WheelPicker.tsx), a preset score or a score set directly (Manual).
 // Preset and Manual build their games with gamesForScore (alternating, winner last). Facts (season
 // record, career…) sit under the header. Nothing is written until "Accept Result".
 import { type Side, finalScores, gamesForScore, seriesState, seriesTarget } from "@sabung/engine";
@@ -6,7 +6,6 @@ import type { BestOf } from "@sabung/shared";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./Button";
-import { LiveMatchVisualizer } from "./LiveMatchVisualizer";
 import { MatchGallery } from "./MatchGallery";
 import { type HeadToHead, MatchHeader, type MatchTheme } from "./MatchHeader";
 import { Modal } from "./Modal";
@@ -16,13 +15,12 @@ import { useIdol } from "./idolSource";
 export type MatchMethod = "sim" | "manual" | "wheel";
 export type AcceptedResult = { method: MatchMethod; scoreA: number; scoreB: number; result: Side | "D"; games: Side[] };
 export type MatchFact = { label: string; a: string; b: string };
-type Mode = "sim" | "preset" | "manual" | "wheel";
+type Mode = "wheel" | "preset" | "manual";
 
 const MODES: { mode: Mode; label: string }[] = [
-  { mode: "sim", label: "Simulate" },
+  { mode: "wheel", label: "Wheel" },
   { mode: "preset", label: "Score presets" },
   { mode: "manual", label: "Manual" },
-  { mode: "wheel", label: "Spotlight Picker" },
 ];
 const CHIP = "rounded-control bg-surface-hover/60 px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright";
 
@@ -39,7 +37,7 @@ function Stepper({ name, value, max, onChange }: { name: string; value: number; 
   );
 }
 
-export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], simulate, random, onAccept, theme }: {
+export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], random, onAccept, theme }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string; // e.g. "Unzure Cup · R32 · Match 4"
@@ -48,7 +46,6 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   bestOf: BestOf;
   h2h?: HeadToHead;
   facts?: MatchFact[];
-  simulate: () => Side[] | Promise<Side[]>; // the engine plays the match when pressed; pressing again rolls again
   random?: () => number; // wheel randomness (tests)
   onAccept: (result: AcceptedResult) => void;
   theme?: MatchTheme; // the competition's colour and name, grand final look (Update 3)
@@ -56,14 +53,12 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   const a = useIdol(idolA);
   const b = useIdol(idolB);
   const hasGallery = !!(a.gallery?.length || b.gallery?.length);
-  const [mode, setMode] = useState<Mode>("sim");
+  const [mode, setMode] = useState<Mode>("wheel");
   const [games, setGames] = useState<Side[]>([]);
   const [typed, setTyped] = useState<[number, number]>([0, 0]);
-  const [roll, setRoll] = useState(0); // a new visualizer for every roll
-  const runSim = async () => { setGames(await simulate()); setRoll((r) => r + 1); };
   const scores = finalScores(bestOf);
   const state = seriesState(bestOf, games);
-  const method: MatchMethod = mode === "sim" ? "sim" : mode === "wheel" ? "wheel" : "manual";
+  const method: MatchMethod = mode === "wheel" ? "wheel" : "manual";
   const pending: AcceptedResult | null = state.result ? { method, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result, games } : null;
   const outcome = state.result && (state.result === "D" ? "Draw" : `${state.result === "A" ? a.name : b.name} wins`);
 
@@ -121,13 +116,6 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
       </div>
 
       <div className="mt-4">
-        {mode === "sim" && (games.length === 0
-          ? <div className="flex justify-center"><Button variant="primary" className="px-10 py-3 text-base" onClick={() => void runSim()}>Simulate</Button></div>
-          : <div className="space-y-3">
-              <LiveMatchVisualizer key={roll} games={games} nameA={a.name} nameB={b.name} target={seriesTarget(bestOf)} />
-              <div className="flex justify-center"><Button onClick={() => void runSim()}>Simulate again</Button></div>
-            </div>)}
-
         {mode === "preset" && (
           <div role="group" aria-label="Score presets" className="flex flex-wrap justify-center gap-2">
             {scores.map(([x, y]) => (
@@ -148,9 +136,9 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
           </div>
         )}
 
-        {mode === "wheel" && <WheelPicker idolA={idolA} idolB={idolB} bestOf={bestOf} games={games} onChange={setGames} random={random} />}
+        {mode === "wheel" && <WheelPicker idolA={idolA} idolB={idolB} bestOf={bestOf} games={games} onChange={setGames} random={random} grand={theme?.grandFinal} />}
 
-        {mode !== "wheel" && mode !== "sim" && (
+        {mode !== "wheel" && (
           <p className="m-0 mt-3 text-center text-sm text-text-secondary" aria-live="polite">
             {outcome ? `${state.scoreA}–${state.scoreB} · ${outcome}` : mode === "manual" ? `Not a valid Bo${bestOf} score yet` : "Pick a score"}
           </p>

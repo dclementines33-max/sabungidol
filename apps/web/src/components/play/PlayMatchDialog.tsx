@@ -48,7 +48,6 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
       bestOf={match.bestOf}
       h2h={h2h?.pair ? { winsA: h2h.pair.wins, draws: h2h.pair.draws, winsB: h2h.pair.losses } : undefined}
       facts={facts}
-      simulate={() => engine().simulateMatch(match.id, 1 + Math.floor(Math.random() * 2 ** 31))} // Update 3: rolled when pressed
       theme={{
         accent: (/^D[12]|^BS/.test(match.comp) ? brand(match.comp.startsWith("BS") ? `D1${match.comp[2]}` : match.comp).color : undefined)
           ?? ACCENT[match.comp] ?? ACCENT[match.comp.slice(0, 2)],

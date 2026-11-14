@@ -40,20 +40,19 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.screenshot({ path: "test-results/unzure-panel.png" }); // for a human look
 
   await page.goto("/play/nugu");
-  // Step 6: click an open bracket match → MatchModal → Simulate → Accept; the cup then goes on from it.
+  // Step 6: click an open bracket match → MatchModal (2026-11-15: opens on the wheel, no Simulate) → Spin all → Accept.
   await page.getByRole("button", { name: /^Play .* vs / }).first().click(); // Nugu round 1 = plain fixtures (bracket from the last 16)
   const modal = page.getByRole("dialog");
-  await modal.getByRole("button", { name: "Simulate", exact: true }).click();
-  await expect(modal.getByText(/^Game \d in play|^Full time/)).toBeVisible();
-  await expect(modal.getByText(/Game \d+ \/ \d/)).toHaveCount(0); // Update 3: the live sim never shows how many games
-  expect(await axe(page)).toEqual([]);
-  await page.screenshot({ path: "test-results/match-modal.png", fullPage: true }); // for a human look
-  await modal.getByRole("radio", { name: "Spotlight Picker" }).click();
+  await expect(modal.getByRole("radio", { name: "Wheel" })).toHaveAttribute("aria-checked", "true");
+  await expect(modal.getByRole("radio", { name: "Simulate" })).toHaveCount(0);
+  await modal.getByRole("button", { name: "Spin game 1" }).click();
+  await page.waitForTimeout(1200); // mid-spin, for a human look
+  await modal.screenshot({ path: "test-results/wheel-spinning.png" });
+  await expect(modal.getByText(/^1–0$|^0–1$/).first()).toBeAttached({ timeout: 10_000 }); // one game per spin
   await modal.getByRole("button", { name: "Spin all" }).click();
-  await expect(modal.getByText(/ wins$|^Draw$/)).toBeVisible({ timeout: 30_000 }); // Update 3 bug: Spin all stuck after one spin
-  await modal.screenshot({ path: "test-results/spotlight-picker.png" });
-  await modal.getByRole("radio", { name: "Simulate" }).click();
-  await modal.getByRole("button", { name: "Simulate", exact: true }).click();
+  await expect(modal.getByText(/ wins$|^Draw$/)).toBeVisible({ timeout: 60_000 }); // Update 3 bug: Spin all stuck after one spin
+  expect(await axe(page)).toEqual([]);
+  await modal.screenshot({ path: "test-results/wheel.png" });
   await modal.getByRole("button", { name: "Accept Result" }).click();
   await expect(page.getByText(/^Result saved: \d–\d$/)).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Play to the end" }).click();

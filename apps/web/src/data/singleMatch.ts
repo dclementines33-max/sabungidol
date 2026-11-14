@@ -16,7 +16,7 @@ async function playable(db: Db, id: string, salt = 0) {
   return { seasonId: input.seasonId, match, saved, bestOf: seasonBestOf(input.config, match.comp, match.stage, match.round) };
 }
 
-// Nothing is saved: the modal shows these idols (its "Simulate" asks simulateMatch for fresh games).
+// Nothing is saved: the modal shows these idols.
 // Also each idol's record this season (W-D-L), in this competition and in all of them, for the facts table.
 export async function matchPreview(db: Db, id: string) {
   const { match, saved, bestOf } = await playable(db, id);
@@ -36,9 +36,6 @@ export async function matchPreview(db: Db, id: string) {
   };
 }
 
-// "Simulate" in the MatchModal (Update 3): played the moment it is pressed, with a new salt each time, so
-// pressing it again can give another result (the bulk "Main …" buttons stay on the season seed).
-export const simulateMatch = async (db: Db, id: string, salt: number) => (await playable(db, id, salt)).match.games;
 
 export async function acceptMatch(db: Db, id: string, games: Side[], method: "sim" | "manual" | "wheel") {
   const { seasonId, match, bestOf } = await playable(db, id);

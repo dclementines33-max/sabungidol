@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MatchModal } from "./MatchModal";
-import { PAUSE_MS, SPIN_MS } from "./WheelPicker";
+import { PAUSE_MS, TENSE_MS } from "./WheelPicker";
 import { SampleIdols } from "./sampleIdols";
 
 afterEach(cleanup);
@@ -12,7 +12,7 @@ const open = (props: Partial<Parameters<typeof MatchModal>[0]> = {}) => {
   render(
     <SampleIdols>
       <MatchModal open onOpenChange={() => {}} title="Unzure Cup · R32 · Match 4" idolA="mina" idolB="yuna" bestOf={5}
-        simulate={() => ["A", "B", "A", "A"]} random={() => 0.2} onAccept={onAccept} {...props} />
+        random={() => 0.2} onAccept={onAccept} {...props} />
     </SampleIdols>,
   );
   return onAccept;
@@ -22,31 +22,18 @@ const accept = () => screen.getByRole("button", { name: "Accept Result" }) as HT
 describe("MatchModal (PRD §9)", () => {
   it("shows both idols, the format and the chance to win", () => {
     open({ h2h: { winsA: 3, draws: 1, winsB: 2 } });
-    expect(screen.getByText("Mina Kim")).toBeTruthy();
+    expect(screen.getAllByText("Mina Kim").length).toBeGreaterThan(0); // header and wheel stage
     expect(screen.getByText("Bo5")).toBeTruthy();
     expect(screen.getByText(/Win odds: Mina Kim \d+%, Yuna \d+%/)).toBeTruthy();
     expect(screen.getByText("3–1–2")).toBeTruthy();
   });
 
-  it("writes nothing until Accept Result, then sends the simulated games", async () => {
-    const onAccept = open();
+  it("opens on the wheel; there is no Simulate any more (2026-11-15) and nothing is decided before a spin", () => {
+    open();
+    expect(screen.getByRole("radio", { name: "Wheel" }).getAttribute("aria-checked")).toBe("true");
+    expect(screen.queryByRole("radio", { name: "Simulate" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Simulate" })).toBeNull();
     expect(accept().disabled).toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
-    await waitFor(() => expect(accept().disabled).toBe(false));
-    fireEvent.click(accept());
-    expect(onAccept).toHaveBeenCalledWith({ method: "sim", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
-  });
-
-  it("Simulate plays when pressed and 'Simulate again' rolls again (Update 3)", async () => {
-    const rolls = [["A", "A", "A"], ["B", "B", "B"]] as const;
-    const simulate = vi.fn(async () => [...rolls[simulate.mock.calls.length - 1]!]);
-    const onAccept = open({ simulate });
-    expect(simulate).not.toHaveBeenCalled(); // nothing decided before the button
-    fireEvent.click(screen.getByRole("button", { name: "Simulate" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Simulate again" }));
-    await waitFor(() => expect(simulate).toHaveBeenCalledTimes(2));
-    fireEvent.click(accept());
-    expect(onAccept).toHaveBeenCalledWith(expect.objectContaining({ result: "B", games: ["B", "B", "B"] }));
   });
 
   it("preset = one click on a final score; games alternate with the winner last", () => {
@@ -75,10 +62,9 @@ describe("MatchModal (PRD §9)", () => {
 
   it("wheel results are accepted as method wheel", () => {
     const onAccept = open();
-    fireEvent.click(screen.getByRole("radio", { name: "Spotlight Picker" }));
     vi.useFakeTimers();
     fireEvent.click(screen.getByRole("button", { name: "Spin all" }));
-    for (let i = 0; i < 3; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + SPIN_MS));
+    for (let i = 0; i < 6; i++) act(() => vi.advanceTimersByTime(PAUSE_MS + TENSE_MS));
     vi.useRealTimers();
     fireEvent.click(accept());
     expect(onAccept).toHaveBeenCalledWith({ method: "wheel", scoreA: 3, scoreB: 0, result: "A", games: ["A", "A", "A"] });

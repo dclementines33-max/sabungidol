@@ -11,7 +11,7 @@ const show = (gallery: string[]) => {
   const idols = new Map(SAMPLE_IDOLS.map((i) => [i.id, i.id === "mina" ? { ...i, gallery } : i]));
   render(
     <IdolSourceProvider source={{ idol: (id) => idols.get(id), photo: () => undefined, galleryPhoto: (id, size) => `blob:${id}-${size}` }}>
-      <MatchModal open onOpenChange={() => {}} title="Match" idolA="mina" idolB="yuna" bestOf={5} simulate={() => []} onAccept={() => {}} />
+      <MatchModal open onOpenChange={() => {}} title="Match" idolA="mina" idolB="yuna" bestOf={5} onAccept={() => {}} />
     </IdolSourceProvider>,
   );
 };
