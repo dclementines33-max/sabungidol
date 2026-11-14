@@ -11,7 +11,7 @@ export function titleLabel(key: string): string {
   if (/^D[12][A-F]$/.test(key)) return `League ${key}`;
   if (/^BS[A-F]$/.test(key)) return `B-Side Cup ${key.slice(2)}`;
   if (key.startsWith("MBK-")) return `Music Bank Cup ${key.slice(4)}`;
-  return { IDL: "The Idols (league)", "IDL-PO": "The Idols Playoff", UZC: "Unzure Cup", NUG: "Nugu Cup", INK: "Inkigayo Cup", DSG: "Daesang Cup" }[key] ?? key;
+  return { IDL: "The Idols (league)", "IDL-PO": "The Idols Playoff", UZC: "Unzure Cup", NUG: "Nugu Cup", INK: "Inkigayo Cup", DSG: "Daesang Cup", SWS: "Swiss Play-in", LCQ: "Last Chance Qualifier" }[key] ?? key;
 }
 
 // Branding (Settings → Branding): D1X has its own name, colour and logo; D2X follows D1X as its Divisi 2.

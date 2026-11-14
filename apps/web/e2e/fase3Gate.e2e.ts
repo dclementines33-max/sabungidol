@@ -14,7 +14,8 @@ test("GATE: 3 seasons in a row, no integrity errors, no duplicate matches", asyn
     await page.getByRole("button", { name: "Simulate Whole Season" }).click();
     await expect(page.getByText(/Season complete!/).first()).toBeVisible({ timeout: 200_000 });
     await expect(page.getByText(n === 1 ? /^5,583 matches played$/ : /^5,590 matches played$/)).toBeVisible(); // the whole season, nothing twice
-    await page.getByRole("button", { name: "Save ratings" }).click();
+    await page.getByRole("button", { name: "Save ratings…" }).click();
+    await page.getByRole("dialog", { name: "Season verdict" }).getByRole("button", { name: "Save ratings" }).click();
     await expect(page.getByText(/^Ratings updated for \d+ idols$/).first()).toBeVisible({ timeout: 30_000 });
     if (n === 3) break;
     await page.getByRole("button", { name: "Start New Season" }).click();

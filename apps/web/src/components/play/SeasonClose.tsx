@@ -9,6 +9,7 @@ import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
+import { SeasonVerdict } from "./SeasonVerdict";
 import { withNames } from "./usePlaySeason";
 
 export function SeasonClose({ done }: { done: boolean }) {
@@ -16,6 +17,7 @@ export function SeasonClose({ done }: { done: boolean }) {
   const name = (id: string) => lookup(id)?.name ?? id;
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [verdict, setVerdict] = useState(false);
   const { data: close } = useQuery({ queryKey: [...SEASON_QUERY, "close"], queryFn: () => engine().closePreview(), enabled: done });
 
   const block = (blockers: string[]) => notify({ level: "blocker", message: `Start New Season is blocked: ${blockers.join(", ")} not finished` });
@@ -32,6 +34,7 @@ export function SeasonClose({ done }: { done: boolean }) {
   const saveRatings = () => run(async () => {
     const { changed } = await engine().saveProgression();
     notify({ level: "success", message: `Ratings updated for ${changed} idols` });
+    setVerdict(false);
   });
   const startNew = () => run(async () => {
     const result = await engine().startNewSeason();
@@ -61,25 +64,14 @@ export function SeasonClose({ done }: { done: boolean }) {
               <div key={title}><h3 className="m-0 mb-1 text-sm font-medium">{title}</h3><p className="m-0 text-sm text-text-secondary">{ids.map(name).join(", ")}</p></div>
             ))}
           </div>
-          <details className="panel">
-            <summary className="cursor-pointer px-3 py-2">Rating Progression: {close.progression.length} idols change (optional)</summary>
-            <div tabIndex={0} role="region" aria-label="Rating changes" className="max-h-96 overflow-auto px-3 pb-3 focus-visible:outline-2 focus-visible:outline-accent-bright">
-              <table className="w-full text-sm">
-                <thead><tr className="text-left text-text-secondary"><th scope="col">Idol</th><th scope="col">Rating</th><th scope="col">Reason</th></tr></thead>
-                <tbody>
-                  {close.progression.map((r) => (
-                    <tr key={r.idolId}><td>{name(r.idolId)}</td><td className="font-mono tabular-nums">{r.current} → {r.new}</td><td className="text-text-secondary">{r.reason}</td></tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </details>
+          <p className="m-0 text-sm text-text-secondary">Rating Progression: {close.progression.length} idols change (optional). Save ratings to see the season verdict first.</p>
           <div className="flex flex-wrap gap-3">
-            <Button disabled={busy || close.progression.length === 0} onClick={saveRatings}>Save ratings</Button>
+            <Button disabled={busy || close.progression.length === 0} onClick={() => setVerdict(true)}>Save ratings…</Button>
             <Button variant="primary" disabled={busy} onClick={() => setConfirm(true)}>Start New Season</Button>
           </div>
         </>
       )}
+      {close && <SeasonVerdict open={verdict} onOpenChange={setVerdict} rows={close.progression} busy={busy} onSave={saveRatings} />}
       <ConfirmDialog open={confirm} onOpenChange={setConfirm} title="Start New Season"
         message="This season is archived (read-only) and a new season is created as a draft with the post-promotion/relegation rosters. A snapshot is made first."
         confirmLabel="Start New Season" onConfirm={startNew} />

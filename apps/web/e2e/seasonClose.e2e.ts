@@ -21,13 +21,18 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Promoted to D1 (+2)" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("heading", { name: "New badges this season" })).toBeVisible(); // Fase 4 step 3
   await expect(page.getByText(/^Idol of The Season$/)).toBeVisible();
-  await page.getByText(/Rating Progression: \d+ idols change/).click();
-  await expect(page.getByRole("cell", { name: /^\d+ → \d+$/ }).first()).toBeVisible();
+  await expect(page.getByText(/Rating Progression: \d+ idols change/)).toBeVisible();
   const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
   expect(violations).toEqual([]);
   await page.screenshot({ path: "test-results/season-close.png", fullPage: true }); // for a human look
 
-  await page.getByRole("button", { name: "Save ratings" }).click();
+  await page.getByRole("button", { name: "Save ratings…" }).click(); // 2026-11-15: the season verdict first
+  const verdict = page.getByRole("dialog", { name: "Season verdict" });
+  await expect(verdict.getByRole("region", { name: "Risers" }).getByRole("listitem").first()).toBeVisible();
+  await expect(verdict.getByRole("region", { name: "Fallers" }).getByRole("listitem").first()).toBeVisible();
+  expect((await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => v.id)).toEqual([]);
+  await verdict.screenshot({ path: "test-results/season-verdict.png" });
+  await verdict.getByRole("button", { name: "Save ratings" }).click();
   await expect(page.getByText(/^Ratings updated for \d+ idols$/)).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Start New Season" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Start New Season" }).click();
