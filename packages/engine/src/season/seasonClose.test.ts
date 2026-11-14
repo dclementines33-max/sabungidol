@@ -34,13 +34,16 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
     for (const r of rows) {
       expect(r.new).toBeGreaterThanOrEqual(1);
       expect(r.new).toBeLessThanOrEqual(100);
-      expect(r.new - r.old).toBeLessThanOrEqual(Math.ceil((6 + 5 + 2 + 2) * 1.6)); // performance + titles + upsets + promotion, ×1.6 at most
-      expect(r.old - r.new).toBeLessThanOrEqual(6 + 2 + 1); // a loss: performance + relegation + rounding
+      expect(r.new - r.old).toBeLessThanOrEqual(Math.ceil(12 * 2.5)); // a great season × the biggest gain factor
+      expect(r.old - r.new).toBeLessThanOrEqual(12 + 1); // MAX_DROP + rounding
+      const sum = r.parts.reduce((s, p) => s + p.delta, 0); // the raw delta is the breakdown's sum; a bad season counts extra
+      if (sum >= 0) expect(r.expected).toBeCloseTo(sum, 6);
+      else expect(r.expected).toBeLessThanOrEqual(sum + 1e-9);
     }
     const champ = rows.find((r) => r.idolId === season.titles.UZC!.champion)!;
-    expect(champ.reason).toMatch(/titles \+\d/);
+    expect(champ.reason).toMatch(/UZC won \+\d/); // the breakdown names the Unzure title
     // A gain is scaled by the rating it was played with (gainFactor, 2026-11-15 curve)
-    const gains = rows.filter((r) => r.reason.includes("×")).map((r) => ({ old: r.old, factor: Number(/× ([\d.]+)/.exec(r.reason)![1]) }));
+    const gains = rows.filter((r) => /× [\d.]+ \(rating/.test(r.reason)).map((r) => ({ old: r.old, factor: Number(/× ([\d.]+) \(rating/.exec(r.reason)![1]) }));
     for (const g of gains) expect(g.factor).toBe(Number(gainFactor(g.old).toFixed(2))); // the reason shows 2 decimals
     expect(gains.some((g) => g.old >= 85 && g.factor <= 0.5)).toBe(true);
     expect(gains.some((g) => g.old < 70 && g.factor > 1)).toBe(true);

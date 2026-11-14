@@ -32,3 +32,4 @@ export * from "./stats/seasonStory";
 export * from "./stats/seasonDrama";
 export * from "./stats/seasonNews";
 export * from "./stats/newsScore";
+export { type Part, expectationParts, placeValue, prestigeOf } from "./season/expectation";
