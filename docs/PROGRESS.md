@@ -226,6 +226,8 @@ U5 ✅ Groups: groupStats(+byComp, record) + GroupEntry list; worker titlesByCom
 U6 ✅ components/PageHeader on Studio + remaining wiki pages + Story. R4 ✅ (2026-11-14): tokens.css .studio-flow/.studio-section
    (numbered chapter: crimson rule, blackletter 01…, big h2) = settings SECTION + Input Data + Rating Manager sections. Nav: Idol Profile, Season Progression.
 
+Production (2026-11-14): version 01ce8996 = Update 3 V1–V6 + import fixes.
+
 ### Update 3 plan (APPROVED 2026-11-14) — doc "Beberapa update dan perubahan 2.docx" (12 pictures, not in git)
 V1 ✅ engine season/types pendingBatch: a round (bracket), a Swiss round of all groups, and EVERY group matchday are played or
    listed pending together (was: the first pending match stopped the track, so panels showed 1 match at a time). SeasonResult
