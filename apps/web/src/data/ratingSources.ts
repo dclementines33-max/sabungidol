@@ -2,6 +2,7 @@
 // propose new ratings; the Rating Manager draft is saved by the user.
 import { type Db, type SeasonRow, listSeasons } from "@sabung/db";
 import { promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
+import { careerTargets } from "./careerTargets";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
@@ -31,15 +32,14 @@ export async function lastSeasonProgression(db: Db): Promise<{ season: string | 
   return { season: last.season.name, proposals: last.rows.map((r) => ({ idolId: r.idolId, new: r.new, reason: `Progression ${last.season.name}: ${r.reason}` })) };
 }
 
-// §6.5: all-time score (newest season weight 1.0, 15% less per season back) → percentile → 45–98.
+// §6.5: all-time score (newest season weight 1.0, 15% less per season back) → rank → careerTargets curve (2026-11-15:
+// modest, only the top 2–3% at 90+; was an even 45–98 spread).
 export async function careerSync(db: Db, current: Record<string, number>, mode: "replace" | "blend"): Promise<Proposal[]> {
   const total = new Map<string, number>();
   (await finishedSeasons(db)).forEach(({ rows }, age) => {
     for (const r of rows) total.set(r.idolId, (total.get(r.idolId) ?? 0) + r.score * 0.85 ** age);
   });
-  const ranked = [...total.entries()].sort((a, b) => a[1] - b[1]);
-  return ranked.map(([idolId], i) => {
-    const target = 45 + (ranked.length > 1 ? i / (ranked.length - 1) : 1) * (98 - 45);
+  return [...careerTargets(total)].map(([idolId, target]) => {
     const value = mode === "blend" ? (target + (current[idolId] ?? target)) / 2 : target;
     return { idolId, new: Math.round(value), reason: `Sync Career Stats (${mode === "blend" ? "Blend 50/50" : "Replace"})` };
   });
