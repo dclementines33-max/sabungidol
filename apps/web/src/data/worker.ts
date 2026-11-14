@@ -3,7 +3,7 @@
 import {
   type MatchFilter, type RatingChange, applyRatings, type BackupSection, type Branding, type Db, type ImportMode, type IssueFix, type NewEvent, startSeason, addIdols, countMatches, currentSeason, deleteBlocker, deleteIdol, getPhoto, idols, insertPhoto, leagueRosters, listCompetitions, listEvents, replaceInRoster, resetSeason, saveCompetition, setLeagueRosters, updateSeason,
   type IdolDetails, addGroup, listGroups, listIdols, updateIdolDetails,
-  deletePhoto, logEvent, openDb, setGroupLogo, setPhotoFocal, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
+  deletePhoto, logEvent, openDb, replaceTheIdols, resetStatistics, setGallery, theIdolsChanges, setGroupLogo, setPhotoFocal, saveMatches, seasons, setActive, setIdolPhoto, updateIdol,
 } from "@sabung/db";
 import { pickTheIdols, runSeason, splitLeagues, testSeason } from "@sabung/engine";
 import * as Comlink from "comlink";
@@ -16,7 +16,6 @@ import { careerStats, rebuildStats } from "./careerWorker";
 import { seasonArchive } from "./archiveWorker";
 import { storyOf } from "./storyWorker";
 import { overview } from "./overviewWorker";
-import { predict, predictions } from "./predictionsWorker";
 import { careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
@@ -65,9 +64,6 @@ const api = {
   addGroup: async (name: string) => addGroup(await open(), name),
   updateIdolDetails: async (rows: IdolDetails[], dryRun: boolean) => updateIdolDetails(await open(), rows, dryRun),
   setPhotoFocal: async (photoId: string, x: number, y: number) => setPhotoFocal(await open(), photoId, x, y),
-  // Final predictions (PRD §16).
-  predict: async (matchId: string, pick: string) => predict(await open(), matchId, pick),
-  predictions: async () => predictions(await open()),
   addIdols: async (batch: Parameters<typeof addIdols>[1]) => addIdols(await open(), batch),
   updateIdol: async (id: string, input: Parameters<typeof updateIdol>[2]) => updateIdol(await open(), id, input),
   setActive: async (ids: string[], active: boolean) => setActive(await open(), ids, active),
@@ -85,10 +81,23 @@ const api = {
   // Deleting also removes the idol's photo (its record and files).
   deleteIdol: async (id: string) => {
     const db = await open();
-    const photoId = (await listIdols(db)).find((i) => i.id === id)?.photoId;
+    const idol = (await listIdols(db)).find((i) => i.id === id);
     const result = await deleteIdol(db, id);
-    if (result.deleted && photoId) await dropPhoto(db, photoId);
+    if (result.deleted) for (const photoId of [idol?.photoId, ...(idol?.gallery ?? [])]) if (photoId) await dropPhoto(db, photoId);
     return result;
+  },
+  // The idol's gallery becomes these images (the old gallery photos are removed). Returns the old ids to forget.
+  setGallery: async (idolId: string, images: Blob[]) => {
+    const db = await open();
+    const ids: string[] = [];
+    for (const image of images) {
+      const stored = await storePhotoFiles(DATABASE, image);
+      await insertPhoto(db, stored);
+      ids.push(stored.id);
+    }
+    const old = await setGallery(db, idolId, ids);
+    for (const photoId of old) await dropPhoto(db, photoId);
+    return old;
   },
   // A new photo for an idol; the old one is removed. Returns both ids (the page forgets the old one's cached URLs).
   replacePhoto: async (idolId: string, image: Blob) => {
@@ -117,8 +126,16 @@ const api = {
   // Playing the season (Fase 3).
   startSeason: async () => {
     const db = await open();
-    const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: i.rating, active: i.active }));
-    return startSeason(db, (await currentSeason(db))!.id, pickTheIdols({ idols } as Parameters<typeof pickTheIdols>[0]));
+    return startSeason(db, (await currentSeason(db))!.id, await theIdolsNow(db));
+  },
+  // The Idols "Sync rating" (Update 4): who would change, and the change itself (refused once IDL has a match).
+  theIdolsChanges: async () => {
+    const db = await open();
+    return theIdolsChanges(db, (await currentSeason(db))!.id, await theIdolsNow(db));
+  },
+  syncTheIdols: async () => {
+    const db = await open();
+    return replaceTheIdols(db, (await currentSeason(db))!.id, await theIdolsNow(db));
   },
   seasonOverview: async () => seasonOverview(await open()),
   leagueView: async (comp: string) => leagueView(await open(), comp),
@@ -169,6 +186,12 @@ const api = {
     return startNewSeason(db);
   },
   // Danger Zone: the season back to a draft; with redraw the 12 leagues are split again too.
+  // Reset statistik (Update 4): back to the setup as Season 1 draft; a snapshot first, like every dangerous action.
+  resetStatistics: async () => {
+    const db = await open();
+    await saveSnapshot(db, DATABASE, "reset statistik");
+    return resetStatistics(db);
+  },
   resetSeason: async (seasonId: string, redraw: boolean) => {
     const db = await open();
     await saveSnapshot(db, DATABASE, "reset season"); // PRD §12.3: a snapshot before every dangerous action
@@ -226,6 +249,12 @@ const api = {
 
 export type WorkerApi = typeof api;
 Comlink.expose(api);
+
+// The 20 highest-rated active idols right now (who The Idols would be).
+async function theIdolsNow(db: Db) {
+  const idols = (await listIdols(db)).map((i) => ({ id: i.id, groupId: i.groupId, rating: i.rating, active: i.active }));
+  return pickTheIdols({ idols } as Parameters<typeof pickTheIdols>[0]);
+}
 
 // A photo nobody uses any more: its record, then its files (a leftover file is harmless, a missing one is not).
 async function dropPhoto(db: Db, photoId: string) {

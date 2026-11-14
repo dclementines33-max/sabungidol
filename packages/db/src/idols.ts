@@ -8,14 +8,14 @@ import { entries, groups, idols, matches, photos, seasons } from "./schema";
 
 export type IdolRow = {
   id: string; name: string; groupId: string | null; groupName: string | null; rating: number;
-  seed: number | null; nationality: string | null; birthday: string | null; role: string | null; photoId: string | null; active: boolean;
+  seed: number | null; nationality: string | null; birthday: string | null; role: string | null; photoId: string | null; active: boolean; gallery: string[];
   focalX?: number | null; focalY?: number | null; // the photo's focal point (PRD §10.3), null = centre
 };
 
 export async function listIdols(db: Db | Tx): Promise<IdolRow[]> {
   return db.select({
     id: idols.id, name: idols.name, groupId: idols.groupId, groupName: groups.name, rating: idols.rating,
-    seed: idols.seed, nationality: idols.nationality, birthday: idols.birthday, role: idols.role, photoId: idols.photoId, active: idols.active,
+    seed: idols.seed, nationality: idols.nationality, birthday: idols.birthday, role: idols.role, photoId: idols.photoId, active: idols.active, gallery: idols.gallery,
     focalX: photos.focalX, focalY: photos.focalY,
   }).from(idols).leftJoin(groups, eq(idols.groupId, groups.id)).leftJoin(photos, eq(idols.photoId, photos.id)).orderBy(asc(sql`lower(${idols.name})`));
 }

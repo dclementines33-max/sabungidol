@@ -10,6 +10,7 @@ import { ProfileEdit } from "../../../components/idolProfile/ProfileEdit";
 import { ProfileHero } from "../../../components/idolProfile/ProfileHero";
 import { ProfileOverview } from "../../../components/idolProfile/ProfileOverview";
 import { ProfileRecords } from "../../../components/idolProfile/ProfileRecords";
+import { ProfileGallery } from "../../../components/idolProfile/ProfileGallery";
 import { ProfileRivals } from "../../../components/idolProfile/ProfileRivals";
 import { ProfileSeasons } from "../../../components/idolProfile/ProfileSeasons";
 import { CAREER_COLUMNS } from "../../../components/wiki/careerColumns";
@@ -51,6 +52,7 @@ function IdolProfile() {
           { id: "matches", label: "Matches", content: () => <MatchLog filter={{ idolId: id }} label={`Match ${idol.name}`} /> },
           { id: "rivals", label: "Rivals", content: () => <ProfileRivals idolId={id} rivals={profile.rivals} /> },
           { id: "records", label: "Records", content: () => <ProfileRecords records={profile.records} /> },
+          { id: "gallery", label: `Galeri (${idol.gallery.length})`, content: () => <ProfileGallery name={idol.name} photos={idol.gallery} /> },
         ]} />
       )}
     </div>

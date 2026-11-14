@@ -6,7 +6,7 @@
   --color-bg-raised: #0b0306;
   --color-surface: #1a0609;
   --color-surface-hover: #340a13;
-  --color-border: #4a1420; /* decorative lines only */
+  --color-border: #4a142066; /* decorative lines only, 40% so they stay subtle */
   --color-border-strong: #4c6c81; /* control outlines: 3:1 on every surface */
   --color-text-primary: #b9d3e2;
   --color-text-secondary: #87a4b5;
@@ -146,7 +146,7 @@
   /* Studio sections (R4): a numbered editorial chapter — a crimson rule on top, the number in blackletter on the right,
      a big headline. The page that holds them resets the counter with .studio-flow. */
   .studio-flow { counter-reset: studio; }
-  .studio-section { position: relative; counter-increment: studio; border-top: 2px solid color-mix(in oklab, var(--color-accent-bright) 70%, transparent); padding-top: 1.5rem; }
+  .studio-section { position: relative; counter-increment: studio; border-top: 2px solid color-mix(in oklab, var(--color-accent-bright) 35%, transparent); padding-top: 1.5rem; }
   .studio-section::before { content: counter(studio, decimal-leading-zero); position: absolute; top: -0.5rem; right: 0; font-family: var(--font-gothic); font-size: 3.5rem; line-height: 1; color: color-mix(in oklab, var(--color-accent) 45%, transparent); pointer-events: none; }
   .studio-section > h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); text-transform: uppercase; }
   .panel { background: linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65)); border-radius: var(--radius-card); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(185 211 226 / 0.06); }

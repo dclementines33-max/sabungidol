@@ -20,6 +20,7 @@ export const idols = pgTable("idols", {
   birthday: date(),
   role: text(), // position in the group, e.g. "Leader, Main Vocalist" (Update 3)
   photoId: text(),
+  gallery: jsonb().$type<string[]>().notNull().default([]), // extra photo ids shown beside the MatchModal (gallery feature)
   rating: smallint().notNull(),
   active: boolean().notNull().default(true),
 }, (t) => [

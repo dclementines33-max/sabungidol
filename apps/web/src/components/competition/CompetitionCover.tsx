@@ -23,23 +23,23 @@ export function CompetitionCover({ name, code, issue, color, logoId, stats = [],
 }) {
   const tint = `var(--color-${color ?? "accent"})`;
   return (
-    <header className="relative isolate overflow-hidden rounded-card px-5 pt-5 pb-6 sm:px-8 sm:pt-8"
+    <header className="relative isolate mx-auto max-w-3xl overflow-hidden rounded-card px-4 pt-4 pb-5 sm:px-6 sm:pt-5"
       style={{ background: `radial-gradient(60rem 26rem at 85% 100%, color-mix(in oklab, ${tint} 38%, transparent), transparent 70%), linear-gradient(115deg, color-mix(in oklab, ${tint} 22%, var(--color-bg-base)), var(--color-bg-base) 75%)` }}>
-      <p aria-hidden="true" className="outline-text pointer-events-none absolute -bottom-3 left-2 -z-10 m-0 font-display text-[clamp(4.5rem,15vw,12rem)] leading-none whitespace-nowrap opacity-60">{name}</p>
-      {hero && <IdolPhoto idolId={hero} size={1024} className="photo-frame absolute right-4 bottom-0 -z-10 hidden w-44 opacity-90 sm:block lg:w-60" />}
+      <p aria-hidden="true" className="outline-text pointer-events-none absolute -bottom-3 left-2 -z-10 m-0 font-display text-[clamp(3rem,9vw,6rem)] leading-none whitespace-nowrap opacity-40">{name}</p>
+      {hero && <IdolPhoto idolId={hero} size={1024} className="photo-frame absolute right-4 bottom-0 -z-10 hidden w-28 opacity-90 sm:block lg:w-36" />}
       <div className="flex flex-wrap items-center gap-3">
-        <CompetitionLogo logoId={logoId} className="size-12" />
+        <CompetitionLogo logoId={logoId} className="size-9" />
         <span className="tag">{code}</span>
         <span className="kicker">{issue}</span>
       </div>
-      <h2 className="m-0 mt-4 max-w-[16ch] text-[clamp(2.25rem,5.5vw,4.5rem)]">{name}</h2>
+      <h2 className="m-0 mt-3 max-w-[16ch] text-[clamp(1.75rem,4vw,2.75rem)]">{name}</h2>
       {hero && <HeroName id={hero} role={heroRole} />}
       {stats.length > 0 && (
-        <dl className="m-0 mt-6 flex flex-wrap gap-x-10 gap-y-3">
+        <dl className="m-0 mt-4 grid max-w-md grid-cols-2 gap-x-6 gap-y-3">
           {stats.map((s) => (
             <div key={s.label} className="border-l-2 pl-3" style={{ borderColor: tint }}>
               <dt className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{s.label}</dt>
-              <dd className="m-0 font-display text-2xl">{s.value}</dd>
+              <dd className="m-0 font-display text-xl">{s.value}</dd>
             </div>
           ))}
         </dl>

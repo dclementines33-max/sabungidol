@@ -1,6 +1,6 @@
 // One Career Stats tab (PRD §8 "spreadsheet legend"): every idol in scope for one competition key, the chosen
 // columns (Update 2: chosen per format), a podium of the top three, photo + name sticky on the left, sorted, and CSV.
-import type { CareerRow } from "@sabung/engine";
+import { type CareerRow, careerOrder } from "@sabung/engine";
 import { Button, IdolPhoto, VirtualTable, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export function CareerTable({ comp, label, allowed, sort }: { comp: string; labe
   const [shown, setShown] = useState(() => columnsFor(comp));
   const { data, isPending } = useQuery({ queryKey: ["career-table", comp], queryFn: () => engine().careerTable(comp), staleTime: 0 });
   if (isPending) return <p className="text-text-secondary">Menghitung statistik…</p>;
-  const rows = (data ?? []).filter((r) => allowed.has(r.idolId)).sort((a, b) => Number(b[sort]) - Number(a[sort]) || b.matches - a.matches || a.idolId.localeCompare(b.idolId));
+  const rows = (data ?? []).filter((r) => allowed.has(r.idolId)).sort(careerOrder(sort));
   if (!rows.length) return <p className="text-text-secondary">Belum ada match di {label} untuk idol dalam scope ini.</p>;
   const columns = CAREER_COLUMNS.filter((c) => shown.includes(c.id));
   const download = () => {

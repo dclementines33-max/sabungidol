@@ -1,0 +1,1 @@
+ALTER TABLE "idols" ADD COLUMN "gallery" jsonb DEFAULT '[]'::jsonb NOT NULL;

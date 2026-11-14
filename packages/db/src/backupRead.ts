@@ -46,5 +46,20 @@ export async function readBackupTables(db: Db, section: BackupSection, seasonId?
     idol_keys: await db.select({ id: idols.id, name: idols.name, groupName: groups.name }).from(idols).leftJoin(groups, eq(idols.groupId, groups.id)).orderBy(asc(idols.id)),
   };
   for (const name of SECTION_TABLES[section]) tables[name] = await read[name]();
+  if (section === "base") return asSeasonOne(tables);
   return tables;
+}
+
+// "Data dasar" is the setup without anything played (Update 4 fix): its season is written as Season 1 draft, with
+// the league rosters only (The Idols is picked when a season starts) and no opener (it came from a played season).
+function asSeasonOne(tables: BackupTables): BackupTables {
+  const source = tables.seasons?.at(-1);
+  if (!source) return tables;
+  const { opener: _opener, ...config } = (source.config ?? {}) as Record<string, unknown>;
+  return {
+    ...tables,
+    seasons: [{ ...source, id: "S01", number: 1, name: "Season 1", status: "draft", config }],
+    competitions: (tables.competitions ?? []).filter((c) => c.seasonId === source.id).map((c) => ({ ...c, seasonId: "S01" })),
+    entries: (tables.entries ?? []).filter((e) => e.seasonId === source.id && e.stage === "LG" && e.comp !== "IDL").map((e) => ({ ...e, seasonId: "S01" })),
+  };
 }

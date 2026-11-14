@@ -6,7 +6,6 @@ import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
-import { FinalPredictions } from "../play/FinalPredictions";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { CompetitionCover } from "./CompetitionCover";
 import { GalaStage } from "./GalaStage";
@@ -56,7 +55,6 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
         {!next && view.cells.length === 0 && <span className="text-sm text-text-secondary">{comp === "DSG" || comp === "MBK" ? "Dimainkan sebagai pembuka season berikutnya, antara juara season ini." : "Menunggu fase sebelumnya selesai."}</span>}
       </div>
-      <FinalPredictions cells={view.cells} title={(c) => `${title ?? label(c.comp)} · ${c.round}`} />
       {early.length > 0 && (
         <details className="space-y-3" open={early.some((c) => !c.winner)}>
           <summary className="kicker cursor-pointer">Ronde awal · {early.filter((c) => c.score).length}/{early.length} match</summary>

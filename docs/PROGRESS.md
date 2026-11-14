@@ -14,7 +14,118 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
-**Next task: better default photos via the user's own Chrome (Pinterest, or any site).**
+**HEAVY QUEUE (router "Redesign dan UI polish kompetisi", 2026-11-15) — BUILT, NOT committed, NO preview yet.**
+- Home: top = all-time #1 (`home/AllTimeTop.tsx`) = Career Stats "Semua" by titles via the shared engine `careerOrder(sort)`
+  (CareerTable uses it too; `homeFacts.allTimeTop`, overview `.allTimeTop`). `home/HomeSeason.tsx` (was HomeActions) = season
+  block + "Berita penting". Backgrounds = design/assets photos, stored SIDEWAYS (no EXIF) → rotated → `public/home/porch.webp`,
+  `sky.webp`. Unzure champion cover moved to `dashboard/ChampionCover.tsx` (was home/HomeHero), top of Dashboard.
+- News: engine `stats/seasonNews.ts` (rivalry ≥3 meetings, multi-title, title-milestone 5/10/15…, slump = rating ≥85 losing 4+,
+  unbeaten = no loss in a finished D1/D2 league) added by storyWorker; `stats/newsScore.ts` newsScore 0–100 (our numbers; titles
+  by PRESTIGE) + topNews(n, one per kind) → Home shows 4. /story order unchanged.
+- Settings: `/studio/settings?s=season|liga|branding|backup|data|danger`, side nav (strip on phones), one view at a time;
+  Home "Buka Backup" + Welcome restore link open ?s=backup. e2e tests go to the view they need.
+
+**UPDATE 4 — BUILT 2026-11-14, on preview 96975b81 (test alias), NOT deployed, NOT committed.** User list + decisions:
+- Tebak Juara removed (FinalPredictions, predictionsWorker, dashboard card, e2e part). Old PREDICTION log rows stay hidden.
+- MatchModal gallery: 3 RANDOM photos per idol (supersedes "all"); `PhotoLightbox` (packages/ui) = fixed 70vh frame,
+  ‹ › on the left/right middle (position never moves with the photo's shape), arrow keys, wraps. `GalleryThumb` shared.
+- Idol Profile: tab "Galeri (n)" = all photos (components/idolProfile/ProfileGallery.tsx).
+- Records: `rankLabel` = plain number ("3", ties show the same number); "#3 bersama" gone.
+- League Overview (D1/D2 and The Idols): rank numbers over the top-5 cards removed.
+- Rating Manager restyled (RatingCard = framed portrait, tier edge, gothic rating, old→new, tier slider; steps
+  −5 −3 −1 +1 +3 +5; RatingActions = two editorial columns Preset / Dari hasil season). Theme text scale ends at
+  text-3xl: text-4xl/5xl are NO-OPS (still used, pre-existing, in WallOfFame, TournamentMap, HomeLeaders, MatchHeader VS, WheelPicker).
+- The Idols "Sync rating" (SyncTheIdols.tsx; db theIdols.ts theIdolsChanges/replaceTheIdols; Worker theIdolsChanges/
+  syncTheIdols): re-pick the 20 by current rating, confirm shows in/out; ONLY before The Idols' first match (user).
+- BACKUP FIXED (db backupSetup.ts + backupWrite importShape; test backupSections.test.ts covers every section × mode ×
+  fresh/played device): "Data dasar" is exported as Season 1 draft (league rosters only, no IDL, no opener);
+  Replace = all seasons wiped, Season 1 draft + backup idols/ratings; Merge = add missing idols, rosters only into a
+  draft without matches. Idols Replace = update by name+group, never delete. Roster = into the current draft season,
+  refused (conflict message) when it is running. Season Replace = delete that season, re-insert with mapped idol ids.
+  Merge of Season/Full drops an unplayed draft numbered ≤ the backup's seasons (a new device's Season 1).
+  Before: base restored "Season 6 live" on a new device; idols/roster/season Replace failed (FK / foreign idol ids).
+- Settings → Danger Zone "Reset statistik…" (type RESET; snapshot first; db resetStatistics.ts): everything played +
+  rating history + archived seasons go; idols keep CURRENT ratings (user), groups, photos, galleries, settings, branding,
+  league rosters stay as Season 1 draft.
+
+**LIGHT QUEUE (2026-11-15, router, NOT committed):** tokens.css `--color-border` now 40% alpha (+ studio-section rule 35%);
+CompetitionCover compact (max-w-3xl, smaller name/logo/photo, 2-col stats); LeaguePanel stat "Rating rata-rata"
+(competition/averageRating.ts + test; also The Idols); RatingCards: shared `Select` + new Group filter. e2e not run
+(web build broken by the other session's Home work: HomeActions missing).
+
+**GALLERY FEATURE — BUILT 2026-11-14, on preview 9a9a9686 (test alias), NOT deployed, NOT committed.** Main photo stays
+fixed; the MatchModal shows ALL gallery photos of each idol (user: "semua, bisa scroll"), in a NEW random order every
+time it opens (user), left/right on ≥lg (modal widens to max-w-6xl, strips 8rem, sticky, scroll down), stacked under
+the header on phones (horizontal scroll). Click = lightbox (shared Modal, ‹ › buttons + arrow keys, wraps).
+Photos live in the app (OPFS), never fetched live. Code: db `idols.gallery` jsonb string[] (migration 0003),
+`gallery.ts setGallery` (replaces, returns removed ids), `unusedPhotoIds` keeps gallery ids, `forgetPhotos` removes them
+from galleries, backup Merge gives an existing idol without a gallery the backup's one; Worker `setGallery(idolId, blobs)`
+(+ deleteIdol drops gallery photos); ui `MatchGallery.tsx` + `idolSource` (`gallery`, optional `galleryPhoto`,
+`useGalleryPhoto`); web `IdolDataProvider` feeds them, Studio → Input Data `GalleryImport.tsx` = "Pilih folder galeri…"
+(webkitdirectory; subfolder "Name GROUP" matched by `matchName` from matchPhotos.ts; preview, replace per idol).
+Tests: db gallery.test, ui MatchGallery.test, web groupByFolder.test. Stored per photo: orig + 1024/256/64 WebP (orig kept).
+NEXT: user imports import/gallery on the preview (or after deploy) and checks; then "deploy". Bundle was already
+188.8 KB before this (budget 180) — pre-existing, measured with the change stashed.
+- Collecting now: one folder per idol in import/gallery/<Name GROUP>/ (282 folders; "/" and ":" in names → "-"; README
+  inside). The user also drops his own photos there. Files are 01.jpg, 02.jpg … (≤1200 px JPEG).
+- First 25 to fill (user list): Ahn Yujin, Danielle, Gawon, Ella Gross, Ian, Karina, Kim Chaewon (LE SSERAFIM, assumed),
+  Kim Jiwoo, Kim Minji, Kyujin, Liz, Pham Hanni, Rei, Ryujin, Sullyoon, Winter, Jang Wonyoung, Yeji, Carmen, Haerin,
+  Iroha, Haewon (user typed "Haewnon"), Umji, Juun, Sasha. ALL 25 DONE (249 photos, 38 MB): 7 from own IG, the rest
+  from Pinterest search (Kim Chaewon 9, all others 10). Review sheet: import/gallery-sheet.jpg. Small ones (<600 px):
+  Hanni 01. Identity less sure (Pinterest mixes members): Ian, Kim Jiwoo — user to check.
+- RULE (user, 2026-11-14): CHECK FOR A PERSONAL IG BEFORE USING PINTEREST — search Instagram itself, never assume.
+  Real = blue tick + millions of followers + followed by members/group (paid ticks with 40–160K and odd spelling are
+  fans). Group-IG photos (concept photos etc.) are allowed too. Checked: personal IG = Yeji @yezyizhere, Ryujin
+  @iamfinethankyouandryu, Ella @ellagross, Gawon @gawon, Umji @ummmmm_j.i (re-done from own IG, topped up to 10 with
+  the largest old Pinterest picks; old Pinterest sets in import/old-gallery/). No personal IG: NewJeans 4, NMIXX 4,
+  Hearts2Hearts 3, Iroha, Sasha. Group IGs are mostly reels/group shots and captions rarely name the member, so only
+  Haewon got 2 labelled (#HAEWON) group-IG photos (11–12). The tagging collector (localStorage.__igtag, __tag) reads the
+  caption too early — fix (wait for the caption to change) before relying on it.
+- ALL IDOLS pass (2026-11-14, user: "fan IG accounts are fine, do every idol"): import/gallery now has 240 of 282 idols
+  filled, 2,316 photos, 351 MB (mostly 10 each, Pinterest search "<name> <group>", picks by eye from the numbered grid).
+  42 STILL EMPTY (list in import/empty-galleries.txt): Pinterest has nothing or mixes members — A2O LITE (9), QWER (4,
+  the word "qwer" returns 0 pins), Loossemble (5), HEART OF WOMAN Ji Hyun/Liri/Liuyin, BILLIE Moon Sua/Siyoon/Suhyeon,
+  tripleS Kwak Yeonji/Lee Jiwoo/Mayu/Nien/Xinyu, MΛDEIN MiU/Serina, RESCENE Minami/Zena, and Handong, Jiana, Nana,
+  Pharita, Seunghee, Yeoreum, Yewon, Yihyun, Yoon Seeun, Yuha. Next for them: fan IG accounts (search IG by name).
+  Identity was judged from small thumbnails: some sets may hold a wrong member (flagged: Beni, Dami, Gahyeon, Haseul 4,
+  Kim Lip 5, Luda 5, Jieun 6, Jurin 5, Mia Hinano 2). The app stores orig + 3 sizes, so importing all may need ~1 GB of
+  browser storage (estimate, not measured).
+- FAN-IG pass (2026-11-14): +12 idols (QWER 4, A2O LITE Ayune/Himeki/Merci/Oa/Rada/Vora/Xili, Gowon) → 252/282 filled,
+  2,423 photos. 30 STILL EMPTY (import/empty-galleries.txt). Stopped: this session's context had become very costly;
+  the user agreed to continue in a NEW session. Recipe that works (Claude in Chrome, user logged in to IG):
+  1. https://www.instagram.com/explore/search/keyword/?q=<name>%20<group> ; read post links + caption from each grid
+     link's img.alt; keep posts whose caption names this member and no other member (avoids wrong people).
+  2. Navigate to each /p/<id>/ (6–7 posts); collect <img> with naturalWidth ≥ 1000 AND on-screen in the post area
+     (rect.top < 900, width > 250) — without that filter the "more posts" thumbnails below leak in; click
+     button[aria-label="Next"] up to 6× for carousels; keep the list in localStorage (window vars die on navigation).
+  3. Numbered overlay grid → one screenshot (scale 0.6) → pick by eye → fetch + <a download> "<Name GROUP> NN.jpg".
+  4. `node import/ig-tools/gallery.mjs` moves + resizes into import/gallery.
+  IG pages' CSP sometimes blocks new Function(), so inline the code. "Young" (A2O LITE) is too generic to search.
+  CHEAP MODE (user 2026-11-14): Tampermonkey userscript `import/ig-tools/sabung-ig.user.js` (the user installs it in
+  Chrome). Per idol: `__ig.start("hina","qwer",["chodan","magenta","siyeon"])` (other members' names exclude posts) →
+  it searches, visits up to 7 posts by itself and shows the grid (tab title "IG n ready"; `__ig.status()`) → one
+  screenshot at scale 0.4 → `await __ig.save("Hina QWER",[..6 picks..])` → `node import/ig-tools/gallery.mjs`.
+  Target now 6 photos per idol; gallery.mjs resizes to ≤800 px, quality 82 (earlier photos stay ≤1200 px).
+- Pinterest: the user allowed Automatic downloads for pinterest.com (2026-11-14). The collector text is kept in
+  pinterest.com localStorage.__pinjs → on a search page run `new Function(localStorage.__pinjs)(); await __pin(2)`,
+  screenshot (pins 0–5 are ads/featured boards, the grid shows from 6), `await __dlMany([..], "Name GROUP", from=1)`.
+- How (IG): inject the collector (window.__collect → sessionStorage.__all), screenshot the numbered grid, pick, then
+  reload and fetch the picks from sessionStorage with a 10 s timeout (fetching straight after the overlay froze the tab),
+  save as "<Name GROUP> NN.jpg"; then `node import/ig-tools/gallery.mjs` moves + resizes them into import/gallery.
+  Pinterest: window.__pin(2) collects i.pinimg.com pins (originals, fallback 736x); gallery.mjs also unpacks
+  "pack <Name GROUP>.json" (name → base64) if a page packs a set into one download.
+
+**Older task: better default photos via the user's own Chrome (Pinterest, or any site).**
+- 2026-11-14 progress: Claude in Chrome works (user logged in to IG). IVE 6/6 DONE from each member's own IG
+  (for_everyoung10, _yujin_an, fallingin__fall, reinyourheart, liz.yeyo, eeseooes) → import/ive-photos/ (old picks in
+  import/old-photos/ive/), sheet import/ive-sheet.jpg. Next: tripleS / TUIDE / A2O LITE (40) — most have no personal IG.
+- How: in the IG tab inject a small script (open the first ~6 posts in the modal, collect every <img> ≥1000 px wide,
+  show a numbered grid overlay, screenshot, pick), save the pick with a blob <a download>. Chrome saves into
+  Documents\SKRIPSII\sitasi dump (its last folder); move from there, resize with a sharp script (≤1200 px, optional top
+  crop). The user allowed Automatic downloads for instagram.com. Image URLs can't be read out (blocked) — not needed.
+  Both scripts are saved in import/ig-tools/ (git-ignored): ig.js = paste its text into javascript_tool on a profile page,
+  then `__collect(6,4)` → `__wait()` → screenshot → `__dl(n, "Name GROUP.jpg")`; if the grid is empty, the page had not
+  loaded yet — run `__collect` again. finish.mjs = `node finish.mjs <rawDir> <outDir> <sheet.jpg> [crops.json]`.
 - The user asked: the photos found so far are "kurang menarik"; search Pinterest / Instagram / X, pick the most popular
   and best-looking ones (good for "adu visual"). Rule: never kprofiles; face fully visible, no glasses, masks, hands or
   props over it; this is the default base photo only.
@@ -383,7 +494,7 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
   `/play/$comp` panels (`components/competition`: LeaguePanel, CupPanel, UnzurePanel, Tabs, …).
 - `/wiki/idols` Idol Database (`components/idolDatabase`) · `/studio/input` Input Data
   (`components/inputData`) · `/studio/inactive` (`components/inactiveManager`) · `/studio/settings`
-  (`components/settings`: Season, Branding, Roster, DataMaker, EngineTuning, Data + IntegrityList,
+  (`components/settings` in 6 views via ?s=: Season, Branding, Roster, DataMaker, EngineTuning, Data + IntegrityList,
   Backup, DangerZone) · shell in `components/shell` · `/dev/*` check pages (not in the menu).
 - packages/ui: IdolCard (trading card), IdolPhoto, RatingBadge (`TIER_FILL`), VirtualTable,
   PhotoDropZone, ColorSwatchPicker, Button (danger = outlined), Modal, ConfirmDialog (typeToConfirm),
@@ -459,3 +570,18 @@ page (React, apps/web/src/pages) ──Comlink──▶ Worker (apps/web/src/dat
 - `design/refs/overall vibe layout & ui.mp4` not reviewed.
 - A one-off E-DB-001 on an existing database after rapid reloads (unreproduced; a reload fixes it).
 - Reload with 2 seasons (10,530 matches, Playwright Chromium, dev server): the database is ready after ~6.6 s on EVERY page (season chip); the Fase 4 pages themselves then take ~0.1–0.8 s. CAUSE (measured): PGlite `opfs-ahp` opens one sync access handle per file on every open (1,043 Postgres files, mostly the empty system catalog, + 100 spare pool files) at ~5 ms each = ~5.5 s; lock 14 ms, migrations ~30 ms. It does not grow with matches (an empty database also takes 5.2 s). Option: PGlite `memfs2opfs` reopens in 1.2 s but keeps the whole database in memory (58 MB at 2 seasons) and needs the stored data converted. Tried a smaller pool (maintainedPoolSize 50): REVERTED. A new database refills its pool only to that size before the first migration, and 0000_init needs 57 new files: opfs-ahp then hangs with no error (worker e2e). A safe size (~70+) would save only ~0.15 s. Left as is; memfs2opfs is the only real fix (whole database in memory + data conversion), not done.
+- Gallery fill (cheap mode, 2026-11-14): Handong Dreamcatcher 5 photos done; Hyeju Loossemble skipped (grid mixed faces). Remaining 29 in import/empty-galleries.txt untouched. Note: `__ig` is only visible ~3 s after page load; `start()` navigates, so poll with short waits (<30 s) instead of one long await.
+- Also skipped 2026-11-14: Kim Hyunjin Loossemble (search returned a male group), Vivi Loossemble (only 3 uncertain selfies). Generic names need the user's fan-account handles.
+- 2026-11-14: Pharita BABYMONSTER 6 photos (stage shots, medium confidence); Yuha skipped (mixed). Grid can contain leftovers from the previous idol's collection - check.
+- 2026-11-14 Pinterest (cleaner than IG): Yuha, Zena, Yihyun 6 each (medium confidence, user should eyeball). Skipped as mixed/duo: Yewon, Yoon Seeun (duo shots), Moon Sua, Minami. Not tried: Yeojin, Siyoon, Nana, Jiana.
+- 2026-11-14 Pinterest pass: ALL listed idols got 6 photos (single-person picks, hair-colour matching, confidence medium/low; user checks by eye). Only Young A2O LITE still empty (no Pinterest results). Weakest identity: Ji Hyun, Hyeju, MiU, Yihyun, Mayu, Jiana.
+
+## Two-session workflow (user 2026-11-14)
+- Router + light work = a Sonnet session. Heavy work = an Opus (medium effort) session the USER starts by hand
+  (a Sonnet session cannot start a stronger model). User gives an update description to the router; router splits it.
+- Light (Sonnet): copy/text changes, styling tweaks, renames, small UI wiring, data fill/import, docs, running scripts/tests.
+- Heavy (Opus): new features/logic across files, simulation/rating maths, data model or save-format changes, hard bugs,
+  anything where a wrong guess is costly or needs critical thinking.
+- Router writes each heavy task as a brief (goal, files, done = what) and sends it with SendMessage to the Opus session id.
+- Sessions (confirmed by user 2026-11-14): "Sonnet lighter task" = local_86373881-67c0-4018-9c57-4002b60b48c6 (Sonnet, effort low);
+  "Opus Hard Task" = local_8baa338f-68d8-4d03-96bd-676a2b3f9085 (Opus, effort medium). If an id is not found, run list_sessions and match by title.

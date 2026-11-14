@@ -1,6 +1,6 @@
 // A league panel (PRD §8): pick the league (A–F), then Overview / Klasemen / Fixtures / Roster, with
 // play controls for the next matchday or the rest of the league.
-import { Button, IdolCard } from "@sabung/ui";
+import { Button, IdolCard, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
 import { useBranding } from "../../data/branding";
@@ -9,19 +9,22 @@ import { CompetitionLogo } from "../CompetitionLogo";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
+import { averageRating } from "./averageRating";
 import { CompetitionCover } from "./CompetitionCover";
 import { LeagueFixtures } from "./LeagueFixtures";
 import { LeagueStandings } from "./LeagueStandings";
 import { Tabs } from "./Tabs";
 
 
-// playoff: an extra tab after Roster (The Idols' double elimination playoff, Update 3)
-export function LeaguePanel({ codes, zoneKey, playoff }: { codes: string[]; zoneKey: string; playoff?: () => ReactNode }) {
+// playoff: an extra tab after Roster (The Idols' double elimination playoff, Update 3); actions: extra buttons
+// beside the play buttons (The Idols' Sync rating, Update 4), told whether a play is running.
+export function LeaguePanel({ codes, zoneKey, playoff, actions }: { codes: string[]; zoneKey: string; playoff?: () => ReactNode; actions?: (running: boolean) => ReactNode }) {
   const season = useCurrentSeason();
   const [comp, setComp] = useState(codes[0]!);
   const [matchId, setMatchId] = useState<string | null>(null);
   const { progress, running, play } = usePlaySeason();
   const { brand } = useBranding();
+  const idol = useIdolLookup();
   const { data: view } = useQuery({ queryKey: [...SEASON_QUERY, "league", comp, season?.status], queryFn: () => engine().leagueView(comp), enabled: season?.status === "live" });
   if (!season || season.status === "draft") return <p className="text-text-secondary">Mulai season di Sabung Idol untuk memainkan liga ini.</p>;
   if (!view) return <p className="text-text-secondary">Membaca liga…</p>;
@@ -45,20 +48,20 @@ export function LeaguePanel({ codes, zoneKey, playoff }: { codes: string[]; zone
         stats={[
           { label: "Matchday", value: `${playedMds}/38` },
           { label: "Poin pemimpin", value: leader?.points ?? 0 },
+          { label: "Rating rata-rata", value: averageRating(view.roster.flatMap((id) => idol(id)?.rating ?? [])) },
           { label: "Berikutnya", value: next ? `MD ${Number(next.slice(2))}` : "Selesai" },
         ]} />
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || !next} onClick={() => play({ kind: "round", comp, stage: "LG", round: next! })}>Main matchday berikutnya</Button>
         <Button disabled={running || !next} onClick={() => play({ kind: "stage", comp, stage: "LG" })}>Main sampai akhir liga</Button>
         {codes.length > 1 && <Button disabled={running} onClick={() => play({ kind: "comps", comps: codes })}>Simulate semua liga</Button>}
+        {actions?.(running)}
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
       </div>
       <Tabs label={`Panel ${comp}`} tabs={[
         { id: "overview", label: "Overview", content: () => (
           <ol className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0" aria-label="Lima teratas">
-            {view.standings.slice(0, 5).map((r, i) => (
-              <li key={r.idolId} className="relative"><span aria-hidden="true" className="absolute -top-3 -left-1 z-[1] font-gothic text-2xl text-accent-bright">{i + 1}</span><IdolCard idolId={r.idolId} /></li>
-            ))}
+            {view.standings.slice(0, 5).map((r) => <li key={r.idolId}><IdolCard idolId={r.idolId} /></li>)}
           </ol>
         ) },
         { id: "table", label: "Klasemen", content: () => <LeagueStandings zoneKey={zoneKey} rows={view.standings} form={view.form} positions={view.positions} /> },

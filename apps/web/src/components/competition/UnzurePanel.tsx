@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
-import { FinalPredictions } from "../play/FinalPredictions";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { useBranding } from "../../data/branding";
@@ -49,7 +48,6 @@ export function UnzurePanel() {
         {progress && <span role="status" className="text-sm text-text-secondary">Memainkan… {progress.done}</span>}
         {view.cells.length === 0 && <span className="text-sm text-text-secondary">Swiss dimulai setelah fase liga selesai.</span>}
       </div>
-      <FinalPredictions cells={view.cells} title={(c) => (c.round === "3RD" ? "Perebutan juara 3" : "Final Unzure Cup")} />
       <Tabs label="Unzure Cup" tabs={[
         { id: "swiss", label: "Swiss Play-in", content: () => (
           <div className="space-y-10">{swiss.map((s, g) => <div key={g}><h3 className="m-0 mb-3 font-display text-xl">Grup <span className="font-gothic text-3xl text-accent-bright">{LETTERS[g]}</span></h3><SwissPlayInBracket group={LETTERS[g]!} seededIds={s.ids} rounds={s.rounds} open={swissOpen(g)} /></div>)}</div>

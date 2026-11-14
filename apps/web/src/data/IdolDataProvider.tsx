@@ -26,20 +26,23 @@ export function IdolDataProvider({ children }: { children: ReactNode }) {
   const urls = usePhotoUrls((s) => s.urls);
   const source = useMemo<IdolSource>(() => {
     const byId = new Map(idols.map((i) => [i.id, i]));
-    return {
+    const source: IdolSource = {
       idol: (id) => {
         const i = byId.get(id);
-        return i && { id: i.id, name: i.name, groupName: i.groupName, groupColor: groupColour(i.groupId), rating: i.rating, active: i.active,
+        return i && { id: i.id, name: i.name, groupName: i.groupName, groupColor: groupColour(i.groupId), rating: i.rating, active: i.active, gallery: i.gallery,
           focal: i.focalX != null && i.focalY != null ? [i.focalX, i.focalY] as [number, number] : undefined };
       },
       photo: (id, size) => {
         const photoId = byId.get(id)?.photoId;
-        if (!photoId) return undefined;
+        return photoId ? source.galleryPhoto!(photoId, size) : undefined;
+      },
+      galleryPhoto: (photoId, size) => {
         const url = urls[`${photoId}:${size}`];
         if (!url) queueMicrotask(() => requestPhoto(photoId, size)); // not during render
         return url;
       },
     };
+    return source;
   }, [idols, urls]);
   return <IdolSourceProvider source={source}>{children}</IdolSourceProvider>;
 }

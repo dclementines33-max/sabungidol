@@ -1,6 +1,6 @@
 // Home's all-time numbers (Update 2): leaders per category and a pool of facts to pick from at random.
 // Pure: built from the cached career rows, head-to-head pairs and upsets.
-import type { CareerRow, PairRecord, Upset } from "@sabung/engine";
+import { type CareerRow, type PairRecord, type Upset, careerOrder } from "@sabung/engine";
 
 export type Leader = { label: string; idolId: string; value: string };
 export type Fact = { label: string; ids: string[]; value: string };
@@ -10,6 +10,10 @@ const MIN_MATCHES = 20; // highest win rate needs a real sample
 function best(rows: CareerRow[], score: (r: CareerRow) => number) {
   return rows.reduce<CareerRow | undefined>((top, r) => (score(r) > 0 && (!top || score(r) > score(top)) ? r : top), undefined);
 }
+
+// Home's top slot: #1 of Career Stats "Semua" in its default order (titles).
+export const allTimeTop = (rows: CareerRow[]): CareerRow | null =>
+  rows.filter((r) => r.comp === "ALL" && r.matches > 0).sort(careerOrder("titles"))[0] ?? null;
 
 export function homeLeaders(rows: CareerRow[]): Leader[] {
   const all = rows.filter((r) => r.comp === "ALL");

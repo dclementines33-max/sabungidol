@@ -34,13 +34,22 @@ describe("backup (PRD §12.3)", () => {
     expect(asFile(await readBackupTables(b, "full"))).toEqual(full);
   });
 
-  it("Merge matches idols by name + group, keeps what exists, adds what is new, skips an existing season", async () => {
-    await addIdols(b, [idol("mina", "AURORA", 80)]); // same idol, another id and rating
+  it("Merge matches idols by name + group, keeps what exists, adds what is new, skips an existing played season", async () => {
+    const { added: [mina] } = await addIdols(b, [idol("mina", "AURORA", 80)]); // same idol, another id and rating
     await createDraftSeason(b, { id: "S01", number: 1, name: "Season 1", seed: "t", leagues: {} });
+    await b.update(seasons).set({ status: "live" });
+    await saveMatches(b, "S01", [{ id: "S01-D1A-LG-MD01-M09", comp: "D1A", stage: "LG", round: "MD01", idolA: mina!, idolB: mina!, games: ["A", "A", "A"],
+      scoreA: 3, scoreB: 0, result: "A", ratingA: 80, ratingB: 80, formA: "Steady", formB: "Steady" }]);
     const result = await importBackup(b, asFile(await readBackupTables(a, "full")), "merge", false);
     expect(result.conflicts).toEqual(["Mina (Aurora): rating di sini 80, di backup 92 — tetap 80", "Season 1 sudah ada — dilewati (pakai Replace untuk menimpa)"]);
     expect((await listIdols(b)).map((i) => `${i.name}:${i.rating}`)).toEqual(["mina:80", "Yuna:84"]);
     expect(await leagueRosters(b, "S01")).toEqual({}); // the skipped season's rows were not added
+  });
+
+  it("Merge lets an unplayed draft (a new device's Season 1) make way for the backup's played season", async () => {
+    await createDraftSeason(b, { id: "S01", number: 1, name: "Season 1", seed: "t", leagues: {} });
+    await importBackup(b, asFile(await readBackupTables(a, "full")), "merge", false);
+    expect(await readBackupTables(b, "full").then((t) => t.matches?.length)).toBe(1);
   });
 
   it("a roster section finds this install's idols through their names", async () => {

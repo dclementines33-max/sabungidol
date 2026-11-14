@@ -21,6 +21,6 @@ test("GATE: 3 seasons in a row, no integrity errors, no duplicate matches", asyn
     await page.getByRole("dialog").getByRole("button", { name: "Start New Season" }).click();
     await expect(page.getByTestId("season-chip")).toHaveText(`Season ${n + 1} · Draft`, { timeout: 30_000 });
   }
-  await page.goto("/studio/settings");
+  await page.goto("/studio/settings?s=data");
   await expect(page.getByText("Tidak ada masalah.")).toBeVisible({ timeout: 60_000 });
 });

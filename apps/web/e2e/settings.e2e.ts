@@ -16,9 +16,12 @@ test("Settings A: season, branding, roster, Data Maker", async ({ page }) => {
   await page.getByRole("button", { name: "Simpan season" }).click();
   await expect(page.getByTestId("season-chip")).toHaveText("Musim Pertama · Draft");
 
+  await page.getByRole("navigation", { name: "Bagian settings" }).getByRole("link", { name: /^Branding/ }).click();
   await page.getByRole("radio", { name: "teal" }).first().check({ force: true }); // the native radio is visually hidden behind its swatch
   await page.getByRole("button", { name: "Simpan D1A" }).click();
   await expect(page.getByText(/Branding .* disimpan/)).toBeVisible();
+
+  await page.getByRole("navigation", { name: "Bagian settings" }).getByRole("link", { name: /^Liga & roster/ }).click();
 
   await expect(page.getByRole("button", { name: /D1A\s*20\/20 idol/ })).toBeVisible();
   await page.getByRole("button", { name: "Pratinjau pembagian ulang" }).click();
@@ -31,6 +34,7 @@ test("Settings A: season, branding, roster, Data Maker", async ({ page }) => {
   await expect(page.getByText("12 liga dibagi ulang")).toBeVisible();
 
   await page.reload(); // everything was saved
+  await page.getByRole("navigation", { name: "Bagian settings" }).getByRole("link", { name: /^Season & aturan/ }).click();
   await expect(page.getByRole("checkbox", { name: "Swiss Play-in" })).not.toBeChecked();
   await expect(page.getByRole("row", { name: /Unzure Cup/ }).getByRole("combobox", { name: /knockout/ })).toHaveValue("7");
 });

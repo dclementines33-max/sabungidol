@@ -28,6 +28,6 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await expect(page.getByRole("figure").filter({ hasText: "Top 3 season" })).toBeVisible();
   expect(await axe(page)).toEqual([]);
 
-  await page.goto("/studio/settings");
+  await page.goto("/studio/settings?s=data");
   await expect(page.getByText("Tidak ada masalah.")).toBeVisible({ timeout: 30_000 }); // no integrity errors
 });

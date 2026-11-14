@@ -1,7 +1,7 @@
 // Home and Dashboard reads in the Worker (PRD §8): the live season's state, reigning champions, the biggest
 // upset of this season, On This Day (the same matchday in earlier seasons), all-time leaders, facts, totals, last backup.
 import { type Db, countMatches, currentSeason, listGroups, listIdols, listSeasons, queryMatches } from "@sabung/db";
-import { homeFacts, homeLeaders } from "./homeFacts";
+import { allTimeTop, homeFacts, homeLeaders } from "./homeFacts";
 import { lastBackupAt } from "./backup/backupWorker";
 import { seasonOverview } from "./seasonRunner";
 import { champions, wikiStats } from "./wikiWorker";
@@ -23,6 +23,7 @@ export async function overview(db: Db) {
     lastUnzure: titles.find((t) => t.key === "UZC") ?? null,
     upset: stats.upsets.find((u) => u.season === season.number) ?? null,
     onThisDay: earlier.sort((x, y) => gap(y) - gap(x) || x.id.localeCompare(y.id)).slice(0, 6),
+    allTimeTop: allTimeTop(stats.rows),
     leaders: homeLeaders(stats.rows),
     facts: homeFacts(stats.rows, stats.pairs, stats.upsets),
     totals: { idols: (await listIdols(db)).length, groups: (await listGroups(db)).length, seasonsDone: (await listSeasons(db)).filter((s) => s.status === "archived").length },

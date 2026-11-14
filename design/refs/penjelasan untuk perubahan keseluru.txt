@@ -1,0 +1,17 @@
+penjelasan untuk perubahan keseluruhan tema, layout, interface desain web/apps ini
+
+
+pertama kesleiuruhan layout dan susunan nya boleh menggunakan referensi Editorial UI design, swiss punk UI, Spatial/Immersive UI, buatlah susunan layout yang experimental, unik dan ekegant, jangan terpaku dengan layout membosankan seperti yang sekarang.
+
+kedua, jangan menggunakan outline atau box, pada setiap layout asset dan komponen, jika memang perlu box, jangan gunakan outline, semua agar terlihat mahal dan elegan. Intinya sebisa mungkin janga ada garis garis outline, kalaupun untuk komponen design jangan box, garis saja boleh.
+
+
+Kemudian untuk warna gunakan yang ada sekarang namun pembagian nya lebih bebas, background tetap gelap, penggunaaan warna jangan membosankan, buat agar terlihat megah dan mewah.
+
+Jadi saya mau ada banyak visual, seperti foto atau grafik, jika  perlu asset foto boleh buatkan atau minta dengan saya, beri tau harus letakkan dimana foto - foto tersebut.
+
+Kemudian untuk elemen, icon, aset, dan ciri khas design, buatlah seperti tema grunge  atau gothic,  dan gunakan tekstur serta elemen desain tambahan
+
+kemudian untuk font sans serif yang jelas dan kuat. 
+
+semua ini berlaku untuk semua desain yang ada sekarang, mulai dari kartu idol, layout, etc dan semua yang akan dibuat kedepannya.

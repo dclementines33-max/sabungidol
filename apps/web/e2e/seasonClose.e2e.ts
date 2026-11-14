@@ -50,7 +50,7 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /^Draft: \d{2,} perubahan$/ })).toBeVisible({ timeout: 30_000 });
 
   // Fase 4 step 1: Rebuild Stats folds the archived Season 1 again (Season 2 is still running).
-  await page.goto("/studio/settings");
+  await page.goto("/studio/settings?s=data");
   await page.getByRole("button", { name: "Rebuild Stats" }).click();
   await expect(page.getByText("Statistik dibangun ulang dari 1 season")).toBeVisible({ timeout: 60_000 });
 });

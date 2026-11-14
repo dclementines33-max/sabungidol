@@ -14,7 +14,7 @@ const password = "gate-password-123";
 const settings = async (page: Page) => {
   await page.goto(`${CLOUD}/`);
   await expect(page.getByTestId("season-chip")).toHaveText(/· Draft/, { timeout: 150_000 });
-  await page.goto(`${CLOUD}/studio/settings`);
+  await page.goto(`${CLOUD}/studio/settings?s=backup`);
 };
 const login = async (page: Page, action: "Masuk" | "Daftar akun baru") => {
   await page.getByRole("textbox", { name: "Email" }).fill(email);

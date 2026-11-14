@@ -1,9 +1,9 @@
-// Home hero (PRD §8; redesign brief: editorial cover + swiss punk): the last Unzure Cup champion huge, the
-// word UNZURE as a giant outline behind the torn photo, an issue tag, a vertical label on the right.
+// Dashboard champion cover (moved from Home, 2026-11-15; redesign brief: editorial cover + swiss punk): the last Unzure Cup
+// champion huge, the word UNZURE as a giant outline behind the framed photo, an issue tag, a vertical label on the right.
 // Before any Unzure final: the season name alone on the same cover.
 import { IdolPhoto, useIdol } from "@sabung/ui";
 
-export function HomeHero({ seasonName, champion, championSeason }: { seasonName: string; champion: string | null; championSeason?: number }) {
+export function ChampionCover({ seasonName, champion, championSeason }: { seasonName: string; champion: string | null; championSeason?: number }) {
   return (
     <section aria-label="Sorotan" className="relative isolate min-h-[26rem] overflow-hidden rounded-card px-5 pt-5 sm:px-10 sm:pt-8"
       style={{ background: "radial-gradient(50rem 30rem at 75% 110%, rgb(255 77 99 / 0.35), transparent 65%), linear-gradient(120deg, var(--color-accent), var(--color-surface-hover) 45%, var(--color-bg-base))" }}>

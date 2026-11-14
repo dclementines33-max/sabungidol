@@ -106,6 +106,10 @@ export function foldSeason(previous: CareerState, season: number, matches: SimMa
 
 export type CareerRow = CareerLine & { idolId: string; comp: string; winRate: number; gameDiff: number; avgGames: number; avgPlacement: number | null };
 
+// Career Stats' ranking: the chosen column, then more matches, then idol id. Home's all-time #1 is the top of "titles".
+export const careerOrder = (sort: keyof CareerRow) => (a: CareerRow, b: CareerRow) =>
+  Number(b[sort]) - Number(a[sort]) || b.matches - a.matches || a.idolId.localeCompare(b.idolId);
+
 export function careerRows(state: CareerState): CareerRow[] {
   return Object.entries(state).map(([key, l]) => {
     const [idolId, comp] = key.split("|") as [string, string];

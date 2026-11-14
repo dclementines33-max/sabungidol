@@ -38,5 +38,5 @@ export function allTimeRecords(rows: CareerRow[], { minMatches = 50, include = (
   });
 }
 
-// Update 3: "T3" read as nonsense; a shared place says so in words.
-export const rankLabel = (e: RecordEntry) => `#${e.rank}${e.tied ? " bersama" : ""}`;
+// The place as a plain number (user: "T3" and "#3 bersama" both read badly); a shared place shows the same number twice.
+export const rankLabel = (e: RecordEntry) => String(e.rank);

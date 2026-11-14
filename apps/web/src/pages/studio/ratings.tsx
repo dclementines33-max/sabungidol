@@ -59,8 +59,8 @@ function RatingManager() {
     <div className="studio-flow space-y-8">
       <PageHeader tag="Rating Manager" title="Atur kekuatan setiap idol" note="Usulan rating untuk season berikutnya, preset, dan Engine Lab." />
       <section aria-labelledby="draft" className="studio-section space-y-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 id="draft" className="m-0 font-display">Draft: {diff.length} perubahan</h2>
+        <div className="flex flex-wrap items-end gap-3">
+          <h2 id="draft" className="m-0 flex-1 font-display">Draft: <span className={`font-gothic text-2xl ${diff.length ? "text-brand-gold" : "text-text-secondary"}`}>{diff.length}</span> perubahan</h2>
           <Button disabled={!steps.length} onClick={() => setConfirm("revert")}>Revert{steps.length ? ` (${steps.at(-1)!.label})` : ""}</Button>
           <Button disabled={!steps.length} onClick={() => setConfirm("discard")}>Discard</Button>
           <Button variant="primary" disabled={!diff.length} onClick={() => setConfirm("save")}>Save Now</Button>

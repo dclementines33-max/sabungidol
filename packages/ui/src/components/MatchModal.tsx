@@ -7,6 +7,7 @@ import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./Button";
 import { LiveMatchVisualizer } from "./LiveMatchVisualizer";
+import { MatchGallery } from "./MatchGallery";
 import { type HeadToHead, MatchHeader, type MatchTheme } from "./MatchHeader";
 import { Modal } from "./Modal";
 import { WheelPicker } from "./WheelPicker";
@@ -54,6 +55,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
 }) {
   const a = useIdol(idolA);
   const b = useIdol(idolB);
+  const hasGallery = !!(a.gallery?.length || b.gallery?.length);
   const [mode, setMode] = useState<Mode>("sim");
   const [games, setGames] = useState<Side[]>([]);
   const [typed, setTyped] = useState<[number, number]>([0, 0]);
@@ -80,7 +82,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      className="max-w-3xl"
+      className={hasGallery ? "max-w-3xl lg:max-w-6xl" : "max-w-3xl"}
       footer={
         <>
           <Button onClick={() => onOpenChange(false)}>Batal</Button>
@@ -90,7 +92,12 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
         </>
       }
     >
-      <MatchHeader idolA={idolA} idolB={idolB} bestOf={bestOf} h2h={h2h} theme={theme} />
+      {/* With a gallery: phones stack header, both strips, then the rest; wide screens put the strips left and right. */}
+      <div className={hasGallery ? "grid grid-cols-1 gap-x-6 gap-y-4 [grid-template-areas:'head'_'ga'_'gb'_'rest'] lg:grid-cols-[8rem_minmax(0,1fr)_8rem] lg:[grid-template-areas:'ga_head_gb'_'ga_rest_gb']" : undefined}>
+      {hasGallery && <div className="[grid-area:ga]"><MatchGallery idolId={idolA} side="A" /></div>}
+      <div className="[grid-area:head]"><MatchHeader idolA={idolA} idolB={idolB} bestOf={bestOf} h2h={h2h} theme={theme} /></div>
+      {hasGallery && <div className="[grid-area:gb]"><MatchGallery idolId={idolB} side="B" /></div>}
+      <div className="min-w-0 [grid-area:rest]">
       {facts.length > 0 && (
         <table className="mt-4 w-full text-sm tabular-nums">
           <tbody>
@@ -148,6 +155,8 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
             {outcome ? `${state.scoreA}–${state.scoreB} · ${outcome}` : mode === "manual" ? `Skor belum sah untuk Bo${bestOf}` : "Pilih skor"}
           </p>
         )}
+      </div>
+      </div>
       </div>
     </Modal>
   );

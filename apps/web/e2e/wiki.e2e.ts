@@ -158,8 +158,8 @@ test("Season Story: news cards linking to their matches", async () => {
   await page.goto("/story");
   const cards = page.getByRole("list", { name: "Berita season" }).getByRole("listitem");
   await expect(cards.first()).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText(/menumbangkan .+ meski selisih rating \d+/).first()).toBeVisible();
-  await expect(page.getByText(/^Idol of the Month$/)).toHaveCount(4);
+  await expect(page.getByText(/Tumbangkan .+ Meski Kalah Rating \d+ Poin/).first()).toBeVisible();
+  await expect(page.getByText(/^Bintang bulan ini$/)).toHaveCount(4);
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/season-story.png", fullPage: true });
   await page.getByRole("link", { name: /^Match S01-/ }).first().click();
@@ -193,6 +193,7 @@ test("Dashboard: fixed cards with the season's data", async () => {
   await page.goto("/dashboard");
   await expect(page.getByRole("region", { name: "Data" }).locator("dl").first()).toContainText("5.583", { timeout: 60_000 });
   await expect(page.getByRole("region", { name: "Progress kompetisi" })).toContainText("Selesai");
+  await expect(page.getByText(/^Juara Unzure Cup · Season 1$/)).toBeVisible(); // champion cover moved here from Home
   await expect(page.getByRole("table", { name: /^Klasemen / }).getByRole("row")).toHaveCount(21); // Update 2: D1 table + title race
   await expect(page.getByRole("img", { name: /^Title race / })).toBeVisible();
   await page.getByRole("button", { name: "D1F" }).click();
@@ -212,10 +213,12 @@ test("Season Progression: six title races, positions, progress, titles per group
   await page.screenshot({ path: "test-results/progression.png", fullPage: true });
 });
 
-test("Home: hero with the Unzure champion, action cards, backup line", async () => {
+test("Home: all-time #1, the current season, backup line", async () => {
   test.setTimeout(120_000);
   await page.goto("/");
-  await expect(page.getByText(/^Juara Unzure Cup · Season 1$/)).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("#1 sepanjang masa")).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("heading", { name: "Season 1" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Berita penting" }).getByRole("listitem")).toHaveCount(4); // top news, one per kind
   await expect(page.getByText("Lanjutkan season")).toBeVisible();
   await expect(page.getByText("100%")).toBeVisible();
   await expect(page.getByRole("heading", { name: "On This Day" })).toBeVisible();

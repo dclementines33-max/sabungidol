@@ -6,11 +6,11 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, DatabaseBackup, Image, Settings, Users } from "lucide-react";
 import type { ReactNode } from "react";
 
-const STEPS: { to: "/wiki/idols" | "/studio/input" | "/studio/settings"; icon: typeof Users; title: string; text: string }[] = [
+const STEPS: { to: "/wiki/idols" | "/studio/input" | "/studio/settings"; icon: typeof Users; title: string; text: string; backup?: true }[] = [
   { to: "/wiki/idols", icon: Users, title: "Periksa idol", text: "Lihat semua idol, rating dan liganya." },
   { to: "/studio/input", icon: Image, title: "Tambah idol & foto", text: "Paste daftar idol, atau seret foto yang lebih tajam." },
   { to: "/studio/settings", icon: Settings, title: "Atur season & liga", text: "Nama season, kompetisi, Best of N, roster dan branding." },
-  { to: "/studio/settings", icon: DatabaseBackup, title: "Restore dari backup", text: "Punya file .sabung? Impor di Settings → Backup." },
+  { to: "/studio/settings", icon: DatabaseBackup, title: "Restore dari backup", backup: true, text: "Punya file .sabung? Impor di Settings → Backup." },
 ];
 
 export function Welcome({ seasonName, idols, leagues, reserves }: { seasonName: string; idols: number; leagues: number; reserves: number }): ReactNode {
@@ -28,9 +28,9 @@ export function Welcome({ seasonName, idols, leagues, reserves }: { seasonName: 
         <StatTile label="Status" value="Draft" />
       </div>
       <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-2">
-        {STEPS.map(({ to, icon: Icon, title, text }) => (
+        {STEPS.map(({ to, icon: Icon, title, text, backup }) => (
           <li key={title}>
-            <Link to={to} className="group flex h-full items-start gap-4 panel bg-surface p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <Link to={to} search={backup ? { s: "backup" } : undefined} className="group flex h-full items-start gap-4 panel bg-surface p-4 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
               <Icon aria-hidden="true" size={24} strokeWidth={1.5} className="mt-0.5 shrink-0 text-accent-bright" />
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-lg">{title}</span>

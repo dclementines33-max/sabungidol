@@ -32,7 +32,7 @@ export async function checkIntegrity(db: Db): Promise<Issue[]> {
 
 // Photo records no idol uses (logos are kept: they are referenced from competitions.branding).
 export async function unusedPhotoIds(db: Db): Promise<string[]> {
-  const used = (await db.select({ id: idols.photoId }).from(idols)).flatMap((r) => (r.id ? [r.id] : []));
+  const used = (await db.select({ id: idols.photoId, gallery: idols.gallery }).from(idols)).flatMap((r) => [...(r.id ? [r.id] : []), ...r.gallery]);
   const logos = (await db.execute(sql`select branding->>'logoId' as id from competitions where branding->>'logoId' is not null`)).rows.map((r) => (r as { id: string }).id);
   const keep = [...used, ...logos];
   return (await db.select({ id: photos.id }).from(photos).where(keep.length ? notInArray(photos.id, keep) : undefined)).map((r) => r.id);

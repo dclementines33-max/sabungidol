@@ -61,13 +61,6 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/play/b-side");
-  // PRD §16 final prediction: play B-Side A up to its final, pick a winner, then play it; the Dashboard counts it.
-  for (const round of ["R1", "QF", "SF"]) {
-    await page.getByRole("button", { name: `Main ronde berikutnya (${round})` }).click();
-    await expect(page.getByRole("button", { name: /^Main ronde berikutnya \((QF|SF|F)\)$/ })).toBeVisible({ timeout: 30_000 });
-  }
-  await page.getByRole("group", { name: /^Tebakan / }).getByRole("button").first().click();
-  await expect(page.getByRole("group", { name: /^Tebakan / }).getByRole("button", { pressed: true })).toHaveCount(1);
   await page.getByRole("button", { name: "Main sampai selesai" }).click();
   await expect(page.getByText(/Juara B-Side Cup A/i)).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "BSC" }).click();
@@ -75,6 +68,4 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await expect(page.getByText(/Juara B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "Semua cup sampai selesai" }).click(); // U1: the other five B-Side cups at once
   await expect(page.getByText(/^\d+ match dimainkan$/).first()).toBeVisible({ timeout: 60_000 });
-  await page.goto("/dashboard");
-  await expect(page.getByRole("region", { name: "Akurasi tebakan final" })).toContainText("dari 1 tebakan benar", { timeout: 60_000 });
 });

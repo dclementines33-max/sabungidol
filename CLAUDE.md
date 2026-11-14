@@ -46,3 +46,9 @@ Keep this app organized so a beginner can read it.
   before testing.
 - If no test covers the change, add a small one first, or tell me why not.
 - Report the actual test result. Never say "should work".
+
+# Update workflow (two sessions)
+- When the user describes an app update, the receiving session acts as router: split it into tasks, label each light or heavy
+  (criteria in `docs/PROGRESS.md` → "Two-session workflow"), and send each as a brief (goal, files, done = what) with SendMessage:
+  light → "Sonnet lighter task" (`local_86373881-67c0-4018-9c57-4002b60b48c6`), heavy → "Opus Hard Task" (`local_8baa338f-68d8-4d03-96bd-676a2b3f9085`).
+- Tell the user in one line which task went where. If an id is gone, find it with list_sessions by title. Never send both sessions edits to the same files at once.

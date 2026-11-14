@@ -29,6 +29,10 @@ export async function forgetPhotos(db: Db, ids: string[]) {
   if (!ids.length) return;
   await db.transaction(async (tx) => {
     await tx.update(idols).set({ photoId: null }).where(inArray(idols.photoId, ids));
+    for (const row of await tx.select({ id: idols.id, gallery: idols.gallery }).from(idols)) { // and out of every gallery
+      const kept = row.gallery.filter((id) => !ids.includes(id));
+      if (kept.length !== row.gallery.length) await tx.update(idols).set({ gallery: kept }).where(eq(idols.id, row.id));
+    }
     await tx.delete(photos).where(inArray(photos.id, ids));
   });
 }

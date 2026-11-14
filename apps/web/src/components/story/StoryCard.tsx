@@ -1,14 +1,14 @@
 // One Season Story item (PRD §8: editorial news from templates, each linking to the real match — the pair's
 // Head to Head, whose match log holds it). Update 3: no full crimson blocks (too harsh); a newspaper look —
 // a coloured line and kicker per kind, the idol's framed photo, the lead story big.
-import type { DramaStory, Story as BaseStory } from "@sabung/engine";
+import type { AnyStory as Story } from "@sabung/engine";
 import { IdolPhoto, useIdolLookup } from "@sabung/ui";
 import { Link } from "@tanstack/react-router";
 import { useBranding } from "../../data/branding";
 
-type Story = BaseStory | DramaStory;
-const KICKER: Record<Story["kind"], string> = { "points-record": "Rekor pecah", "late-promotion": "Promosi dramatis", upset: "Upset", "reverse-sweep": "Reverse sweep", streak: "Streak", "first-title": "Juara pertama kali", "idol-of-month": "Idol of the Month" };
-const TONE: Record<Story["kind"], string> = { "points-record": "brand-gold", "first-title": "brand-gold", upset: "accent-bright", "reverse-sweep": "brand-violet", streak: "brand-teal", "late-promotion": "brand-lime", "idol-of-month": "brand-rose" };
+// Copy (user via router, 2026-11-15): news stays Indonesian, lively sports-media headlines, semi-formal.
+const KICKER: Record<Story["kind"], string> = { "points-record": "Rekor pecah", "late-promotion": "Promosi dramatis", upset: "Kejutan", "reverse-sweep": "Comeback", streak: "Tren positif", "first-title": "Juara baru", "idol-of-month": "Bintang bulan ini", rivalry: "Rivalitas", "multi-title": "Borong gelar", "title-milestone": "Tonggak sejarah", slump: "Krisis", unbeaten: "Tak terkalahkan" };
+const TONE: Record<Story["kind"], string> = { "points-record": "brand-gold", "first-title": "brand-gold", upset: "accent-bright", "reverse-sweep": "brand-violet", streak: "brand-teal", "late-promotion": "brand-lime", "idol-of-month": "brand-rose", rivalry: "brand-orchid", "multi-title": "brand-gold", "title-milestone": "brand-amber", slump: "brand-sky", unbeaten: "brand-gold" };
 const LINK = "text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary";
 
 export function StoryCard({ story, lead = false }: { story: Story; lead?: boolean }) {
@@ -16,14 +16,19 @@ export function StoryCard({ story, lead = false }: { story: Story; lead?: boolea
   const lookup = useIdolLookup();
   const name = (id: string) => lookup(id)?.name ?? id;
   const s = story;
-  const star = "winner" in s ? s.winner : s.idol;
-  const headline = s.kind === "upset" ? `${name(s.winner)} menumbangkan ${name(s.loser)} meski selisih rating ${s.gap}`
-    : s.kind === "reverse-sweep" ? `${name(s.winner)} bangkit dari ketinggalan dan menyapu ${name(s.loser)}`
-    : s.kind === "streak" ? `${name(s.idol)} menang ${s.wins} kali beruntun`
-    : s.kind === "first-title" ? `${name(s.idol)} juara ${label(s.title)} untuk pertama kali`
-    : s.kind === "points-record" ? `${name(s.idol)} memecahkan rekor poin liga: ${s.points} poin di ${label(s.league)} (rekor lama ${s.previous})`
-    : s.kind === "late-promotion" ? `${name(s.idol)} melesat dari peringkat ${s.from} ke ${s.to} dan naik dari ${label(s.league)}`
-    : `${name(s.idol)} jadi Idol of the Month (matchday ${s.from}–${s.to}, ${s.wins} kemenangan)`;
+  const star = "winner" in s ? s.winner : "idol" in s ? s.idol : s.a;
+  const headline = s.kind === "upset" ? `Kejutan Besar! ${name(s.winner)} Tumbangkan ${name(s.loser)} Meski Kalah Rating ${s.gap} Poin`
+    : s.kind === "reverse-sweep" ? `Bangkit dari Jurang, ${name(s.winner)} Balikkan Keadaan atas ${name(s.loser)}`
+    : s.kind === "streak" ? `${name(s.idol)} Tak Terbendung, Sapu ${s.wins} Kemenangan Beruntun`
+    : s.kind === "first-title" ? `Penantian Berakhir! ${name(s.idol)} Rebut Gelar ${label(s.title)} Perdananya`
+    : s.kind === "points-record" ? `Sejarah Tercipta: ${name(s.idol)} Kumpulkan ${s.points} Poin di ${label(s.league)}, Rekor ${s.previous} Tumbang`
+    : s.kind === "late-promotion" ? `Comeback Dramatis! ${name(s.idol)} Melesat dari Peringkat ${s.from} ke ${s.to} dan Promosi dari ${label(s.league)}`
+    : s.kind === "rivalry" ? `${name(s.a)} vs ${name(s.b)}: ${s.meetings} Duel Panas Musim Ini, Skor Sementara ${s.winsA}–${s.winsB}`
+    : s.kind === "multi-title" ? `${name(s.idol)} Berpesta Gelar! Borong ${s.titles.length} Trofi: ${s.titles.map(label).join(", ")}`
+    : s.kind === "title-milestone" ? `${name(s.idol)} Cetak Sejarah, Kini Koleksi ${s.total} Gelar Sepanjang Karier`
+    : s.kind === "slump" ? `Alarm Bahaya! ${name(s.idol)} (Rating ${s.rating}) Telan ${s.losses} Kekalahan Beruntun`
+    : s.kind === "unbeaten" ? `Tanpa Cela! ${name(s.idol)} Tak Tersentuh Kekalahan di ${label(s.league)}: ${s.wins} Menang, ${s.draws} Seri`
+    : `${name(s.idol)} Bersinar Paling Terang di Matchday ${s.from}–${s.to} dengan ${s.wins} Kemenangan`;
   const tone = `var(--color-${TONE[s.kind]})`;
   return (
     <article className={`flex w-full gap-4 border-t-2 pt-3 ${lead ? "flex-col sm:flex-row sm:items-end" : ""}`} style={{ borderColor: tone }}>
@@ -34,8 +39,9 @@ export function StoryCard({ story, lead = false }: { story: Story; lead?: boolea
         <div>
           {"matchId" in s && "loser" in s && <Link to="/wiki/h2h" search={{ a: s.winner, b: s.loser }} className={LINK}>Match {s.matchId}</Link>}
           {s.kind === "streak" && <Link to="/wiki/idols/$id" params={{ id: s.idol }} className={LINK}>Sampai {s.matchId}</Link>}
+          {s.kind === "rivalry" && <Link to="/wiki/h2h" search={{ a: s.a, b: s.b }} className={LINK}>Head to Head</Link>}
           {s.kind === "first-title" && <Link to="/wiki/champions" className={LINK}>Hall of Champions</Link>}
-          {(s.kind === "points-record" || s.kind === "late-promotion" || s.kind === "idol-of-month") && <Link to="/wiki/idols/$id" params={{ id: s.idol }} className={LINK}>Profil</Link>}
+          {(s.kind === "points-record" || s.kind === "late-promotion" || s.kind === "idol-of-month" || s.kind === "multi-title" || s.kind === "title-milestone" || s.kind === "slump" || s.kind === "unbeaten") && <Link to="/wiki/idols/$id" params={{ id: s.idol }} className={LINK}>Profil</Link>}
         </div>
       </div>
     </article>

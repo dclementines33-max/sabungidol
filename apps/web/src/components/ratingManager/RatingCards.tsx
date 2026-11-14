@@ -5,6 +5,7 @@ import { Button } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
+import { Select } from "../idolDatabase/IdolFilters";
 import { TierStrip } from "../TierStrip";
 import { RatingCard } from "./RatingCard";
 
@@ -18,6 +19,7 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
   onChange: (changes: Map<string, number>, label: string) => void;
 }) {
   const [scope, setScope] = useState("active");
+  const [group, setGroup] = useState("");
   const [query, setQuery] = useState("");
   const [order, setOrder] = useState<keyof typeof ORDERS>("rating");
   const [selected, setSelected] = useState(new Set<string>());
@@ -25,6 +27,7 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
   const [limit, setLimit] = useState(24); // 240 cards at once buried the Engine Lab
   const { data: career = [] } = useQuery({ queryKey: ["career-table", "ALL"], queryFn: () => engine().careerTable("ALL"), staleTime: 0, enabled: typeof Worker !== "undefined" });
   const lineOf = new Map(career.map((r) => [r.idolId, r]));
+  const groups = [...new Map(idols.flatMap((i) => (i.groupId ? [[i.groupId, i.groupName!] as [string, string]] : []))).entries()].sort((a, b) => a[1].localeCompare(b[1]));
   const leagues = [...new Set(leagueOf.values())].sort();
   const value = (i: IdolRow) => draft.get(i.id) ?? i.rating;
   const sorters: Record<keyof typeof ORDERS, (a: IdolRow, b: IdolRow) => number> = {
@@ -33,6 +36,7 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
   };
   const rows = idols.filter((i) =>
     (scope === "all" || (scope === "active" ? i.active : leagueOf.get(i.id) === scope)) &&
+    (group === "" || (group === "solo" ? !i.groupId : i.groupId === group)) &&
     `${i.name} ${i.groupName ?? ""}`.toLowerCase().includes(query.toLowerCase())).sort(sorters[order]);
   const bulk = (fn: (i: IdolRow) => number, label: string) =>
     onChange(new Map(rows.filter((i) => selected.has(i.id)).map((i) => [i.id, Math.max(1, Math.min(100, fn(i)))])), label);
@@ -45,17 +49,9 @@ export function RatingCards({ idols, leagueOf, draft, onChange }: {
         <label className="text-sm text-text-secondary">Cari
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Nama idol atau girl group" className={`${input} mt-1 block w-56`} />
         </label>
-        <label className="text-sm text-text-secondary">Scope
-          <select value={scope} onChange={(e) => setScope(e.target.value)} className={`${input} mt-1 block w-40`}>
-            <option value="active">Idol aktif</option><option value="all">Semua idol</option>
-            {leagues.map((l) => <option key={l} value={l}>Liga {l}</option>)}
-          </select>
-        </label>
-        <label className="text-sm text-text-secondary">Urutan
-          <select value={order} onChange={(e) => setOrder(e.target.value as keyof typeof ORDERS)} className={`${input} mt-1 block w-40`}>
-            {Object.entries(ORDERS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-          </select>
-        </label>
+        <Select label="Scope" value={scope} onChange={setScope} options={[["active", "Idol aktif"], ["all", "Semua idol"], ...leagues.map((l): [string, string] => [l, `Liga ${l}`])]} />
+        <Select label="Group" value={group} onChange={setGroup} options={[["", "Semua"], ...groups, ["solo", "Soloist"]]} />
+        <Select label="Urutan" value={order} onChange={(v) => setOrder(v as keyof typeof ORDERS)} options={Object.entries(ORDERS)} />
         <Button onClick={() => setSelected(new Set(rows.map((i) => i.id)))}>Pilih semua ({rows.length})</Button>
         <Button disabled={!selected.size} onClick={() => setSelected(new Set())}>Kosongkan pilihan</Button>
       </div>

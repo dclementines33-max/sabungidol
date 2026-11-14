@@ -4,6 +4,7 @@
 // The preview is the real import in a transaction that is then rolled back, so it never lies.
 import { and, eq, sql } from "drizzle-orm";
 import { type BackupTables, TABLE_ORDER, type TableName } from "./backupRead";
+import { applySetup, upsertIdols } from "./backupSetup";
 import type { Db, Tx } from "./openDb";
 import { achievements, competitions, entries, groups, idols, matches, photos, placements, ratingHistory, seasons, statsCache } from "./schema";
 
@@ -22,7 +23,7 @@ export async function importBackup(db: Db, tables: BackupTables, mode: ImportMod
   let result!: ImportResult;
   try {
     await db.transaction(async (tx) => {
-      result = await (tables.rating_history && tables.idols && !tables.groups ? ratings(tx, tables, mode) : mode === "replace" ? replace(tx, tables) : merge(tx, tables));
+      result = await importShape(tx, tables, mode);
       await tx.delete(statsCache); // a cache: always rebuilt
       if (dryRun) throw DRY_RUN;
     });
@@ -30,6 +31,30 @@ export async function importBackup(db: Db, tables: BackupTables, mode: ImportMod
     if (error !== DRY_RUN) throw error;
   }
   return result;
+}
+
+// What a backup holds decides how it goes in (the sections of backupRead.ts SECTION_TABLES).
+async function importShape(tx: Tx, tables: BackupTables, mode: ImportMode): Promise<ImportResult> {
+  const result: ImportResult = { added: 0, replaced: 0, conflicts: [], unknown: [] };
+  if (tables.rating_history && tables.idols && !tables.groups) return ratings(tx, tables, mode);
+  if (tables.groups && !tables.seasons) { await upsertIdols(tx, tables, mode === "replace", result); return result; } // idols: never deleted
+  if (tables.seasons && !tables.matches) { // base (with idols) or roster (without): the setup of a season, never a played one
+    const idolMap = await upsertIdols(tx, tables, mode === "replace", result);
+    await applySetup(tx, tables, idolMap, mode === "replace" && !!tables.groups, result);
+    return result;
+  }
+  if (!tables.groups && mode === "replace") { // one season: it goes, then comes back with this database's idol ids
+    for (const s of tables.seasons ?? []) result.replaced += await deleteSeason(tx, s.id as string);
+    const merged = await merge(tx, tables);
+    return { ...merged, replaced: result.replaced };
+  }
+  return mode === "replace" ? replace(tx, tables) : merge(tx, tables); // full
+}
+
+async function deleteSeason(tx: Tx, seasonId: string): Promise<number> {
+  let n = 0;
+  for (const table of [achievements, placements, ratingHistory, matches, entries, competitions]) n += (await tx.delete(table).where(eq(table.seasonId, seasonId)).returning()).length;
+  return n + (await tx.delete(seasons).where(eq(seasons.id, seasonId)).returning()).length;
 }
 
 async function replace(tx: Tx, tables: BackupTables): Promise<ImportResult> {
@@ -51,36 +76,14 @@ async function replace(tx: Tx, tables: BackupTables): Promise<ImportResult> {
 
 async function merge(tx: Tx, tables: BackupTables): Promise<ImportResult> {
   const result: ImportResult = { added: 0, replaced: 0, conflicts: [], unknown: [] };
-  const groupName = new Map((tables.groups ?? []).map((g) => [g.id, g.name]));
-  const existingGroups = new Map((await tx.select().from(groups)).map((g) => [g.name.toLowerCase(), g.id]));
-  const groupMap = new Map<unknown, string>();
-  for (const g of tables.groups ?? []) {
-    const found = existingGroups.get(String(g.name).toLowerCase());
-    if (!found) result.added += (await tx.insert(groups).values(g as never).returning()).length;
-    groupMap.set(g.id, found ?? (g.id as string));
-  }
-  for (const p of tables.photos ?? []) result.added += (await tx.insert(photos).values(p as never).onConflictDoNothing().returning()).length;
+  const idolMap = await upsertIdols(tx, tables, false, result);
 
-  const existing = await tx.select({ id: idols.id, name: idols.name, rating: idols.rating, group: groups.name }).from(idols).leftJoin(groups, eq(idols.groupId, groups.id));
-  const byKey = new Map(existing.map((i) => [key(i.name, i.group), i]));
-  const idolMap = new Map<unknown, string>();
-  for (const i of tables.idols ?? []) {
-    const group = i.groupId ? groupName.get(i.groupId) : null;
-    const found = byKey.get(key(i.name, group));
-    if (found) {
-      if (found.rating !== i.rating) result.conflicts.push(`${i.name} (${group ?? "Soloist"}): rating di sini ${found.rating}, di backup ${i.rating} — tetap ${found.rating}`);
-      idolMap.set(i.id, found.id);
-    } else {
-      result.added += (await tx.insert(idols).values({ ...i, groupId: i.groupId ? groupMap.get(i.groupId) : null } as never).returning()).length;
-      idolMap.set(i.id, i.id as string);
-    }
+  // A draft nobody played yet (a new device's Season 1) makes way for played seasons from the backup.
+  const newest = Math.max(0, ...(tables.seasons ?? []).map((s) => s.number as number));
+  for (const s of await tx.select({ id: seasons.id, number: seasons.number, status: seasons.status }).from(seasons)) {
+    const [played] = await tx.select({ n: sql<number>`count(*)::int` }).from(matches).where(eq(matches.seasonId, s.id));
+    if (tables.matches && s.status === "draft" && played!.n === 0 && s.number <= newest) result.replaced += await deleteSeason(tx, s.id);
   }
-  for (const k of tables.idol_keys ?? []) { // sections without idols say who their ids are
-    if (idolMap.has(k.id)) continue;
-    const found = byKey.get(key(k.name, k.groupName));
-    if (found) idolMap.set(k.id, found.id);
-  }
-
   const takenSeasons = await tx.select({ id: seasons.id, number: seasons.number }).from(seasons);
   const skipped = new Set<unknown>();
   for (const s of tables.seasons ?? []) {

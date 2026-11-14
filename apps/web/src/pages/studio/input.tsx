@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { AddIdols } from "../../components/inputData/AddIdols";
+import { GalleryImport } from "../../components/inputData/GalleryImport";
 import { IdolActions } from "../../components/inputData/IdolActions";
 import { IdolDetailsImport } from "../../components/inputData/IdolDetailsImport";
 import { PhotoImport } from "../../components/inputData/PhotoImport";
@@ -19,6 +20,7 @@ function InputData() {
       <PageHeader tag="Input Data" title="Tambah dan rapikan idol" note="Tambah idol satu per satu atau sekaligus, unggah foto, lalu edit atau hapus." />
       <AddIdols idols={idols} />
       <PhotoImport idols={idols} />
+      <GalleryImport idols={idols} />
       <IdolDetailsImport />
       <IdolActions idols={idols} />
     </div>

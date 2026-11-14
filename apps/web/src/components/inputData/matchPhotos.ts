@@ -21,20 +21,23 @@ function similarity(a: string, b: string): number {
 }
 
 export function matchPhotos(files: File[], idols: Idol[]): PhotoMatch[] {
-  return files.map((file) => {
-    const wanted = norm(baseName(file.name));
-    let best: { id: string; score: number; sure: boolean } | null = null;
-    for (const idol of idols) {
-      const name = norm(idol.name);
-      const group = norm(idol.groupName ?? "");
-      // The name alone, or name + group in either order (to tell two idols with one name apart).
-      const exactWithGroup = !!group && (wanted === name + group || wanted === group + name);
-      const score = exactWithGroup ? 2 : wanted === name ? 1.5 : Math.max(similarity(wanted, name), group ? similarity(wanted, name + group) : 0);
-      if (!best || score > best.score) best = { id: idol.id, score, sure: exactWithGroup || wanted === name };
-    }
-    // An exact name shared by two groups is not sure: the user picks.
-    const sameName = idols.filter((i) => norm(i.name) === wanted).length;
-    if (!best || best.score < MIN_SCORE) return { file, idolId: null, sure: false };
-    return { file, idolId: best.id, sure: best.sure && (best.score === 2 || sameName === 1) };
-  });
+  return files.map((file) => ({ file, ...matchName(baseName(file.name), idols) }));
+}
+
+// One text (a file name without extension, or a gallery folder name) against every idol.
+export function matchName(text: string, idols: Idol[]): { idolId: string | null; sure: boolean } {
+  const wanted = norm(text);
+  let best: { id: string; score: number; sure: boolean } | null = null;
+  for (const idol of idols) {
+    const name = norm(idol.name);
+    const group = norm(idol.groupName ?? "");
+    // The name alone, or name + group in either order (to tell two idols with one name apart).
+    const exactWithGroup = !!group && (wanted === name + group || wanted === group + name);
+    const score = exactWithGroup ? 2 : wanted === name ? 1.5 : Math.max(similarity(wanted, name), group ? similarity(wanted, name + group) : 0);
+    if (!best || score > best.score) best = { id: idol.id, score, sure: exactWithGroup || wanted === name };
+  }
+  // An exact name shared by two groups is not sure: the user picks.
+  const sameName = idols.filter((i) => norm(i.name) === wanted).length;
+  if (!best || best.score < MIN_SCORE) return { idolId: null, sure: false };
+  return { idolId: best.id, sure: best.sure && (best.score === 2 || sameName === 1) };
 }

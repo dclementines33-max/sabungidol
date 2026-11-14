@@ -7,7 +7,7 @@ import { strFromU8, unzipSync } from "fflate";
 const ready = async (page: Page) => {
   await page.goto("/");
   await expect(page.getByTestId("season-chip")).toHaveText(/Season 1 · Draft|Musim Backup · Draft/, { timeout: 150_000 });
-  await page.goto("/studio/settings");
+  await page.goto("/studio/settings?s=backup");
 };
 const fullBackup = async (page: Page) => {
   await page.getByRole("combobox", { name: "Bagian" }).selectOption("full");
@@ -23,8 +23,11 @@ test("full backup → restore in another browser → identical checksums", async
   test.setTimeout(300_000);
   const a = await (await browser.newContext()).newPage();
   await ready(a);
+  await a.getByRole("link", { name: /^Season & aturan/ }).click();
   await a.getByRole("textbox", { name: "Nama season" }).fill("Musim Backup"); // something of our own
   await a.getByRole("button", { name: "Simpan season" }).click();
+  await expect(a.getByTestId("season-chip")).toHaveText("Musim Backup · Draft");
+  await a.getByRole("link", { name: /^Backup/ }).click();
   const fromA = await fullBackup(a);
   const original = manifestOf(fromA);
   expect(original.manifest.tables.idols.rows).toBe(242);

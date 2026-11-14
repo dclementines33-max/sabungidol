@@ -31,3 +31,5 @@ export * from "./components/KahootPodium";
 export * from "./components/VirtualTable";
 export * from "./components/PhotoDropZone";
 export * from "./components/ColorSwatchPicker";
+export * from "./components/MatchGallery";
+export * from "./components/PhotoLightbox";

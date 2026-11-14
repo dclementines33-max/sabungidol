@@ -16,11 +16,13 @@ export type IdolInfo = {
   titles?: number;
   focal?: [number, number]; // photo focal point 0–1 (PRD §10.3); centre when absent
   active?: boolean; // false = inactive (PRD §15: shown with a badge in the Idol Database)
+  gallery?: string[]; // extra photo ids, shown beside the MatchModal
 };
 
 export type IdolSource = {
   idol: (id: string) => IdolInfo | undefined;
   photo: (id: string, size: PhotoSize) => string | undefined; // a cached object URL
+  galleryPhoto?: (photoId: string, size: PhotoSize) => string | undefined; // a gallery photo by its own id
 };
 
 const Context = createContext<IdolSource | null>(null);
@@ -48,4 +50,8 @@ export function useIdolLookup(): IdolSource["idol"] {
 
 export function useIdolPhoto(id: string, size: PhotoSize): string | undefined {
   return useSource().photo(id, size);
+}
+
+export function useGalleryPhoto(photoId: string, size: PhotoSize): string | undefined {
+  return useSource().galleryPhoto?.(photoId, size);
 }

@@ -22,6 +22,13 @@
       "when": 1794608372202,
       "tag": "0002_idol_role",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794637511477,
+      "tag": "0003_idol_gallery",
+      "breakpoints": true
     }
   ]
 }
