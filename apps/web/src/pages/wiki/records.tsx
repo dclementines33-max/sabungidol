@@ -5,6 +5,7 @@ import { useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { LEAGUE_ARENAS } from "../../components/competition/arenaTheme";
 import { Select } from "../../components/idolDatabase/IdolFilters";
 import { RecordCard, type RecordRow } from "../../components/records/RecordCard";
 import { IdolLink } from "../../components/wiki/IdolLink";
@@ -22,13 +23,17 @@ function AllTimeRecords() {
   const q = search.trim().toLowerCase();
   const hit = (...ids: string[]) => !q || ids.some((id) => lookup(id)?.name.toLowerCase().includes(q));
   const cards: { title: string; rows: RecordRow[] }[] = [
+    {
+      title: "Idol of the Season",
+      rows: data.idolOfSeason.filter((s) => hit(s.idolId)).map((s) => ({ key: s.idolId, idolId: s.idolId, rank: rankLabel(s), who: <><IdolLink id={s.idolId} /> <span className="text-text-secondary">{s.seasons.map((n) => `S${n}`).join(" · ")}</span></>, value: `${s.value}×` })),
+    },
     ...data.categories.map((c) => ({
       title: c.label,
-      rows: c.entries.filter((e) => hit(e.idolId)).map((e) => ({ key: e.idolId, rank: rankLabel(e), who: <IdolLink id={e.idolId} />, value: c.kind === "percent" ? `${(e.value * 100).toFixed(1)}%` : String(e.value) })),
+      rows: c.entries.filter((e) => hit(e.idolId)).map((e) => ({ key: e.idolId, idolId: e.idolId, rank: rankLabel(e), who: <IdolLink id={e.idolId} />, value: c.kind === "percent" ? `${(e.value * 100).toFixed(1)}%` : String(e.value) })),
     })),
     {
       title: "Biggest upset (rating gap)",
-      rows: data.upsets.filter((u) => hit(u.winner, u.loser)).map((u) => ({ key: u.matchId, rank: rankLabel(u), who: <><IdolLink id={u.winner} /> <span className="text-text-secondary">vs</span> <IdolLink id={u.loser} /> <span className="text-text-secondary">S{u.season}</span></>, value: `+${u.value}` })),
+      rows: data.upsets.filter((u) => hit(u.winner, u.loser)).map((u) => ({ key: u.matchId, idolId: u.winner, rank: rankLabel(u), who: <><IdolLink id={u.winner} /> <span className="text-text-secondary">vs</span> <IdolLink id={u.loser} /> <span className="text-text-secondary">S{u.season}</span></>, value: `+${u.value}` })),
     },
     {
       title: "Most H2H meetings",
@@ -49,7 +54,7 @@ function AllTimeRecords() {
         <Select label="Minimum matches (% records)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {cards.map((c) => <RecordCard key={c.title} title={c.title} rows={c.rows} />)}
+        {cards.map((c, i) => <RecordCard key={c.title} title={c.title} rows={c.rows} arena={LEAGUE_ARENAS[i % 6]!.arena} />)}
       </div>
     </div>
   );

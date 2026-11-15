@@ -2,6 +2,7 @@
 // sliced per page here, so a page receives only what it shows (not 30,000 head-to-head pairs).
 import { type Db, type MatchFilter, countMatches, countMatchesWhere, listAchievements, listPlacements, listRatingHistory, listSeasons, queryMatches } from "@sabung/db";
 import { type PairRecord, allTimeRecords, rankRecords } from "@sabung/engine";
+import { seasonArchive } from "./archiveWorker";
 import { careerStats } from "./careerWorker";
 
 type Stats = Awaited<ReturnType<typeof careerStats>>;
@@ -93,5 +94,26 @@ export async function records(db: Db, minMatches: number) {
   const upsets = rankRecords(stats.upsets.map((u) => ({ idolId: u.matchId, value: u.gap, matches: 0 })), "total")
     .map((e) => ({ ...e, ...stats.upsets.find((u) => u.matchId === e.idolId)! }));
   const meetings = rankRecords(Object.entries(stats.pairs).map(([key, p]) => ({ idolId: key, value: p.meetings, matches: 0 })), "total").slice(0, 100);
-  return { categories: allTimeRecords(stats.rows, { minMatches }), upsets, meetings };
+  const sotsRaw = await idolOfSeason(db);
+  const sots = rankRecords(sotsRaw.map((r) => ({ idolId: r.idolId, value: r.value, matches: 0 })), "total")
+    .map((e) => ({ ...e, seasons: sotsRaw.find((r) => r.idolId === e.idolId)!.seasons }));
+  return { categories: allTimeRecords(stats.rows, { minMatches }), upsets, meetings, idolOfSeason: sots };
+}
+
+// Idol of the Season: who finished #1 of the Season Honours podium most often (same seasonTop as the archive), with the seasons.
+let sotsMemo: { key: string; rows: Promise<{ idolId: string; value: number; seasons: number[] }[]> } | undefined;
+export async function idolOfSeason(db: Db) {
+  const seasons = (await listSeasons(db)).filter((s) => s.status !== "draft");
+  const key = `${await countMatches(db)}|${seasons.map((s) => s.status).join()}`;
+  if (sotsMemo?.key !== key) {
+    sotsMemo = { key, rows: (async () => {
+      const wins = new Map<string, number[]>();
+      for (const s of seasons) {
+        const top = (await seasonArchive(db, s.id).catch(() => null)) as { done?: boolean; seasonTop?: string[] } | null;
+        if (top?.done && top.seasonTop?.[0]) wins.set(top.seasonTop[0], [...(wins.get(top.seasonTop[0]) ?? []), s.number]);
+      }
+      return [...wins].map(([idolId, ns]) => ({ idolId, value: ns.length, seasons: ns.sort((a, b) => a - b) }));
+    })() };
+  }
+  return sotsMemo.rows;
 }
