@@ -26,6 +26,7 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await expect(page.getByText(/Season complete!/)).toBeVisible({ timeout: 150_000 });
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
   await expect(page.getByRole("figure").filter({ hasText: "Season top 3" })).toBeVisible();
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => null)))); // honours cards arrive one by one; axe must not sample them mid-fade
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/studio/settings?s=data");
