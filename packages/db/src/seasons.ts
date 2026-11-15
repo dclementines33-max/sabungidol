@@ -1,5 +1,6 @@
 // Seasons and their league rosters (PRD §12.1: seasons + entries). A new season starts as a draft
 // with its 12 league rosters saved in one transaction.
+import { readSeasonConfig } from "@sabung/shared";
 import { and, asc, desc, eq } from "drizzle-orm";
 import type { Db, Tx } from "./openDb";
 import { achievements, competitions, entries, idols, matches, placements, ratingHistory, seasons, statsCache } from "./schema";
@@ -45,8 +46,9 @@ export async function replaceInRoster(db: Db | Tx, seasonId: string, outId: stri
 }
 
 // Settings → Season: name and config (competitions on/off, BoN per stage).
+// The config is repaired before it is stored (out-of-range values clamped, junk dropped), whoever writes it.
 export async function updateSeason(db: Db, id: string, change: { name?: string; config?: unknown }) {
-  await db.update(seasons).set(change).where(eq(seasons.id, id));
+  await db.update(seasons).set(change.config === undefined ? change : { ...change, config: readSeasonConfig(change.config) }).where(eq(seasons.id, id));
 }
 
 // Settings → Roster liga / Data Maker: replaces the rosters of the given leagues, in one go.

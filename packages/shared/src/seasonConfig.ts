@@ -35,7 +35,32 @@ export const seasonConfigSchema = z.object({
   opener: openerSchema.optional(),
 });
 export type SeasonConfig = z.infer<typeof seasonConfigSchema>;
-export const readSeasonConfig = (raw: unknown): SeasonConfig => seasonConfigSchema.parse(raw ?? {});
+
+// Engine Tuning's safe range (the schema's bounds); clampTuning keeps any value inside it, junk → the PRD default.
+export const TUNING_LIMITS = { scale: [10, 100], sigma: [0, 15] } as const;
+const clampNumber = (x: unknown, [lo, hi]: readonly [number, number], fallback: number) =>
+  typeof x === "number" && Number.isFinite(x) ? Math.min(hi, Math.max(lo, x)) : fallback;
+export function clampTuning(raw: unknown): SeasonConfig["tuning"] {
+  const t = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  return { scale: clampNumber(t.scale, TUNING_LIMITS.scale, 40), sigma: clampNumber(t.sigma, TUNING_LIMITS.sigma, 4) };
+}
+
+// A saved config must never brick a page (2026-11-16: an Engine Tuning of 100000 made this throw everywhere, Settings
+// would not open). Valid → as is; otherwise every field is repaired on its own and the rest is kept.
+export function readSeasonConfig(raw: unknown): SeasonConfig {
+  const ok = seasonConfigSchema.safeParse(raw ?? {});
+  if (ok.success) return ok.data;
+  const o = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const keys = new Set<string>(SEASON_COMPETITIONS.map((c) => c.key));
+  const bestOfs = o.bestOf && typeof o.bestOf === "object" ? Object.entries(o.bestOf).filter(([, v]) => BEST_OF_CHOICES.includes(v as BestOf)) : [];
+  const opener = openerSchema.safeParse(o.opener);
+  return seasonConfigSchema.parse({
+    off: Array.isArray(o.off) ? o.off.filter((k): k is string => typeof k === "string" && keys.has(k)) : [],
+    bestOf: Object.fromEntries(bestOfs),
+    tuning: clampTuning(o.tuning),
+    opener: opener.success ? opener.data : undefined,
+  });
+}
 
 // The BoN a stage plays with: the season's choice, else the PRD default.
 export function bestOfFor(config: SeasonConfig, key: CompetitionKey, stage: StageCode): BestOf {

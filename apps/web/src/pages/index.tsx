@@ -9,6 +9,7 @@ import { HomeFact } from "../components/home/HomeFact";
 import { HomeLeaders } from "../components/home/HomeLeaders";
 import { HomeNumbers } from "../components/home/HomeNumbers";
 import { HomeSeason } from "../components/home/HomeSeason";
+import { SectionBoundary } from "../components/SectionBoundary";
 import { OnThisDay } from "../components/home/OnThisDay";
 import { Welcome } from "../components/home/Welcome";
 import { engine } from "../data/engineClient";
@@ -35,14 +36,14 @@ function Home() {
   if (!o) return <p className="text-text-secondary">Loading season…</p>;
   return (
     <div className="space-y-10">
-      {o.allTimeTop && <AllTimeTop row={o.allTimeTop} />}
-      <HomeSeason name={o.season.name} status={o.season.status} progress={o.progress} played={o.played}
+      {o.allTimeTop && <SectionBoundary name="All-time #1"><AllTimeTop row={o.allTimeTop} /></SectionBoundary>}
+      <SectionBoundary name="This season"><HomeSeason name={o.season.name} status={o.season.status} progress={o.progress} played={o.played}
         phase={o.competitions.find((c) => c.status === "running" || c.status === "next")?.name}
-        news={topNews(stories ?? [], 4)} />
-      <OnThisDay matches={o.onThisDay} />
-      <HomeNumbers idols={o.totals.idols} groups={o.totals.groups} matches={o.matches} seasons={o.totals.seasonsDone} />
-      <HomeFact facts={o.facts} />
-      <HomeLeaders leaders={o.leaders} />
+        news={topNews(stories ?? [], 4)} /></SectionBoundary>
+      <SectionBoundary name="On This Day"><OnThisDay matches={o.onThisDay} /></SectionBoundary>
+      <SectionBoundary name="All-time numbers"><HomeNumbers idols={o.totals.idols} groups={o.totals.groups} matches={o.matches} seasons={o.totals.seasonsDone} /></SectionBoundary>
+      <SectionBoundary name="Random fact"><HomeFact facts={o.facts} /></SectionBoundary>
+      <SectionBoundary name="The rulers"><HomeLeaders leaders={o.leaders} /></SectionBoundary>
       <p className="m-0 text-sm text-text-secondary">
         {o.lastBackup ? `Last backup ${daysAgo(o.lastBackup)} days ago.` : "No backup yet."}{" "}
         <Link to="/studio/settings" search={{ s: "backup" }} className="text-accent-bright underline underline-offset-4">Open Backup</Link>

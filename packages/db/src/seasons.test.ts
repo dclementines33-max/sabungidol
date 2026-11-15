@@ -77,3 +77,12 @@ describe("Reset Season", () => {
     expect(await leagueRosters(db, "S01")).toEqual({ D1A: [a, b] }); // same rosters
   });
 });
+
+describe("season config written to the database", () => {
+  it("is repaired on the way in: a typed 100000 is stored as 100, junk dropped (2026-11-16 soft lock)", async () => {
+    await createDraftSeason(db, { id: "S01", number: 1, name: "Season 1", seed: "x", leagues: {} });
+    await updateSeason(db, "S01", { config: { tuning: { scale: 100000, sigma: 4 }, bestOf: { "D1:LG": 9 } } });
+    const [row] = await db.select().from(seasons).where(eq(seasons.id, "S01"));
+    expect(row!.config).toEqual({ off: [], bestOf: {}, tuning: { scale: 100, sigma: 4 } });
+  });
+});

@@ -2,7 +2,7 @@
 // or by hand, with the odds they give per rating gap and Best of N (before variance and form).
 import type { SeasonRow } from "@sabung/db";
 import { seriesOdds } from "@sabung/engine";
-import { TUNING_PRESETS, readSeasonConfig } from "@sabung/shared";
+import { TUNING_LIMITS, TUNING_PRESETS, clampTuning, readSeasonConfig } from "@sabung/shared";
 import { Button } from "@sabung/ui";
 import { useState } from "react";
 import { engine } from "../../data/engineClient";
@@ -14,8 +14,10 @@ const pct = (p: number) => `${Math.round(p * 100)}%`;
 
 export function EngineTuning({ season }: { season: SeasonRow }) {
   const [tuning, setTuning] = useState(() => readSeasonConfig(season.config).tuning);
+  const safe = clampTuning(tuning); // what is shown and saved
   const save = async () => {
-    await engine().updateSeason(season.id, { config: { ...readSeasonConfig(season.config), tuning } });
+    setTuning(safe); // a typed 100000 is saved as the top of the range, never as is (2026-11-16)
+    await engine().updateSeason(season.id, { config: { ...readSeasonConfig(season.config), tuning: safe } });
     notify({ level: "success", message: "Engine Tuning saved" });
     await refreshSeason();
   };
@@ -34,18 +36,18 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
           <Button key={name} aria-pressed={tuning.scale === preset.scale && tuning.sigma === preset.sigma} className="px-3" onClick={() => setTuning({ ...preset })}>{name}</Button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-4">{field("scale", "Odds constant (PRD: 40)", 10, 100)}{field("sigma", "Variance σ per match (PRD: 4)", 0, 15)}</div>
+      <div className="flex flex-wrap gap-4">{field("scale", "Odds constant (PRD: 40)", ...TUNING_LIMITS.scale)}{field("sigma", "Variance σ per match (PRD: 4)", ...TUNING_LIMITS.sigma)}</div>
       <div className="overflow-x-auto"><table className="border-collapse text-sm tabular-nums">
         <caption className="pb-2 text-left text-text-secondary">Favourite's win chance, before variance and form</caption>
         <thead><tr className="text-left text-text-secondary">{["Rating gap", "Per game", "Bo3", "Bo5", "Bo7", "Bo4 W/D/L"].map((h) => <th key={h} scope="col" className="px-3 py-1 font-medium">{h}</th>)}</tr></thead>
         <tbody>
           {GAPS.map((gap) => {
-            const odds = (bestOf: 3 | 4 | 5 | 7) => seriesOdds(50 + gap, 50, bestOf, tuning.scale);
+            const odds = (bestOf: 3 | 4 | 5 | 7) => seriesOdds(50 + gap, 50, bestOf, safe.scale);
             const bo4 = odds(4);
             return (
               <tr key={gap} className="border-t border-border font-mono">
                 <td className="px-3 py-1">{gap}</td>
-                <td className="px-3 py-1">{pct(1 / (1 + 10 ** (-gap / tuning.scale)))}</td>
+                <td className="px-3 py-1">{pct(1 / (1 + 10 ** (-gap / safe.scale)))}</td>
                 <td className="px-3 py-1">{pct(odds(3).A)}</td>
                 <td className="px-3 py-1">{pct(odds(5).A)}</td>
                 <td className="px-3 py-1">{pct(odds(7).A)}</td>

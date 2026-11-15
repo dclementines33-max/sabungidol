@@ -7,6 +7,7 @@ import { RatingBadge, StatTile } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChampionCover } from "../components/dashboard/ChampionCover";
+import { SectionBoundary } from "../components/SectionBoundary";
 import { CompetitionProgress } from "../components/dashboard/CompetitionProgress";
 import { D1Board } from "../components/dashboard/D1Board";
 import { DashboardCard } from "../components/dashboard/DashboardCard";
@@ -38,9 +39,9 @@ function Dashboard() {
         <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">{o.season.name}</h2>
         <p className="m-0 text-lg text-text-secondary">{o.played.toLocaleString("en-GB")} matches · {Math.round(o.progress * 100)}% competitions done{phase ? ` · now: ${phase.name}` : ""}</p>
       </header>
-      <ChampionCover seasonName={o.season.name} champion={o.lastUnzure?.champion ?? null} championSeason={o.lastUnzure?.season} />
-      {o.season.status === "live" ? <D1Board /> : <p className="m-0 text-text-secondary">Division 1 standings appear once the season starts.</p>}
-      <TournamentMap />
+      <SectionBoundary name="Unzure champion"><ChampionCover seasonName={o.season.name} champion={o.lastUnzure?.champion ?? null} championSeason={o.lastUnzure?.season} /></SectionBoundary>
+      {o.season.status === "live" ? <SectionBoundary name="Division 1"><D1Board /></SectionBoundary> : <p className="m-0 text-text-secondary">Division 1 standings appear once the season starts.</p>}
+      <SectionBoundary name="Season map"><TournamentMap /></SectionBoundary>
       <div className="columns-1 gap-10 md:columns-2 xl:columns-3">
         <DashboardCard title="Competition progress"><CompetitionProgress competitions={o.competitions} /></DashboardCard>
         <DashboardCard title="Top 5 rating">

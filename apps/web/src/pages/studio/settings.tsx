@@ -15,6 +15,7 @@ import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 import { useCurrentSeason, useLeagueRosters } from "../../data/seasonQuery";
 import { PageHeader } from "../../components/PageHeader";
+import { SectionBoundary } from "../../components/SectionBoundary";
 
 const VIEWS = [
   { id: "season", label: "Season & rules", note: "Name, competitions, Best of N, Engine Tuning" },
@@ -61,12 +62,12 @@ function Settings() {
           </ol>
         </nav>
         <div className="studio-flow min-w-0 space-y-8">
-          {view === "season" && <><SeasonSettings key={season.id} season={season} /><EngineTuning key={`t-${season.id}`} season={season} /></>}
-          {view === "leagues" && <><RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} /><DataMaker seasonId={season.id} draft={draft} idols={idols} /></>}
-          {view === "branding" && <BrandingSettings seasonId={season.id} />}
-          {view === "backup" && <BackupSettings seasonId={season.id} />}
-          {view === "data" && <DataSettings />}
-          {view === "danger" && <DangerZone season={season} />}
+          {view === "season" && <><SectionBoundary name="Season"><SeasonSettings key={season.id} season={season} /></SectionBoundary><SectionBoundary name="Engine Tuning"><EngineTuning key={`t-${season.id}`} season={season} /></SectionBoundary></>}
+          {view === "leagues" && <><SectionBoundary name="League rosters"><RosterSettings seasonId={season.id} draft={draft} rosters={rosters} activeIds={idols.filter((i) => i.active).map((i) => i.id)} /></SectionBoundary><SectionBoundary name="Data Maker"><DataMaker seasonId={season.id} draft={draft} idols={idols} /></SectionBoundary></>}
+          {view === "branding" && <SectionBoundary name="Branding"><BrandingSettings seasonId={season.id} /></SectionBoundary>}
+          {view === "backup" && <SectionBoundary name="Backup"><BackupSettings seasonId={season.id} /></SectionBoundary>}
+          {view === "data" && <SectionBoundary name="Data"><DataSettings /></SectionBoundary>}
+          {view === "danger" && <SectionBoundary name="Danger Zone"><DangerZone season={season} /></SectionBoundary>}
         </div>
       </div>
     </div>
