@@ -11,7 +11,7 @@ describe("branding labels", () => {
   it("D2X follows D1X: same logo and colour, name as its Division 2", () => {
     expect(brandOf(saved, "D1A")).toEqual({ name: "Starlight League", color: "brand-rose", logoId: "logo1" });
     expect(brandOf(saved, "D2A")).toEqual({ name: "Starlight League · Division 2", color: "brand-rose", logoId: "logo1" });
-    expect(brandOf(saved, "D2B").name).toBe("League D2B"); // nothing set for D1B
+    expect(brandOf(saved, "D2B").name).toBe("HYBE. CO · Division 2"); // nothing set for D1B
   });
 
   it("uses custom names in title keys and falls back to the defaults", () => {

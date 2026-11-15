@@ -10,6 +10,7 @@ import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { averageRating } from "./averageRating";
+import { arenaOf } from "./arenaTheme";
 import { CompetitionCover } from "./CompetitionCover";
 import { LeagueFixtures } from "./LeagueFixtures";
 import { LeagueStandings } from "./LeagueStandings";
@@ -33,7 +34,7 @@ export function LeaguePanel({ codes, zoneKey, playoff, actions }: { codes: strin
   const next = view.fixtures.find((f) => f.matches.some((m) => m.scoreA === undefined))?.round;
   const leader = view.standings[0];
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-arena={arenaOf(comp)}>
       {codes.length > 1 && (
         <div className="flex flex-wrap gap-1" role="group" aria-label="League">
           {codes.map((c) => (

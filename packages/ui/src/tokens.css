@@ -158,3 +158,14 @@
 /* Fields (user 2026-11-15): every typeable field, select and textarea has only a faint underline; unlayered, so it beats the
    per-component border-border-strong classes. Focus stays an outline. Checkboxes, radios and file pickers are left alone. */
 input:not([type="checkbox"], [type="radio"], [type="file"], [type="range"]), select, textarea { border-color: var(--color-border); }
+
+/* Arena themes (router B): data-arena="east|hybe|sm|jyp|yg|west|uzc|idl" on a panel re-colours its accent for everything inside
+   (kickers, buttons, focus, cover glow). Fills stay dark so --color-on-accent keeps its contrast. Names + code mapping: apps/web/src/components/competition/arenaTheme.ts. */
+[data-arena="east"] { --color-accent-bright: #6fb0ff; --color-accent: #123c6e; }
+[data-arena="hybe"] { --color-accent-bright: #b79bff; --color-accent: #3d2680; }
+[data-arena="sm"]   { --color-accent-bright: #4fe0d0; --color-accent: #0c4f4a; }
+[data-arena="jyp"]  { --color-accent-bright: #ff8a3d; --color-accent: #7a2f00; }
+[data-arena="yg"]   { --color-accent-bright: #c8e04a; --color-accent: #3d4d00; }
+[data-arena="west"] { --color-accent-bright: #5fd98a; --color-accent: #0f4a2c; }
+[data-arena="uzc"]  { --color-accent-bright: #f0c75e; --color-accent: #5c4300; }
+[data-arena="idl"]  { --color-accent-bright: #ff7aa8; --color-accent: #7a1a3c; }

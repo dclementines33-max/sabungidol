@@ -1,6 +1,7 @@
 // Which competition panel shows which Settings competition (Swiss and LCQ live in the Unzure panel),
 // and how a title key reads ("D1A", "IDL-PO", "MBK-D1A" …).
 import { type CompetitionKey, SEASON_COMPETITIONS } from "@sabung/shared";
+import { defaultLeagueName } from "../competition/arenaTheme";
 
 export const PANEL_OF: Record<CompetitionKey, string> = {
   D1: "d1", D2: "d2", IDL: "the-idols", SWS: "unzure", LCQ: "unzure", UZC: "unzure",
@@ -22,7 +23,8 @@ export function brandOf(saved: SavedCompetition[], code: string): Brand {
   const league = /^D([12])([A-F])$/.exec(code);
   const s = saved.find((c) => c.code === (league ? `D1${league[2]}` : code));
   const { color, logoId } = (s?.branding ?? {}) as { color?: string; logoId?: string | null };
-  const name = league ? (s ? (league[1] === "1" ? s.name : `${s.name} · Division 2`) : `League ${code}`) : (s?.name ?? titleLabel(code));
+  const base = league ? (s?.name ?? defaultLeagueName(league[2]!)) : "";
+  const name = league ? (league[1] === "1" ? base : `${base} · Division 2`) : (s?.name ?? titleLabel(code));
   return { name, color, logoId };
 }
 

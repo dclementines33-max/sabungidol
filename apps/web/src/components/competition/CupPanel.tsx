@@ -7,6 +7,7 @@ import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
+import { arenaOf } from "./arenaTheme";
 import { CompetitionCover } from "./CompetitionCover";
 import { GalaStage } from "./GalaStage";
 import { MatchList } from "./MatchList";
@@ -31,7 +32,7 @@ export function CupPanel({ codes, title }: { codes: string[]; title?: string }) 
   const played = view.cells.filter((c) => c.score).length;
   const champion = Object.values(view.titles)[0]?.champion;
   return (
-    <section className="space-y-6" aria-label={title ?? comp}>
+    <section className="space-y-6" aria-label={title ?? comp} data-arena={arenaOf(comp)}>
       {codes.length > 1 && (
         <div className="flex flex-wrap gap-1" role="group" aria-label="Cup">
           {codes.map((c) => <Button key={c} aria-pressed={c === comp} className={`px-3 font-mono ${c === comp ? "bg-surface-hover" : ""}`} onClick={() => setComp(c)}>{c}</Button>)}

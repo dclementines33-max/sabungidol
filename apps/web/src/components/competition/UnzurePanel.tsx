@@ -8,6 +8,7 @@ import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 import { PlayMatchDialog } from "../play/PlayMatchDialog";
 import { usePlaySeason } from "../play/usePlaySeason";
 import { useBranding } from "../../data/branding";
+import { arenaOf } from "./arenaTheme";
 import { CompetitionCover } from "./CompetitionCover";
 import { GroupStage } from "./GroupStage";
 import { Tabs } from "./Tabs";
@@ -37,7 +38,7 @@ export function UnzurePanel() {
     .map((c) => ({ round: Number(c.round.split("-R")[1]) - 1, a: c.a, b: c.b, onOpen: () => { if (!running) setMatchId(c.id); } }));
   const ko = view.cells.filter((c) => c.comp === "UZC" && c.stage !== "GS");
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-arena={arenaOf("UZC")}>
       <CompetitionCover name={label("UZC")} code="UZC" issue={`${season.name} · Swiss → LCQ → Groups → Knockout`}
         hero={view.titles.UZC?.champion ?? null} heroRole="Champion"
         stats={[{ label: "Played", value: view.cells.filter((c) => c.score).length }, { label: "To play", value: view.cells.filter((c) => !c.score).length }]} />
