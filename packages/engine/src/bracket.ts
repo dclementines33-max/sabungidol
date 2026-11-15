@@ -28,6 +28,29 @@ export function resolveBracket(template: BracketMatch[], entrants: string[], pla
   return [...cells.values()];
 }
 
+// The order to draw a bracket in (2026-11-16 bug: seed pairing re-pairs best v worst each round, so match 2's winner
+// does not play in the next round's match 1; drawn in slot order, winners appeared in the wrong box). Rounds are
+// walked from the last one back: each round lists first the matches whose winners feed the (already ordered) later
+// rounds, in that order, then the rest. So the two cards drawn next to each other always feed the card they join.
+export function bracketDisplayOrder(template: BracketMatch[]): string[] {
+  const rounds: BracketMatch[][] = [];
+  for (const m of template) {
+    const last = rounds.at(-1);
+    if (last && last[0]!.stage === m.stage && last[0]!.round === m.round) last.push(m); else rounds.push([m]);
+  }
+  const ordered: BracketMatch[][] = [];
+  for (let i = rounds.length - 1; i >= 0; i--) {
+    const mine = new Map(rounds[i]!.map((m) => [m.key, m]));
+    const fed: BracketMatch[] = [];
+    for (const later of ordered) for (const m of later) for (const s of [m.a, m.b]) { // nearest later round first
+      const feeder = "winner" in s ? mine.get(s.winner) : undefined;
+      if (feeder && !fed.includes(feeder)) fed.push(feeder);
+    }
+    ordered.unshift([...fed, ...rounds[i]!.filter((m) => !fed.includes(m))]);
+  }
+  return ordered.flat().map((m) => m.key);
+}
+
 // entrants[0] is seed 1. play() returns which side won.
 export function runBracket(template: BracketMatch[], entrants: string[], play: Play): BracketResult[] {
   const rounds = bracketRounds(template, entrants, play);
