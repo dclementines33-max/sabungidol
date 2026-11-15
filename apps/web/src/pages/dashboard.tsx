@@ -12,6 +12,7 @@ import { CompetitionProgress } from "../components/dashboard/CompetitionProgress
 import { D1Board } from "../components/dashboard/D1Board";
 import { DashboardCard } from "../components/dashboard/DashboardCard";
 import { RatingHistogram } from "../components/dashboard/RatingHistogram";
+import { StorageTile } from "../components/dashboard/StorageTile";
 import { TournamentMap } from "../components/dashboard/TournamentMap";
 import { groupStats } from "../components/groups/groupStats";
 import { IdolLink } from "../components/wiki/IdolLink";
@@ -57,7 +58,7 @@ function Dashboard() {
         <DashboardCard title="Data">
           <div className="grid grid-cols-2 gap-3">
             <StatTile label="Matches saved" value={o.matches.toLocaleString("en-GB")} />
-            <StatTile label="Storage" value={storage?.usage !== undefined ? `${(storage.usage / 1e6).toFixed(0)} MB` : "–"} />
+            <StorageTile usage={storage?.usage} quota={storage?.quota} />
           </div>
         </DashboardCard>
       </div>

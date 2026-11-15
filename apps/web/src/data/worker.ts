@@ -91,21 +91,22 @@ const api = {
   setGallery: async (idolId: string, images: Blob[]) => {
     const db = await open();
     const ids: string[] = [];
-    for (const image of images) {
-      const stored = await storePhotoFiles(DATABASE, image);
-      await insertPhoto(db, stored);
-      ids.push(stored.id);
+    let old: string[];
+    try {
+      for (const image of images) ids.push((await keepPhoto(db, image)).id);
+      old = await setGallery(db, idolId, ids);
+    } catch (error) {
+      for (const photoId of ids) await dropPhoto(db, photoId).catch(() => {}); // all or nothing: the old gallery stays
+      throw error;
     }
-    const old = await setGallery(db, idolId, ids);
     for (const photoId of old) await dropPhoto(db, photoId);
     return old;
   },
   // A new photo for an idol; the old one is removed. Returns both ids (the page forgets the old one's cached URLs).
   replacePhoto: async (idolId: string, image: Blob) => {
     const db = await open();
-    const stored = await storePhotoFiles(DATABASE, image);
-    await insertPhoto(db, stored);
-    const old = await setIdolPhoto(db, idolId, stored.id);
+    const stored = await keepPhoto(db, image);
+    const old = await setIdolPhoto(db, idolId, stored.id).catch(async (error) => { await dropPhoto(db, stored.id).catch(() => {}); throw error; });
     if (old) await dropPhoto(db, old);
     return { photoId: stored.id, old };
   },
@@ -203,9 +204,7 @@ const api = {
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
   savePhoto: async (image: Blob): Promise<string> => {
     const db = await open();
-    const stored = await storePhotoFiles(DATABASE, image);
-    await insertPhoto(db, stored);
-    return stored.id;
+    return (await keepPhoto(db, image)).id;
   },
   // The best stored file for a wanted size (never a blown-up copy); null when the photo is unknown.
   photoBlob: async (photoId: string, size: number): Promise<Blob | null> => {
@@ -258,6 +257,18 @@ async function theIdolsNow(db: Db) {
 }
 
 // A photo nobody uses any more: its record, then its files (a leftover file is harmless, a missing one is not).
+// Files plus their record; when the record can't be written (e.g. a full disk) the files go again: nothing half-written.
+async function keepPhoto(db: Db, image: Blob) {
+  const stored = await storePhotoFiles(DATABASE, image);
+  try {
+    await insertPhoto(db, stored);
+  } catch (error) {
+    await removePhotoFiles(DATABASE, stored.id).catch(() => {});
+    throw error;
+  }
+  return stored;
+}
+
 async function dropPhoto(db: Db, photoId: string) {
   await deletePhoto(db, photoId);
   await removePhotoFiles(DATABASE, photoId).catch(() => {}); // cleaned later by the integrity check

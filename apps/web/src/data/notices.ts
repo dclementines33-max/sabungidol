@@ -5,6 +5,7 @@
 import type { LoggedEvent, NewEvent } from "@sabung/db";
 import type { Notice } from "@sabung/ui";
 import { create } from "zustand";
+import { STORAGE_FULL, STORAGE_FULL_MESSAGE, isStorageFull } from "./storageFull";
 
 export type Persister = {
   log: (event: NewEvent, options?: { oncePerDay?: boolean }) => Promise<LoggedEvent | null>;
@@ -70,6 +71,11 @@ export const useNotices = create<State>()((set, get) => {
     persister: null,
 
     notify: (input, options) => {
+      if (input.level === "error" && isStorageFull(input.context)) { // a save failed on a full disk: one clear warning, not one error per failed write
+        if (get().pinned.some((p) => p.code === STORAGE_FULL)) return;
+        input = { level: "warning", code: STORAGE_FULL, message: STORAGE_FULL_MESSAGE, context: `${input.code ?? ""} ${input.message} · ${input.context}` };
+        options = { log: false }; // event_log can't be written either
+      }
       const notice = add(input);
       set((s) => ({
         toasts: notice.level === "info" || notice.level === "success" ? [...s.toasts, notice] : s.toasts,

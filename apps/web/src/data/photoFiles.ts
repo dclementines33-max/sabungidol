@@ -28,8 +28,8 @@ export async function writeFile(dir: FileSystemDirectoryHandle, name: string, bl
 // Stores the original and the smaller WebP copies; never enlarges. Returns what the photo record needs.
 export async function storePhotoFiles(database: string, image: Blob) {
   const bitmap = await createImageBitmap(image);
+  const id = ulid();
   try {
-    const id = ulid();
     const dir = await folder(database, id, true);
     const sizes: PhotoSizes = { orig: { w: bitmap.width, h: bitmap.height, type: image.type || "image/webp" } };
     await writeFile(dir, "orig", image);
@@ -46,6 +46,9 @@ export async function storePhotoFiles(database: string, image: Blob) {
       bytes += copy.size;
     }
     return { id, sizes, bytes };
+  } catch (error) {
+    await removePhotoFiles(database, id).catch(() => {}); // a failed write (e.g. a full disk) leaves no half-written folder
+    throw error;
   } finally {
     bitmap.close();
   }
