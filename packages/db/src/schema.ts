@@ -5,10 +5,16 @@ import {
   boolean, date, index, integer, jsonb, pgTable, primaryKey, real, smallint, text, timestamp, uniqueIndex,
 } from "drizzle-orm/pg-core";
 
+// Cloud sync (2026-11-16): updatedAt is stamped on every update (last write wins); syncKey is frozen at the first sync
+// (lower(name)|lower(group), so devices from the same seed agree); a photo's hash is the SHA-256 of its original.
+const updatedAt = () => timestamp({ mode: "string", withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date().toISOString());
+
 export const groups = pgTable("groups", {
   id: text().primaryKey(),
   name: text().notNull(),
   logoId: text(),
+  syncKey: text(),
+  updatedAt: updatedAt(),
 }, (t) => [uniqueIndex("groups_name").on(sql`lower(${t.name})`)]); // "IVE" and "ive" are one group
 
 export const idols = pgTable("idols", {
@@ -23,6 +29,8 @@ export const idols = pgTable("idols", {
   gallery: jsonb().$type<string[]>().notNull().default([]), // extra photo ids shown beside the MatchModal (gallery feature)
   rating: smallint().notNull(),
   active: boolean().notNull().default(true),
+  syncKey: text(),
+  updatedAt: updatedAt(),
 }, (t) => [
   // Same name in the same group (or both soloists) is a duplicate.
   uniqueIndex("idols_name_group").on(sql`lower(${t.name})`, sql`coalesce(${t.groupId}, '')`),
@@ -34,6 +42,8 @@ export const photos = pgTable("photos", {
   focalY: real(),
   sizes: jsonb(),
   bytes: integer(),
+  hash: text(),
+  updatedAt: updatedAt(),
 });
 
 export const seasons = pgTable("seasons", {
@@ -50,6 +60,7 @@ export const competitions = pgTable("competitions", {
   code: text().notNull(),
   name: text().notNull(),
   branding: jsonb(),
+  updatedAt: updatedAt(),
 }, (t) => [primaryKey({ columns: [t.seasonId, t.code] })]);
 
 export const entries = pgTable("entries", {

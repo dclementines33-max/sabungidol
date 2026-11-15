@@ -71,7 +71,7 @@ export async function listCompetitions(db: Db | Tx, seasonId: string) {
 }
 export async function saveCompetition(db: Db, seasonId: string, code: string, name: string, branding: Branding) {
   await db.insert(competitions).values({ seasonId, code, name, branding })
-    .onConflictDoUpdate({ target: [competitions.seasonId, competitions.code], set: { name, branding } });
+    .onConflictDoUpdate({ target: [competitions.seasonId, competitions.code], set: { name, branding, updatedAt: new Date().toISOString() } }); // the sync stamp (upserts skip $onUpdate)
 }
 
 // Danger Zone → Reset Season (PRD §8): the season back to a draft with the same rosters — its

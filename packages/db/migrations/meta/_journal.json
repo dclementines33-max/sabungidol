@@ -29,6 +29,13 @@
       "when": 1794637511477,
       "tag": "0003_idol_gallery",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794786953262,
+      "tag": "0004_lush_the_order",
+      "breakpoints": true
     }
   ]
 }
