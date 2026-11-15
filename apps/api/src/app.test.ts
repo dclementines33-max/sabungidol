@@ -51,6 +51,6 @@ describe("cloud backup API", () => {
     expect((await call(`/api/backups/${id}`, { method: "DELETE", headers: { cookie: a.cookie } })).status).toBe(204);
     expect(await (await call("/api/backups", { headers: { cookie: a.cookie } })).json()).toEqual([]);
     expect((await pg.query("select relname from pg_class where relrowsecurity order by relname")).rows.map((r) => (r as { relname: string }).relname))
-      .toEqual(["account", "cloud_backup", "session", "user", "verification"]);
+      .toEqual(["account", "cloud_backup", "session", "sync_file", "sync_record", "user", "verification"]);
   });
 });

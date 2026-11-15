@@ -1,8 +1,9 @@
-// The API's routes: /api/auth/* goes to Better Auth, /api/backups/* needs a logged-in session.
+// The API's routes: /api/auth/* goes to Better Auth, /api/backups/* and /api/sync/* (sync.ts) need a logged-in session.
 import type { Auth } from "./auth";
 import { MAX_BACKUP_BYTES, deleteBackup, downloadBackup, listBackups, uploadBackup } from "./backups";
 import type { Db } from "./db";
 import type { Files } from "./files";
+import { handleSync } from "./sync";
 
 export type Deps = { db: Db; auth: Auth; files: Files };
 
@@ -12,11 +13,13 @@ const error = (status: number, message: string) => json({ error: message }, stat
 export async function handle(request: Request, { db, auth, files }: Deps): Promise<Response> {
   const { pathname } = new URL(request.url);
   if (pathname.startsWith("/api/auth/")) return auth.handler(request);
-  if (!pathname.startsWith("/api/backups")) return error(404, "Not found");
+  const sync = pathname === "/api/sync" || pathname.startsWith("/api/sync/");
+  if (!sync && !pathname.startsWith("/api/backups")) return error(404, "Not found");
 
   const session = await auth.api.getSession({ headers: request.headers });
-  if (!session) return error(401, "Sign in to use cloud backup.");
+  if (!session) return error(401, sync ? "Sign in to sync." : "Sign in to use cloud backup.");
   const userId = session.user.id;
+  if (sync) return handleSync(request, db, files, userId);
   const id = pathname.split("/")[3]; // /api/backups/:id
 
   if (!id && request.method === "GET") return json(await listBackups(db, userId));

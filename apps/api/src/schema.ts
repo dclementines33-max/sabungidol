@@ -1,6 +1,6 @@
 // Cloud tables (PRD §12.4) in Supabase Postgres: Better Auth's four tables (as getAuthTables lists them
 // for email + password) and one row per cloud backup. The .sabung file itself is in Supabase Storage.
-import { boolean, index, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { bigserial, boolean, index, integer, jsonb, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 
 const stamps = { createdAt: timestamp().notNull().defaultNow(), updatedAt: timestamp().notNull().defaultNow() };
 
@@ -53,3 +53,22 @@ export const cloudBackup = pgTable("cloud_backup", {
   size: integer().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
 }, (t) => [index().on(t.userId)]);
+
+// Cloud sync (2026-11-16): photos and idol info shared between a user's devices. One row per synced record — kind
+// group | idol | gallery | photo | league — keyed per user; seq grows with every write, so a device pulls "everything
+// after the seq it last saw" without trusting clocks, while updatedAt (the device's time of the change) decides which
+// write wins. sync_file lists the photo originals already in Storage (sync/<userId>/<sha256>), so none goes up twice.
+export const syncRecord = pgTable("sync_record", {
+  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+  kind: text().notNull(),
+  key: text().notNull(),
+  data: jsonb().notNull(),
+  updatedAt: text().notNull(),
+  seq: bigserial({ mode: "number" }).notNull(),
+}, (t) => [primaryKey({ columns: [t.userId, t.kind, t.key] }), index().on(t.userId, t.seq)]);
+
+export const syncFile = pgTable("sync_file", {
+  userId: text().notNull().references(() => user.id, { onDelete: "cascade" }),
+  hash: text().notNull(),
+  size: integer().notNull(),
+}, (t) => [primaryKey({ columns: [t.userId, t.hash] })]);
