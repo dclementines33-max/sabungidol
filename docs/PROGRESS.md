@@ -14,6 +14,8 @@ file only when the task touches it. Keep this file current: update it at the end
 Production = version 01ce8996 (Update 3 V1–V6 + import fixes), deployed at the user's request; latest code is committed.
 The user tests on another device. Nothing is half-built in the code.
 
+**FIXES 2026-11-16 (router): brackets drawn in feeder order (engine bracketDisplayOrder, used by bracketSkeleton → every cup panel, Unzure KO, playoffs, archive; engine pairing unchanged; bracketDisplay.test). Settings soft lock: readSeasonConfig never throws (repairs each field), clampTuning/TUNING_LIMITS shared, Engine Tuning clamps on save, db updateSeason repairs config on write; SectionBoundary (E-PANEL-002) around Settings sections, Dashboard cards/blocks and Home blocks.**
+
 **WHEEL (2026-11-15, router): the wheel is back and Simulate is gone from the match dialog (presets + Manual stay; bulk season buttons stay). WheelPicker.tsx = stage (spotlight, lit/grey portraits, gallery flash, match point/decider call + longer spin, crowd meter, series chance, split-flap score, UPSET stamp, gold burst for finals); WheelDisc.tsx = the wheel; wheelMath.ts = landing (50:50), seriesChance, tension, spinMs, crowd, isUpset (tested). Stored method "sim" untouched. LiveMatchVisualizer and worker simulateMatch removed.**
 
 **SPOTLIGHT PICKER (2026-11-15, router): WheelPicker.tsx is now a spotlight duel (two framed portraits, a beam swings between them and stops on the winner; sweep() schedules the flips, unit-tested). Same draw: one random number per game, < 0.5 = A. Mode label "Spotlight Picker"; stored method stays "wheel". Screenshot e2e: test-results/spotlight-picker.png. Also: competition panels "Playing…" (was Memainkan).**
