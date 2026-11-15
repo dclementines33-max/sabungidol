@@ -37,6 +37,7 @@ test("cloud backup from device A is restored on device B with identical checksum
   await a.getByRole("textbox", { name: "Season name" }).fill("Musim Cloud"); // something of our own
   await a.getByRole("button", { name: "Save season" }).click();
   await login(a, "Create account");
+  await a.getByRole("combobox", { name: "Cloud backup type" }).selectOption("full"); // the test compares every table
   await a.getByRole("button", { name: "Back up to cloud" }).click();
   await expect(a.getByText(/Backup uploaded to the cloud/)).toBeVisible({ timeout: 120_000 });
   const original = await tablesOf(a);

@@ -60,7 +60,7 @@ export function BackupSettings({ seasonId }: { seasonId: string }) {
         <Button onClick={() => setImporting(true)}>Import backup…</Button>
       </div>
       <ImportDialog open={importing} onOpenChange={(open) => { setImporting(open); if (!open) setCloudFile(undefined); }} title="Import .sabung backup" accept=".sabung" readFile={readFile} onApply={apply} file={cloudFile} />
-      <CloudBackup onRestore={(f) => { setCloudFile(f); setImporting(true); }} />
+      <CloudBackup seasonId={seasonId} onRestore={(f) => { setCloudFile(f); setImporting(true); }} />
       <div>
         <h3 className="m-0 text-sm font-medium">Automatic snapshots (last 3, taken before risky actions)</h3>
         {snapshots.length === 0
