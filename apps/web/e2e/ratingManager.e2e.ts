@@ -24,6 +24,19 @@ test("Rating Manager: draft, revert, save, Engine Lab", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Draft: 0 changes" })).toBeVisible();
   await expect(first).toHaveValue("99");
 
+  // The large photo viewer: same rating controls inside, editing the same draft.
+  await page.getByRole("button", { name: /^Large photo of / }).nth(1).click();
+  const viewer = page.getByRole("dialog");
+  await expect(viewer.getByRole("img").first()).toBeVisible();
+  await viewer.getByRole("spinbutton", { name: /^New rating for / }).fill("88");
+  expect((await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze()).violations.map((v) => v.id)).toEqual([]);
+  await page.screenshot({ path: "C:/Users/danim/Project/sabung-idol/import/rating-viewer.png" });
+  await page.keyboard.press("Escape");
+  await expect(viewer).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Draft: 1 changes" })).toBeVisible(); // edited from inside the viewer
+  await page.getByRole("button", { name: /^Revert/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Revert" }).click();
+
   for (const [label, pick] of [["Idol A", 0], ["Idol B", 1]] as const) {
     await page.getByRole("combobox", { name: label }).fill("a");
     await page.getByRole("listbox", { name: label }).getByRole("option").nth(pick).click();
