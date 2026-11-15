@@ -5,9 +5,12 @@ import { PRESTIGE } from "../season/seasonClose";
 import type { DramaStory } from "./seasonDrama";
 import type { NewsStory } from "./seasonNews";
 import type { MomentStory } from "./seasonMoments";
+import type { CareerStory } from "./careerNews";
 import type { Story } from "./seasonStory";
 
-export type AnyStory = Story | DramaStory | NewsStory | MomentStory;
+export type AnyStory = Story | DramaStory | NewsStory | MomentStory | CareerStory;
+
+export const BREAKING = 80; // from this score a story gets the breaking-news headline
 
 export function newsScore(s: AnyStory): number {
   switch (s.kind) {
@@ -26,6 +29,8 @@ export function newsScore(s: AnyStory): number {
     case "champion": return 40 + 45 * PRESTIGE[competitionKeyOf(s.title.split("-")[0]!)];
     case "clinched": return Math.min(90, 70 + 3 * s.left);
     case "shock-exit": return Math.min(88, 60 + 2 * s.gap);
+    case "rivalry-renewed": return Math.min(80, 30 + 3 * (s.meetings + s.earlier));
+    case "farewell": return Math.min(85, 50 + 5 * s.titles);
     case "big-match": return 35 + (s.ratingLoser - 90) * 3;
   }
 }

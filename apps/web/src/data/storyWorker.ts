@@ -1,31 +1,36 @@
 // Season Story in the Worker (PRD §8): the season replayed from its saved matches (nothing is played), and
 // the titles of earlier seasons, so "first title" means first ever.
-import { type Db, leagueTotals, listPlacements, listSeasonRatingChanges, listSeasons } from "@sabung/db";
-import { D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
-import { runSeason, seasonDrama, seasonNews, seasonStory } from "@sabung/engine";
+import { type Db, countMatchesWhere, listIdols, listSeasonRatingChanges, listPlacements } from "@sabung/db";
+import { careerNews, runSeason, seasonDrama, seasonMoments, seasonNews, seasonStory, topPairs } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 import { involves, seasonRecord } from "./podiumDetail";
+import { storyContext } from "./storyContext";
 
 export async function storyOf(db: Db, seasonId: string) {
-  const seasons = await listSeasons(db);
-  const season = seasons.find((s) => s.id === seasonId);
+  const ctx = await storyContext(db, seasonId);
+  const { season, earlier } = ctx;
   if (!season || season.status === "draft") return [];
   const input = await seasonInput(db, season);
   const result = runSeason({ ...input, saved: await seasonMatches(db, season.id), target: () => false });
-  const earlier = new Set(seasons.filter((s) => s.number < season.number).map((s) => s.id));
-  const placements = await listPlacements(db);
-  const won = placements.filter((p) => p.finalRank === 1 && earlier.has(p.seasonId));
-  const earlierTitles = new Set(won.map((p) => `${p.idolId}|${p.comp}`));
-  const titleCount = new Map<string, number>();
-  for (const p of won) titleCount.set(p.idolId, (titleCount.get(p.idolId) ?? 0) + 1);
-  const stories = seasonStory(result.matches, result.titles, earlierTitles);
-  // The most league points one idol made in an earlier season (SQL totals per league; the IDL league is not counted).
-  let best: number | null = earlier.size ? 0 : null;
-  for (const id of earlier) for (const comp of [...D1_LEAGUES, ...D2_LEAGUES]) for (const r of await leagueTotals(db, id, comp)) best = Math.max(best!, r.points);
-  const drama = seasonDrama(result.matches, best);
-  const news = seasonNews(result.matches, result.titles, titleCount);
-  return [...drama, ...news, ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
+  const stories = seasonStory(result.matches, result.titles, ctx.earlierTitles);
+  const drama = seasonDrama(result.matches, ctx.best);
+  const news = seasonNews(result.matches, result.titles, ctx.titleCount);
+  // Breaking news (2026-11-16): the Simulation Timeline's moments, for the whole season. A champion already told as a first title is left out.
+  const firsts = new Set(stories.flatMap((s) => (s.kind === "first-title" ? [`${s.idol}|${s.title}`] : [])));
+  const moments = seasonMoments(result.matches, null, result.titles).map((m) => m.story).filter((s) => s.kind !== "champion" || !firsts.has(`${s.idol}|${s.title}`));
+  // Rivalries renewed (the season's most-met pairs, counted in earlier seasons) and farewells (only in the newest season:
+  // idols now inactive who played before and not now).
+  const pairs: [string, string, number, number][] = [];
+  for (const [a, b, meetings] of topPairs(result.matches)) {
+    let before = 0;
+    for (const id of earlier) before += await countMatchesWhere(db, { seasonId: id, idolId: a, vsId: b });
+    pairs.push([a, b, meetings, before]);
+  }
+  const newest = ctx.seasons.filter((s) => s.status !== "draft").every((s) => s.number <= season.number);
+  const playing = new Set(result.matches.flatMap((m) => [m.idolA, m.idolB]));
+  const gone = newest ? (await listIdols(db)).filter((i) => !i.active && ctx.placedEarlier.has(i.id) && !playing.has(i.id)).map((i) => ({ idol: i.id, titles: ctx.titleCount.get(i.id) ?? 0 })) : [];
+  return [...drama, ...news, ...moments, ...careerNews(pairs, gone), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
 }
 
 // The season top 3's detail (Season Honours): record, places, rating change and the stories that name them.
