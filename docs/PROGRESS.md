@@ -501,6 +501,7 @@ page (React, apps/web/src/pages) â”€â”€Comlinkâ”€â”€â–¶ 
 - `photoFiles.ts`/`photoSizes.ts`/`photoCache.ts` photos in OPFS `<db>-photos/<id>/` (64/256/1024, never
   enlarged) Â· `backup/sabungFile.ts` (.sabung ZIP format) Â· `backup/backupWorker.ts` (export/import,
   snapshots in `<db>-snapshots`, 3 kept) Â· `integrityWorker.ts` Â· `databaseReset.ts`/`resetOffer.ts`.
+- Story/highlights (2026-11-16): engine `stats/seasonMoments.ts` (big match, shock exit, clinched, champion), `simHighlights.ts` (one bulk play, from before/after replays; returned by `playSeason`), `careerNews.ts` (rivalry renewed, farewell), `newsScore` BREAKING=80. Web: `data/storyContext.ts` (earlier seasons), `components/story/storyText.ts` (all headlines), `components/play/SimTimeline.tsx` + `timelineStore.ts` and `GrandFinalCelebration.tsx` + `celebrationStore.ts` (UZC round F accepted in PlayMatchDialog); both rendered once in AppShell.
 - `notices.ts` notifications (Zustand; `notify`, `{log:false}`, `{oncePerDay}`) Â· `seasonQuery.ts`
   (`useCurrentSeason`, `useLeagueRosters` = the 12 leagues, without IDL).
 
