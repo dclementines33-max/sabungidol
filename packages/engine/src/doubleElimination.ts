@@ -9,13 +9,13 @@ const m = (key: string, a: Source, b: Source): BracketMatch => {
   return { key, stage: stage as BracketMatch["stage"], round, slot: Number(slot), a, b };
 };
 
-// The Idols playoff, top 10 of the league: 7 upper + 8 lower + Grand Final = 16 matches.
+// The Idols playoff, top 10 of the league: 7 upper + 8 lower (seeds 9 and 10 each face an upper-bracket loser in LB1) + Grand Final = 16 matches.
 // Lower rounds 2 and 3 cross sides so a loser does not meet the same half straight away.
 export function idolsPlayoffTemplate(): BracketMatch[] {
   return [
     m("UB-R1-1", s(5), s(8)), m("UB-R1-2", s(6), s(7)),
     m("UB-QF-1", s(4), w("UB-R1-1")), m("UB-QF-2", s(3), w("UB-R1-2")),
-    m("LB-LB1-1", s(9), s(10)), m("LB-LB1-2", l("UB-R1-1"), l("UB-R1-2")),
+    m("LB-LB1-1", s(9), l("UB-R1-2")), m("LB-LB1-2", s(10), l("UB-R1-1")), // 9 and 10 never meet in round 1
     m("LB-LB2-1", w("LB-LB1-1"), l("UB-QF-2")), m("LB-LB2-2", w("LB-LB1-2"), l("UB-QF-1")),
     m("UB-SF-1", s(1), w("UB-QF-1")), m("UB-SF-2", s(2), w("UB-QF-2")),
     m("LB-LB3-1", w("LB-LB2-1"), l("UB-SF-1")), m("LB-LB3-2", w("LB-LB2-2"), l("UB-SF-2")),

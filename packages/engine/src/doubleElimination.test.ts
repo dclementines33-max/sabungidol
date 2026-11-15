@@ -28,7 +28,9 @@ describe("double elimination (PRD §4)", () => {
     expect(t.filter((m) => m.stage === "UB").length).toBe(7);
     expect(t.filter((m) => m.stage === "LB").length).toBe(8);
     expect(t.at(-1)).toMatchObject({ stage: "FN", round: "GF" });
-    checkDoubleElimination(t, 10, ["LB-LB1-1"]); // 9 v 10 starts in the lower bracket
+    checkDoubleElimination(t, 10, []);
+    const first = t.filter((m) => m.round === "LB1");
+    expect(first.some((m) => "seed" in m.a && "seed" in m.b)).toBe(false); // seeds 9 and 10 are in different matches
   });
 
   it("Inkigayo Cup: 6 league champions, seeds 1–2 bye, UB R1 losers go home, 8 matches", () => {
