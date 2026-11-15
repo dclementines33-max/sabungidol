@@ -20,7 +20,7 @@ The user tests on another device. Nothing is half-built in the code.
 
 **SPOTLIGHT PICKER (2026-11-15, router): WheelPicker.tsx is now a spotlight duel (two framed portraits, a beam swings between them and stops on the winner; sweep() schedules the flips, unit-tested). Same draw: one random number per game, < 0.5 = A. Mode label "Spotlight Picker"; stored method stays "wheel". Screenshot e2e: test-results/spotlight-picker.png. Also: competition panels "Playingâ€¦" (was Memainkan).**
 
-**PREVIEW 2026-11-16: version 9b7b71d2-b249-4071-9722-6ebb1c374bb4 (alias test) = main up to the bracket/settings fixes (plus everything since 01ce8996). NOT deployed to production.**
+**PREVIEW 2026-11-16: version 62164b9d-b1ac-45b9-9421-aa23c5586332 (alias test) = main up to ab24079: Simulation Timeline, breaking news, Unzure celebration, arena themes, honours restyle, bracket seeding fix. NOT deployed to production.**
 
 **RATING MANAGER REBUILT (2026-11-15, router): calm rows (RatingList + RatingRow): checkbox, photo, name + group Â· league, slider (commits on release), number field, tier chip, "was N" when changed. Order: Draft â†’ Ratings â†’ Presets â†’ Engine Lab. No W-D-L, no step/quick buttons, no career query.**
 
