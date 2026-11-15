@@ -8,7 +8,7 @@
   rules) and the memory note (decisions, open items, a one-line session log entry).
 
 # Project
-- Spec: `PRD_1.md` (Sabung Idol PRD). Build phase by phase per §15; never start the next phase before its gate passes and the user approves.
+- Spec: `PRD_1.md` (Sabung Idol PRD). Build phase by phase per Â§15; never start the next phase before its gate passes and the user approves.
 - UI references: pictures in `design/refs/`, explained in `design/NOTES.md`. Read both before building or changing any page or component the user sees; a reference says what a page shows, while colours and sizes come from `packages/ui/src/tokens.css`.
 
 # Project rules
@@ -49,6 +49,6 @@ Keep this app organized so a beginner can read it.
 
 # Update workflow (two sessions)
 - When the user describes an app update, the receiving session acts as router: split it into tasks, label each light or heavy
-  (criteria in `docs/PROGRESS.md` → "Two-session workflow"), and send each as a brief (goal, files, done = what) with SendMessage:
-  light → "Sonnet lighter task" (`local_86373881-67c0-4018-9c57-4002b60b48c6`), heavy → "Opus Hard Task" (`local_8baa338f-68d8-4d03-96bd-676a2b3f9085`).
+  (criteria in `docs/PROGRESS.md` â†’ "Two-session workflow"), and send each as a brief (goal, files, done = what) with SendMessage:
+  light â†’ "Sonnet lighter task" (`local_bae9947b-6cf5-4542-8513-c8a152412a20`), heavy â†’ "Opus Hard Task" (`local_ccbd1d15-6161-4700-8127-82730a97a786`).
 - Tell the user in one line which task went where. If an id is gone, find it with list_sessions by title. Never send both sessions edits to the same files at once.
