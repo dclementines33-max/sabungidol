@@ -1,10 +1,11 @@
 // Season Story in the Worker (PRD §8): the season replayed from its saved matches (nothing is played), and
 // the titles of earlier seasons, so "first title" means first ever.
-import { type Db, leagueTotals, listPlacements, listSeasons } from "@sabung/db";
+import { type Db, leagueTotals, listPlacements, listSeasonRatingChanges, listSeasons } from "@sabung/db";
 import { D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
 import { runSeason, seasonDrama, seasonNews, seasonStory } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
+import { involves, seasonRecord } from "./podiumDetail";
 
 export async function storyOf(db: Db, seasonId: string) {
   const seasons = await listSeasons(db);
@@ -25,4 +26,15 @@ export async function storyOf(db: Db, seasonId: string) {
   const drama = seasonDrama(result.matches, best);
   const news = seasonNews(result.matches, result.titles, titleCount);
   return [...drama, ...news, ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
+}
+
+// The season top 3's detail (Season Honours): record, places, rating change and the stories that name them.
+export async function podiumOf(db: Db, seasonId: string, ids: string[]) {
+  const [matches, places, changes, stories] = await Promise.all([seasonMatches(db, seasonId), listPlacements(db, seasonId), listSeasonRatingChanges(db, seasonId), storyOf(db, seasonId)]);
+  return ids.map((id) => ({
+    id, record: seasonRecord(matches, id),
+    places: places.filter((p) => p.idolId === id).map((p) => ({ comp: p.comp, rank: p.finalRank })).sort((a, b) => a.rank - b.rank || a.comp.localeCompare(b.comp)),
+    rating: changes.find((c) => c.idolId === id) ?? null,
+    stories: stories.filter((s) => involves(s, id)),
+  }));
 }

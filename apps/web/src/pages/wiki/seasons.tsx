@@ -40,7 +40,7 @@ function SeasonArchive() {
         : !archive.done ? <p className="text-text-secondary">{archive.season.name} isn't finished — the archive fills in once every competition is done.</p>
         : (
           <>
-            <SeasonHonours titles={archive.titles} top={archive.seasonTop} />
+            <SeasonHonours seasonId={seasonId!} titles={archive.titles} top={archive.seasonTop} />
             <RecapButton seasonName={archive.season.name} titles={archive.titles} />
             <div className="grid max-w-xl grid-cols-3 gap-3">
               <StatTile label="Match" value={archive.numbers.matches} />
