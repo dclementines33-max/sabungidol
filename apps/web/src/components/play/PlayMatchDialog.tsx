@@ -7,6 +7,7 @@ import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
+import { useCelebration } from "./celebrationStore";
 
 // Each competition's own colour on the match stage (Update 3); a league or B-Side cup uses its league's branding colour.
 const ACCENT: Record<string, string> = { UZC: "brand-violet", SWS: "brand-indigo", LCQ: "brand-indigo", IDL: "brand-gold", INK: "brand-rose", NUG: "brand-lime", DSG: "brand-gold", MBK: "brand-orchid", D2: "brand-sky", BS: "brand-teal" };
@@ -30,6 +31,10 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
     try {
       const r = await engine().acceptMatch(match.id, games, method);
       notify({ level: "success", message: `Result saved: ${r.scoreA}–${r.scoreB}` });
+      if (match.comp === "UZC" && match.round === "F") { // the Unzure Cup grand final: celebrate its champion
+        const a = r.result === "A";
+        useCelebration.getState().show({ champion: a ? match.idolA : match.idolB, runnerUp: a ? match.idolB : match.idolA, score: a ? `${r.scoreA}–${r.scoreB}` : `${r.scoreB}–${r.scoreA}` });
+      }
     } catch (error) {
       notify({ level: "error", code: "E-PLAY-002", message: "The match result wasn't saved.", context: error instanceof Error ? error.message : String(error) });
     } finally {

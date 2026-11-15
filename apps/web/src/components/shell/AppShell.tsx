@@ -15,6 +15,7 @@ import { DatabaseResetOffer } from "./DatabaseResetOffer";
 import { replayEarlyInput } from "./earlyInput";
 import { PinnedNotices } from "./PinnedNotices";
 import { SimTimeline } from "../play/SimTimeline";
+import { GrandFinalCelebration } from "../play/GrandFinalCelebration";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useRememberedFlag("sabung.railCollapsed");
@@ -67,6 +68,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Toasts notices={toasts} onDismiss={dismissToast} />
       <BlockerDialog notice={blocker} onClose={closeBlocker} />
       <SimTimeline />
+      <GrandFinalCelebration />
     </>
   );
 }
