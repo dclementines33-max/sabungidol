@@ -102,6 +102,19 @@ const api = {
     for (const photoId of old) await dropPhoto(db, photoId);
     return old;
   },
+  // Adds photos to the idol's gallery (phones can't pick a folder); the photos already there stay. All or nothing.
+  addGalleryPhotos: async (idolId: string, images: Blob[]) => {
+    const db = await open();
+    const existing = (await listIdols(db)).find((i) => i.id === idolId)?.gallery ?? [];
+    const ids: string[] = [];
+    try {
+      for (const image of images) ids.push((await keepPhoto(db, image)).id);
+      await setGallery(db, idolId, [...existing, ...ids]);
+    } catch (error) {
+      for (const photoId of ids) await dropPhoto(db, photoId).catch(() => {});
+      throw error;
+    }
+  },
   // A new photo for an idol; the old one is removed. Returns both ids (the page forgets the old one's cached URLs).
   replacePhoto: async (idolId: string, image: Blob) => {
     const db = await open();

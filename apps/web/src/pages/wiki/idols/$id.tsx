@@ -52,7 +52,7 @@ function IdolProfile() {
           { id: "matches", label: "Matches", content: () => <MatchLog filter={{ idolId: id }} label={`Match ${idol.name}`} /> },
           { id: "rivals", label: "Rivals", content: () => <ProfileRivals idolId={id} rivals={profile.rivals} /> },
           { id: "records", label: "Records", content: () => <ProfileRecords records={profile.records} /> },
-          { id: "gallery", label: `Gallery (${idol.gallery.length})`, content: () => <ProfileGallery name={idol.name} photos={idol.gallery} /> },
+          { id: "gallery", label: `Gallery (${idol.gallery.length})`, content: () => <ProfileGallery idolId={idol.id} name={idol.name} photos={idol.gallery} /> },
         ]} />
       )}
     </div>
