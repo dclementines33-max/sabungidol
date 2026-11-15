@@ -19,14 +19,19 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "To the next phase" }).click();
   await expect(page.getByText(/4,940 matches played/).first()).toBeVisible({ timeout: 120_000 }); // 12 leagues + The Idols
+  await page.getByRole("dialog", { name: "Simulation highlights" }).getByRole("button", { name: "Close" }).click(); // every bulk play ends on its highlights
   await expect(phases.getByRole("link", { name: /Division 1.*Done/ })).toBeVisible();
   await expect(phases.getByRole("link", { name: /Unzure Cup.*(Ready to play|Waiting)/ })).toBeVisible();
 
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
   await expect(page.getByText(/Season complete!/)).toBeVisible({ timeout: 150_000 });
+  await page.getByRole("dialog", { name: "Simulation highlights" }).getByRole("button", { name: "Close" }).click();
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
-  await expect(page.getByRole("figure").filter({ hasText: "Season top 3" })).toBeVisible();
-  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => null)))); // honours cards arrive one by one; axe must not sample them mid-fade
+  const top = page.getByRole("list", { name: "Season top 3" });
+  await expect(top.getByRole("article", { name: /^Idol of the Season: / })).toBeVisible();
+  await expect(top.getByRole("list", { name: "Final places" })).toHaveCount(3); // places from the replay, not only after Close Season
+  await expect(page.getByRole("article", { name: /^Unzure Cup champion: / })).toBeVisible();
+  await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null)))); // honours cards arrive one by one; axe must not sample them mid-fade (the breaking-news dot pulses forever)
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/studio/settings?s=data");

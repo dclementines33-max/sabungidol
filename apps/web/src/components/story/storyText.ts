@@ -18,7 +18,7 @@ export function headline(s: Story, name: Name, label: Name): string {
     case "first-title": return `Penantian Berakhir! ${name(s.idol)} Rebut Gelar ${label(s.title)} Perdananya`;
     case "points-record": return `Sejarah Tercipta: ${name(s.idol)} Kumpulkan ${s.points} Poin di ${label(s.league)}, Rekor ${s.previous} Tumbang`;
     case "late-promotion": return `Comeback Dramatis! ${name(s.idol)} Melesat dari Peringkat ${s.from} ke ${s.to} dan Promosi dari ${label(s.league)}`;
-    case "rivalry": return `${name(s.a)} vs ${name(s.b)}: ${s.meetings} Duel Panas Musim Ini, Skor Sementara ${s.winsA}–${s.winsB}`;
+    case "rivalry": return `${name(s.a)} vs ${name(s.b)}: ${s.meetings} Duel Panas Musim Ini, Rekor Pertemuan ${s.winsA}–${s.winsB}`;
     case "multi-title": return `${name(s.idol)} Berpesta Gelar! Borong ${s.titles.length} Trofi: ${s.titles.map(label).join(", ")}`;
     case "title-milestone": return `${name(s.idol)} Cetak Sejarah, Kini Koleksi ${s.total} Gelar Sepanjang Karier`;
     case "slump": return `Alarm Bahaya! ${name(s.idol)} (Rating ${s.rating}) Telan ${s.losses} Kekalahan Beruntun`;
