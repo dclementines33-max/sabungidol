@@ -14,6 +14,7 @@ import { NavRail } from "./NavRail";
 import { DatabaseResetOffer } from "./DatabaseResetOffer";
 import { replayEarlyInput } from "./earlyInput";
 import { PinnedNotices } from "./PinnedNotices";
+import { SimTimeline } from "../play/SimTimeline";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useRememberedFlag("sabung.railCollapsed");
@@ -65,6 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} onCommand={runCommand} />
       <Toasts notices={toasts} onDismiss={dismissToast} />
       <BlockerDialog notice={blocker} onClose={closeBlocker} />
+      <SimTimeline />
     </>
   );
 }

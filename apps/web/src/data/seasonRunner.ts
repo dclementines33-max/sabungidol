@@ -3,10 +3,11 @@
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
 import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
-import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason, seasonScores, seasonTop } from "@sabung/engine";
+import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason, seasonScores, seasonTop, simHighlights } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
 import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 import { seasonMatches } from "./seasonMatches";
+import { storyContext } from "./storyContext";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
@@ -80,7 +81,8 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
   pauseRequested = false;
   const input = await seasonInput(db);
   let saved: SimMatch[] = await listSeasonMatches(db, input.seasonId); // fresh: playSeason extends it as it saves
-  const frontier = runSeason({ ...input, saved, target: () => false }).pending;
+  const before = runSeason({ ...input, saved, target: () => false }); // also the "before" of the Simulation Timeline
+  const frontier = before.pending;
   const allowed = allows(target, frontier);
   const estimate = target.kind === "all" ? 5600 : target.kind === "ids" ? target.ids.length : frontier.filter(allowed).length;
   let added = 0;
@@ -98,7 +100,9 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
     saved = result.matches;
     onProgress({ done: added, total: Math.max(estimate, added) });
     if (result.done || fresh.length === 0 || pauseRequested) {
-      return { added, removed, done: result.done, paused: pauseRequested && !result.done && fresh.length > 0, pending: result.pending.length, titles: result.titles, notices: result.notices };
+      const ctx = added ? await storyContext(db, input.seasonId) : null;
+      const highlights = ctx ? simHighlights(before, result, ctx.best, ctx.titleCount) : [];
+      return { highlights, added, removed, done: result.done, paused: pauseRequested && !result.done && fresh.length > 0, pending: result.pending.length, titles: result.titles, notices: result.notices };
     }
   }
 }

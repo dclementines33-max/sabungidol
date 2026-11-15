@@ -4,9 +4,10 @@ import { competitionKeyOf } from "@sabung/shared";
 import { PRESTIGE } from "../season/seasonClose";
 import type { DramaStory } from "./seasonDrama";
 import type { NewsStory } from "./seasonNews";
+import type { MomentStory } from "./seasonMoments";
 import type { Story } from "./seasonStory";
 
-export type AnyStory = Story | DramaStory | NewsStory;
+export type AnyStory = Story | DramaStory | NewsStory | MomentStory;
 
 export function newsScore(s: AnyStory): number {
   switch (s.kind) {
@@ -22,6 +23,10 @@ export function newsScore(s: AnyStory): number {
     case "slump": return Math.min(70, 10 + 6 * s.losses + (s.rating - 85));
     case "reverse-sweep": return 40;
     case "idol-of-month": return 20 + s.wins;
+    case "champion": return 40 + 45 * PRESTIGE[competitionKeyOf(s.title.split("-")[0]!)];
+    case "clinched": return Math.min(90, 70 + 3 * s.left);
+    case "shock-exit": return Math.min(88, 60 + 2 * s.gap);
+    case "big-match": return 35 + (s.ratingLoser - 90) * 3;
   }
 }
 
