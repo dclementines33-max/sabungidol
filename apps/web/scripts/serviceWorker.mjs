@@ -1,7 +1,6 @@
 // PWA (PRD §11): after `vite build`, Workbox writes dist/client/sw.js, which caches the whole app
 // (pages, PGlite WASM, the default idol data) so it opens and runs fully offline.
-// shortcut: no skipWaiting, so a new version takes over only after every tab is closed; add an
-// "update ready" notice if users stay on old versions too long.
+// A new version takes over at once (skipWaiting + clientsClaim); __root.tsx then reloads the page.
 import { generateSW } from "workbox-build";
 
 const { count, size, warnings } = await generateSW({
@@ -11,6 +10,8 @@ const { count, size, warnings } = await generateSW({
   navigateFallback: "/index.html", // every route is the same SPA shell
   maximumFileSizeToCacheInBytes: 12 * 1024 * 1024, // pglite.wasm is ~9 MB
   cleanupOutdatedCaches: true,
+  skipWaiting: true,
+  clientsClaim: true,
 });
 for (const warning of warnings) console.warn(warning);
 console.log(`sw.js: ${count} files, ${(size / 1048576).toFixed(1)} MB precached`);

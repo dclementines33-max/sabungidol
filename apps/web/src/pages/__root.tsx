@@ -11,7 +11,12 @@ import { queryClient } from "../data/queryClient";
 import appCss from "../styles.css?url";
 
 // PWA: the service worker (scripts/serviceWorker.mjs) exists only in the production build.
-if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) void navigator.serviceWorker.register("/sw.js");
+if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) {
+  // An update (not the first install) swaps the cached files, so reload onto the new version.
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => hadController && location.reload());
+  void navigator.serviceWorker.register("/sw.js");
+}
 
 export const Route = createRootRoute({
   head: () => ({
