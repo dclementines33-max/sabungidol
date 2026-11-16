@@ -6,11 +6,13 @@ import type { DramaStory } from "./seasonDrama";
 import type { NewsStory } from "./seasonNews";
 import type { MomentStory } from "./seasonMoments";
 import type { CareerStory } from "./careerNews";
+import type { TitleStory } from "./titleNews";
 import type { Story } from "./seasonStory";
 
-export type AnyStory = Story | DramaStory | NewsStory | MomentStory | CareerStory;
+export type AnyStory = Story | DramaStory | NewsStory | MomentStory | CareerStory | TitleStory;
 
 export const BREAKING = 80; // from this score a story gets the breaking-news headline
+const prestige = (title: string) => PRESTIGE[competitionKeyOf(title.split("-")[0]!)];
 
 export function newsScore(s: AnyStory): number {
   switch (s.kind) {
@@ -41,6 +43,11 @@ export function newsScore(s: AnyStory): number {
     case "stuck-in-d2": return Math.min(75, 40 + 8 * s.seasons);
     case "early-exit-again": return Math.min(90, 45 + 20 * s.times);
     case "big-match": return 35 + (s.ratingLoser - 90) * 3;
+    // Title news: an underdog by how far below the favourite and past how many better-rated idols; level points = tiebreak.
+    case "underdog-champion": return Math.min(95, 35 + 2 * (s.favouriteRating - s.rating) + 2 * s.above + 15 * prestige(s.title));
+    case "favourite-flop": return Math.min(80, 30 + 30 * prestige(s.title) + ((s.rank !== null ? s.rank >= 4 : !["F", "GF"].includes(s.round)) ? 10 : 0));
+    case "title-race": return s.how === "level" ? 85 : s.how === "narrow" ? 75 - 5 * s.margin : Math.min(80, 45 + 2 * s.margin);
+    case "final-thriller": return 45 + 30 * prestige(s.title);
   }
 }
 

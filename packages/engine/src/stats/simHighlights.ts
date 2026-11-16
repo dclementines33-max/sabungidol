@@ -5,7 +5,8 @@
 import type { SeasonResult, SimMatch, Title } from "../season/types";
 import { STRONG, cupTimeline } from "./cupTimeline";
 import { type Indexed, leagueTimeline, ratingsOf } from "./leagueTimeline";
-import type { AnyStory } from "./newsScore";
+import { type AnyStory, newsScore, topNews } from "./newsScore";
+import { type TitleStory, titleNews } from "./titleNews";
 
 export type TrackStory =
   | { kind: "rivalry-result"; matchId: string; winner: string; loser: string; draw: boolean }
@@ -26,6 +27,7 @@ export type Finale = {
   promoted: string[]; relegated: string[]; qualified: string[];
   path: { matchId: string; round: string; opponent: string; won: boolean; score: string }[]; // the champion's road
   lines: TimelineStory[]; // "story of the season"
+  news?: TitleStory[]; // the biggest title story of each competition decided in this play
 };
 export type TimelinePoint = { comp: string; stage: string; round: string; stories: TimelineStory[] };
 export type Timeline = { track: string | null; points: TimelinePoint[]; finale: Finale | null }; // track null = whole season
@@ -53,7 +55,8 @@ export function simHighlights(before: State, after: State, opts: TimelineOptions
     const cups = new Map([...comps].map(([c, l]) => [c, l.filter((x) => x.m.stage !== "LG")]).filter(([, l]) => l.length) as [string, Indexed[]][]);
     const cup = cups.size ? cupTimeline(cups, after.titles, before.titles, rivals) : null;
     const events = [...(lg?.events ?? []), ...(cup?.events ?? [])];
-    return { track, events, finale: cup?.finale ?? lg?.finale ?? null, first: Math.min(...[...comps.values()].flat().filter((x) => x.fresh).map((x) => x.at)) };
+    const finale = cup?.finale ?? lg?.finale ?? null;
+    return { track, events, finale: finale && { ...finale, news: titleLines(track, before, after) }, first: Math.min(...[...comps.values()].flat().filter((x) => x.fresh).map((x) => x.at)) };
   }).filter((t) => t.events.length || t.finale).sort((a, b) => a.first - b.first);
 
   if (!opts.season) return timelines.map((t) => ({ track: t.track, points: points(t.events), finale: t.finale }));
@@ -72,8 +75,16 @@ export function simHighlights(before: State, after: State, opts: TimelineOptions
   const finale: Finale | null = finales.length ? {
     champions: finales.flatMap((f) => f.champions), promoted: finales.flatMap((f) => f.promoted), relegated: finales.flatMap((f) => f.relegated),
     qualified: [], path: [], lines: finales.flatMap((f) => f.lines).slice(0, 2),
+    news: finales.flatMap((f) => f.news ?? []).sort((a, b) => newsScore(b) - newsScore(a)),
   } : null;
   return events.length || finale ? [{ track: null, points: points(events), finale }] : [];
+}
+
+// One story per competition whose title was decided in this play: its most important title news.
+function titleLines(track: string, before: State, after: State): TitleStory[] {
+  const fresh = Object.fromEntries(Object.entries(after.titles).filter(([key]) => !before.titles[key] && trackOf(key.split("-")[0]!) === track));
+  const news = titleNews(after.matches, fresh);
+  return Object.keys(fresh).flatMap((key) => topNews(news.filter((s) => s.title === key), 1));
 }
 
 // Events grouped into one point per competition round, in play order.

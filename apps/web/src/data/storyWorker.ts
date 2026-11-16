@@ -1,7 +1,7 @@
 // Season Story in the Worker (PRD §8): the season replayed from its saved matches (nothing is played), and
 // the titles of earlier seasons, so "first title" means first ever.
 import { type Db, countMatchesWhere, listIdols, listPlacements } from "@sabung/db";
-import { type Placed, careerNews, runSeason, seasonDrama, seasonMoments, seasonNews, seasonPlacements, seasonStory, topPairs, trajectoryNews } from "@sabung/engine";
+import { type Placed, careerNews, runSeason, seasonDrama, seasonMoments, seasonNews, seasonPlacements, seasonStory, titleNews, topPairs, trajectoryNews } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 import { storyContext } from "./storyContext";
@@ -37,5 +37,5 @@ export async function storyOf(db: Db, seasonId: string) {
     ...(await listPlacements(db)).filter((p) => earlier.has(p.seasonId)).map((p) => ({ season: number.get(p.seasonId)!, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
     ...seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0).map((p) => ({ season: season.number, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
   ];
-  return [...drama, ...news, ...moments, ...careerNews(pairs, gone), ...trajectoryNews(rows, season.number, (id) => rating.get(id) ?? 0), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
+  return [...drama, ...news, ...titleNews(result.matches, result.titles), ...moments, ...careerNews(pairs, gone), ...trajectoryNews(rows, season.number, (id) => rating.get(id) ?? 0), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
 }

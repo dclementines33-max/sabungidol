@@ -40,6 +40,16 @@ describe("simulation timeline", () => {
     expect(t!.finale!.relegated).toContain("h");
   });
 
+  it("the finale leads with each decided competition's biggest title story, only when the title is new", () => {
+    const titles = { D1A: { champion: "a", runnerUp: "b" } };
+    const [t] = simHighlights({ matches: [], titles: {} }, { matches: league(), titles });
+    expect(t!.finale!.news).toEqual([expect.objectContaining({ kind: "favourite-flop", idol: "h", title: "D1A", rank: 8 })]);
+    const [season] = simHighlights({ matches: [], titles: {} }, { matches: [...league(), ...league("D1B")], titles: { ...titles, D1B: { champion: "a", runnerUp: "b" } } }, { season: true });
+    expect(season!.finale!.news!.map((s) => s.title).sort()).toEqual(["D1A", "D1B"]);
+    const played = league();
+    expect(simHighlights({ matches: played.slice(0, -2), titles }, { matches: played, titles })[0]?.finale?.news).toEqual([]);
+  });
+
   it("a quiet play has no timeline at all (no filler)", () => {
     const quiet = [match("D2A", "LG", "MD01", "x", "y", "A"), match("D2A", "LG", "MD01", "z", "w", "B")];
     expect(simHighlights({ matches: [], titles: {} }, { matches: quiet, titles: {} })).toEqual([]);

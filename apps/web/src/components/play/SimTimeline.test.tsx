@@ -15,7 +15,8 @@ const d1a: Timeline = {
     { comp: "D1A", stage: "LG", round: "MD03", stories: [{ kind: "upset", matchId: "m1", winner: "mina", loser: "yuna", gap: 14 }] },
     { comp: "D1A", stage: "LG", round: "MD07", stories: [{ kind: "new-leader", idol: "mina", league: "D1A", matchday: 7, previous: "yuna" }] },
   ],
-  finale: { champions: [{ title: "D1A", idol: "mina", runnerUp: "yuna" }], promoted: [], relegated: ["rei"], qualified: [], path: [], lines: [] },
+  finale: { champions: [{ title: "D1A", idol: "mina", runnerUp: "yuna" }], promoted: [], relegated: ["rei"], qualified: [], path: [], lines: [],
+    news: [{ kind: "underdog-champion", idol: "mina", title: "D1A", rating: 78, favourite: "yuna", favouriteRating: 90, above: 9 }] },
 };
 const ink: Timeline = { track: "INK", points: [{ comp: "INK", stage: "KO", round: "QF", stories: [{ kind: "giant-killer", idol: "rei", comp: "INK", wins: 2 }] }], finale: null };
 
@@ -29,6 +30,9 @@ describe("SimTimeline", () => {
     const points = within(track).getAllByRole("listitem").filter((li) => li.parentElement === track);
     expect(points.map((li) => li.querySelector(".kicker")?.textContent)).toEqual(["Matchday 3", "Matchday 7", "Finale"]);
     expect(within(track).getByText("rei")).toBeTruthy(); // relegated, in the finale
+    const news = within(track).getByRole("list", { name: "Biggest news" }); // the top title story, kicker + headline
+    expect(within(news).getByText("Kuda hitam · D1A")).toBeTruthy();
+    expect(news.textContent).toContain("Kuda Hitam Juara! mina (Rating 78) Kuasai D1A, Lewati 9 Idol Berating Lebih Tinggi; Unggulan yuna (90) Gigit Jari");
     expect(points[0]!.getAttribute("aria-current")).toBe("step");
     fireEvent.click(screen.getByRole("button", { name: "Skip to the end" }));
     expect(points[2]!.getAttribute("aria-current")).toBe("step");

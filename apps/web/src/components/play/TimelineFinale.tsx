@@ -2,7 +2,7 @@
 // and one or two "story of the season" lines.
 import type { Finale } from "@sabung/engine";
 import { IdolPhoto } from "@sabung/ui";
-import { headlineOf } from "./timelineText";
+import { headlineOf, kickerOf, toneOf } from "./timelineText";
 
 type Name = (id: string) => string;
 
@@ -20,6 +20,16 @@ export function TimelineFinale({ finale, name, label }: { finale: Finale; name: 
   return (
     <div className="flex flex-col gap-3">
       <p className="kicker m-0">Finale</p>
+      {finale.news && finale.news.length > 0 && (
+        <ul className="m-0 flex list-none flex-col gap-2 p-0" aria-label="Biggest news">
+          {finale.news.map((s) => (
+            <li key={`${s.kind}|${s.title}`} lang="id" className="border-l-2 pl-3" style={{ borderColor: toneOf(s) }}>
+              <span className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)} · {label(s.title)}</span>
+              <span className="block font-display text-base">{headlineOf(s, name, label)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
       <ul className="m-0 flex list-none flex-col gap-2 p-0" aria-label="Champions">
         {finale.champions.map((c) => (
           <li key={c.title} className="flex items-center gap-3">
