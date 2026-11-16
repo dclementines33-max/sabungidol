@@ -5,7 +5,7 @@ import { idols, photos } from "./schema";
 
 export type PhotoRecord = { id: string; sizes: Record<string, { w: number; h: number }>; bytes: number; focalX: number; focalY: number };
 
-export async function insertPhoto(db: Db | Tx, photo: Omit<PhotoRecord, "focalX" | "focalY"> & { focalX?: number; focalY?: number }) {
+export async function insertPhoto(db: Db | Tx, photo: Omit<PhotoRecord, "focalX" | "focalY"> & { focalX?: number; focalY?: number; hash?: string | null }) {
   await db.insert(photos).values({ focalX: 0.5, focalY: 0.5, ...photo }); // focal point: centre unless set (PRD §10.3)
 }
 

@@ -21,3 +21,4 @@ export * from "./integrity";
 export * from "./ratings";
 export * from "./stats";
 export * from "./matchQuery";
+export * from "./sync";
