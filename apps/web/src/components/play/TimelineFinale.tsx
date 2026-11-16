@@ -1,12 +1,24 @@
 // The last card of a Simulation Timeline: the champion(s), who goes up and who goes down, the champion's path in a cup,
-// and one or two "story of the season" lines.
-import type { Finale } from "@sabung/engine";
+// each competition's stories (or, with none, its plain summary), and one or two "story of the season" lines.
+import type { Finale, TimelineStory, TitleNews } from "@sabung/engine";
 import { IdolPhoto } from "@sabung/ui";
 import { headlineOf, kickerOf, toneOf } from "./timelineText";
 
 type Name = (id: string) => string;
 
-function Names({ title, ids, name, tone }: { title: string; ids: string[]; name: Name; tone: string }) {
+// A competition's stories; with none, its summary, so a finale never shows only a name.
+export const storiesOf = (n: TitleNews): TimelineStory[] => (n.stories.length ? n.stories : n.summary ? [n.summary] : []);
+
+export function NewsItem({ s, tag, name, label }: { s: TimelineStory; tag?: string; name: Name; label: Name }) {
+  return (
+    <li lang="id" className="border-l-2 pl-3" style={{ borderColor: toneOf(s) }}>
+      <span className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)}{tag ? ` · ${tag}` : ""}</span>
+      <span className="block font-display text-base">{headlineOf(s, name, label)}</span>
+    </li>
+  );
+}
+
+export function Names({ title, ids, name, tone }: { title: string; ids: string[]; name: Name; tone: string }) {
   if (!ids.length) return null;
   return (
     <div>
@@ -22,12 +34,7 @@ export function TimelineFinale({ finale, name, label }: { finale: Finale; name: 
       <p className="kicker m-0">Finale</p>
       {finale.news && finale.news.length > 0 && (
         <ul className="m-0 flex list-none flex-col gap-2 p-0" aria-label="Biggest news">
-          {finale.news.map((s) => (
-            <li key={`${s.kind}|${s.title}`} lang="id" className="border-l-2 pl-3" style={{ borderColor: toneOf(s) }}>
-              <span className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)} · {label(s.title)}</span>
-              <span className="block font-display text-base">{headlineOf(s, name, label)}</span>
-            </li>
-          ))}
+          {finale.news.flatMap((n) => storiesOf(n).map((s) => <NewsItem key={`${n.title}|${s.kind}`} s={s} tag={label(n.title)} name={name} label={label} />))}
         </ul>
       )}
       <ul className="m-0 flex list-none flex-col gap-2 p-0" aria-label="Champions">

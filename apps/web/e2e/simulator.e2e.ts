@@ -25,7 +25,10 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
 
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
   await expect(page.getByText(/Season complete!/)).toBeVisible({ timeout: 150_000 });
-  await page.getByRole("dialog", { name: "Simulation highlights" }).getByRole("button", { name: "Close" }).click();
+  const review = page.getByRole("dialog", { name: "Simulation highlights" });
+  await expect(review.getByRole("region", { name: "Champions" })).toBeVisible(); // the whole season is a review, not a track
+  await review.screenshot({ path: "test-results/season-review.png" });
+  await review.getByRole("button", { name: "Close" }).click();
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
   const top = page.getByRole("list", { name: "Season top 3" });
   await expect(top.getByRole("article", { name: /^Idol of the Season: / })).toBeVisible();

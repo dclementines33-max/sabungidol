@@ -37,5 +37,5 @@ export async function storyOf(db: Db, seasonId: string) {
     ...(await listPlacements(db)).filter((p) => earlier.has(p.seasonId)).map((p) => ({ season: number.get(p.seasonId)!, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
     ...seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0).map((p) => ({ season: season.number, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
   ];
-  return [...drama, ...news, ...titleNews(result.matches, result.titles), ...moments, ...careerNews(pairs, gone), ...trajectoryNews(rows, season.number, (id) => rating.get(id) ?? 0), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
+  return [...drama, ...news, ...titleNews(result.matches, result.titles).filter((s) => s.kind !== "title-summary"), ...moments, ...careerNews(pairs, gone), ...trajectoryNews(rows, season.number, (id) => rating.get(id) ?? 0), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
 }

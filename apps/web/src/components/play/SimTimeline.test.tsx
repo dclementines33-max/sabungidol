@@ -16,7 +16,7 @@ const d1a: Timeline = {
     { comp: "D1A", stage: "LG", round: "MD07", stories: [{ kind: "new-leader", idol: "mina", league: "D1A", matchday: 7, previous: "yuna" }] },
   ],
   finale: { champions: [{ title: "D1A", idol: "mina", runnerUp: "yuna" }], promoted: [], relegated: ["rei"], qualified: [], path: [], lines: [],
-    news: [{ kind: "underdog-champion", idol: "mina", title: "D1A", rating: 78, favourite: "yuna", favouriteRating: 90, above: 9 }] },
+    news: [{ title: "D1A", stories: [{ kind: "underdog-champion", idol: "mina", title: "D1A", rating: 78, favourite: "yuna", favouriteRating: 90, above: 9 }], summary: null }] },
 };
 const ink: Timeline = { track: "INK", points: [{ comp: "INK", stage: "KO", round: "QF", stories: [{ kind: "giant-killer", idol: "rei", comp: "INK", wins: 2 }] }], finale: null };
 
@@ -40,5 +40,29 @@ describe("SimTimeline", () => {
     expect(screen.getByText("QF")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(useSimTimeline.getState().items).toBeNull();
+  });
+
+  it("whole season: a review (headlines, every champion with one line, up and down, key moments), no sideways track", () => {
+    const season: Timeline = {
+      track: null,
+      points: [{ comp: "INK", stage: "KO", round: "QF", stories: [{ kind: "shock-exit", matchId: "q", winner: "rei", loser: "yuna", comp: "INK", round: "QF", gap: 9 }, { kind: "giant-killer", idol: "rei", comp: "INK", wins: 2 }] }],
+      finale: {
+        champions: [], promoted: ["sol"], relegated: ["rei"], qualified: [], path: [], lines: [],
+        news: [
+          { title: "D1A", stories: [{ kind: "title-race", idol: "mina", runnerUp: "yuna", title: "D1A", margin: 0, how: "level" }], summary: { kind: "title-summary", idol: "mina", runnerUp: "yuna", title: "D1A", points: 80, margin: 0, score: null } },
+          { title: "INK", stories: [], summary: { kind: "title-summary", idol: "rei", runnerUp: "mina", title: "INK", points: null, margin: null, score: "3–1" } },
+        ],
+      },
+    };
+    render(<IdolSourceProvider source={{ idol: (id) => ({ id, name: id, rating: 80 }) as never, photo: () => undefined }}><SimTimeline /></IdolSourceProvider>);
+    act(() => useSimTimeline.getState().show([season]));
+    expect(screen.queryByRole("list", { name: "Timeline" })).toBeNull();
+    expect(within(screen.getByRole("region", { name: "Season headlines" })).getByText(/Sama Poin, Beda Nasib! mina Juara D1A/)).toBeTruthy();
+    const champions = screen.getByRole("region", { name: "Champions" });
+    expect(within(champions).getByText(/mina Juara D1A dengan 80 Poin/)).toBeTruthy(); // its story is a headline already: the summary
+    expect(within(champions).getByText(/rei Juara INK, Kalahkan mina 3–1 di Final/)).toBeTruthy(); // no story: the summary
+    expect(screen.getByRole("region", { name: "Promotion and relegation" }).textContent).toContain("sol");
+    const moments = screen.getByRole("region", { name: "Key moments" });
+    expect(within(moments).getAllByRole("listitem")).toHaveLength(1); // the shock exit; the timeline-only giant-killer is left out
   });
 });

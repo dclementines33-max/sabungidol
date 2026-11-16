@@ -6,6 +6,7 @@ import type { SeasonResult, SimMatch, Title } from "../season/types";
 import { STRONG, cupTimeline } from "./cupTimeline";
 import { type Indexed, leagueTimeline, ratingsOf } from "./leagueTimeline";
 import { type AnyStory, newsScore, topNews } from "./newsScore";
+import { seasonNews } from "./seasonNews";
 import { type TitleStory, titleNews } from "./titleNews";
 
 export type TrackStory =
@@ -27,8 +28,9 @@ export type Finale = {
   promoted: string[]; relegated: string[]; qualified: string[];
   path: { matchId: string; round: string; opponent: string; won: boolean; score: string }[]; // the champion's road
   lines: TimelineStory[]; // "story of the season"
-  news?: TitleStory[]; // the biggest title story of each competition decided in this play
+  news?: TitleNews[]; // every competition decided in this play, biggest story first
 };
+export type TitleNews = { title: string; stories: AnyStory[]; summary: Extract<TitleStory, { kind: "title-summary" }> | null };
 export type TimelinePoint = { comp: string; stage: string; round: string; stories: TimelineStory[] };
 export type Timeline = { track: string | null; points: TimelinePoint[]; finale: Finale | null }; // track null = whole season
 
@@ -75,16 +77,25 @@ export function simHighlights(before: State, after: State, opts: TimelineOptions
   const finale: Finale | null = finales.length ? {
     champions: finales.flatMap((f) => f.champions), promoted: finales.flatMap((f) => f.promoted), relegated: finales.flatMap((f) => f.relegated),
     qualified: [], path: [], lines: finales.flatMap((f) => f.lines).slice(0, 2),
-    news: finales.flatMap((f) => f.news ?? []).sort((a, b) => newsScore(b) - newsScore(a)),
+    news: finales.flatMap((f) => f.news ?? []).sort((a, b) => top(b) - top(a)),
   } : null;
   return events.length || finale ? [{ track: null, points: points(events), finale }] : [];
 }
 
-// One story per competition whose title was decided in this play: its most important title news.
-function titleLines(track: string, before: State, after: State): TitleStory[] {
+const STORIES = 3; // per competition
+const top = (n: TitleNews) => (n.stories[0] ? newsScore(n.stories[0]) : 0);
+
+// Each competition whose title was decided in this play: its biggest stories (title news, an unbeaten league season) and
+// the plain summary, so no finale is left with only a champion's name.
+function titleLines(track: string, before: State, after: State): TitleNews[] {
   const fresh = Object.fromEntries(Object.entries(after.titles).filter(([key]) => !before.titles[key] && trackOf(key.split("-")[0]!) === track));
   const news = titleNews(after.matches, fresh);
-  return Object.keys(fresh).flatMap((key) => topNews(news.filter((s) => s.title === key), 1));
+  const unbeaten = seasonNews(after.matches, {}, new Map()).filter((s) => s.kind === "unbeaten");
+  return Object.keys(fresh).map((key) => {
+    const stories = [...news.filter((s) => s.title === key && s.kind !== "title-summary"), ...unbeaten.filter((s) => s.league === key)];
+    const summary = news.find((s): s is TitleNews["summary"] & TitleStory => s.kind === "title-summary" && s.title === key) ?? null;
+    return { title: key, stories: topNews(stories, STORIES), summary };
+  });
 }
 
 // Events grouped into one point per competition round, in play order.

@@ -53,6 +53,8 @@ describe("titleNews", () => {
     expect(race((x, y) => (x === "b" && y === "c" ? "D" : top(x, y)))).toMatchObject({ how: "narrow", margin: 2 });
     // a wins everything; the rest draw: 18 vs 4 points.
     expect(race(winsAll("a"))).toMatchObject({ how: "runaway", margin: 14 });
+    const { matches, titles } = league({ a: 85, b: 85, c: 80, d: 80 }, winsAll("a"));
+    expect(titleNews(matches, titles)[0]).toEqual({ kind: "title-summary", idol: "a", runnerUp: titles.D1A!.runnerUp, title: "D1A", points: 18, margin: 14, score: null });
   });
 
   it("knockout: the favourite out early, a final in the deciding game", () => {
@@ -71,8 +73,11 @@ describe("titleNews", () => {
     const g = (id: string, a: string, b: string, ra: number, rb: number, result: "A" | "B") => m(id, { comp: "UZC", stage: "GS", round: "A-MD1", idolA: a, idolB: b, ratingA: ra, ratingB: rb, result });
     const matches = [g("g1", "fav", "a", 95, 90, "B"), g("g2", "b", "c", 89, 88, "A"), g("g3", "fav", "b", 95, 89, "B"), g("g4", "a", "c", 90, 88, "A"),
       m("f", { comp: "UZC", stage: "KO", round: "F", idolA: "a", idolB: "b", ratingA: 90, ratingB: 89, scoreA: 3, scoreB: 0, result: "A" })];
-    expect(titleNews(matches, { UZC: { champion: "a", runnerUp: "b" } })).toEqual([expect.objectContaining({ kind: "favourite-flop", idol: "fav", stage: "GS", rank: null })]);
+    expect(titleNews(matches, { UZC: { champion: "a", runnerUp: "b" } })).toEqual([
+      { kind: "title-summary", idol: "a", runnerUp: "b", title: "UZC", points: null, margin: null, score: "3–0" },
+      expect.objectContaining({ kind: "favourite-flop", idol: "fav", stage: "GS", rank: null }),
+    ]);
     const dsg = [m("d", { comp: "DSG", stage: "FN", round: "F", idolA: "x", idolB: "y", ratingA: 70, ratingB: 95, scoreA: 3, scoreB: 2 })];
-    expect(titleNews(dsg, { DSG: { champion: "x", runnerUp: "y" } })).toEqual([]);
+    expect(titleNews(dsg, { DSG: { champion: "x", runnerUp: "y" } }).map((s) => s.kind)).toEqual(["title-summary"]); // facts only
   });
 });

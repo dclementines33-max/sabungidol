@@ -9,6 +9,7 @@ import { useBranding } from "../../data/branding";
 import { arenaOf } from "../competition/arenaTheme";
 import { Tabs } from "../competition/Tabs";
 import { Select } from "../idolDatabase/IdolFilters";
+import { SeasonReview } from "./SeasonReview";
 import { TimelineFinale } from "./TimelineFinale";
 import { headlineOf, kickerOf, pointLabel, starOf, toneOf } from "./timelineText";
 import { useSimTimeline } from "./timelineStore";
@@ -30,7 +31,7 @@ function Popup({ timelines, close }: { timelines: Timeline[]; close: () => void 
       footer={<Button variant="primary" onClick={close}>Close</Button>}>
       {timelines.length > TABS_UP_TO ? <Switcher timelines={timelines} title={title} />
         : timelines.length > 1 ? <Tabs label="Competition" tabs={timelines.map((t) => ({ id: t.track ?? "season", label: title(t), content: () => <Track key={t.track} t={t} /> }))} />
-        : <Track t={timelines[0]!} />}
+        : timelines[0]!.track === null ? <Review t={timelines[0]!} /> : <Track t={timelines[0]!} />}
     </Modal>
   );
 }
@@ -45,6 +46,13 @@ function Switcher({ timelines, title }: { timelines: Timeline[]; title: (t: Time
       <Track key={pick} t={t} />
     </div>
   );
+}
+
+// A whole-season play: the season review, not a track.
+function Review({ t }: { t: Timeline }) {
+  const { label } = useBranding();
+  const lookup = useIdolLookup();
+  return <SeasonReview t={t} name={(id) => lookup(id)?.name ?? id} label={label} />;
 }
 
 function Track({ t }: { t: Timeline }) {

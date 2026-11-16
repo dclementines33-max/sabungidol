@@ -48,6 +48,7 @@ export function newsScore(s: AnyStory): number {
     case "favourite-flop": return Math.min(80, 30 + 30 * prestige(s.title) + ((s.rank !== null ? s.rank >= 4 : !["F", "GF"].includes(s.round)) ? 10 : 0));
     case "title-race": return s.how === "level" ? 85 : s.how === "narrow" ? 75 - 5 * s.margin : Math.min(80, 45 + 2 * s.margin);
     case "final-thriller": return 45 + 30 * prestige(s.title);
+    case "title-summary": return 0; // facts, not news
   }
 }
 

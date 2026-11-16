@@ -8,7 +8,7 @@ type Name = (id: string) => string;
 
 const TRACK_KICKER: Record<TrackStory["kind"], string> = { "rivalry-result": "Rivalitas panas", "new-leader": "Pemimpin baru", "leader-run": "Raja klasemen", zone: "Zona panas", "top-miss": "Tercecer", failed: "Bintang tumbang", escape: "Lolos tipis", qualified: "Lolos", "giant-killer": "Pembunuh raksasa", final: "Final" };
 const TRACK_TONE: Record<TrackStory["kind"], string> = { "rivalry-result": "brand-orchid", "new-leader": "brand-gold", "leader-run": "brand-gold", zone: "brand-sky", "top-miss": "brand-sky", failed: "accent-bright", escape: "brand-lime", qualified: "brand-teal", "giant-killer": "brand-violet", final: "brand-gold" };
-const isTrack = (s: TimelineStory): s is TrackStory => s.kind in TRACK_KICKER;
+export const isTrack = (s: TimelineStory): s is TrackStory => s.kind in TRACK_KICKER;
 
 export const kickerOf = (s: TimelineStory) => (isTrack(s) ? TRACK_KICKER[s.kind] : KICKER[s.kind]);
 export const toneOf = (s: TimelineStory) => `var(--color-${isTrack(s) ? TRACK_TONE[s.kind] : TONE[s.kind]})`;
