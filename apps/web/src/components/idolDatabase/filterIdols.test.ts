@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { NO_FILTER, filterIdols } from "./filterIdols";
 
 const idol = (id: string, rating: number, extra: Partial<IdolRow> = {}): IdolRow => ({
-  id, name: id, groupId: "g1", groupName: "Aurora", rating, seed: null, nationality: null, birthday: null, role: null, photoId: null, active: true, gallery: [], ...extra,
+  id, name: id, groupId: "g1", groupName: "Aurora", groupLogoId: null, rating, seed: null, nationality: null, birthday: null, role: null, photoId: null, active: true, gallery: [], ...extra,
 });
 const idols = [idol("Mina", 92), idol("Yuna", 84, { nationality: "KR" }), idol("Sora", 84, { groupId: null, groupName: null }), idol("Rina", 55, { active: false })];
 const leagueOf = new Map([["Mina", "D1A"], ["Yuna", "D1A"], ["Sora", "D2B"]]);
