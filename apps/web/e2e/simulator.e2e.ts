@@ -30,6 +30,7 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await review.screenshot({ path: "test-results/season-review.png" });
   await review.getByRole("button", { name: "Close" }).click();
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
+  await expect(page.getByRole("figure", { name: "Most Valuable Idol" })).toBeVisible(); // the season awards, MVI first
   const top = page.getByRole("list", { name: "Season top 3" });
   await expect(top.getByRole("article", { name: /^Idol of the Season: / })).toBeVisible();
   await expect(top.getByRole("list", { name: "Final places" })).toHaveCount(3); // places from the replay, not only after Close Season

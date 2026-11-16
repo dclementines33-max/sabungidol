@@ -32,6 +32,7 @@ export * from "./stats/seasonStory";
 export * from "./stats/seasonDrama";
 export * from "./stats/seasonNews";
 export * from "./stats/titleNews";
+export * from "./stats/seasonAwards";
 export * from "./stats/newsScore";
 export * from "./stats/seasonMoments";
 export * from "./stats/simHighlights";

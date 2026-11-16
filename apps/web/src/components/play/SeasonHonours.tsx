@@ -4,6 +4,7 @@
 import { IdolCard } from "@sabung/ui";
 import { useBranding } from "../../data/branding";
 import { PodiumDetail } from "./PodiumDetail";
+import { SeasonAwards } from "./SeasonAwards";
 
 type Title = { champion: string; runnerUp: string };
 const ORDER = ["DSG", "UZC", "IDL", "IDL-PO", "INK", "NUG"];
@@ -18,6 +19,7 @@ export function SeasonHonours({ seasonId, titles, top }: { seasonId: string; tit
       <p aria-hidden="true" className="outline-text pointer-events-none absolute inset-x-0 top-2 -z-10 m-0 text-center font-display text-[clamp(4rem,16vw,12rem)] leading-none opacity-40">Honours</p>
       <h2 id="honours" className="m-0 text-center font-display text-2xl uppercase">Season Honours</h2>
       {top.length === 3 && <PodiumDetail seasonId={seasonId} top={top} unzure={titles.UZC?.champion} />}
+      <SeasonAwards seasonId={seasonId} />
       <div>
         <h3 className="kicker mb-4 text-center">Every champion</h3>
         <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
