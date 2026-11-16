@@ -62,7 +62,7 @@ async function run(db: Db, database: string) {
     seq = page.seq;
     if (!page.more) break;
   }
-  const changed = await applyRemote(db, pulled, { seasonId: season?.id ?? null, leagueName: (code) => defaultLeagueName(code[2]!), photoId: (h) => localPhoto(db, database, h) });
+  const changed = await applyRemote(db, pulled, { firstLink: state.seq === 0, seasonId: season?.id ?? null, leagueName: (code) => defaultLeagueName(code[2]!), photoId: (h) => localPhoto(db, database, h) });
   const rostersTaken = state.seq === 0 && (await applyFirstRosters(db, pulled)); // first link of a fresh device only
   await writeCache(db, KEY, "sync", { ...state, seq }, 0);
 

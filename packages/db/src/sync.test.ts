@@ -38,7 +38,9 @@ describe("cloud sync merge", () => {
     await addIdols(a, [idol("Liz"), idol("Rei")]);
     await addIdols(b, [idol("Liz", 90), idol("Rei")]); // same seed, other ids, B's own rating for Liz
     c.push(await localChanges(a, null, null));
-    expect(await applyRemote(b, c.all(), helpers(b))).toBe(0); // same base: nothing new for B
+    expect(await applyRemote(b, c.all(), helpers(b))).toBe(0); // same base, B newer: nothing changes
+    await applyRemote(b, c.all(), { ...helpers(b), firstLink: true }); // B's first link: the cloud wins…
+    expect((await listIdols(b)).find((i) => i.name === "Liz")?.rating).toBe(90); // …but never over a rating
     expect((await listIdols(b)).length).toBe(2);
 
     await later();

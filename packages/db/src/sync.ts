@@ -60,6 +60,7 @@ export type ApplyHelpers = {
   photoId: (hash: string) => Promise<string>; // the local photo with this original (downloaded and stored when new)
   leagueName: (code: string) => string; // a league's default name, when the running season has no branding row yet
   seasonId: string | null; // the running season: league logos land there
+  firstLink?: boolean; // this device's first pull: the cloud wins (its own seed data is stamped later than real edits elsewhere)
 };
 
 // Merges cloud rows into this device: newer wins per record; a missing record is created (an idol with the cloud's
@@ -89,7 +90,7 @@ async function applyOne(db: Db, r: SyncRow, help: ApplyHelpers): Promise<boolean
       await db.insert(groups).values({ id: ulid(), name, logoId: logoId ?? null, syncKey: r.key, updatedAt: r.updatedAt });
       return true;
     }
-    if (g.at >= r.updatedAt) return false;
+    if (!help.firstLink && g.at >= r.updatedAt) return false;
     await db.update(groups).set({ name, syncKey: r.key, updatedAt: r.updatedAt, ...(logoId ? { logoId } : {}) }).where(eq(groups.id, g.id));
     return true;
   }
@@ -105,7 +106,7 @@ async function applyOne(db: Db, r: SyncRow, help: ApplyHelpers): Promise<boolean
       await db.insert(idols).values({ id: ulid(), ...info, photoId: photoId ?? null, rating: typeof d.rating === "number" ? d.rating : 75, syncKey: r.key, updatedAt: r.updatedAt });
       return true;
     }
-    if (i.at >= r.updatedAt) return false;
+    if (!help.firstLink && i.at >= r.updatedAt) return false;
     await db.update(idols).set({ ...info, syncKey: r.key, updatedAt: r.updatedAt, ...(photoId ? { photoId } : {}) }).where(eq(idols.id, i.id)); // rating and active stay this device's
     return true;
   }
@@ -119,13 +120,13 @@ async function applyOne(db: Db, r: SyncRow, help: ApplyHelpers): Promise<boolean
   }
   if (r.kind === "photo") {
     const [p] = await db.select({ id: photos.id, at: iso(photos.updatedAt) }).from(photos).where(eq(photos.hash, r.key));
-    if (!p || p.at >= r.updatedAt) return false;
+    if (!p || (!help.firstLink && p.at >= r.updatedAt)) return false;
     await db.update(photos).set({ focalX: Number(d.focalX), focalY: Number(d.focalY), updatedAt: r.updatedAt }).where(eq(photos.id, p.id));
     return true;
   }
   if (r.kind === "league" && help.seasonId && LEAGUE.test(r.key)) {
     const [c] = await db.select({ name: competitions.name, branding: competitions.branding, at: iso(competitions.updatedAt) }).from(competitions).where(and(eq(competitions.seasonId, help.seasonId), eq(competitions.code, r.key)));
-    if (c && c.at >= r.updatedAt) return false;
+    if (c && !help.firstLink && c.at >= r.updatedAt) return false;
     const logoId = await help.photoId(String(d.logo));
     const branding = { ...((c?.branding as object | null) ?? {}), logoId };
     await db.insert(competitions).values({ seasonId: help.seasonId, code: r.key, name: c?.name ?? help.leagueName(r.key), branding, updatedAt: r.updatedAt })
