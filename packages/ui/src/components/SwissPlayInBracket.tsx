@@ -45,15 +45,20 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
                   <div key={`${b.wins}-${b.losses}`} className="mb-3">
                     <h4 className="m-0 mb-1 font-gothic text-lg leading-none text-accent-bright">{b.wins}–{b.losses}</h4>
                     <ul className="m-0 list-none space-y-1 p-0">
-                      {done.map((m) => (
-                        <li key={`${m.a}-${m.b}`} className="bg-surface/80 p-0.5 text-xs">
-                          {[m.a, m.b].map((id) => (
-                            <span key={id} className={`flex items-center gap-1.5 ${id === m.winner ? "bg-accent/30 font-bold text-text-primary" : "text-text-secondary"}`}>
-                              <IdolPhoto idolId={id} size={64} className="h-6 w-5 shrink-0" /><span className="truncate">{name(id)}</span>
-                            </span>
-                          ))}
-                        </li>
-                      ))}
+                      {done.map((m) => {
+                        const [sa, sb] = m.score?.split("–") ?? [];
+                        return (
+                          <li key={`${m.a}-${m.b}`} className="bg-surface/80 p-0.5 text-xs">
+                            {([m.a, m.b] as const).map((id, i) => (
+                              <span key={id} className={`flex items-center gap-1.5 pr-1 ${id === m.winner ? "bg-accent/30 font-bold text-text-primary" : "text-text-secondary"}`}>
+                                <IdolPhoto idolId={id} size={64} className="h-6 w-5 shrink-0" />
+                                <span className="flex-1 truncate">{name(id)}</span>
+                                <span className={`w-4 text-center font-mono tabular-nums ${id === m.winner ? "text-accent-bright" : ""}`}>{i === 0 ? (sa ?? "") : (sb ?? "")}</span>
+                              </span>
+                            ))}
+                          </li>
+                        );
+                      })}
                       {next.map((m) => (
                         <li key={`${m.a}-${m.b}`}>
                           <button type="button" onClick={m.onOpen} className="block w-full bg-surface-hover/70 p-0.5 text-left text-xs hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">

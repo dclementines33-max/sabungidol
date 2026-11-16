@@ -4,7 +4,7 @@
 import type { Rng } from "./rng";
 import { shuffle } from "./shuffle";
 
-export type SwissMatch = { a: string; b: string; winner: string };
+export type SwissMatch = { a: string; b: string; winner: string; score?: string };
 export type Pair = [string, string];
 export type SwissRecord = { wins: number; losses: number };
 

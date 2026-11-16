@@ -32,7 +32,7 @@ export function UnzurePanel() {
   const swiss = (view.draws.swiss ?? []).map((ids, g) => ({
     ids,
     rounds: [...new Set(view.cells.filter((c) => c.stage === "SW" && c.round.startsWith(`${LETTERS[g]}-`) && c.winner).map((c) => c.round))]
-      .map((round) => view.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner! }))),
+      .map((round) => view.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner!, score: c.score }))),
   }));
   const swissOpen = (g: number) => view.cells.filter((c) => c.stage === "SW" && c.id && !c.score && c.round.startsWith(`${LETTERS[g]}-`))
     .map((c) => ({ round: Number(c.round.split("-R")[1]) - 1, a: c.a, b: c.b, onOpen: () => { if (!running) setMatchId(c.id); } }));

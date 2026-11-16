@@ -26,7 +26,7 @@ export function ArchiveBrackets({ seasonId }: { seasonId: string }) {
   const swiss = (data?.draws.swiss ?? []).map((ids, g) => ({
     ids,
     rounds: [...new Set(data!.cells.filter((c) => c.stage === "SW" && c.round.startsWith(`${LETTERS[g]}-`)).map((c) => c.round))]
-      .map((round) => data!.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner! }))),
+      .map((round) => data!.cells.filter((c) => c.round === round && c.stage === "SW" && c.winner).map((c) => ({ a: c.a, b: c.b, winner: c.winner!, score: c.score }))),
   }));
   return (
     <div className="space-y-5">
