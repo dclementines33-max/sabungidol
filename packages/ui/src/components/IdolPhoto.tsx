@@ -29,7 +29,8 @@ export function IdolPhoto({ idolId, size, className = "w-16" }: { idolId: string
       className={`${frame} flex items-center justify-center font-display text-on-fill`}
       style={{ background: `var(--color-${idol.groupColor ?? "muted"})`, containerType: "inline-size" }}
     >
-      <span aria-hidden="true" style={{ fontSize: "40cqi" }}>{initials(idol.name)}</span>
+      {/* Drawn by CSS, not text: inside a labelled button ("Large photo of …") the initials must not count as its visible name. */}
+      <span aria-hidden="true" data-initials={initials(idol.name)} className="before:content-[attr(data-initials)]" style={{ fontSize: "40cqi" }} />
     </div>
   );
 }

@@ -24,6 +24,7 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "New badges this season" })).toBeVisible(); // Fase 4 step 3
   await expect(page.getByText(/^Idol of The Season$/)).toBeVisible();
   await expect(page.getByText(/Rating Progression: \d+ idols change/)).toBeVisible();
+  await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null)))); // honours cards fade in one by one: axe must not sample one mid-fade
   const violations = (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
   expect(violations).toEqual([]);
   await page.screenshot({ path: "test-results/season-close.png", fullPage: true }); // for a human look

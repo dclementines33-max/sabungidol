@@ -37,7 +37,7 @@ describe("IdolPhoto", () => {
   it("shows initials on the group colour when there is no photo", () => {
     render(<SampleIdols><IdolPhoto idolId="mina" size={64} /></SampleIdols>);
     const photo = screen.getByRole("img", { name: "Mina Kim" });
-    expect(photo.textContent).toBe("MK");
+    expect(photo.querySelector("[data-initials]")?.getAttribute("data-initials")).toBe("MK"); // drawn by CSS, not text
     expect(photo.getAttribute("style")).toContain("var(--color-brand-rose)");
   });
   it("shows the stored photo, lazily, when there is one", () => {
