@@ -1,7 +1,7 @@
 // Closing the season (PRD §4, §6.3): archive guard, Rating Progression (preview → save, optional),
 // promotion/relegation preview and "Start New Season" (a new draft season N+1). Runs in the Worker.
 import { type Db, applyRatings, archiveSeason, createDraftSeason, currentSeason, listAchievements, listSeasonMatches } from "@sabung/db";
-import { openerPairs, promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
+import { boardTargets, openerPairs, promotionPlan, runSeason, seasonProgression } from "@sabung/engine";
 import { readSeasonConfig, ulid } from "@sabung/shared";
 import { updateCareerCache } from "./careerWorker";
 import { seasonInput, seasonOverview } from "./seasonRunner";
@@ -19,7 +19,7 @@ async function closeState(db: Db) {
 
 export async function closePreview(db: Db) {
   const { input, result, plan, blockers, rating } = await closeState(db);
-  if (blockers.length) return { blockers, progression: [], promoted: [], relegated: [], badges: [] };
+  if (blockers.length) return { blockers, progression: [], promoted: [], relegated: [], badges: [], targets: [] };
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) };
   const progression = seasonProgression(result.matches, result.titles, leagues, plan)
     .map((r) => ({ ...r, current: rating.get(r.idolId) ?? r.old }))
@@ -27,7 +27,7 @@ export async function closePreview(db: Db) {
     .sort((a, b) => b.new - b.current - (a.new - a.current));
   await updateCareerCache(db); // the finished season gets its placements and badges (§7.2, §7.4)
   const badges = (await listAchievements(db)).filter((b) => b.seasonId === input.seasonId).map((b) => ({ idolId: b.idolId, badge: b.badge }));
-  return { blockers, progression, promoted: plan.promoted, relegated: plan.relegated, badges };
+  return { blockers, progression, promoted: plan.promoted, relegated: plan.relegated, badges, targets: boardTargets(result.matches) };
 }
 
 export async function saveProgression(db: Db) {

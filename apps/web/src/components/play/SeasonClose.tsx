@@ -71,7 +71,7 @@ export function SeasonClose({ done }: { done: boolean }) {
           </div>
         </>
       )}
-      {close && <SeasonVerdict open={verdict} onOpenChange={setVerdict} rows={close.progression} busy={busy} onSave={saveRatings} />}
+      {close && <SeasonVerdict open={verdict} onOpenChange={setVerdict} rows={close.progression} targets={close.targets} busy={busy} onSave={saveRatings} />}
       <ConfirmDialog open={confirm} onOpenChange={setConfirm} title="Start New Season"
         message="This season is archived (read-only) and a new season is created as a draft with the post-promotion/relegation rosters. A snapshot is made first."
         confirmLabel="Start New Season" onConfirm={startNew} />

@@ -33,6 +33,7 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   const verdict = page.getByRole("dialog", { name: "Season verdict" });
   await expect(verdict.getByRole("region", { name: "Risers" }).getByRole("listitem").first()).toBeVisible();
   await expect(verdict.getByRole("region", { name: "Fallers" }).getByRole("listitem").first()).toBeVisible();
+  await expect(verdict.getByRole("region", { name: "Board targets" })).toContainText(/\d+ Exceeded\d+ Met\d+ Missed\d+ Failed/); // every league idol graded
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => v.id)).toEqual([]);
   await verdict.screenshot({ path: "test-results/season-verdict.png" });
   await verdict.getByRole("button", { name: "Save ratings" }).click();
