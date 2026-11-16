@@ -2,6 +2,7 @@
 // save Rating Progression, Start New Season — each with exactly its matches (Season 1: 5,583; later seasons 5,590 = + Daesang and 6 Music Bank as opener) (ids are unique by the
 // primary key and carry the season number), then the integrity check finds nothing.
 import { expect, test } from "@playwright/test";
+import { closeHighlights } from "./highlights";
 
 test("GATE: 3 seasons in a row, no integrity errors, no duplicate matches", async ({ page }) => {
   test.setTimeout(600_000);
@@ -14,6 +15,7 @@ test("GATE: 3 seasons in a row, no integrity errors, no duplicate matches", asyn
     await page.getByRole("button", { name: "Simulate Whole Season" }).click();
     await expect(page.getByText(/Season complete!/).first()).toBeVisible({ timeout: 200_000 });
     await expect(page.getByText(n === 1 ? /^5,583 matches played$/ : /^5,590 matches played$/)).toBeVisible(); // the whole season, nothing twice
+    await closeHighlights(page);
     await page.getByRole("button", { name: "Save ratings…" }).click();
     await page.getByRole("dialog", { name: "Season verdict" }).getByRole("button", { name: "Save ratings" }).click();
     await expect(page.getByText(/^Ratings updated for \d+ idols$/).first()).toBeVisible({ timeout: 30_000 });

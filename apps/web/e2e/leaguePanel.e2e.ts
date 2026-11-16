@@ -1,6 +1,7 @@
 // Fase 3 step 4: a league panel — play a matchday and a single match, the table with zones, WCAG AA.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { closeHighlights } from "./highlights";
 
 test("League panel: matchday, single match, table with zones", async ({ page }) => {
   test.setTimeout(240_000);
@@ -14,6 +15,7 @@ test("League panel: matchday, single match, table with zones", async ({ page }) 
   await expect(page.getByText("0/38")).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Play next matchday" }).click();
   await expect(page.getByText("10 matches played")).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page);
   await expect(page.getByText("1/38")).toBeVisible();
 
   await page.getByRole("tab", { name: "Standings" }).click();

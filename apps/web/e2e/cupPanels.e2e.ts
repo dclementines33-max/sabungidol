@@ -2,6 +2,7 @@
 // knockout cup played from its own panel. WCAG AA.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
+import { closeHighlights } from "./highlights";
 
 const axe = async (page: Page) =>
   (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations.map((v) => `${v.id}: ${v.nodes[0]?.target.join(" ")}`);
@@ -14,18 +15,24 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await page.getByRole("button", { name: "Start Season 1" }).click();
   await page.getByRole("button", { name: "Play matchday 1 in every league" }).click(); // U1: one matchday in every league
   await expect(page.getByText(/^1\d\d matches played$/).first()).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page);
   await page.getByRole("button", { name: "To the next phase" }).click();
   await expect(page.getByText(/4,8\d\d matches played/).first()).toBeVisible({ timeout: 120_000 });
+  await closeHighlights(page);
 
   await page.goto("/play/unzure");
   await page.getByRole("button", { name: "Play Swiss R1" }).click();
   await expect(page.getByText("32 matches played")).toBeVisible({ timeout: 60_000 }); // round 1 in all 4 Swiss groups
+  await closeHighlights(page);
   await page.getByRole("button", { name: "Play to the end of Swiss" }).click();
+  await expect(page.getByText(/^(?!32 )\d+ matches played$/).first()).toBeVisible({ timeout: 60_000 }); // this play's toast, not round 1's
+  await closeHighlights(page);
   await expect(page.getByRole("button", { name: "Play LCQ MD1" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByRole("region", { name: "Swiss group A" })).toBeVisible(); // 4 Swiss groups
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Play to the champion" }).click();
   await expect(page.getByText(/^(\d{3}|\d{1,3}(,\d{3})+) matches played$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
+  await closeHighlights(page, true); // the Unzure champion is crowned
   await page.getByRole("tab", { name: "Pots & draw" }).click();
   await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
   await page.getByRole("tab", { name: "Groups" }).click();
@@ -57,14 +64,18 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   await expect(page.getByText(/^Result saved: \d–\d$/)).toBeVisible({ timeout: 30_000 });
   await page.getByRole("button", { name: "Play to the end" }).click();
   await expect(page.getByText(/Champion Nugu Cup/i)).toBeVisible({ timeout: 120_000 });
+  await closeHighlights(page, true);
   expect(await axe(page)).toEqual([]);
 
   await page.goto("/play/b-side");
   await page.getByRole("button", { name: "Play to the end" }).click();
   await expect(page.getByText(/Champion B-Side Cup A/i)).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page, true);
   await page.getByRole("button", { name: "BSC" }).click();
   await page.getByRole("button", { name: "Play to the end" }).click();
   await expect(page.getByText(/Champion B-Side Cup C/i)).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page, true);
   await page.getByRole("button", { name: "Every cup to the end" }).click(); // U1: the other five B-Side cups at once
   await expect(page.getByText(/^\d+ matches played$/).first()).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page, true);
 });

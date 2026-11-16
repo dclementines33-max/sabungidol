@@ -3,6 +3,7 @@
 // that can be started. WCAG AA.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { closeHighlights } from "./highlights";
 
 test("Season close: guard, progression, Start New Season", async ({ page }) => {
   test.setTimeout(360_000);
@@ -18,6 +19,7 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
 
   await page.getByRole("button", { name: "Simulate Whole Season" }).click();
   await expect(page.getByText(/Season complete!/)).toBeVisible({ timeout: 200_000 });
+  await closeHighlights(page);
   await expect(page.getByRole("heading", { name: "Promoted to D1 (+2)" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("heading", { name: "New badges this season" })).toBeVisible(); // Fase 4 step 3
   await expect(page.getByText(/^Idol of The Season$/)).toBeVisible();
@@ -42,8 +44,10 @@ test("Season close: guard, progression, Start New Season", async ({ page }) => {
   await expect(page.getByTestId("season-chip")).toHaveText(/Season 2 · live/);
   await page.getByRole("button", { name: "To the next phase" }).click();
   await expect(page.getByText(/^7 matches played/).first()).toBeVisible({ timeout: 60_000 }); // the opener: Daesang + 6 Music Bank
+  await closeHighlights(page);
   await page.getByRole("button", { name: "To the next phase" }).click();
   await expect(page.getByText(/4,940 matches played/).first()).toBeVisible({ timeout: 120_000 });
+  await closeHighlights(page);
 
   // Step 8: Season 1's progression was saved, so applying it again changes nothing (idempotent, §6.4);
   // Sync from Career Stats proposes new ratings from the archived season (§6.5).
