@@ -58,8 +58,9 @@ describe("IdolCard", () => {
     expect(screen.getByText("Mina Kim")).toBeTruthy();
     expect(screen.getByText("Aurora")).toBeTruthy();
     expect(screen.getByLabelText("Rating 92, tier S")).toBeTruthy();
-    // tier badge is a sibling element (redesign 2026-11-17), not nested inside the rating span
-    expect(document.querySelector(".bg-tier-s")).toBeTruthy();
+    // the tier picks the card frame (premium redesign 2026-11-17) and fills the tier badge
+    expect(screen.getByRole("article").getAttribute("data-tier")).toBe("S");
+    expect(document.querySelector(".bg-tier-s")?.textContent).toBe("S");
     expect(screen.queryByLabelText(/On Fire/)).toBeNull();
     expect(screen.getByLabelText("7 titles")).toBeTruthy();
   });

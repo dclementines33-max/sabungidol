@@ -24,6 +24,17 @@ test.afterAll(() => page.close());
 test("Idol Profile: from a card, tabs with career, matches, rivals", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/idols");
+  // Premium card redesign (2026-11-17): the grid with several tiers, desktop and phone, for a human look.
+  await expect(page.locator(".tcg-card").first()).toBeVisible({ timeout: 60_000 });
+  const top = page.locator('.tcg-card[data-tier="S+"], .tcg-card[data-tier="S"]').first();
+  await top.evaluate((el) => el.scrollIntoView({ block: "start" }));
+  await page.screenshot({ path: "test-results/idol-card-grid.png" });
+  await top.evaluate((el) => el.scrollIntoView({ block: "center" })); // clear of the sticky header
+  await top.screenshot({ path: "test-results/idol-card-top-tier.png" });
+  expect(await axe(page)).toEqual([]); // the card grid itself
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: "test-results/idol-card-grid-phone.png" });
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.getByRole("list", { name: "Idol" }).getByRole("link").first().click();
   await expect(page).toHaveURL(/\/wiki\/idols\/\w+/);
   await expect(page.locator("#idol-name")).toBeVisible();
