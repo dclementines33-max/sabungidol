@@ -59,9 +59,21 @@ export function NotificationCenter({ notices, unread, onOpen, onExport }: {
                 return (
                   <li key={n.id} className="flex gap-2 text-sm">
                     <Icon aria-label={LEVEL[n.level].label} size={16} strokeWidth={1.5} className={`${color} mt-0.5 shrink-0`} />
-                    <span className="flex-1">
-                      {n.code && <span className="font-mono text-text-secondary">{n.code} · </span>}
-                      {n.message}
+                    <span className="min-w-0 flex-1">
+                      {n.context ? ( // the real error text sits behind the message: a native toggle, keyboard-friendly
+                        <details>
+                          <summary className="cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-bright">
+                            {n.code && <span className="font-mono text-text-secondary">{n.code} · </span>}
+                            {n.message}
+                          </summary>
+                          <p className="m-0 mt-1 text-xs break-words text-text-secondary">{n.context}</p>
+                        </details>
+                      ) : (
+                        <>
+                          {n.code && <span className="font-mono text-text-secondary">{n.code} · </span>}
+                          {n.message}
+                        </>
+                      )}
                     </span>
                     <time dateTime={n.at} className="font-mono text-xs text-text-secondary tabular-nums">{n.at.slice(11, 16)}</time>
                   </li>

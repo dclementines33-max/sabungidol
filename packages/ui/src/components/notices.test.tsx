@@ -69,6 +69,17 @@ describe("NotificationCenter", () => {
     expect(items[2]).toContain("Matchday 1 selesai");
   });
 
+  it("a notice with context hides the real error text behind its message until opened", () => {
+    render(<NotificationCenter notices={[{ ...notice("9", "error", "Cloud upload failed."), code: "E-CLOUD-001", context: "HTTP 413" }]} unread={0} onExport={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: "Notifications" }));
+    const details = screen.getByText("HTTP 413").closest("details")!;
+    expect(details.open).toBe(false);
+    fireEvent.click(screen.getByText(/Cloud upload failed\./)); // the summary
+    details.open = true; // jsdom does not toggle on click
+    expect(details.querySelector("summary")?.textContent).toContain("E-CLOUD-001");
+    expect(details.textContent).toContain("HTTP 413");
+  });
+
   it("filters by level and exports what is shown", () => {
     const onExport = vi.fn();
     render(<NotificationCenter notices={history} unread={0} onExport={onExport} />);
