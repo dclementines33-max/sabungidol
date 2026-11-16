@@ -210,6 +210,10 @@ test("Season Progression: six title races, positions, progress, titles per group
   await expect(page.getByRole("img", { name: /^Title race / })).toHaveCount(6, { timeout: 60_000 });
   await expect(page.getByRole("img", { name: /^Positions / })).toHaveCount(2); // a D1 league + The Idols (Update 3)
   await expect(page.getByRole("list", { name: "Titles by girl group" }).getByRole("listitem").first()).toBeVisible();
+  const telemetry = page.getByRole("region", { name: "Telemetry" }); // 2026-11-17: games won vs what the rating expected
+  await expect(telemetry.getByRole("img", { name: /^Games won against expectation for \d+ idols/ })).toBeVisible();
+  await expect(telemetry.getByRole("region", { name: "Over-performers" }).getByRole("listitem")).toHaveCount(5);
+  await telemetry.screenshot({ path: "test-results/telemetry.png" });
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/progression.png", fullPage: true });
 });

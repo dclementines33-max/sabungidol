@@ -1,10 +1,12 @@
 // Season Progression (Update 2): what happened in this season as charts — the six D1 title races, one league's
-// positions over time, The Idols' positions (Update 3, instead of how far every competition is), and which girl groups took this season's titles.
+// positions over time, The Idols' positions (Update 3, instead of how far every competition is), which girl groups took this season's titles,
+// and the telemetry: who is beating her rating and who isn't (2026-11-17).
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Bump } from "../../components/progression/Bump";
 import { RaceGrid } from "../../components/progression/RaceGrid";
+import { Telemetry } from "../../components/progression/Telemetry";
 import { TitleShare } from "../../components/progression/TitleShare";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
@@ -27,6 +29,7 @@ function Progression() {
   const season = useCurrentSeason();
   const live = season?.status === "live";
   const { data: o } = useQuery({ queryKey: [...SEASON_QUERY, "overview", season?.id, season?.status], queryFn: () => engine().seasonOverview(), enabled: live });
+  const { data: telemetry } = useQuery({ queryKey: [...SEASON_QUERY, "telemetry", season?.id], queryFn: () => engine().seasonTelemetry(), enabled: live });
   if (!season) return <p className="text-text-secondary">Loading season…</p>;
   if (!live) return <p className="text-text-secondary">Season Progression shows while a season is live.</p>;
   return (
@@ -53,6 +56,9 @@ function Progression() {
           </Chapter>
         </div>
       </div>
+      <Chapter n="05" title="Telemetry" note="Every idol's share of games won against what her rating expected. Above the line she is beating her rating; below it, falling short.">
+        {telemetry && <Telemetry rows={telemetry} />}
+      </Chapter>
     </div>
   );
 }

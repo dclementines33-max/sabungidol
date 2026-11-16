@@ -17,6 +17,7 @@ import { seasonArchive } from "./archiveWorker";
 import { storyOf } from "./storyWorker";
 import { podiumOf } from "./honoursWorker";
 import { awardsOf } from "./awardsWorker";
+import { telemetryOf } from "./telemetryWorker";
 import { overview } from "./overviewWorker";
 import { careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
@@ -190,6 +191,7 @@ const api = {
   seasonStory: async (seasonId: string) => storyOf(await open(), seasonId),
   podiumDetail: async (seasonId: string, ids: string[]) => podiumOf(await open(), seasonId, ids),
   seasonAwards: async (seasonId: string) => awardsOf(await open(), seasonId),
+  seasonTelemetry: async () => telemetryOf(await open()),
   overview: async () => overview(await open()),
   headToHead: async (a?: string, b?: string) => headToHead(await open(), a, b),
   matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),
