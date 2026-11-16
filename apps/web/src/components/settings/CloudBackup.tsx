@@ -44,20 +44,21 @@ export function CloudBackup({ seasonId, onRestore }: { seasonId: string; onResto
   const session = useQuery({ queryKey: ["cloud-session"], queryFn: cloudSession, staleTime: 0, retry: false });
   const user = session.data;
   const backups = useQuery({ queryKey: ["cloud-backups", user?.email], queryFn: listCloudBackups, enabled: !!user, staleTime: 0 });
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState("");
   const [deleting, setDeleting] = useState<Backup | null>(null);
 
   const upload = async () => {
-    setBusy(true);
+    setBusy("Preparing backup…");
     try {
       const { bytes, name } = await engine().exportBackup(section, section === "season" || section === "base" ? seasonId : undefined);
+      setBusy(`Uploading ${mb(bytes.byteLength)}…`);
       await uploadCloudBackup(bytes, name);
       notify({ level: "success", message: `Backup uploaded to the cloud (${mb(bytes.byteLength)})` });
       await backups.refetch();
     } catch (error) {
       fail("Cloud upload failed.")(error);
     }
-    setBusy(false);
+    setBusy("");
   };
   const remove = (b: Backup) => deleteCloudBackup(b.id).then(() => backups.refetch(), fail("The cloud backup couldn't be deleted."));
   const restore = (b: Backup) => downloadCloudBackup(b).then(onRestore, fail("The cloud backup couldn't be downloaded."));
@@ -76,7 +77,7 @@ export function CloudBackup({ seasonId, onRestore }: { seasonId: string; onResto
               <select aria-label="Cloud backup type" value={section} onChange={(e) => setSection(e.target.value as BackupSection)} className="rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-2 text-text-primary">
                 {Object.entries(SECTION_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
               </select>
-              <Button variant="primary" disabled={busy} onClick={upload}>{busy ? "Uploading…" : "Back up to cloud"}</Button>
+              <Button variant="primary" disabled={!!busy} onClick={upload}>{busy || "Back up to cloud"}</Button>
             </div>
             {backups.data?.length === 0 ? <p className="m-0 text-sm text-text-secondary">No cloud backups yet.</p> : (
               <ul className="m-0 list-none space-y-1 p-0 text-sm" aria-label="Cloud backups">
