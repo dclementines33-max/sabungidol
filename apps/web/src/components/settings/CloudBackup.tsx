@@ -5,8 +5,8 @@ import { type BackupSection, SECTION_LABELS } from "@sabung/shared";
 import { Button, ConfirmDialog } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { type CloudBackup as Backup, cloudSession, deleteCloudBackup, downloadCloudBackup, listCloudBackups, signIn, signOut, signUp, uploadCloudBackup } from "../../data/cloudApi";
-import { engine } from "../../data/engineClient";
+import { type CloudBackup as Backup, cloudSession, deleteCloudBackup, downloadCloudBackup, listCloudBackups, signIn, signOut, signUp } from "../../data/cloudApi";
+import { backUpToCloud, useCloudUpload } from "../../data/cloudUpload";
 import { notify } from "../../data/notices";
 import { FIELD } from "./settingsShared";
 
@@ -44,22 +44,10 @@ export function CloudBackup({ seasonId, onRestore }: { seasonId: string; onResto
   const session = useQuery({ queryKey: ["cloud-session"], queryFn: cloudSession, staleTime: 0, retry: false });
   const user = session.data;
   const backups = useQuery({ queryKey: ["cloud-backups", user?.email], queryFn: listCloudBackups, enabled: !!user, staleTime: 0 });
-  const [busy, setBusy] = useState("");
+  const busy = useCloudUpload((s) => s.status); // the upload outlives this panel (data/cloudUpload.ts)
   const [deleting, setDeleting] = useState<Backup | null>(null);
 
-  const upload = async () => {
-    setBusy("Preparing backup…");
-    try {
-      const { bytes, name } = await engine().exportBackup(section, section === "season" || section === "base" ? seasonId : undefined);
-      setBusy(`Uploading ${mb(bytes.byteLength)}…`);
-      await uploadCloudBackup(bytes, name);
-      notify({ level: "success", message: `Backup uploaded to the cloud (${mb(bytes.byteLength)})` });
-      await backups.refetch();
-    } catch (error) {
-      fail("Cloud upload failed.")(error);
-    }
-    setBusy("");
-  };
+  const upload = () => backUpToCloud(section, section === "season" || section === "base" ? seasonId : undefined);
   const remove = (b: Backup) => deleteCloudBackup(b.id).then(() => backups.refetch(), fail("The cloud backup couldn't be deleted."));
   const restore = (b: Backup) => downloadCloudBackup(b).then(onRestore, fail("The cloud backup couldn't be downloaded."));
 

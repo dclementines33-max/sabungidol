@@ -17,6 +17,27 @@ export const signUp = (email: string, password: string) => post("auth/sign-up/em
 export const signOut = () => post("auth/sign-out", {});
 
 export const listCloudBackups = async () => (await (await call("backups")).json()) as CloudBackup[];
-export const uploadCloudBackup = (bytes: Uint8Array, name: string) => call(`backups?name=${encodeURIComponent(name)}`, { method: "POST", body: bytes as BodyInit });
+// In parts of 20 MB (the cloud stores at most 50 MB per object), each tried up to 3 times, then recorded as one backup.
+const PART = 20 * 1024 * 1024;
+async function tries<T>(work: () => Promise<T>): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await work();
+    } catch (error) {
+      if (attempt === 3) throw error;
+      await new Promise((r) => setTimeout(r, 1500 * attempt));
+    }
+  }
+}
+export async function uploadCloudBackup(bytes: Uint8Array, name: string, progress?: (sent: number, total: number) => void) {
+  const upload = crypto.randomUUID();
+  const parts = Math.max(1, Math.ceil(bytes.byteLength / PART));
+  for (let i = 0; i < parts; i++) {
+    const body = bytes.subarray(i * PART, (i + 1) * PART);
+    await tries(() => call(`backups/upload/${upload}/${i}`, { method: "PUT", body: body as BodyInit }));
+    progress?.(Math.min((i + 1) * PART, bytes.byteLength), bytes.byteLength);
+  }
+  return call(`backups/upload/${upload}?name=${encodeURIComponent(name)}&parts=${parts}&size=${bytes.byteLength}`, { method: "POST" });
+}
 export const downloadCloudBackup = async (b: CloudBackup) => new File([await (await call(`backups/${b.id}`)).arrayBuffer()], b.name);
 export const deleteCloudBackup = (id: string) => call(`backups/${id}`, { method: "DELETE" });
