@@ -576,6 +576,7 @@ page (React, apps/web/src/pages) â”€â”€Comlinkâ”€â”€â–¶ 
 - Deploy: `pnpm --filter @sabung/web build && pnpm --filter @sabung/api exec wrangler deploy`. Gate e2e online:
   `CLOUD_URL=https://sabung-idol.sabung-api.workers.dev pnpm --filter @sabung/web e2e cloud.e2e.ts` and
   `OFFLINE_URL=â€¦ e2e offline.e2e.ts`. In the user's PowerShell `npx` is blocked (execution policy): use `npx.cmd`.
+- e2e: every bulk play can open the Simulation highlights popup, which covers the page (role queries and clicks fail). After a bulk-play wait call `closeHighlights(page)` (e2e/highlights.ts); pass `true` when the play crowns a champion (popup certain). Note `pnpm e2e gate.e2e.ts` also runs fase3Gate (name filter).
 - Shell pitfalls: no Python on this machine; sed eats `\d` (use the Edit tool for regex text); a heredoc
   with tricky quoting can fail silently â€” check the file was written; never edit package.json while
   pnpm is running.
