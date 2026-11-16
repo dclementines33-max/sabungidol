@@ -62,9 +62,11 @@ export function trajectoryNews(rows: Placed[], cur: number, rating: (id: string)
     if (up && at(cur - 1).some((x) => /^D2/.test(x.comp))) out.push({ kind: "promoted-champion", idol, league: up.comp });
     const down = at(cur).find(relegated);
     if (down && Array.from({ length: AGAIN }, (_, i) => at(cur - 1 - i)).some((rs) => rs.some(relegated))) out.push({ kind: "relegated-again", idol, league: down.comp });
+    // D2 idols cannot qualify for Unzure, stuck-in-d2 tells their story
     const early = (rs: Placed[]) => rs.length > 0 && !rs.some((x) => x.comp === "UZC" && x.stage !== "GS");
     const times = [0, 1, 2].filter((i) => early(at(cur - i))).length;
-    if (r >= TOP && early(at(cur)) && !at(cur).some((x) => /^D2/.test(x.comp)) && times >= 2) // D2 idols cannot qualify, stuck-in-d2 tells that out.push({ kind: "early-exit-again", idol, times, rating: r });
+    if (r >= TOP && early(at(cur)) && !at(cur).some((x) => /^D2/.test(x.comp)) && times >= 2)
+      out.push({ kind: "early-exit-again", idol, times, rating: r });
     const d2 = streak((rs) => rs.some((x) => /^D2/.test(x.comp)));
     if (r >= TOP && d2 >= 2) out.push({ kind: "stuck-in-d2", idol, seasons: d2, rating: r });
   }
