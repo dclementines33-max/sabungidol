@@ -19,6 +19,7 @@ export type IdolInfo = {
   gallery?: string[]; // extra photo ids, shown beside the MatchModal
   nationality?: string | null; // ISO 3166-1 alpha-2, e.g. "KR"
   birthday?: string | null; // ISO date string, e.g. "2004-04-16"
+  groupLogoId?: string | null; // photo id of the group's logo, loaded via useGalleryPhoto
 };
 
 export type IdolSource = {

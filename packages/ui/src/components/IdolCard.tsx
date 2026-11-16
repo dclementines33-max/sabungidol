@@ -6,7 +6,7 @@ import { tierOf } from "@sabung/shared";
 import { Trophy } from "lucide-react";
 import { IdolPhoto } from "./IdolPhoto";
 import { TIER_FILL } from "./RatingBadge";
-import { useIdol } from "./idolSource";
+import { useGalleryPhoto, useIdol } from "./idolSource";
 
 // ISO 3166-1 alpha-2 → flag emoji (regional indicator symbols A–Z = U+1F1E6–U+1F1FF).
 const toFlag = (code: string | null | undefined): string | null =>
@@ -29,6 +29,7 @@ export function IdolCard({ idolId }: { idolId: string }) {
   const glow = `var(--color-${idol.groupColor ?? "accent"})`;
   const flag = toFlag(idol.nationality);
   const age = toAge(idol.birthday);
+  const logoUrl = useGalleryPhoto(idol.groupLogoId ?? "", 64) || null;
   return (
     <article className="relative w-48 overflow-hidden rounded-card bg-bg-raised shadow-[0_14px_24px_-18px_var(--glow)] transition-transform duration-(--duration-base) hover:-translate-y-1"
       style={{ "--glow": glow } as React.CSSProperties}>
@@ -51,7 +52,10 @@ export function IdolCard({ idolId }: { idolId: string }) {
       {/* Footer */}
       <div className="px-3 pt-1.5 pb-3">
         <div className="flex items-baseline justify-between gap-1">
-          <p className="m-0 truncate text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase [font-stretch:120%]">{idol.groupName ?? "Soloist"}</p>
+          <span className="flex min-w-0 items-center gap-1">
+            {logoUrl && <img src={logoUrl} alt="" aria-hidden="true" className="size-3.5 shrink-0 object-contain opacity-80" />}
+            <p className="m-0 truncate text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase [font-stretch:120%]">{idol.groupName ?? "Soloist"}</p>
+          </span>
           {age !== null && <span className="shrink-0 text-[10px] text-text-secondary tabular-nums">{age}y</span>}
         </div>
         <p className="m-0 truncate font-display text-lg">{idol.name}</p>
