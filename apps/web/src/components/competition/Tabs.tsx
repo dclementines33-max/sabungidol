@@ -14,7 +14,7 @@ export function Tabs({ label, tabs }: { label: string; tabs: { id: string; label
   const current = tabs.find((t) => t.id === active)!;
   return (
     <div>
-      <div role="tablist" aria-label={label} className="mb-4 flex flex-wrap gap-1 border-b border-border">
+      <div role="tablist" aria-label={label} className="mb-4 flex gap-1 overflow-x-auto border-b border-border">
         {tabs.map((t, i) => (
           <button key={t.id} id={`${base}-${t.id}`} type="button" role="tab" aria-selected={t.id === active} aria-controls={`${base}-panel`} tabIndex={t.id === active ? 0 : -1}
             onClick={() => setActive(t.id)} onKeyDown={(e) => move(e, i)}
