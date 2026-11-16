@@ -31,6 +31,14 @@ export function newsScore(s: AnyStory): number {
     case "shock-exit": return Math.min(88, 60 + 2 * s.gap);
     case "rivalry-renewed": return Math.min(80, 30 + 3 * (s.meetings + s.earlier));
     case "farewell": return Math.min(85, 50 + 5 * s.titles);
+    case "runner-up-streak": return Math.min(85, 60 + 10 * s.seasons);
+    case "finalist-streak": return Math.min(90, 66 + 10 * s.seasons);
+    case "drought": return Math.min(80, 45 + 5 * s.seasons + (s.rating - 90));
+    case "drought-ended": return Math.min(92, 56 + 6 * s.gap);
+    case "repeat-champion": return Math.min(95, 58 + 12 * s.seasons);
+    case "promoted-champion": return 88;
+    case "relegated-again": return 60;
+    case "stuck-in-d2": return Math.min(75, 40 + 8 * s.seasons);
     case "big-match": return 35 + (s.ratingLoser - 90) * 3;
   }
 }

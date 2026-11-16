@@ -4,8 +4,8 @@ import type { AnyStory as Story } from "@sabung/engine";
 
 type Name = (id: string) => string;
 
-export const KICKER: Record<Story["kind"], string> = { "points-record": "Rekor pecah", "late-promotion": "Promosi dramatis", upset: "Kejutan", "reverse-sweep": "Comeback", streak: "Tren positif", "first-title": "Juara baru", "idol-of-month": "Bintang bulan ini", rivalry: "Rivalitas", "multi-title": "Borong gelar", "title-milestone": "Tonggak sejarah", slump: "Krisis", unbeaten: "Tak terkalahkan", "big-match": "Laga akbar", "shock-exit": "Tersingkir", clinched: "Juara lebih awal", champion: "Juara", "rivalry-renewed": "Rivalitas lama", farewell: "Perpisahan" };
-export const TONE: Record<Story["kind"], string> = { "points-record": "brand-gold", "first-title": "brand-gold", upset: "accent-bright", "reverse-sweep": "brand-violet", streak: "brand-teal", "late-promotion": "brand-lime", "idol-of-month": "brand-rose", rivalry: "brand-orchid", "multi-title": "brand-gold", "title-milestone": "brand-amber", slump: "brand-sky", unbeaten: "brand-gold", "big-match": "brand-indigo", "shock-exit": "accent-bright", clinched: "brand-gold", champion: "brand-gold", "rivalry-renewed": "brand-orchid", farewell: "muted" };
+export const KICKER: Record<Story["kind"], string> = { "points-record": "Rekor pecah", "late-promotion": "Promosi dramatis", upset: "Kejutan", "reverse-sweep": "Comeback", streak: "Tren positif", "first-title": "Juara baru", "idol-of-month": "Bintang bulan ini", rivalry: "Rivalitas", "multi-title": "Borong gelar", "title-milestone": "Tonggak sejarah", slump: "Krisis", unbeaten: "Tak terkalahkan", "big-match": "Laga akbar", "shock-exit": "Tersingkir", clinched: "Juara lebih awal", champion: "Juara", "rivalry-renewed": "Rivalitas lama", farewell: "Perpisahan", "runner-up-streak": "Selalu kedua", "finalist-streak": "Finalis abadi", drought: "Paceklik", "drought-ended": "Dahaga berakhir", "repeat-champion": "Juara beruntun", "promoted-champion": "Naik kelas, juara", "relegated-again": "Terdegradasi lagi", "stuck-in-d2": "Terjebak di D2" };
+export const TONE: Record<Story["kind"], string> = { "points-record": "brand-gold", "first-title": "brand-gold", upset: "accent-bright", "reverse-sweep": "brand-violet", streak: "brand-teal", "late-promotion": "brand-lime", "idol-of-month": "brand-rose", rivalry: "brand-orchid", "multi-title": "brand-gold", "title-milestone": "brand-amber", slump: "brand-sky", unbeaten: "brand-gold", "big-match": "brand-indigo", "shock-exit": "accent-bright", clinched: "brand-gold", champion: "brand-gold", "rivalry-renewed": "brand-orchid", farewell: "muted", "runner-up-streak": "brand-sky", "finalist-streak": "brand-indigo", drought: "brand-sky", "drought-ended": "brand-lime", "repeat-champion": "brand-gold", "promoted-champion": "brand-lime", "relegated-again": "accent-bright", "stuck-in-d2": "muted" };
 
 // The idol whose photo leads the item.
 export const starOf = (s: Story) => ("winner" in s ? s.winner : "idol" in s ? s.idol : s.a);
@@ -29,6 +29,14 @@ export function headline(s: Story, name: Name, label: Name): string {
     case "clinched": return `${name(s.idol)} Pastikan Gelar ${label(s.league)} di Matchday ${s.matchday}, ${s.left} Laga Lebih Cepat`;
     case "rivalry-renewed": return `Rivalitas Lama Bersemi Lagi: ${name(s.a)} vs ${name(s.b)}, ${s.meetings} Duel Musim Ini setelah ${s.earlier} Pertemuan Sebelumnya`;
     case "farewell": return s.titles ? `Selamat Tinggal, ${name(s.idol)}! Sang Pemilik ${s.titles} Gelar Tak Lagi Berlaga` : `${name(s.idol)} Absen Musim Ini, Tak Lagi Berlaga di Arena`;
+    case "runner-up-streak": return `${name(s.idol)} Kembali Finis Kedua: ${s.seasons} Musim Beruntun Jadi Runner-up, Gelar Masih Menjauh`;
+    case "finalist-streak": return `Final Lagi, Kalah Lagi: ${name(s.idol)} ${s.seasons} Musim Beruntun Gagal di Final Unzure Cup`;
+    case "drought": return `Paceklik Panjang! ${name(s.idol)} (Rating ${s.rating}) ${s.seasons} Musim Tanpa Gelar`;
+    case "drought-ended": return `Dahaga ${s.gap} Musim Berakhir! ${name(s.idol)} Akhirnya Juara ${label(s.comp)} Lagi`;
+    case "repeat-champion": return s.seasons >= 3 ? `Three-peat! ${name(s.idol)} Juara ${label(s.comp)} ${s.seasons} Musim Beruntun` : `Back-to-back! ${name(s.idol)} Pertahankan Gelar ${label(s.comp)}`;
+    case "promoted-champion": return `Naik Kelas Langsung Juara! ${name(s.idol)} Sapu Bersih ${label(s.league)} di Musim Pertama`;
+    case "relegated-again": return `Pahit Lagi: ${name(s.idol)} Terdegradasi dari ${label(s.league)} untuk Kedua Kalinya dalam Waktu Singkat`;
+    case "stuck-in-d2": return `Bintang Terjebak! ${name(s.idol)} (Rating ${s.rating}) ${s.seasons} Musim Bertahan di Division 2`;
     case "champion": return `${name(s.idol)} Juara ${label(s.title)}! ${name(s.runnerUp)} Harus Puas di Posisi Kedua`;
   }
 }
