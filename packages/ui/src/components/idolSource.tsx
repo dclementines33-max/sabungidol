@@ -17,6 +17,8 @@ export type IdolInfo = {
   focal?: [number, number]; // photo focal point 0–1 (PRD §10.3); centre when absent
   active?: boolean; // false = inactive (PRD §15: shown with a badge in the Idol Database)
   gallery?: string[]; // extra photo ids, shown beside the MatchModal
+  nationality?: string | null; // ISO 3166-1 alpha-2, e.g. "KR"
+  birthday?: string | null; // ISO date string, e.g. "2004-04-16"
 };
 
 export type IdolSource = {

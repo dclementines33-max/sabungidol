@@ -30,7 +30,8 @@ export function IdolDataProvider({ children }: { children: ReactNode }) {
       idol: (id) => {
         const i = byId.get(id);
         return i && { id: i.id, name: i.name, groupName: i.groupName, groupColor: groupColour(i.groupId), rating: i.rating, active: i.active, gallery: i.gallery,
-          focal: i.focalX != null && i.focalY != null ? [i.focalX, i.focalY] as [number, number] : undefined };
+          focal: i.focalX != null && i.focalY != null ? [i.focalX, i.focalY] as [number, number] : undefined,
+          nationality: i.nationality, birthday: i.birthday };
       },
       photo: (id, size) => {
         const photoId = byId.get(id)?.photoId;
