@@ -63,6 +63,20 @@ describe("backup sections", () => {
     expect(result.conflicts.some((c) => c.includes("is already live"))).toBe(true);
   });
 
+  it("Data dasar brings its ratings into an empty database and, with Merge, into a new device's default idols", async () => {
+    const from = await source();
+    const rating = async (db: Db) => (await listIdols(db)).find((i) => i.name === "I5")!.rating;
+    for (const mode of ["merge", "replace"] as const) {
+      const empty = await openDb();
+      await restore(from, "base", empty, mode);
+      expect(await rating(empty)).toBe(91);
+      expect((await listIdols(empty)).map((i) => [i.name, i.rating])).toEqual((await listIdols(from)).map((i) => [i.name, i.rating]));
+    }
+    const fresh = await device(false); // default idols at 70, Season 1 draft
+    await restore(from, "base", fresh, "merge");
+    expect(await rating(fresh)).toBe(91);
+  });
+
   it("Idol Replace updates idols matched by name + group and deletes nobody, even with matches played", async () => {
     const db = await device(true);
     await restore(await source(), "idols", db, "replace");

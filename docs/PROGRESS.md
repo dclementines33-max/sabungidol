@@ -55,7 +55,8 @@ The user tests on another device. Nothing is half-built in the code.
 - BACKUP FIXED (db backupSetup.ts + backupWrite importShape; test backupSections.test.ts covers every section Ã— mode Ã—
   fresh/played device): "Data dasar" is exported as Season 1 draft (league rosters only, no IDL, no opener);
   Replace = all seasons wiped, Season 1 draft + backup idols/ratings; Merge = add missing idols, rosters only into a
-  draft without matches. Idols Replace = update by name+group, never delete. Roster = into the current draft season,
+  draft without matches; while that setup is open (`setupOpen`), Merge also takes the backup's ratings for existing
+  idols (2026-11-16 fix: a new device's default idols kept their 70s). Idols Replace = update by name+group, never delete. Roster = into the current draft season,
   refused (conflict message) when it is running. Season Replace = delete that season, re-insert with mapped idol ids.
   Merge of Season/Full drops an unplayed draft numbered â‰¤ the backup's seasons (a new device's Season 1).
   Before: base restored "Season 6 live" on a new device; idols/roster/season Replace failed (FK / foreign idol ids).

@@ -13,9 +13,10 @@ const key = (name: unknown, group: unknown) => `${String(name).toLowerCase()}|${
 const IDOL_COPY = ["rating", "seed", "nationality", "birthday", "role", "photoId", "active", "gallery"] as const;
 
 // Groups by name, photos by id, idols by name + group. overwrite: an existing idol takes the backup's fields
-// (Replace); otherwise it keeps its own and only gets the backup's gallery when it has none (Merge).
+// (Replace); otherwise it keeps its own and only gets the backup's gallery when it has none (Merge), and its rating
+// when takeRating (a base backup merged while this device's setup is still open).
 // Returns backup idol id → this database's id, for every idol the backup names (idol_keys included).
-export async function upsertIdols(tx: Tx, tables: BackupTables, overwrite: boolean, result: SetupResult): Promise<Map<unknown, string>> {
+export async function upsertIdols(tx: Tx, tables: BackupTables, overwrite: boolean, result: SetupResult, takeRating = false): Promise<Map<unknown, string>> {
   const groupName = new Map((tables.groups ?? []).map((g) => [g.id, g.name]));
   const existingGroups = new Map((await tx.select().from(groups)).map((g) => [g.name.toLowerCase(), g.id]));
   const groupMap = new Map<unknown, string>();
@@ -42,7 +43,10 @@ export async function upsertIdols(tx: Tx, tables: BackupTables, overwrite: boole
       await tx.update(idols).set(Object.fromEntries(IDOL_COPY.filter((f) => f in i).map((f) => [f, i[f]])) as never).where(eq(idols.id, found.id));
       result.replaced++;
     } else {
-      if (found.rating !== i.rating) result.conflicts.push(`${i.name} (${group ?? "Soloist"}): rating here ${found.rating}, in the backup ${i.rating} — keeping ${found.rating}`);
+      if (found.rating !== i.rating && takeRating) {
+        await tx.update(idols).set({ rating: i.rating as number }).where(eq(idols.id, found.id));
+        result.replaced++;
+      } else if (found.rating !== i.rating) result.conflicts.push(`${i.name} (${group ?? "Soloist"}): rating here ${found.rating}, in the backup ${i.rating} — keeping ${found.rating}`);
       const gallery = (i.gallery as string[] | undefined) ?? [];
       if (!found.gallery.length && gallery.length) await tx.update(idols).set({ gallery }).where(eq(idols.id, found.id));
     }
@@ -53,6 +57,14 @@ export async function upsertIdols(tx: Tx, tables: BackupTables, overwrite: boole
     if (found) idolMap.set(k.id, found.id);
   }
   return idolMap;
+}
+
+// The setup can still change: no season yet, or the current one is a draft without matches.
+export async function setupOpen(tx: Tx): Promise<boolean> {
+  const target = await currentSeason(tx);
+  if (!target) return true;
+  const [played] = await tx.select({ n: sql<number>`count(*)::int` }).from(matches).where(eq(matches.seasonId, target.id));
+  return target.status === "draft" && played!.n === 0;
 }
 
 // Every season and everything played in them (idols, groups, photos and the event log stay).
@@ -74,8 +86,7 @@ export async function applySetup(tx: Tx, tables: BackupTables, idolMap: Map<unkn
     result.replaced += await wipeSeasons(tx);
     target = undefined;
   } else if (target) {
-    const [played] = await tx.select({ n: sql<number>`count(*)::int` }).from(matches).where(eq(matches.seasonId, target.id));
-    if (target.status !== "draft" || played!.n > 0) {
+    if (!(await setupOpen(tx))) {
       result.conflicts.push(`${target.name} is already live — the backup's settings & rosters weren't applied (use Replace with Base data to start over)`);
       return;
     }

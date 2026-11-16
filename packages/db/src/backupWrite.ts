@@ -4,7 +4,7 @@
 // The preview is the real import in a transaction that is then rolled back, so it never lies.
 import { and, eq, sql } from "drizzle-orm";
 import { type BackupTables, TABLE_ORDER, type TableName } from "./backupRead";
-import { applySetup, upsertIdols } from "./backupSetup";
+import { applySetup, setupOpen, upsertIdols } from "./backupSetup";
 import type { Db, Tx } from "./openDb";
 import { achievements, competitions, entries, groups, idols, matches, photos, placements, ratingHistory, seasons, statsCache } from "./schema";
 
@@ -39,7 +39,8 @@ async function importShape(tx: Tx, tables: BackupTables, mode: ImportMode): Prom
   if (tables.rating_history && tables.idols && !tables.groups) return ratings(tx, tables, mode);
   if (tables.groups && !tables.seasons) { await upsertIdols(tx, tables, mode === "replace", result); return result; } // idols: never deleted
   if (tables.seasons && !tables.matches) { // base (with idols) or roster (without): the setup of a season, never a played one
-    const idolMap = await upsertIdols(tx, tables, mode === "replace", result);
+    const takeRating = mode === "merge" && !!tables.groups && (await setupOpen(tx)); // base: ratings are part of the setup
+    const idolMap = await upsertIdols(tx, tables, mode === "replace", result, takeRating);
     await applySetup(tx, tables, idolMap, mode === "replace" && !!tables.groups, result);
     return result;
   }
