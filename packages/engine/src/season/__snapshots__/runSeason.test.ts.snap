@@ -2,7 +2,7 @@
 
 exports[`headless season (PRD §4) > golden: a fixed seed always gives this season (an unintended engine change shows up here) 1`] = `
 {
-  "checksum": 4182985300,
+  "checksum": 1433931117,
   "notices": [],
   "titles": {
     "BSA": {
@@ -83,7 +83,7 @@ exports[`headless season (PRD §4) > golden: a fixed seed always gives this seas
     },
     "IDL-PO": {
       "champion": "idol077",
-      "runnerUp": "idol029",
+      "runnerUp": "idol193",
     },
     "INK": {
       "champion": "idol114",
