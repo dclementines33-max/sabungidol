@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
+import type { Timeline } from "@sabung/engine";
 import { IdolSourceProvider } from "@sabung/ui";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SimTimeline } from "./SimTimeline";
 import { useSimTimeline } from "./timelineStore";
@@ -8,19 +9,31 @@ import { useSimTimeline } from "./timelineStore";
 vi.mock("../../data/branding", () => ({ useBranding: () => ({ label: (k: string) => k, brand: () => ({}) }) }));
 afterEach(cleanup);
 
+const d1a: Timeline = {
+  track: "D1A",
+  points: [
+    { comp: "D1A", stage: "LG", round: "MD03", stories: [{ kind: "upset", matchId: "m1", winner: "mina", loser: "yuna", gap: 14 }] },
+    { comp: "D1A", stage: "LG", round: "MD07", stories: [{ kind: "new-leader", idol: "mina", league: "D1A", matchday: 7, previous: "yuna" }] },
+  ],
+  finale: { champions: [{ title: "D1A", idol: "mina", runnerUp: "yuna" }], promoted: [], relegated: ["rei"], qualified: [], path: [], lines: [] },
+};
+const ink: Timeline = { track: "INK", points: [{ comp: "INK", stage: "KO", round: "QF", stories: [{ kind: "giant-killer", idol: "rei", comp: "INK", wins: 2 }] }], finale: null };
+
 describe("SimTimeline", () => {
-  it("shows nothing until a bulk play sends highlights; Skip shows all at once, Close empties it", () => {
+  it("one tab per competition, labelled points in a sideways track, the finale last; Skip goes to the end, Close empties it", () => {
     render(<IdolSourceProvider source={{ idol: (id) => ({ id, name: id, rating: 80 }) as never, photo: () => undefined }}><SimTimeline /></IdolSourceProvider>);
     expect(screen.queryByRole("dialog")).toBeNull();
-    act(() => useSimTimeline.getState().show([
-      { at: 1, story: { kind: "upset", matchId: "m1", winner: "mina", loser: "yuna", gap: 12 } },
-      { at: 2, story: { kind: "champion", idol: "mina", title: "D1A", runnerUp: "yuna" } },
-    ]));
-    const items = screen.getAllByRole("listitem");
-    expect(items).toHaveLength(2);
-    expect(items[1]!.style.animationDelay).not.toBe("0ms"); // the second rises later
-    fireEvent.click(screen.getByRole("button", { name: "Skip" }));
-    expect(screen.getAllByRole("listitem").every((li) => li.style.animationDelay === "0ms")).toBe(true);
+    act(() => useSimTimeline.getState().show([d1a, ink]));
+    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["D1A", "INK"]);
+    const track = screen.getByRole("list", { name: "Timeline" });
+    const points = within(track).getAllByRole("listitem").filter((li) => li.parentElement === track);
+    expect(points.map((li) => li.querySelector(".kicker")?.textContent)).toEqual(["Matchday 3", "Matchday 7", "Finale"]);
+    expect(within(track).getByText("rei")).toBeTruthy(); // relegated, in the finale
+    expect(points[0]!.getAttribute("aria-current")).toBe("step");
+    fireEvent.click(screen.getByRole("button", { name: "Skip to the end" }));
+    expect(points[2]!.getAttribute("aria-current")).toBe("step");
+    fireEvent.click(screen.getByRole("tab", { name: "INK" }));
+    expect(screen.getByText("QF")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(useSimTimeline.getState().items).toBeNull();
   });

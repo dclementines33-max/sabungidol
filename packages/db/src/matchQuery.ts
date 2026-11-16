@@ -41,3 +41,9 @@ export async function countMatchesWhere(db: Db, f: MatchFilter): Promise<number>
   const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(matches).where(where(f));
   return n;
 }
+
+// The n pairs that met most often in all saved matches (the H2H "top rivalries"), as "a|b" with a < b.
+export async function mostMetPairs(db: Db, n = 10): Promise<string[]> {
+  const rows = await db.execute<{ lo: string; hi: string }>(sql`select least(idol_a, idol_b) as lo, greatest(idol_a, idol_b) as hi from matches group by 1, 2 order by count(*) desc, 1, 2 limit ${n}`);
+  return rows.rows.map((r) => [r.lo, r.hi].sort().join("|"));
+}

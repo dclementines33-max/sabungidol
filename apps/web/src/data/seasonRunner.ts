@@ -2,12 +2,11 @@
 // the season from the saved results and plays only what the target allows, in chunks so progress
 // shows and Pause works; each round is saved in its own transaction (PRD §13); matches whose pairing
 // changed after a manual result are removed.
-import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, saveMatches } from "@sabung/db";
+import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, mostMetPairs, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason, seasonScores, seasonTop, simHighlights } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
 import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
 import { seasonMatches } from "./seasonMatches";
-import { storyContext } from "./storyContext";
 
 export type PlayTarget =
   | { kind: "all" } // the whole season
@@ -100,8 +99,7 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
     saved = result.matches;
     onProgress({ done: added, total: Math.max(estimate, added) });
     if (result.done || fresh.length === 0 || pauseRequested) {
-      const ctx = added ? await storyContext(db, input.seasonId) : null;
-      const highlights = ctx ? simHighlights(before, result, ctx.best, ctx.titleCount) : [];
+      const highlights = added ? simHighlights(before, result, { season: target.kind === "all", rivals: new Set(await mostMetPairs(db)) }) : [];
       return { highlights, added, removed, done: result.done, paused: pauseRequested && !result.done && fresh.length > 0, pending: result.pending.length, titles: result.titles, notices: result.notices };
     }
   }

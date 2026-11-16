@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { addIdols } from "./idols";
-import { countMatchesWhere, queryMatches } from "./matchQuery";
+import { countMatchesWhere, mostMetPairs, queryMatches } from "./matchQuery";
 import { openDb } from "./openDb";
 import { saveMatches } from "./saveMatches";
 import { createDraftSeason } from "./seasons";
@@ -22,5 +22,6 @@ describe("matches for the wiki", () => {
     expect(first.rows.map((m) => m.round)).toEqual(["MD04", "MD03", "MD02"]);
     const second = await queryMatches(db, {}, { limit: 3, after: first.next! });
     expect([second.rows.map((m) => m.round), second.next]).toEqual([["MD01"], null]);
+    expect(await mostMetPairs(db, 1)).toEqual([[a, b].sort().join("|")]); // a and b met twice, either side
   });
 });
