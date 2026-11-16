@@ -33,6 +33,7 @@ test("League panel: matchday, single match, table with zones", async ({ page }) 
   await modal.getByRole("group", { name: "Score presets" }).getByRole("button").first().click();
   await expect(modal.getByText(/wins$/)).toBeVisible();
   await expect(modal.getByRole("rowheader", { name: "Career W-D-L" })).toBeVisible();
+  await expect(modal.getByRole("row", { name: /\(\+?-?\d+\.\d\) Morale \w+ \(/ })).toBeVisible(); // each idol's morale going in, e.g. "Buoyant (+2.0)"
   await page.screenshot({ path: "test-results/match-modal-preset.png" }); // for a human look
   await accept.click();
   await expect(page.getByText(/^Result saved: \d–\d$/)).toBeVisible({ timeout: 30_000 });

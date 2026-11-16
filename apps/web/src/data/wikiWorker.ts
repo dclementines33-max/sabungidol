@@ -3,6 +3,7 @@
 import { type Db, type MatchFilter, countMatches, countMatchesWhere, listAchievements, listPlacements, listRatingHistory, listSeasons, queryMatches } from "@sabung/db";
 import { type PairRecord, allTimeRecords, rankRecords } from "@sabung/engine";
 import { careerStats, updateCareerCache } from "./careerWorker";
+import { moodOf } from "./idolMood";
 
 type Stats = Awaited<ReturnType<typeof careerStats>>;
 let memo: { key: string; stats: Promise<Stats> } | undefined;
@@ -38,6 +39,7 @@ export async function idolProfile(db: Db, id: string) {
     ratingHistory: (await listRatingHistory(db, id)).map((h) => ({ old: h.old, new: h.new, season: h.seasonId ? number.get(h.seasonId) ?? null : null, at: h.at.toISOString() })).reverse(),
     rivals: rivalsOf(stats.pairs, id),
     records,
+    mood: await moodOf(db, id),
   };
 }
 

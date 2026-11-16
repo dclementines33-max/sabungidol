@@ -39,3 +39,4 @@ export * from "./stats/simHighlights";
 export * from "./stats/careerNews";
 export { type Part, expectationParts, placeValue, prestigeOf } from "./season/expectation";
 export * from "./season/boardTargets";
+export * from "./morale";

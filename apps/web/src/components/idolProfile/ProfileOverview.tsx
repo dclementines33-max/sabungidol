@@ -1,4 +1,4 @@
-// Idol Profile → Overview (PRD §8): badges, the trophy cabinet (PRD §16), rating history.
+// Idol Profile → Overview (PRD §8): form and morale right now, badges, the trophy cabinet (PRD §16), rating history.
 import { BADGES } from "@sabung/shared";
 import { RatingChart } from "./RatingChart";
 import { TrophyCabinet } from "./TrophyCabinet";
@@ -8,13 +8,23 @@ type Props = {
   titles: { comp: string; season: number }[];
   history: { old: number; new: number }[];
   rating: number;
+  mood?: { form: string; morale: number; moraleName: string; last: string[] } | null;
 };
 
 const H3 = "m-0 text-xs tracking-widest text-text-secondary uppercase";
 
-export function ProfileOverview({ badges, titles, history, rating }: Props) {
+export function ProfileOverview({ badges, titles, history, rating, mood }: Props) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
+      {mood && (
+        <section aria-labelledby="mood" className="space-y-2 lg:col-span-2">
+          <h3 id="mood" className={H3}>This season · right now</h3>
+          <dl className="m-0 flex flex-wrap gap-x-10 gap-y-2">
+            <div><dt className="text-xs text-text-secondary">Form</dt><dd className="m-0 font-display text-xl uppercase">{mood.form} <span className="font-mono text-sm text-text-secondary">{mood.last.join(" ")}</span></dd></div>
+            <div><dt className="text-xs text-text-secondary">Morale</dt><dd className="m-0 font-display text-xl uppercase">{mood.moraleName} <span className="font-mono text-sm text-text-secondary">{mood.morale > 0 ? "+" : ""}{mood.morale} / ±10</span></dd></div>
+          </dl>
+        </section>
+      )}
       <section aria-labelledby="badges" className="space-y-2">
         <h3 id="badges" className={H3}>Badge</h3>
         {badges.length ? (

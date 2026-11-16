@@ -23,6 +23,8 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
   const facts = [
     { label: `This season · ${label(match.comp)}`, a: match.record.comp[0]!, b: match.record.comp[1]! },
     { label: "This season · all", a: match.record.all[0]!, b: match.record.all[1]! },
+    { label: "Form", a: match.form[0]!, b: match.form[1]! },
+    { label: "Morale", a: match.morale[0]!, b: match.morale[1]! },
     { label: "Career W-D-L", a: careerA!, b: careerB! },
     { label: "Titles", a: titlesA!, b: titlesB! },
   ];

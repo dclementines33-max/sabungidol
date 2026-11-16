@@ -29,6 +29,7 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   await expect(page.locator("#idol-name")).toBeVisible();
   await expect(page.getByRole("tab", { name: "Overview" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByRole("heading", { name: "Trophy cabinet" })).toBeVisible(); // PRD §16 trophy cabinet
+  await expect(page.getByRole("region", { name: "This season · right now" })).toContainText(/Form.*Morale/); // 2026-11-17 form + morale
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Edit profile" }).click(); // step 9: edit from the profile
   await page.getByRole("dialog").getByLabel("Country (2 letters)").fill("JP");

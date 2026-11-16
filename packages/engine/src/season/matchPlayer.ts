@@ -1,9 +1,10 @@
-// Plays one match inside a season: builds the id, picks Best of N, applies form, records it.
+// Plays one match inside a season: builds the id, picks Best of N, applies form and morale, records it.
 // Replay (Fase 3): a saved result with the same pairing is reused as it was; a match that may not be
 // played yet (input.target) is pending — in the league phase it is skipped (fixtures do not depend
 // on results), in a cup it stops that cup (PENDING), because the next round needs the result.
 import { type CompetitionCode, type StageCode, buildMatchId, seasonBestOf } from "@sabung/shared";
 import { type Result, getForm } from "../form";
+import { moraleAfter, moraleModifier } from "../morale";
 import { matchRng } from "../rng";
 import { simulateSeries } from "../series";
 import { type MatchRef, PENDING, type SeasonInput, type SimMatch } from "./types";
@@ -15,6 +16,7 @@ export type MatchPlayer = ReturnType<typeof createMatchPlayer>;
 export function createMatchPlayer(input: SeasonInput) {
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const recent = new Map<string, Result[]>(); // results across all competitions, oldest first
+  const morale = new Map<string, number>(); // 2026-11-17: builds over the season (morale.ts)
   const saved = new Map((input.saved ?? []).map((m) => [m.id, m]));
   const matches: SimMatch[] = [];
   const pending: MatchRef[] = [];
@@ -44,7 +46,7 @@ export function createMatchPlayer(input: SeasonInput) {
       const chaos = comp === "NUG" || comp.startsWith("BS");
       const tired = (idol: string) => (chaos ? Math.min(6, 0.75 * (cupLoad.get(idol) ?? 0)) : 0);
       const series = simulateSeries({
-        ratingA, ratingB, formA: formA.modifier - tired(idolA), formB: formB.modifier - tired(idolB),
+        ratingA, ratingB, formA: formA.modifier + moraleModifier(morale.get(idolA) ?? 0) - tired(idolA), formB: formB.modifier + moraleModifier(morale.get(idolB) ?? 0) - tired(idolB),
         bestOf: seasonBestOf(input.config, comp, stage, round), rng: matchRng(input.seed, id, input.salt?.[id]),
         tuning: chaos ? { scale: 1.4 * (input.tuning?.scale ?? 40), sigma: 1.5 * (input.tuning?.sigma ?? 4) } : input.tuning,
       });
@@ -55,6 +57,8 @@ export function createMatchPlayer(input: SeasonInput) {
     const outcome = (side: "A" | "B"): Result => (match.result === "D" ? "D" : match.result === side ? "W" : "L");
     recent.set(idolA, [...(recent.get(idolA) ?? []), outcome("A")].slice(-5));
     recent.set(idolB, [...(recent.get(idolB) ?? []), outcome("B")].slice(-5));
+    morale.set(idolA, moraleAfter(morale.get(idolA) ?? 0, match, "A"));
+    morale.set(idolB, moraleAfter(morale.get(idolB) ?? 0, match, "B"));
     return match;
   };
 
