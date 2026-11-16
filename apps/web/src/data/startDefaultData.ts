@@ -18,12 +18,29 @@ export function startDefaultData(): void {
       queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     }
     startFirstSeason();
+    startCloudSync();
     remindBackup();
     checkIntegrityOnStart();
   }, (error) => {
     console.error("Default idol data not loaded", error);
     notify({ level: "error", code: "E-SEED-001", message: "The default idols failed to load. Reload the page to try again.", context: error instanceof Error ? error.message : String(error) });
   });
+}
+
+// Cloud sync of photos and idol info: now, when back online, when the tab is shown again, and every minute.
+function startCloudSync(): void {
+  const go = () => {
+    if (!navigator.onLine || document.hidden) return;
+    engine().cloudSync().then(({ pulled }) => {
+      if (!pulled) return;
+      notify({ level: "info", message: `Cloud sync: ${pulled} changes from your other devices` }, { log: false });
+      void queryClient.invalidateQueries();
+    }, (error) => console.warn("Cloud sync failed; it tries again later", error));
+  };
+  go();
+  addEventListener("online", go);
+  document.addEventListener("visibilitychange", go);
+  setInterval(go, 60_000);
 }
 
 function startFirstSeason(): void {

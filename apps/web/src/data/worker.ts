@@ -24,6 +24,7 @@ import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
 import { ensureFirstSeason } from "./firstSeason";
 import { loadDefaultData } from "./loadDefaultData";
 import { readPhotoFile, removePhotoFiles, storePhotoFiles } from "./photoFiles";
+import { sha256, syncNow } from "./cloudSync";
 import { type PhotoSizes, bestStored } from "./photoSizes";
 import { type StorageKind, storageFor } from "./storageChoice";
 
@@ -215,6 +216,7 @@ const api = {
   },
 
   // Photos (PRD §10.3, §12): files in OPFS, a record in the photos table; returns the photo id.
+  cloudSync: async () => syncNow(await open(), DATABASE),
   savePhoto: async (image: Blob): Promise<string> => {
     const db = await open();
     return (await keepPhoto(db, image)).id;
@@ -274,7 +276,7 @@ async function theIdolsNow(db: Db) {
 async function keepPhoto(db: Db, image: Blob) {
   const stored = await storePhotoFiles(DATABASE, image);
   try {
-    await insertPhoto(db, stored);
+    await insertPhoto(db, { ...stored, hash: await sha256(await image.arrayBuffer()) }); // the hash cloud sync knows it by
   } catch (error) {
     await removePhotoFiles(DATABASE, stored.id).catch(() => {});
     throw error;
