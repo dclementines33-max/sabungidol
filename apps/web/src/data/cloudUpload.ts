@@ -15,7 +15,7 @@ export async function backUpToCloud(section: BackupSection, seasonId?: string) {
   const show = (status: string) => useCloudUpload.setState({ status });
   show("Preparing backup…");
   try {
-    const { bytes, name } = await engine().exportBackup(section, seasonId);
+    const { bytes, name } = await engine().exportBackup(section, seasonId, true); // without big originals (backup/cloudPhotos.ts)
     show(`Uploading 0 of ${mb(bytes.byteLength)}…`);
     await uploadCloudBackup(bytes, name, (sent, total) => show(`Uploading ${mb(sent)} of ${mb(total)}…`));
     notify({ level: "success", message: `Backup uploaded to the cloud (${mb(bytes.byteLength)})` });

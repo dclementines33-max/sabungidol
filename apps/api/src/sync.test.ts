@@ -1,5 +1,5 @@
 // Cloud sync API on PGlite (same SQL as Supabase): last write wins, gallery entries add-only, each user sees only their
-// own records, and photo originals go up once, only under their real hash.
+// own records, and a photo goes up once per name (the original's hash; the bytes may be its 1024 copy).
 import { readFileSync, readdirSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
@@ -51,7 +51,7 @@ it("last write wins per record, gallery is add-only, and a pull only brings what
   expect((await b.pull()).rows).toEqual([]); // another user's records stay theirs
 });
 
-it("photo originals: only under their real hash, listed as stored once uploaded, private to the user", async () => {
+it("photos: listed as stored once uploaded, private to the user; the name must be a hash", async () => {
   const { call, user } = await setup();
   const a = await user("a@example.com");
   const bytes = new Uint8Array([1, 2, 3, 4]);
@@ -59,7 +59,7 @@ it("photo originals: only under their real hash, listed as stored once uploaded,
   const missing = async (u: { cookie: string }) => ((await (await call("/api/sync/photos/missing", { method: "POST", headers: { cookie: u.cookie, "content-type": "application/json" }, body: JSON.stringify({ hashes: [hash] }) })).json()) as { missing: string[] }).missing;
 
   expect(await missing(a)).toEqual([hash]);
-  expect((await call(`/api/sync/photos/${"0".repeat(64)}`, { method: "PUT", headers: { cookie: a.cookie }, body: bytes })).status).toBe(400); // wrong hash
+  expect((await call("/api/sync/photos/not-a-hash", { method: "PUT", headers: { cookie: a.cookie }, body: bytes })).status).toBe(400);
   expect((await call(`/api/sync/photos/${hash}`, { method: "PUT", headers: { cookie: a.cookie }, body: bytes })).status).toBe(201);
   expect(await missing(a)).toEqual([]);
   expect(new Uint8Array(await (await call(`/api/sync/photos/${hash}`, { headers: { cookie: a.cookie } })).arrayBuffer())).toEqual(bytes);

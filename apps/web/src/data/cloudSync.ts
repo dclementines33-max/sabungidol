@@ -1,9 +1,10 @@
 // Cloud sync in the Worker (2026-11-16): when signed in, pull what other devices wrote and merge it (packages/db sync.ts;
-// on a fresh device also its first rosters), then push what changed here since the last push (photo originals first,
+// on a fresh device also its first rosters), then push what changed here since the last push (photos first, at most their 1024 copy,
 // so a record never points at a missing photo). Offline or signed out it does nothing; unsent changes simply go next time (lastPush only moves on success).
-import { type Db, applyFirstRosters, applyRemote, currentSeason, rosterRows, insertPhoto, localChanges, photoByHash, photosWithoutHash, readCache, setPhotoHash, writeCache } from "@sabung/db";
+import { type Db, applyFirstRosters, applyRemote, currentSeason, getPhoto, rosterRows, insertPhoto, localChanges, photoByHash, photosWithoutHash, readCache, setPhotoHash, writeCache } from "@sabung/db";
 import type { SyncRow } from "@sabung/db";
 import { defaultLeagueName } from "../components/competition/arenaTheme";
+import { cloudFile } from "./backup/cloudPhotos";
 import { readPhotoFile, removePhotoFiles, storePhotoFiles } from "./photoFiles";
 import type { PhotoSizes } from "./photoSizes";
 
@@ -21,9 +22,11 @@ async function api(path: string, init?: RequestInit) {
 const post = (path: string, body: unknown) => api(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 const hashesOf = (r: SyncRow) => [r.kind === "photo" ? r.key : r.kind === "gallery" ? r.data.hash : r.kind === "idol" ? r.data.photo : r.data.logo].filter((h): h is string => typeof h === "string" && !!h);
 
-async function original(db: Db, database: string, hash: string) {
+// What goes up for a photo: its 1024 copy, or the original when that is its biggest file (backup/cloudPhotos.ts).
+async function cloudCopy(db: Db, database: string, hash: string) {
   const id = await photoByHash(db, hash);
-  return id ? readPhotoFile(database, id, "orig", {} as PhotoSizes) : null;
+  const sizes = id && ((await getPhoto(db, id))?.sizes as PhotoSizes | undefined);
+  return id && sizes ? readPhotoFile(database, id, cloudFile(sizes), sizes) : null;
 }
 
 // The local photo for a cloud hash; a new one is downloaded and stored (files removed again if its record fails).
@@ -47,7 +50,8 @@ async function run(db: Db, database: string) {
   const session = await fetch("/api/auth/get-session").then((r) => (r.ok ? r.json() : null)).catch(() => null) as { user?: unknown } | null;
   if (!session?.user) return { pushed: 0, pulled: 0 };
   for (const p of await photosWithoutHash(db)) { // photos from before sync: hashed once
-    const blob = await readPhotoFile(database, p.id, "orig", p.sizes as PhotoSizes).catch(() => null);
+    const sizes = p.sizes as PhotoSizes; // a photo restored from a cloud backup has no original: its biggest copy then
+    const blob = await readPhotoFile(database, p.id, sizes.orig ? "orig" : cloudFile(sizes), sizes).catch(() => null);
     if (blob) await setPhotoHash(db, p.id, await sha256(await blob.arrayBuffer()));
   }
   const state = (await readCache<State>(db, KEY)) ?? { lastPush: null, seq: 0 };
@@ -74,7 +78,7 @@ async function run(db: Db, database: string) {
   for (let i = 0; i < hashes.length; i += CHUNK) {
     const { missing } = (await (await post("sync/photos/missing", { hashes: hashes.slice(i, i + CHUNK) })).json()) as { missing: string[] };
     for (const hash of missing) {
-      const blob = await original(db, database, hash);
+      const blob = await cloudCopy(db, database, hash);
       if (blob) await api(`sync/photos/${hash}`, { method: "PUT", body: blob });
     }
   }

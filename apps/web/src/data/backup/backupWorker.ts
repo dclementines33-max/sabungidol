@@ -3,6 +3,7 @@
 import { type Db, type ImportMode, bundledMigrations, eventLog, importBackup, lastEventAt, readBackupTables } from "@sabung/db";
 import { type BackupSection, SECTION_LABELS } from "@sabung/shared";
 import { writeFile } from "../photoFiles";
+import { withoutOriginals } from "./cloudPhotos";
 import { type PhotoFiles, readSabung, writeSabung } from "./sabungFile";
 
 export const BACKUP_DONE = "I-BACKUP-001";
@@ -23,9 +24,11 @@ async function readPhotos(database: string, photoIds: string[]): Promise<PhotoFi
   return files;
 }
 
-export async function exportBackup(db: Db, database: string, section: BackupSection, seasonId?: string, log = true) {
+// cloud = for the cloud: big originals left out (cloudPhotos.ts); a local download keeps everything.
+export async function exportBackup(db: Db, database: string, section: BackupSection, seasonId?: string, log = true, cloud = false) {
   const tables = await readBackupTables(db, section, seasonId);
-  const photos = tables.photos ? await readPhotos(database, tables.photos.map((p) => p.id as string)) : {};
+  let photos = tables.photos ? await readPhotos(database, tables.photos.map((p) => p.id as string)) : {};
+  if (cloud && tables.photos) ({ photos: tables.photos, files: photos } = withoutOriginals(tables.photos, photos));
   const { bytes, manifest } = await writeSabung(section, tables, photos, await schemaVersion());
   if (log) await db.insert(eventLog).values({ level: "success", code: BACKUP_DONE, message: `Backup ${SECTION_LABELS[section]} created` });
   return { bytes, name: `sabung-${section}-${manifest.createdAt.slice(0, 10)}.sabung` };

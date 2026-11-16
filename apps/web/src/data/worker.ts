@@ -164,7 +164,7 @@ const api = {
   integrityCheck: async () => integrityCheck(await open(), DATABASE),
   fixIntegrity: async (fix: IssueFix) => fixIntegrity(await open(), DATABASE, fix),
   // Backup & restore (PRD §12.3).
-  exportBackup: async (section: BackupSection, seasonId?: string) => exportBackup(await open(), DATABASE, section, seasonId),
+  exportBackup: async (section: BackupSection, seasonId?: string, cloud = false) => exportBackup(await open(), DATABASE, section, seasonId, true, cloud),
   previewImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, true),
   applyImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, false),
   saveSnapshot: async (reason: string) => saveSnapshot(await open(), DATABASE, reason),

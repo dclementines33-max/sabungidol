@@ -3,7 +3,7 @@
 //   POST /api/sync  { rows }            upsert; a record only changes when the incoming updatedAt is newer (last write
 //                                       wins); gallery entries are add-only. Nothing is ever deleted (user decision).
 //   POST /api/sync/photos/missing { hashes }   which originals are not in Storage yet
-//   PUT  /api/sync/photos/<sha256>     upload one original (the bytes must hash to its name)
+//   PUT  /api/sync/photos/<sha256>     upload a photo: its 1024 copy (or its original when smaller), named by the original's SHA-256
 //   GET  /api/sync/photos/<sha256>     download it
 import { and, asc, eq, gt, inArray, sql } from "drizzle-orm";
 import type { Db } from "./db";
@@ -22,7 +22,6 @@ const valid = (r: Row) => KINDS.includes(r.kind as never) && typeof r.key === "s
 
 const json = (body: unknown, status = 200) => Response.json(body, { status });
 const error = (status: number, message: string) => json({ error: message }, status);
-const hex = (bytes: ArrayBuffer) => [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, "0")).join("");
 const path = (userId: string, hash: string) => `sync/${userId}/${hash}`;
 
 export async function pushRows(db: Db, userId: string, rows: Row[]) {
@@ -65,7 +64,6 @@ export async function handleSync(request: Request, db: Db, files: Files, userId:
   if (request.method === "PUT") {
     const body = await request.arrayBuffer();
     if (body.byteLength === 0 || body.byteLength > MAX_PHOTO_BYTES) return error(413, "The photo is empty or over 20 MB.");
-    if (hex(await crypto.subtle.digest("SHA-256", body)) !== hash) return error(400, "The photo does not match its hash.");
     await files.put(path(userId, hash), body); // the file first: a row never points at a missing file
     await db.insert(syncFile).values({ userId, hash, size: body.byteLength }).onConflictDoNothing();
     return json({ ok: true }, 201);
