@@ -13,7 +13,8 @@ export type CareerStory =
   | { kind: "repeat-champion"; idol: string; comp: string; seasons: number }
   | { kind: "promoted-champion"; idol: string; league: string }
   | { kind: "relegated-again"; idol: string; league: string }
-  | { kind: "stuck-in-d2"; idol: string; seasons: number; rating: number };
+  | { kind: "stuck-in-d2"; idol: string; seasons: number; rating: number }
+  | { kind: "early-exit-again"; idol: string; times: number; rating: number }; // no Unzure Cup, or out in its group stage, in 2+ of the last 3 seasons
 
 const MIN_EARLIER = 3;
 
@@ -32,7 +33,7 @@ export function careerNews(pairs: [string, string, number, number][], gone: { id
 
 // Thresholds (ours, no PRD figure): "top tier" = rating 90+ (tier S), a drought = 4 seasons without a title, relegated again = twice in 4 seasons.
 const TOP = 90, DROUGHT = 4, AGAIN = 3, CAP = 3;
-export type Placed = { season: number; idolId: string; comp: string; finalRank: number };
+export type Placed = { season: number; idolId: string; comp: string; finalRank: number; stage?: string | null };
 
 // Trajectory stories for the idols who played season `cur`; `rows` = every placement up to and including `cur`. At most CAP per kind.
 export function trajectoryNews(rows: Placed[], cur: number, rating: (id: string) => number): CareerStory[] {
@@ -61,6 +62,9 @@ export function trajectoryNews(rows: Placed[], cur: number, rating: (id: string)
     if (up && at(cur - 1).some((x) => /^D2/.test(x.comp))) out.push({ kind: "promoted-champion", idol, league: up.comp });
     const down = at(cur).find(relegated);
     if (down && Array.from({ length: AGAIN }, (_, i) => at(cur - 1 - i)).some((rs) => rs.some(relegated))) out.push({ kind: "relegated-again", idol, league: down.comp });
+    const early = (rs: Placed[]) => rs.length > 0 && !rs.some((x) => x.comp === "UZC" && x.stage !== "GS");
+    const times = [0, 1, 2].filter((i) => early(at(cur - i))).length;
+    if (r >= TOP && early(at(cur)) && times >= 2) out.push({ kind: "early-exit-again", idol, times, rating: r });
     const d2 = streak((rs) => rs.some((x) => /^D2/.test(x.comp)));
     if (r >= TOP && d2 >= 2) out.push({ kind: "stuck-in-d2", idol, seasons: d2, rating: r });
   }

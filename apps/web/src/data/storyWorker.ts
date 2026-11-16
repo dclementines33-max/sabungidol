@@ -34,8 +34,8 @@ export async function storyOf(db: Db, seasonId: string) {
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) } as Record<string, string[]>;
   const rows: Placed[] = !result.done ? [] : [
-    ...(await listPlacements(db)).filter((p) => earlier.has(p.seasonId)).map((p) => ({ season: number.get(p.seasonId)!, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank })),
-    ...seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0).map((p) => ({ season: season.number, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank })),
+    ...(await listPlacements(db)).filter((p) => earlier.has(p.seasonId)).map((p) => ({ season: number.get(p.seasonId)!, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
+    ...seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0).map((p) => ({ season: season.number, idolId: p.idolId, comp: p.comp, finalRank: p.finalRank, stage: p.stageReached })),
   ];
   return [...drama, ...news, ...moments, ...careerNews(pairs, gone), ...trajectoryNews(rows, season.number, (id) => rating.get(id) ?? 0), ...(earlier.size ? stories : stories.filter((s) => s.kind !== "first-title"))]; // in the first season every title is a first
 }

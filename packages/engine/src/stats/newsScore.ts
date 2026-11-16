@@ -39,6 +39,7 @@ export function newsScore(s: AnyStory): number {
     case "promoted-champion": return 88;
     case "relegated-again": return 60;
     case "stuck-in-d2": return Math.min(75, 40 + 8 * s.seasons);
+    case "early-exit-again": return Math.min(90, 45 + 20 * s.times);
     case "big-match": return 35 + (s.ratingLoser - 90) * 3;
   }
 }

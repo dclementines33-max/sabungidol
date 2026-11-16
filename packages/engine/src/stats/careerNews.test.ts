@@ -33,7 +33,7 @@ describe("trajectoryNews", () => {
   });
   it("a top idol without a title for 4 seasons; a promoted idol who wins at once; stuck in D2", () => {
     const dry = [1, 2, 3, 4].map((s) => p(s, "a", "IDL", 3));
-    expect(kinds(dry, 4)).toEqual(["drought:a"]);
+    expect(kinds(dry, 4)).toEqual(["drought:a", "early-exit-again:a"]); // never in the Unzure Cup either
     expect(trajectoryNews(dry, 4, () => 80)).toEqual([]); // not a top tier idol
     expect(kinds([p(1, "e", "D2A", 2), p(2, "e", "D1A", 1)], 2)).toEqual(expect.arrayContaining(["promoted-champion:e"]));
     expect(kinds([p(1, "f", "D2B", 5), p(2, "f", "D2B", 4)], 2)).toEqual(["stuck-in-d2:f"]);
@@ -44,5 +44,18 @@ describe("trajectoryNews", () => {
     expect(newsScore({ kind: "repeat-champion", idol: "a", comp: "D1A", seasons: 2 })).toBeGreaterThanOrEqual(BREAKING);
     expect(newsScore({ kind: "drought-ended", idol: "a", comp: "D1A", gap: 4 })).toBeGreaterThanOrEqual(BREAKING);
     expect(newsScore({ kind: "promoted-champion", idol: "a", league: "D1A" })).toBeGreaterThanOrEqual(BREAKING);
+  });
+});
+
+describe("early-exit-again", () => {
+  const p = (season: number, comp: string, stage?: string): Placed => ({ season, idolId: "r", comp, finalRank: 9, stage });
+  const run = (rows: Placed[], cur: number, rating = 95) => trajectoryNews(rows, cur, () => rating).filter((s) => s.kind === "early-exit-again");
+  it("out in the groups or never qualified, 2+ of the last 3 seasons; 3 times is breaking", () => {
+    const three = [1, 2, 3].map((s) => p(s, "D1A"));
+    expect(run(three, 3)).toEqual([{ kind: "early-exit-again", idol: "r", times: 3, rating: 95 }]);
+    expect(newsScore(run(three, 3)[0]!)).toBeGreaterThanOrEqual(BREAKING);
+    expect(run([p(1, "D1A"), p(2, "UZC", "R16"), p(3, "UZC", "GS")], 3)[0]).toMatchObject({ times: 2 });
+    expect(run([p(1, "UZC", "R16"), p(2, "UZC", "R16"), p(3, "UZC", "GS")], 3)).toEqual([]);
+    expect(run(three, 3, 85)).toEqual([]);
   });
 });
