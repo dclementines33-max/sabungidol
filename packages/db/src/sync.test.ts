@@ -5,7 +5,8 @@ import { addIdols, deleteIdol, listIdols, updateIdol } from "./idols";
 import { openDb } from "./openDb";
 import { insertPhoto } from "./photos";
 import { idols } from "./schema";
-import { type SyncRow, applyRemote, localChanges } from "./sync";
+import { createDraftSeason, leagueRosters } from "./seasons";
+import { type SyncRow, applyFirstRosters, applyRemote, localChanges, rosterRows } from "./sync";
 
 const idol = (name: string, rating = 80) => ({ name, groupName: "IVE", rating, seed: null, nationality: null, birthday: null });
 // The cloud in a few lines, as the API keeps it: newer updatedAt wins, gallery entries only add.
@@ -79,5 +80,21 @@ describe("cloud sync merge", () => {
     await applyRemote(a, c.all().filter((r) => r.kind === "idol"), helpers(a)); // a newer record without a photo
     expect((await listIdols(a))[0]).toMatchObject({ photoId: "p1", gallery: [] });
     expect(stamp).toBeTruthy();
+  });
+
+  it("rosters are a starting value: only a fresh device builds its first season from the cloud's, once", async () => {
+    const a = await openDb();
+    const b = await openDb();
+    await addIdols(a, [idol("Liz"), idol("Rei"), idol("Gaeul"), idol("Leeseo")]);
+    await addIdols(b, [idol("Liz"), idol("Rei"), idol("Gaeul"), idol("Leeseo")]);
+    const id = async (db: typeof a, name: string) => (await listIdols(db)).find((i) => i.name === name)!.id;
+    await createDraftSeason(a, { id: "S01", number: 1, name: "Season 1", seed: "x", leagues: { D1A: [await id(a, "Liz"), await id(a, "Rei")], D1B: [await id(a, "Gaeul"), await id(a, "Leeseo")] } });
+    await createDraftSeason(b, { id: "S01", number: 1, name: "Season 1", seed: "y", leagues: { D1A: [await id(b, "Liz"), await id(b, "Gaeul")], D1B: [await id(b, "Rei"), await id(b, "Leeseo")] } });
+    const rows = await rosterRows(a, "S01", "2026-11-16T10:00:00.000Z");
+    expect(rows.find((r) => r.key === "D1A")!.data.idols).toEqual(["liz|ive", "rei|ive"]);
+
+    expect(await applyFirstRosters(b, rows)).toBe(true);
+    expect((await leagueRosters(b, "S01")).D1A).toEqual([await id(b, "Liz"), await id(b, "Rei")]);
+    expect(await applyFirstRosters(b, [{ ...rows[0]!, data: { idols: ["liz|ive", "nobody|x"] } }])).toBe(false); // unknown idol: keep own
   });
 });

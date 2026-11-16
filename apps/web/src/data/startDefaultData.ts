@@ -18,7 +18,6 @@ export function startDefaultData(): void {
       queryClient.invalidateQueries({ queryKey: IDOLS_QUERY });
     }
     startFirstSeason();
-    startCloudSync();
     remindBackup();
     checkIntegrityOnStart();
   }, (error) => {
@@ -44,7 +43,7 @@ function startCloudSync(): void {
 }
 
 function startFirstSeason(): void {
-  engine().ensureFirstSeason().then((season) => {
+  engine().ensureFirstSeason().finally(startCloudSync).then((season) => { // sync after Season 1 exists: a fresh device takes its rosters from the cloud
     if (!season?.created) return; // a season exists already, or too few active idols for 12 leagues
     notify({ level: "info", message: `Season 1 (draft) created: 240 idols in 12 leagues, ${season.reserves} reserves` });
     queryClient.invalidateQueries({ queryKey: SEASON_QUERY });

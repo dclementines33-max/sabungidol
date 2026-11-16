@@ -10,7 +10,7 @@ import type { Db } from "./db";
 import type { Files } from "./files";
 import { syncFile, syncRecord } from "./schema";
 
-export const KINDS = ["group", "idol", "gallery", "photo", "league"] as const;
+export const KINDS = ["group", "idol", "gallery", "photo", "league", "roster"] as const;
 export const MAX_PHOTO_BYTES = 20 * 1024 * 1024;
 const PAGE = 1000;
 const HASH = /^[0-9a-f]{64}$/;

@@ -1,7 +1,7 @@
-// Cloud sync in the Worker (2026-11-16): when signed in, push what changed here since the last push (photo originals
-// first, so a record never points at a missing photo), then pull what other devices wrote and merge it (packages/db
-// sync.ts). Offline or signed out it does nothing; unsent changes simply go next time (lastPush only moves on success).
-import { type Db, applyRemote, currentSeason, insertPhoto, localChanges, photoByHash, photosWithoutHash, readCache, setPhotoHash, writeCache } from "@sabung/db";
+// Cloud sync in the Worker (2026-11-16): when signed in, pull what other devices wrote and merge it (packages/db sync.ts;
+// on a fresh device also its first rosters), then push what changed here since the last push (photo originals first,
+// so a record never points at a missing photo). Offline or signed out it does nothing; unsent changes simply go next time (lastPush only moves on success).
+import { type Db, applyFirstRosters, applyRemote, currentSeason, rosterRows, insertPhoto, localChanges, photoByHash, photosWithoutHash, readCache, setPhotoHash, writeCache } from "@sabung/db";
 import type { SyncRow } from "@sabung/db";
 import { defaultLeagueName } from "../components/competition/arenaTheme";
 import { readPhotoFile, removePhotoFiles, storePhotoFiles } from "./photoFiles";
@@ -9,7 +9,7 @@ import type { PhotoSizes } from "./photoSizes";
 
 const KEY = "cloud-sync";
 const CHUNK = 1000;
-type State = { lastPush: string | null; seq: number };
+type State = { lastPush: string | null; seq: number; rosters?: string }; // rosters: the last roster lists sent
 
 const hex = (bytes: ArrayBuffer) => [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, "0")).join("");
 export const sha256 = async (data: ArrayBuffer) => hex(await crypto.subtle.digest("SHA-256", data));
@@ -53,17 +53,6 @@ async function run(db: Db, database: string) {
   const state = (await readCache<State>(db, KEY)) ?? { lastPush: null, seq: 0 };
   const startedAt = new Date().toISOString();
   const season = await currentSeason(db);
-  const rows = await localChanges(db, state.lastPush, season?.id ?? null);
-  const hashes = [...new Set(rows.flatMap(hashesOf))];
-  for (let i = 0; i < hashes.length; i += CHUNK) {
-    const { missing } = (await (await post("sync/photos/missing", { hashes: hashes.slice(i, i + CHUNK) })).json()) as { missing: string[] };
-    for (const hash of missing) {
-      const blob = await original(db, database, hash);
-      if (blob) await api(`sync/photos/${hash}`, { method: "PUT", body: blob });
-    }
-  }
-  for (let i = 0; i < rows.length; i += CHUNK) await post("sync", { rows: rows.slice(i, i + CHUNK) });
-  await writeCache(db, KEY, "sync", { ...state, lastPush: startedAt }, 0);
 
   let seq = state.seq;
   const pulled: SyncRow[] = [];
@@ -74,6 +63,22 @@ async function run(db: Db, database: string) {
     if (!page.more) break;
   }
   const changed = await applyRemote(db, pulled, { seasonId: season?.id ?? null, leagueName: (code) => defaultLeagueName(code[2]!), photoId: (h) => localPhoto(db, database, h) });
-  await writeCache(db, KEY, "sync", { lastPush: startedAt, seq }, 0);
-  return { pushed: rows.length, pulled: changed };
+  const rostersTaken = state.seq === 0 && (await applyFirstRosters(db, pulled)); // first link of a fresh device only
+  await writeCache(db, KEY, "sync", { ...state, seq }, 0);
+
+  const rows = await localChanges(db, state.lastPush, season?.id ?? null);
+  const rosters = season ? await rosterRows(db, season.id, startedAt) : [];
+  const rosterText = JSON.stringify(rosters.map((r) => [r.key, r.data]));
+  if (rosterText !== state.rosters) rows.push(...rosters); // only when they changed: no new seq every minute
+  const hashes = [...new Set(rows.flatMap(hashesOf))];
+  for (let i = 0; i < hashes.length; i += CHUNK) {
+    const { missing } = (await (await post("sync/photos/missing", { hashes: hashes.slice(i, i + CHUNK) })).json()) as { missing: string[] };
+    for (const hash of missing) {
+      const blob = await original(db, database, hash);
+      if (blob) await api(`sync/photos/${hash}`, { method: "PUT", body: blob });
+    }
+  }
+  for (let i = 0; i < rows.length; i += CHUNK) await post("sync", { rows: rows.slice(i, i + CHUNK) });
+  await writeCache(db, KEY, "sync", { lastPush: startedAt, seq, rosters: rosterText }, 0);
+  return { pushed: rows.length, pulled: changed + (rostersTaken ? 1 : 0) };
 }

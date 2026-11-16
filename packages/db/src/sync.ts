@@ -6,9 +6,11 @@
 import { and, eq, gt, isNull, sql } from "drizzle-orm";
 import { ulid } from "@sabung/shared";
 import type { Db } from "./openDb";
+import { countMatches } from "./countMatches";
 import { competitions, groups, idols, photos } from "./schema";
+import { leagueRosters, listSeasons, setLeagueRosters } from "./seasons";
 
-export type SyncRow = { kind: "group" | "idol" | "gallery" | "photo" | "league"; key: string; data: Record<string, unknown>; updatedAt: string };
+export type SyncRow = { kind: "group" | "idol" | "gallery" | "photo" | "league" | "roster"; key: string; data: Record<string, unknown>; updatedAt: string };
 type Col = typeof idols.updatedAt | typeof groups.updatedAt | typeof photos.updatedAt | typeof competitions.updatedAt;
 const iso = (col: Col) => sql<string>`to_char(${col} at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`; // compares as text
 const LEAGUE = /^D1[A-F]$/; // league branding lives on the D1 code (D2 and B-Side follow it)
@@ -137,3 +139,29 @@ async function applyOne(db: Db, r: SyncRow, help: ApplyHelpers): Promise<boolean
 export const photosWithoutHash = (db: Db) => db.select({ id: photos.id, sizes: photos.sizes }).from(photos).where(isNull(photos.hash));
 export const setPhotoHash = (db: Db, id: string, hash: string) => db.update(photos).set({ hash }).where(eq(photos.id, id));
 export const photoByHash = async (db: Db, hash: string) => (await db.select({ id: photos.id }).from(photos).where(eq(photos.hash, hash)).limit(1))[0]?.id ?? null;
+
+// League rosters are a starting value only (user, 2026-11-16): the running season's rosters go up as lists of idol sync
+// keys (kind "roster", key = league code incl. IDL), and only a fresh device — one draft Season 1, no match played —
+// builds its rosters from them, once. After that each device keeps its own.
+export async function rosterRows(db: Db, seasonId: string, updatedAt: string): Promise<SyncRow[]> {
+  await freezeKeys(db);
+  const keyOf = new Map((await db.select({ id: idols.id, key: idols.syncKey }).from(idols)).map((i) => [i.id, i.key]));
+  return Object.entries(await leagueRosters(db, seasonId)).map(([code, ids]) => ({ kind: "roster", key: code, data: { idols: ids.map((id) => keyOf.get(id)) }, updatedAt }));
+}
+
+export async function applyFirstRosters(db: Db, rows: SyncRow[]): Promise<boolean> {
+  const all = await listSeasons(db);
+  const [season] = all;
+  if (all.length !== 1 || season!.status !== "draft" || (await countMatches(db)) > 0) return false; // not a fresh device
+  await freezeKeys(db);
+  const idOf = new Map((await db.select({ id: idols.id, key: idols.syncKey }).from(idols)).map((i) => [i.key, i.id]));
+  const leagues: Record<string, string[]> = {};
+  for (const r of rows.filter((x) => x.kind === "roster")) {
+    const ids = (r.data.idols as string[]).map((k) => idOf.get(k));
+    if (ids.some((id) => !id)) return false; // an idol this device doesn't have (yet): keep its own rosters
+    leagues[r.key] = ids as string[];
+  }
+  if (!Object.keys(leagues).length) return false;
+  await setLeagueRosters(db, season!.id, leagues);
+  return true;
+}
