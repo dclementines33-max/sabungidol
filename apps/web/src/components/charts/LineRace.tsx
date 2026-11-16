@@ -1,5 +1,6 @@
 // A line chart of several idols over matchdays (title race, positions …): one coloured line per idol, the name at
-// its end, light gridlines only. `invert` puts low values on top (rank 1 at the top).
+// its end, light gridlines only. `invert` puts low values on top (rank 1 at the top). `upTo` draws only the first
+// points (a replay); the scales stay those of the whole season so the lines grow across a fixed frame.
 import { useIdolLookup } from "@sabung/ui";
 
 export const RACE_COLORS = ["var(--color-accent-bright)", "var(--color-cool)", "#f5c451", "#b07cff", "#5fd3a8", "#ff8a4c"];
@@ -7,10 +8,11 @@ const W = 640;
 const H = 280;
 const PAD = { l: 34, r: 110, t: 12, b: 26 };
 
-export function LineRace({ series, label, invert = false, unit = "" }: { series: { id: string; values: number[] }[]; label: string; invert?: boolean; unit?: string }) {
+export function LineRace({ series: full, label, invert = false, unit = "", upTo }: { series: { id: string; values: number[] }[]; label: string; invert?: boolean; unit?: string; upTo?: number }) {
   const lookup = useIdolLookup();
-  const n = Math.max(1, ...series.map((s) => s.values.length - 1));
-  const all = series.flatMap((s) => s.values);
+  const n = Math.max(1, ...full.map((s) => s.values.length - 1));
+  const all = full.flatMap((s) => s.values);
+  const series = upTo === undefined ? full : full.map((s) => ({ ...s, values: s.values.slice(0, Math.max(1, upTo)) }));
   const lo = invert ? Math.min(1, ...all) : 0;
   const hi = Math.max(lo + 1, ...all);
   const x = (i: number) => PAD.l + (i / n) * (W - PAD.l - PAD.r);

@@ -214,6 +214,13 @@ test("Season Progression: six title races, positions, progress, titles per group
   await expect(telemetry.getByRole("img", { name: /^Games won against expectation for \d+ idols/ })).toBeVisible();
   await expect(telemetry.getByRole("region", { name: "Over-performers" }).getByRole("listitem")).toHaveCount(5);
   await telemetry.screenshot({ path: "test-results/telemetry.png" });
+  const towerChapter = page.getByRole("region", { name: "Timing tower" }); // 2026-11-17: replays on demand
+  await expect(towerChapter.getByRole("list", { name: /^Standings .* after matchday \d+$/ }).getByRole("listitem")).toHaveCount(20);
+  await towerChapter.getByRole("button", { name: "Play", exact: true }).click();
+  await expect(towerChapter.getByText(/^Matchday 1 \//)).toBeVisible(); // from the end, Play starts again at 1…
+  await expect(towerChapter.getByText(/^Matchday [3-9] \//)).toBeVisible(); // …and moves on by itself
+  await towerChapter.getByRole("button", { name: "Pause" }).click();
+  await towerChapter.screenshot({ path: "test-results/timing-tower.png" });
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/progression.png", fullPage: true });
 });

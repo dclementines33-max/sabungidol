@@ -1,6 +1,7 @@
 // Season Progression (Update 2): what happened in this season as charts — the six D1 title races, one league's
 // positions over time, The Idols' positions (Update 3, instead of how far every competition is), which girl groups took this season's titles,
-// and the telemetry: who is beating her rating and who isn't (2026-11-17).
+// a timing tower, and the telemetry: who is beating her rating and who isn't (2026-11-17). The charts and the tower
+// replay matchday by matchday on demand (play / pause / replay / scrubber), never during a simulation.
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
@@ -8,6 +9,7 @@ import { Bump } from "../../components/progression/Bump";
 import { RaceGrid } from "../../components/progression/RaceGrid";
 import { Telemetry } from "../../components/progression/Telemetry";
 import { TitleShare } from "../../components/progression/TitleShare";
+import { TowerReplay } from "../../components/progression/TowerReplay";
 import { engine } from "../../data/engineClient";
 import { SEASON_QUERY, useCurrentSeason } from "../../data/seasonQuery";
 
@@ -56,7 +58,10 @@ function Progression() {
           </Chapter>
         </div>
       </div>
-      <Chapter n="05" title="Telemetry" note="Every idol's share of games won against what her rating expected. Above the line she is beating her rating; below it, falling short.">
+      <Chapter n="05" title="Timing tower" note="The standings as a live broadcast graphic. Press Play to watch the season unfold, or drag to any matchday.">
+        <TowerReplay />
+      </Chapter>
+      <Chapter n="06" title="Telemetry" note="Every idol's share of games won against what her rating expected. Above the line she is beating her rating; below it, falling short.">
         {telemetry && <Telemetry rows={telemetry} />}
       </Chapter>
     </div>
