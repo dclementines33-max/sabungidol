@@ -1,5 +1,27 @@
 # Marble Match (preview, separate from the app)
 
+**Update 2026-11-18 (round 2):** a scoreboard on top; a field of **2–20 marbles** (2 = a Best-of-N series as below, 3+ =
+a **Grand Prix**: 3/4/5/7 races, F1 points 25-18-15-12-10-8-6-4-2-1, ties by wins, podium + table at the end); 7 more
+arenas (15 in all, no second sumo) built for close racing with **boost pads**: they push up to a top speed that is
+higher the further a marble is behind the leader (13 m/s + up to 6), so the back of the field catches up. Measured on
+equal pairs: the gap between 1st and 2nd is mostly 0.1–1 s. Photos now come from import/ive-photos and
+import/new-photos/<group> (46 named idols).
+
+| Round 2 arena | What happens |
+|---|---|
+| Neon Overdrive | synthwave highway, huge banked sweepers, two jumps (landings start under the lips), gates, 3 boosts |
+| Crystal Corkscrew | glass tubes: a 3-turn corkscrew and a blind S-bend between open troughs, 2 boosts |
+| Magma Core | 1¼ laps down round a volcano over a lava floor, three wrecking balls, a lava jump, 4 boosts |
+| Factory 9 | two spinning tumble drums with fins, hammers and a gate between them, 3 boosts |
+| Sky Bridges | golden platforms joined by narrow low-railed bridges above the clouds; falls are part of it; 4 boosts |
+| Dragon Slalom | lantern slalom with bumper posts at each apex, a wide bobsled half-pipe, 3 boosts |
+| Abyss Trench | a giant glass spiral, a wide trench run with three "jellyfish" spinners, 3 boosts |
+
+New kit pieces in `src/kit/extras.js`: boost pads, glass pipes (inside = physics surface), tumble drums (a kinematic
+barrel with a trimesh and fins); `kit.hammer({ ball: true })` = wrecking ball. Lessons: a boost without a top speed
+throws marbles off (seen at 20–50 m/s); a wide section must narrow back before a narrow one; a landing must start under
+its lip. 20 marbles: a headless race takes 0.6–2.7 s of CPU for ~25 s of racing.
+
 The marble race as a way to decide **one match**: a Best-of-N series (Bo3/4/5/7, the app's rules: first to 2/3/4,
 Bo4 can end 2–2), **one run = one game**, every game on a **different arena drawn at random** for the match. The result
 is the games' winners in order (`["A","B","A"]`, A = red corner) — exactly what the app's `acceptMatch` takes. Nothing

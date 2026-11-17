@@ -90,3 +90,38 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .controls button { padding: 8px 12px; border: 0; background: rgba(42,9,18,.92); transform: skewX(-10deg); font-weight: 800; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; color: var(--text); }
 .controls button.on { background: var(--accent); color: #fff; }
 @media (max-width: 700px) { .controls { right: 8px; bottom: 112px; } .laps { bottom: 64px; } }
+
+/* scoreboard, field, many marbles */
+.scoreboard { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); display: flex; align-items: stretch; gap: 3px; pointer-events: none; filter: drop-shadow(0 10px 24px rgba(0,0,0,.6)); }
+.scoreboard:empty { display: none; }
+.scoreboard .side, .scoreboard .gp { display: flex; align-items: center; gap: 10px; padding: 6px 12px; background: linear-gradient(180deg, rgba(42,9,18,.96), rgba(14,3,8,.96)); transform: skewX(-10deg); box-shadow: inset 0 -3px 0 var(--c, var(--hot)); }
+.scoreboard .side > *, .scoreboard .gp > * { transform: skewX(10deg); }
+.scoreboard .red { --c: #ff4d63; } .scoreboard .blue { --c: #9fd8ff; }
+.scoreboard img, .scoreboard .noface { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 3px solid var(--c); display: grid; place-items: center; font: 400 16px "Bungee", sans-serif; background: #1a0609; }
+.scoreboard .who { font-weight: 800; text-transform: uppercase; letter-spacing: .06em; font-size: 13px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scoreboard .pts { font: 400 30px/1 "Bungee", sans-serif; color: #fff; min-width: 28px; text-align: center; text-shadow: 0 0 18px var(--c); }
+.scoreboard .gp .pts { font-size: 20px; } .scoreboard .gp b:first-child { font: 400 16px "Bungee", sans-serif; color: var(--c); }
+.scoreboard .mid { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px 16px; background: #f0c75e; color: #140308; transform: skewX(-10deg); min-width: 150px; }
+.scoreboard .mid > * { transform: skewX(10deg); white-space: nowrap; }
+.scoreboard .mid span { font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.scoreboard .mid strong { font: 400 18px/1.1 "Bungee", sans-serif; }
+.scoreboard .mid small { font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.brand { top: 84px; }
+.tower { top: 84px; max-height: calc(100vh - 170px); overflow: hidden; }
+.tower.many li { padding: 3px 10px; margin-bottom: 2px; } .tower.many .pos { font-size: 14px; } .tower.many .name { font-size: 11px; } .tower.many .gap { font-size: 10px; }
+.tower li.boost { box-shadow: inset 3px 0 0 var(--c), 0 0 16px -4px #39ff88; }
+.count output { margin-left: 6px; }
+.field { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 260px; overflow: auto; }
+.field li { display: grid; grid-template-columns: 10px 1fr 52px; gap: 6px; align-items: center; padding: 4px 6px; background: rgba(42,9,18,.6); box-shadow: inset 3px 0 0 var(--c); }
+.field .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.field select, .field input { min-width: 0; background: #1a0609; border: 0; border-bottom: 2px solid var(--c); color: var(--text); padding: 3px; font-size: 12px; }
+.ghost { padding: 6px; border: 0; background: var(--stage-hi); transform: skewX(-10deg); font-weight: 800; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; color: var(--text); }
+.mode { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--hot); }
+.result .card.wide { width: min(640px, 94vw); max-height: 90vh; overflow: auto; }
+.podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin: 10px 0; }
+.podium .step { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 150px; padding: 10px 6px 0; background: linear-gradient(180deg, color-mix(in oklab, var(--c) 35%, transparent), transparent); }
+.podium .step img, .podium .step .noface { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 4px solid var(--c); box-shadow: 0 0 30px var(--c); display: grid; place-items: center; font: 400 26px "Bungee"; }
+.podium .step i { font: 400 44px/1 "Bungee", sans-serif; font-style: normal; color: var(--c); }
+.podium .p1 { padding-top: 0; } .podium .p1 img { width: 96px; height: 96px; }
+.gpt { width: 100%; } .gpt th { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 4px 10px; }
+@media (max-width: 700px) { .scoreboard .who { display: none; } .scoreboard .mid { min-width: 110px; } .brand { top: 70px; } }

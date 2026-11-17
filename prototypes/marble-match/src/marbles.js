@@ -69,7 +69,8 @@ export async function createMarble(scene, { photoUrl, color, label, R }) {
 
   return {
     group,
-    update(t, q) {
+    update(t, q, boosting = 0) {
+      halo.scale.setScalar(R * (boosting ? 9 : 6)); // a boost pad lights the marble up
       const jump = group.position.distanceToSquared(t) > 4; // a respawn or a skipped stretch: restart the trail, no streak
       group.position.set(t.x, t.y, t.z);
       if (jump) filled = false;

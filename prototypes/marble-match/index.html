@@ -20,6 +20,8 @@
 <body>
   <canvas id="view"></canvas>
 
+  <div id="scoreboard" class="scoreboard" aria-label="Scoreboard"></div>
+
   <header class="brand">
     <p class="kicker">Sabung Idol · Marble Match preview</p>
     <h1 id="arena-name">…</h1>
@@ -29,7 +31,7 @@
 
   <ol id="tower" class="tower" aria-label="Standing"></ol>
   <div id="series" class="laps" aria-label="Series"></div>
-  <div id="tags" aria-hidden="true"><span class="tag"></span><span class="tag"></span></div>
+  <div id="tags" aria-hidden="true"></div>
   <div id="lights" class="lights" hidden><span></span><span></span><span></span></div>
   <section id="intro" class="intro" hidden aria-live="polite"></section>
   <p id="banner" class="banner" hidden></p>
@@ -37,14 +39,10 @@
   <aside id="panel" class="panel">
     <button id="fold" class="fold" aria-expanded="true">Setup</button>
     <div class="body">
-      <fieldset class="corner red"><legend>Red corner</legend>
-        <select id="photo-a"></select>
-        <label>Rating <output id="ra-out">95</output><input id="rating-a" type="range" min="50" max="100" value="95" /></label>
-      </fieldset>
-      <fieldset class="corner blue"><legend>Blue corner</legend>
-        <select id="photo-b"></select>
-        <label>Rating <output id="rb-out">84</output><input id="rating-b" type="range" min="50" max="100" value="84" /></label>
-      </fieldset>
+      <label class="count">Marbles <output id="count-out">2</output><input id="count" type="range" min="2" max="20" value="2" /></label>
+      <ol id="field" class="field" aria-label="Field"></ol>
+      <button id="shuffle" class="ghost">Shuffle the field</button>
+      <p class="mode" id="mode">Best of</p>
       <div class="row" role="group" aria-label="Best of">
         <button data-bo="3">Bo3</button><button data-bo="4">Bo4</button><button data-bo="5" class="on">Bo5</button><button data-bo="7">Bo7</button>
       </div>

@@ -13,7 +13,7 @@ export default {
     plinth.position.set(0, 2.6, 0); plinth.receiveShadow = true; kit.group.add(plinth);
     return {
       kind: "sumo", sections: [path], center, rim: 6.4, limit: 75,
-      start: (() => { const a = kit.rand() * Math.PI * 2, gap = Math.PI * (0.5 + kit.rand()); return (k) => center.clone().add(new THREE.Vector3(Math.cos(a + k * gap) * 3.4, 2.4, Math.sin(a + k * gap) * 3.4)); })(), // random spots, never side by side
+      start: (() => { const a0 = kit.rand() * Math.PI * 2; return (k, n) => { const ring = n > 6 ? (k % 2 ? 4.4 : 2.6) : 3.4, a = a0 + (k / n) * Math.PI * 2; return center.clone().add(new THREE.Vector3(Math.cos(a) * ring, 2.4, Math.sin(a) * ring)); }; })(), // spread round the bowl
     };
   },
 };

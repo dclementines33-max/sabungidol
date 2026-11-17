@@ -21,12 +21,12 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
     board: new THREE.MeshStandardMaterial({ color: theme.floor, roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide }),
     wall: new THREE.MeshStandardMaterial({ color: theme.wall, roughness: 0.5, metalness: 0.2, side: THREE.DoubleSide }),
   };
-  const moving = [], pillars = [];
+  const moving = [], pillars = [], scrolls = [];
   const add = (mesh, shadow = true) => { mesh.castShadow = shadow; mesh.receiveShadow = true; group.add(mesh); return mesh; };
   const fixedBody = (pos, rot) => world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(pos.x, pos.y, pos.z).setRotation(rot ?? new THREE.Quaternion()));
 
   const kit = {
-    theme, group, mat, RAPIER, world, rand, // rand: the game's seeded randomness (e.g. which way a sweeper spins)
+    theme, group, mat, RAPIER, world, rand, boosts: [], scrolls, // rand: the game's seeded randomness; boosts: pads; scrolls: textures that flow
     fixedMesh(positions, indices, { friction = 0.45, restitution = 0.15, oneSided = true } = {}) {
       const flags = oneSided ? RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES : 0;
       world.createCollider(RAPIER.ColliderDesc.trimesh(positions, indices, flags).setFriction(friction).setRestitution(restitution));
@@ -52,10 +52,10 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
       const p0 = pose(0);
       const body = world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(p0.pos.x, p0.pos.y, p0.pos.z).setRotation(p0.rot));
       const holder = new THREE.Group();
-      for (const { size, at = new THREE.Vector3(), material = mat.hazard, round } of parts) {
-        const d = round ? RAPIER.ColliderDesc.cylinder(size.y / 2, size.x / 2) : RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
+      for (const { size, at = new THREE.Vector3(), material = mat.hazard, round, sphere } of parts) {
+        const d = sphere ? RAPIER.ColliderDesc.ball(size.x / 2) : round ? RAPIER.ColliderDesc.cylinder(size.y / 2, size.x / 2) : RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
         world.createCollider(d.setTranslation(at.x, at.y, at.z).setRestitution(0.5).setFriction(0.3), body);
-        const m = new THREE.Mesh(round ? new THREE.CylinderGeometry(size.x / 2, size.x / 2, size.y, 16) : new THREE.BoxGeometry(size.x, size.y, size.z), material);
+        const m = new THREE.Mesh(sphere ? new THREE.SphereGeometry(size.x / 2, 24, 16) : round ? new THREE.CylinderGeometry(size.x / 2, size.x / 2, size.y, 16) : new THREE.BoxGeometry(size.x, size.y, size.z), material);
         m.position.copy(at); m.castShadow = true; holder.add(m);
       }
       group.add(holder);
@@ -69,13 +69,14 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
         [{ size: new THREE.Vector3(length, 0.22, 0.2) }, { size: new THREE.Vector3(0.36, 0.5, 0.36), round: true, material: kit.mat.rail }]);
     },
     // a pendulum hammer swinging across the trough, hung from a gantry
-    hammer(sec, i, { height = 3.2, swing = 0.95, speed = 2.2, phase = 0 } = {}) {
+    hammer(sec, i, { height = 3.2, swing = 0.95, speed = 2.2, phase = 0, ball = false } = {}) { // ball: a wrecking ball
       const up = sec.up[i], T = sec.T[i], pivot = sec.pts[i].clone().addScaledVector(up, height);
       const base = frameRot(sec, i);
       for (const s of [-1, 1]) kit.box({ pos: sec.pts[i].clone().addScaledVector(sec.side[i], s * 1.9).addScaledVector(up, height / 2), size: new THREE.Vector3(0.16, height, 0.16), rot: base, material: mat.steel });
       kit.box({ pos: pivot.clone().addScaledVector(up, 0.1), size: new THREE.Vector3(4, 0.16, 0.16), rot: base, material: mat.steel });
       return kit.mover((t) => ({ pos: pivot, rot: new THREE.Quaternion().setFromAxisAngle(T, swing * Math.sin(speed * t + phase)).multiply(base) }),
-        [{ size: new THREE.Vector3(0.08, height - 0.6, 0.08), at: new THREE.Vector3(0, -(height - 0.6) / 2, 0), material: mat.steel }, { size: new THREE.Vector3(0.7, 0.55, 0.55), at: new THREE.Vector3(0, -(height - 0.3), 0) }]);
+        [{ size: new THREE.Vector3(0.08, height - 0.6, 0.08), at: new THREE.Vector3(0, -(height - 0.6) / 2, 0), material: mat.steel },
+         ball ? { size: new THREE.Vector3(1.0, 1.0, 1.0), at: new THREE.Vector3(0, -(height - 0.55), 0), sphere: true } : { size: new THREE.Vector3(0.7, 0.55, 0.55), at: new THREE.Vector3(0, -(height - 0.3), 0) }]);
     },
     // a block sliding from wall to wall
     gate(sec, i, { speed = 1.6, phase = 0, travel = 0.75 } = {}) {
@@ -85,7 +86,7 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
     },
     // moving pieces: pose them for time t (physics) / copy poses to meshes (render)
     update(t) { for (const m of moving) { const { pos, rot } = m.pose(t); m.body.setNextKinematicTranslation(pos); m.body.setNextKinematicRotation(rot); } },
-    sync() { for (const m of moving) { const p = m.body.translation(), q = m.body.rotation(); m.holder.position.set(p.x, p.y, p.z); m.holder.quaternion.set(q.x, q.y, q.z, q.w); } },
+    sync(dt = 0) { for (const t of scrolls) t.offset.y -= dt * 2.2; for (const m of moving) { const p = m.body.translation(), q = m.body.rotation(); m.holder.position.set(p.x, p.y, p.z); m.holder.quaternion.set(q.x, q.y, q.z, q.w); } },
     // pillars down to the floor, once the floor height is known
     finish(groundY) {
       if (!pillars.length) return;

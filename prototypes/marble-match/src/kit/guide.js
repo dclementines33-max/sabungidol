@@ -40,9 +40,12 @@ export function makeGuide(sections) {
   for (const s of sections) {
     const parts = s.branches ?? [s];
     const span = Math.max(...parts.map((p) => p.length));
-    for (const p of parts) for (let i = 0; i < p.n; i++) {
-      g.pts.push(p.pts[i]); g.T.push(p.T[i]); g.side.push(p.side[i]); g.up.push(p.up[i]);
-      g.prog.push(at + (i / (p.n - 1)) * span);
+    for (const p of parts) {
+      p.base = g.pts.length; // where this section starts in the guide (boost pads find their stretch through it)
+      for (let i = 0; i < p.n; i++) {
+        g.pts.push(p.pts[i]); g.T.push(p.T[i]); g.side.push(p.side[i]); g.up.push(p.up[i]);
+        g.prog.push(at + (i / (p.n - 1)) * span);
+      }
     }
     at += span;
   }

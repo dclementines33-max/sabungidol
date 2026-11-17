@@ -51,14 +51,11 @@ export function createScene(canvas, quality) {
     scene.fog.color.set(th.sky[1]);
     rim.color.set(th.glow);
     ground.material.map?.dispose();
-    ground.material.map = canvasTex(1024, 1024, (g, w) => {
-      const r = g.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
-      g.fillStyle = "#000"; g.fillRect(0, 0, w, w);
-      r.addColorStop(0, th.wallDark + "99"); r.addColorStop(0.45, th.ground); r.addColorStop(1, "#000"); // a soft glow, not a lit disc
-      g.fillStyle = r; g.fillRect(0, 0, w, w);
-      g.strokeStyle = th.glow + "22"; g.lineWidth = 3;
-      for (let i = 1; i < 10; i++) { g.beginPath(); g.arc(w / 2, w / 2, i * 50, 0, Math.PI * 2); g.stroke(); }
-    });
+    ground.material.map = groundTexture(th);
+    const glowing = th.groundStyle === "lava" || th.groundStyle === "deep";
+    ground.material.emissiveMap = glowing ? ground.material.map : null;
+    ground.material.emissive.set(glowing ? "#ffffff" : "#000000");
+    ground.material.emissiveIntensity = th.groundStyle === "lava" ? 1.1 : 0.6;
     ground.material.needsUpdate = true;
     const box = new THREE.Box3().setFromObject(group), mid = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
     ground.position.set(mid.x, game.groundY, mid.z);
@@ -73,6 +70,22 @@ export function createScene(canvas, quality) {
     return { mid, reach };
   }
   return { renderer, scene, camera, setArena };
+}
+
+// The floor under an arena, in its theme: neon grid, lava, clouds, the deep sea, or rings.
+function groundTexture(th) {
+  return canvasTex(1024, 1024, (g, w) => {
+    const r = g.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
+    g.fillStyle = "#000"; g.fillRect(0, 0, w, w);
+    const style = th.groundStyle ?? "rings";
+    if (style === "clouds") { g.fillStyle = th.ground; g.fillRect(0, 0, w, w); for (let i = 0; i < 160; i++) { const x = Math.random() * w, y = Math.random() * w, s = 20 + Math.random() * 70, c = g.createRadialGradient(x, y, 0, x, y, s); c.addColorStop(0, "rgba(255,255,255,0.9)"); c.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = c; g.fillRect(x - s, y - s, 2 * s, 2 * s); } return; }
+    r.addColorStop(0, th.wallDark + "99"); r.addColorStop(0.45, th.ground); r.addColorStop(1, "#000"); // a soft glow, not a lit disc
+    g.fillStyle = r; g.fillRect(0, 0, w, w);
+    if (style === "grid") { g.strokeStyle = th.glow + "55"; g.lineWidth = 2; for (let x = 0; x <= w; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, w); g.stroke(); g.beginPath(); g.moveTo(0, x); g.lineTo(w, x); g.stroke(); } }
+    else if (style === "lava") { for (let i = 0; i < 90; i++) { const x = Math.random() * w, y = Math.random() * w, s = 10 + Math.random() * 60, c = g.createRadialGradient(x, y, 0, x, y, s); c.addColorStop(0, "rgba(255,190,60,0.95)"); c.addColorStop(0.5, "rgba(255,70,0,0.6)"); c.addColorStop(1, "rgba(120,10,0,0)"); g.fillStyle = c; g.fillRect(x - s, y - s, 2 * s, 2 * s); } }
+    else if (style === "deep") { for (let i = 0; i < 260; i++) { const x = Math.random() * w, y = Math.random() * w, s = 2 + Math.random() * 6; g.fillStyle = Math.random() < 0.6 ? th.glow + "aa" : "#9b5de5aa"; g.beginPath(); g.arc(x, y, s, 0, Math.PI * 2); g.fill(); } }
+    else { g.strokeStyle = th.glow + "22"; g.lineWidth = 3; for (let i = 1; i < 10; i++) { g.beginPath(); g.arc(w / 2, w / 2, i * 50, 0, Math.PI * 2); g.stroke(); } }
+  });
 }
 
 // A gate over the run: two posts and a board (the arena's name at the start, a checker at the finish).
