@@ -19,7 +19,21 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "To the next phase" }).click();
   await expect(page.getByText(/4,940 matches played/).first()).toBeVisible({ timeout: 120_000 }); // 12 leagues + The Idols
-  await page.getByRole("dialog", { name: "Simulation highlights" }).getByRole("button", { name: "Close" }).click(); // every bulk play ends on its highlights
+  const popup = page.getByRole("dialog", { name: "Simulation highlights" }); // every bulk play ends on its highlights
+  // 2026-11-17: full screen on an opaque backdrop (nothing behind gives a result away); a league = timeline + live standings
+  expect(await popup.evaluate((el) => [getComputedStyle(el).backgroundColor, el.getBoundingClientRect().width >= innerWidth, el.getBoundingClientRect().height >= innerHeight]))
+    .toEqual(["rgb(1, 0, 3)", true, true]);
+  const live = popup.getByRole("region", { name: "Live standings" });
+  await expect(live.getByRole("list", { name: /^Standings after matchday \d+$/ }).getByRole("listitem")).toHaveCount(20);
+  const first = await live.getByRole("list").getAttribute("aria-label");
+  await expect(live.getByRole("list")).not.toHaveAttribute("aria-label", first!, { timeout: 10_000 }); // the clock moves the standings
+  await popup.screenshot({ path: "test-results/broadcast-league.png" });
+  expect(await axe(page)).toEqual([]);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: "test-results/broadcast-league-phone.png" });
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await popup.getByRole("button", { name: "Skip to the end" }).click();
+  await popup.getByRole("button", { name: "Close" }).click();
   await expect(phases.getByRole("link", { name: /Division 1.*Done/ })).toBeVisible();
   await expect(phases.getByRole("link", { name: /Unzure Cup.*(Ready to play|Waiting)/ })).toBeVisible();
 

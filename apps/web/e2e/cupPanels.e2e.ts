@@ -32,7 +32,12 @@ test("Cup panels: Unzure road and Nugu Cup", async ({ page }) => {
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Play to the champion" }).click();
   await expect(page.getByText(/^(\d{3}|\d{1,3}(,\d{3})+) matches played$/)).toBeVisible({ timeout: 120_000 }); // the rest of the road: hundreds of matches
-  await closeHighlights(page, true); // the Unzure champion is crowned
+  const news = page.getByRole("dialog", { name: "Simulation highlights" }); // the Unzure champion is crowned
+  await expect(news.getByRole("region", { name: "Finale" })).toBeVisible({ timeout: 120_000 }); // a cup reads as a news page…
+  await expect(news.getByRole("list", { name: "Timeline" })).toHaveCount(0); // …not a timeline
+  await news.screenshot({ path: "test-results/news-unzure.png" });
+  expect(await axe(page)).toEqual([]);
+  await news.getByRole("button", { name: "Close" }).click();
   await page.getByRole("tab", { name: "Pots & draw" }).click();
   await expect(page.getByRole("heading", { name: "Pot 4" })).toBeVisible();
   await page.getByRole("tab", { name: "Groups" }).click();

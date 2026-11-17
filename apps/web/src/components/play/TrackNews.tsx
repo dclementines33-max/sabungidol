@@ -1,0 +1,44 @@
+// A cup's Simulation results as a news page (2026-11-17, user: "not a timeline, news, nicely laid out"): round by round,
+// in the order they were played, each round's stories as news cards — the very first one as the lead, large — and the
+// finale (champion, path, title news) last, so reading down the page never gives the winner away early.
+import type { Timeline, TimelineStory } from "@sabung/engine";
+import { IdolPhoto, useIdolLookup } from "@sabung/ui";
+import { useBranding } from "../../data/branding";
+import { arenaOf } from "../competition/arenaTheme";
+import { TimelineFinale } from "./TimelineFinale";
+import { headlineOf, kickerOf, pointLabel, starOf, toneOf } from "./timelineText";
+
+function Card({ s, lead, name, label }: { s: TimelineStory; lead: boolean; name: (id: string) => string; label: (k: string) => string }) {
+  return (
+    <li className={`flex gap-4 border-t-2 pt-3 ${lead ? "flex-col sm:col-span-2 sm:flex-row" : ""}`} style={{ borderColor: toneOf(s) }}>
+      <IdolPhoto idolId={starOf(s)} size={lead ? 256 : 64} className={lead ? "photo-frame w-40 shrink-0" : "w-14 shrink-0 self-start rounded-control"} />
+      <span lang="id" className="min-w-0">
+        <span className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)}</span>
+        <span className={`block font-display leading-tight ${lead ? "mt-1 text-[clamp(1.4rem,3vw,2.2rem)]" : "text-base"}`}>{headlineOf(s, name, label)}</span>
+      </span>
+    </li>
+  );
+}
+
+export function TrackNews({ t }: { t: Timeline }) {
+  const { label } = useBranding();
+  const lookup = useIdolLookup();
+  const name = (id: string) => lookup(id)?.name ?? id;
+  return (
+    <div data-arena={arenaOf(t.track!)} className="space-y-10">
+      {t.points.map((p, i) => (
+        <section key={`${p.comp}${p.stage}${p.round}`} aria-label={pointLabel(p, label, false)} className="space-y-4">
+          <h3 className="kicker m-0 flex items-center gap-3"><span>{pointLabel(p, label, false)}</span><span aria-hidden="true" className="h-px flex-1 bg-border-strong" /></h3>
+          <ul className="m-0 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+            {p.stories.map((s, j) => <Card key={j} s={s} lead={i === 0 && j === 0} name={name} label={label} />)}
+          </ul>
+        </section>
+      ))}
+      {t.finale && (
+        <section aria-label="Finale" className="border-t-2 border-accent-bright pt-4">
+          <TimelineFinale finale={t.finale} name={name} label={label} />
+        </section>
+      )}
+    </div>
+  );
+}
