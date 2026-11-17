@@ -5,6 +5,7 @@
 import { D1_LEAGUES, D2_LEAGUES } from "@sabung/shared";
 import { computeStandings } from "../standings";
 import { type Part, PRESTIGE, expectationParts, placeValue, prestigeOf } from "./expectation";
+import { type Award, awardBonus, seasonAwards } from "../stats/seasonAwards";
 import { seasonPlacements } from "./placements";
 import type { SimMatch, Title } from "./types";
 
@@ -43,7 +44,8 @@ export function promotionPlan(matches: SimMatch[], leagues: Record<string, strin
 }
 
 // expected = the raw season delta before the rating factor; parts = its breakdown, biggest first.
-export type ProgressionRow = { idolId: string; old: number; new: number; score: number; expected: number; reason: string; parts: Part[] };
+// award = the season-award bonus already in new (seasonAwards.ts AWARD_BONUS).
+export type ProgressionRow = { idolId: string; old: number; new: number; score: number; expected: number; reason: string; parts: Part[]; award: number };
 
 // The rating each idol played the season with (taken from its matches).
 const startRatings = (matches: SimMatch[]) => {
@@ -86,7 +88,7 @@ export function gainFactor(rating: number): number {
 const MAX_DROP = 12;
 const SLUMP = 2;
 const slumpWeight = (rating: number) => 1 + 0.5 * Math.max(0, Math.min(1, (rating - 70) / 10)); // 1 at 70 and below, 1.5 from 80
-export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
+function baseProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan): ProgressionRow[] {
   const start = startRatings(matches);
   const rating = (id: string) => start.get(id) ?? 0;
   const score = seasonScores(matches, titles, leagues);
@@ -100,6 +102,25 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
     const factor = raw > 0 ? gainFactor(old) : 1;
     const value = Math.max(1, Math.min(100, Math.round(old + raw * factor)));
     const reason = [...mine.slice(0, 3).map((p) => `${p.key} ${p.stage} ${sign(p.delta)}`), factor !== 1 && `× ${factor.toFixed(2)} (rating ${old})`].filter(Boolean).join(", ");
-    return { idolId: id, old, new: value, score: score.get(id)!, expected: raw, reason, parts: mine };
+    return { idolId: id, old, new: value, score: score.get(id)!, expected: raw, reason, parts: mine, award: 0 };
+  });
+}
+
+export type AwardExtra = { groups?: Map<string, string | null>; badges?: Map<string, number> };
+const awardsFrom = (rows: ProgressionRow[], matches: SimMatch[], titles: Partial<Record<string, Title>>, { groups, badges }: AwardExtra) =>
+  seasonAwards(matches, titles, { growth: new Map(rows.map((r) => [r.idolId, r.new - r.old])), badges, scores: new Map(rows.map((r) => [r.idolId, r.score])), groups });
+
+// The season awards (Glow Up from the progression before the award bonus).
+export function seasonEndAwards(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan, extra: AwardExtra = {}): Award[] {
+  return awardsFrom(baseProgression(matches, titles, leagues, plan), matches, titles, extra);
+}
+
+// Season Progression plus the award bonus (capped, rating ≤ 100). Pass groups so MAMA counts.
+export function seasonProgression(matches: SimMatch[], titles: Partial<Record<string, Title>>, leagues: Record<string, string[]>, plan: PromotionPlan, extra: AwardExtra = {}): ProgressionRow[] {
+  const rows = baseProgression(matches, titles, leagues, plan);
+  const bonus = awardBonus(awardsFrom(rows, matches, titles, extra), new Map(rows.map((r) => [r.idolId, r.score])), extra.groups);
+  return rows.map((r) => {
+    const b = bonus.get(r.idolId) ?? 0;
+    return b ? { ...r, new: Math.min(100, r.new + b), award: b, reason: [r.reason, `awards +${b}`].filter(Boolean).join(", ") } : r;
   });
 }

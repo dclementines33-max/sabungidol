@@ -7,6 +7,13 @@ import { updateCareerCache } from "./careerWorker";
 import { seasonInput, seasonOverview } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
+// What the season awards need besides the matches: each idol's group (MAMA) and this season's badges (Golden Disk ties).
+export function awardExtra(idols: { id: string; groupId: string | null }[], badges: { idolId: string }[]) {
+  const count = new Map<string, number>();
+  for (const b of badges) count.set(b.idolId, (count.get(b.idolId) ?? 0) + 1);
+  return { groups: new Map(idols.map((i) => [i.id, i.groupId])), badges: count };
+}
+
 async function closeState(db: Db) {
   const overview = await seasonOverview(db);
   const blockers = overview.competitions.filter((c) => c.status !== "off" && c.status !== "none" && c.status !== "finished").map((c) => c.name);
@@ -21,12 +28,12 @@ export async function closePreview(db: Db) {
   const { input, result, plan, blockers, rating } = await closeState(db);
   if (blockers.length) return { blockers, progression: [], promoted: [], relegated: [], badges: [], targets: [] };
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) };
-  const progression = seasonProgression(result.matches, result.titles, leagues, plan)
+  await updateCareerCache(db); // the finished season gets its placements and badges (§7.2, §7.4)
+  const badges = (await listAchievements(db)).filter((b) => b.seasonId === input.seasonId).map((b) => ({ idolId: b.idolId, badge: b.badge }));
+  const progression = seasonProgression(result.matches, result.titles, leagues, plan, awardExtra(input.idols, badges))
     .map((r) => ({ ...r, current: rating.get(r.idolId) ?? r.old }))
     .filter((r) => r.current !== r.new)
     .sort((a, b) => b.new - b.current - (a.new - a.current));
-  await updateCareerCache(db); // the finished season gets its placements and badges (§7.2, §7.4)
-  const badges = (await listAchievements(db)).filter((b) => b.seasonId === input.seasonId).map((b) => ({ idolId: b.idolId, badge: b.badge }));
   return { blockers, progression, promoted: plan.promoted, relegated: plan.relegated, badges, targets: boardTargets(result.matches) };
 }
 

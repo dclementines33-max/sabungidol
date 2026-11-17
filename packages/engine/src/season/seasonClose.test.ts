@@ -34,7 +34,8 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
     for (const r of rows) {
       expect(r.new).toBeGreaterThanOrEqual(1);
       expect(r.new).toBeLessThanOrEqual(100);
-      expect(r.new - r.old).toBeLessThanOrEqual(Math.ceil(12 * 2.5)); // a great season × the biggest gain factor
+      expect(r.new - r.old - r.award).toBeLessThanOrEqual(Math.ceil(12 * 2.5)); // a great season × the biggest gain factor
+      expect(r.award).toBeLessThanOrEqual(3); // MAX_AWARD_BONUS
       expect(r.old - r.new).toBeLessThanOrEqual(12 + 1); // MAX_DROP + rounding
       const sum = r.parts.reduce((s, p) => s + p.delta, 0); // the raw delta is the breakdown's sum; a bad season counts extra
       if (sum >= 0) expect(r.expected).toBeCloseTo(sum, 6);
@@ -47,6 +48,7 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
     for (const g of gains) expect(g.factor).toBe(Number(gainFactor(g.old).toFixed(2))); // the reason shows 2 decimals
     expect(gains.some((g) => g.old >= 85 && g.factor <= 0.5)).toBe(true);
     expect(gains.some((g) => g.old < 70 && g.factor > 1)).toBe(true);
+    expect(rows.find((r) => r.award >= 2)!.reason).toMatch(/awards \+[23]/); // MVI / Idol of the Season
     expect(seasonProgression(season.matches, season.titles, leagues, plan)).toEqual(rows);
   });
 });

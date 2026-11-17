@@ -19,7 +19,7 @@ async function finishedSeasons(db: Db) {
     const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
     const plan = promotionPlan(result.matches, input.leagues, (id) => rating.get(id) ?? 0);
     const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) };
-    out.push({ season, rows: seasonProgression(result.matches, result.titles, leagues, plan) });
+    out.push({ season, rows: seasonProgression(result.matches, result.titles, leagues, plan, { groups: new Map(input.idols.map((i) => [i.id, i.groupId])) }) });
   }
   return out;
 }

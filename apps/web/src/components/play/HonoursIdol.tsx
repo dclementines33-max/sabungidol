@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useBranding } from "../../data/branding";
 import type { engine } from "../../data/engineClient";
 import { StoryCard } from "../story/StoryCard";
+import { SeasonStatLine } from "./SeasonStatLine";
 
 export type HonoursDetail = Awaited<ReturnType<ReturnType<typeof engine>["podiumDetail"]>>[number];
 const NEWS_SHOWN = 2;
@@ -15,16 +16,7 @@ export function HonoursIdol({ d, kicker, mark, lead = false, stories }: { d: Hon
   const { label } = useBranding();
   const idol = useIdol(d.id);
   const [allNews, setAllNews] = useState(false);
-  const r = d.record;
   const delta = d.rating ? d.rating.new - d.rating.old : null;
-  const stats: [string, string][] = [
-    ["W-D-L", `${r.wins}-${r.draws}-${r.losses}`],
-    ["Win rate", `${(r.winRate * 100).toFixed(1)}%`],
-    ["Titles", String(d.titles.length)],
-    ["Games", `${r.gamesWon}–${r.gamesLost}`],
-    ["Best run", `${r.bestStreak}W`],
-    ["Rating", d.rating ? `${d.rating.old} → ${d.rating.new}` : String(d.startRating ?? idol.rating)],
-  ];
   return (
     <article className="flex min-w-0 flex-col items-center gap-4 text-center" aria-label={`${kicker}: ${idol.name}`}>
       <div className="relative">
@@ -35,11 +27,7 @@ export function HonoursIdol({ d, kicker, mark, lead = false, stories }: { d: Hon
         <p className="kicker m-0">{kicker}</p>
         <h3 className={`m-0 font-display uppercase ${lead ? "text-[clamp(2rem,4vw,3rem)]" : "text-xl"}`}>{idol.name}</h3>
       </div>
-      <dl className="m-0 grid w-full max-w-md grid-cols-3 gap-x-4 gap-y-3 border-y border-border py-3">
-        {stats.map(([k, v]) => (
-          <div key={k}><dt className="text-xs tracking-widest text-text-secondary uppercase">{k}</dt><dd className="m-0 font-display text-base whitespace-nowrap tabular-nums sm:text-lg">{v}</dd></div>
-        ))}
-      </dl>
+      <SeasonStatLine d={d} />
       {delta !== null && <p className={`-mt-2 m-0 text-sm ${delta > 0 ? "text-cool" : delta < 0 ? "text-danger" : "text-muted"}`}>{delta > 0 ? `+${delta}` : delta} rating this season</p>}
       {d.titles.length > 0 && <ul aria-label="Titles" className="m-0 flex list-none flex-wrap justify-center gap-2 p-0">{d.titles.map((t) => <li key={t} className="tag bg-accent text-on-accent">{label(t)}</li>)}</ul>}
       {d.places.length > 0 && (

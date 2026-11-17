@@ -4,8 +4,8 @@
 // again from zero; the Fase 4 gate checks both give the same.
 import { type Db, type SeasonRow, listSeasons, readCache, replaceAchievements, replacePlacements, writeCache } from "@sabung/db";
 import {
-  type AchievementState, type CareerState, type MatchRecords, careerRows, emptyAchievements, foldMatchRecords, foldSeason, promotionPlan, runSeason,
-  seasonAchievements, seasonPlacements, seasonProgression, seasonScores, seasonTop,
+  type AchievementState, type CareerState, type MatchRecords, careerRows, emptyAchievements, foldMatchRecords, foldSeason, runSeason,
+  seasonAchievements, seasonPlacements, seasonScores, seasonTop,
 } from "@sabung/engine";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
@@ -19,9 +19,8 @@ async function replay(db: Db, season: SeasonRow) {
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) } as Record<string, string[]>;
   if (!result.done) return { result, placements: [], scores: new Map<string, number>(), top: undefined };
-  const plan = promotionPlan(result.matches, input.leagues, (id) => rating.get(id) ?? 0);
-  const scores = new Map(seasonProgression(result.matches, result.titles, leagues, plan).map((r) => [r.idolId, r.score])); // §6.2 season score
-  return { result, placements: seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0), scores, top: seasonTop(seasonScores(result.matches, result.titles, leagues))[0] };
+  const scores = seasonScores(result.matches, result.titles, leagues); // §6.2 season score
+  return { result, placements: seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0), scores, top: seasonTop(scores)[0] };
 }
 
 // Folds the finished seasons the cache does not have yet; with rebuild, all of them from zero.

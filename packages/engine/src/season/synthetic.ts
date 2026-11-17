@@ -24,7 +24,7 @@ export function* syntheticSeasons(count: number, seed = "synthetic", ratings?: n
     const placements = seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id)!);
     yield { input: full, result, placements };
     const plan = promotionPlan(result.matches, full.leagues, (id) => rating.get(id)!);
-    const next = new Map(seasonProgression(result.matches, result.titles, leagues, plan).map((r) => [r.idolId, r.new]));
+    const next = new Map(seasonProgression(result.matches, result.titles, leagues, plan, { groups: new Map(full.idols.map((i) => [i.id, i.groupId])) }).map((r) => [r.idolId, r.new]));
     input = { ...full, theIdols: undefined, leagues: plan.leagues as SeasonInput["leagues"],
       config: { off: [], bestOf: {}, tuning: { scale: 40, sigma: 4 }, ...full.config, opener: openerPairs(result.titles, full.config?.off ?? [], []) }, idols: full.idols.map((i) => ({ ...i, rating: next.get(i.id) ?? i.rating })) };
   }

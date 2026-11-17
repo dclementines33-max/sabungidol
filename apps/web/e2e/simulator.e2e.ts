@@ -30,7 +30,12 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   await review.screenshot({ path: "test-results/season-review.png" });
   await review.getByRole("button", { name: "Close" }).click();
   await expect(page.getByRole("heading", { name: "Season Honours" })).toBeVisible();
-  await expect(page.getByRole("figure", { name: "Most Valuable Idol" })).toBeVisible(); // the season awards, MVI first
+  const mvi = page.getByRole("figure", { name: "Most Valuable Idol" }); // the season awards: MVI + Idol of the Season lead
+  await expect(page.getByRole("figure", { name: "Best season overall" })).toBeVisible();
+  await expect(page.getByRole("figure", { name: "Best girl group" })).toBeVisible(); // MAMA
+  await mvi.getByRole("button", { name: /^Top \d+ nominees$/ }).click();
+  await expect(mvi.getByRole("list", { name: "MVI nominees" }).getByRole("listitem")).toHaveCount(10);
+  await page.getByRole("region", { name: "Season awards" }).screenshot({ path: "test-results/season-awards.png" });
   const top = page.getByRole("list", { name: "Season top 3" });
   await expect(top.getByRole("article", { name: /^Idol of the Season: / })).toBeVisible();
   await expect(top.getByRole("list", { name: "Final places" })).toHaveCount(3); // places from the replay, not only after Close Season
