@@ -2,6 +2,15 @@
 import type { CareerRow } from "@sabung/engine";
 
 export type CareerColumn = { id: string; header: string; value: (r: CareerRow) => number | string };
+
+export const AWARD_IDOL_KEYS = ["mvi", "iots", "golden-disk", "chart-topper", "encore", "daebak", "unbreakable", "trend-setter", "glow-up", "hallyu-wave"] as const;
+const AWARD_SHORT: Record<string, string> = { mvi: "MVI", iots: "IOTS", "golden-disk": "G.Disk", "chart-topper": "ChTop", encore: "Encore", daebak: "Daebak", unbreakable: "Unbk.", "trend-setter": "Trend", "glow-up": "Glow", "hallyu-wave": "Hallyu" };
+export function makeAwardColumns(awardMap: Map<string, Record<string, number>>): CareerColumn[] {
+  return [
+    { id: "award-total", header: "Awards", value: (r) => Object.values(awardMap.get(r.idolId) ?? {}).reduce((s, v) => s + v, 0) },
+    ...AWARD_IDOL_KEYS.map((k) => ({ id: `award-${k}`, header: AWARD_SHORT[k]!, value: (r: CareerRow) => awardMap.get(r.idolId)?.[k] ?? 0 })),
+  ];
+}
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
 export const CAREER_COLUMNS: CareerColumn[] = [
@@ -33,7 +42,7 @@ export const CAREER_COLUMNS: CareerColumn[] = [
 // cups, group exit / advance for the Unzure Cup, best finish for knockout cups.
 const RECORD = ["matches", "wdl", "winRate", "gameDiff"];
 export function columnsFor(comp: string): string[] {
-  if (comp === "ALL") return ["titles", "runnerUp", ...RECORD, "bestWinStreak", "seasons"];
+  if (comp === "ALL") return ["titles", "runnerUp", ...RECORD, "bestWinStreak", "seasons", "award-total"];
   if (comp === "D1" || comp === "D2") return ["titles", ...RECORD, "leaguePoints", "avgPlacement", "bestPlacement", "seasons"];
   if (comp === "IDL") return ["titles", "runnerUp", ...RECORD, "leaguePoints", "bestPlacement", "seasons"];
   if (comp === "SWS" || comp === "LCQ") return ["groupAdvance", "groupExit", ...RECORD, "bestWinStreak", "seasons"];
