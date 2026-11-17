@@ -1,0 +1,7 @@
+/* Name tags over the marbles: spans the race places every frame (marble/controller.js). */
+.marble-tag {
+  position: absolute; left: 0; top: 0; padding: 2px 8px; white-space: nowrap;
+  font-weight: 800; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #fff;
+  background: var(--c); transform: translate(-50%, -100%) skewX(-10deg); box-shadow: 0 4px 14px rgb(0 0 0 / 0.5);
+}
+.marble-tag.followed { outline: 2px solid #fff; outline-offset: 2px; font-size: 13px; }

@@ -11,7 +11,7 @@ import { RatingBadge } from "./RatingBadge";
 import { useIdol } from "./idolSource";
 
 export type HeadToHead = { winsA: number; draws: number; winsB: number };
-export type MatchTheme = { accent?: string; kicker?: string; grandFinal?: boolean; grudge?: Grudge }; // accent = a colour token name, e.g. "brand-violet"; grudge = official rivals meet
+export type MatchTheme = { accent?: string; kicker?: string; grandFinal?: boolean; grudge?: Grudge; arena?: string }; // accent = a colour token name, e.g. "brand-violet"; grudge = official rivals meet; arena = where it is played
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
 function Side({ idolId, align, glow, corner }: { idolId: string; align: "left" | "right"; glow: string; corner: string }) {
@@ -57,6 +57,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
           <div className="relative z-[1] mt-10 shrink-0 text-center">
             <p className={`m-0 font-gothic text-5xl leading-none sm:text-6xl ${theme.grudge ? "motion-safe:animate-pulse" : ""}`} style={{ color: theme.grudge ? "var(--color-winner)" : color, textShadow: theme.grudge ? "0 0 18px var(--color-accent-bright), 0 0 42px var(--color-winner)" : `0 0 28px ${color}` }}>VS</p>
             <p className="m-0 mt-2"><span className="chip bg-bg-base/80 text-text-primary"><span>Best of {bestOf}</span></span></p>
+            {theme.arena && <p className="m-0 mt-2 max-w-32 text-[10px] font-extrabold tracking-[0.12em] text-text-secondary uppercase sm:max-w-44"><span className="sr-only">Arena: </span>{theme.arena}</p>}
           </div>
           <Side idolId={idolB} align="right" glow="var(--color-cool)" corner="Blue corner" />
         </div>

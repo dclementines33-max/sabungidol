@@ -36,6 +36,17 @@ describe("MatchModal (PRD §9)", () => {
     expect(screen.queryByRole("note", { name: /Grudge match/ })).toBeNull();
   });
 
+  it("Marble Race mode: the app's race hands back its games, saved with the marble method; the arena shows in the header", () => {
+    const onAccept = open({ theme: { arena: "Encore Tower" }, marble: (done) => <button type="button" onClick={() => done(["A", "B", "A", "A"])}>Race</button> });
+    expect(screen.getByText("Encore Tower")).toBeTruthy();
+    fireEvent.click(screen.getByRole("radio", { name: "Marble Race" }));
+    expect(accept().disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Race" }));
+    expect(screen.getByText(/3–1 · Mina Kim wins/)).toBeTruthy();
+    fireEvent.click(accept());
+    expect(onAccept).toHaveBeenCalledWith({ method: "marble", scoreA: 3, scoreB: 1, result: "A", games: ["A", "B", "A", "A"] });
+  });
+
   it("opens on the wheel; there is no Simulate any more (2026-11-15) and nothing is decided before a spin", () => {
     open();
     expect(screen.getByRole("radio", { name: "Wheel" }).getAttribute("aria-checked")).toBe("true");

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@dimforge/rapier3d-compat": "0.14.0",
     "@radix-ui/react-dialog": "^1.3.1",
     "@sabung/db": "workspace:*",
     "@sabung/engine": "workspace:*",
@@ -16,6 +17,7 @@
     "fflate": "^0.8.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "three": "0.170.0",
     "zod": "^4.6.7",
     "zustand": "^5.1.0"
   },

@@ -1,13 +1,18 @@
-// Click a match → MatchModal (PRD §9). "Simulate" plays the match when pressed (a new roll each time); the
-// accepted result is saved with its method and the season views refresh.
+// Click a match → MatchModal (PRD §9). The accepted result is saved with its method and the season views refresh.
+// 2026-11-18: the match is drawn its arena(s) when the dialog opens (shown in the header, raced on in Marble Race mode,
+// and saved with the result whatever decided it).
 import { RIVALRY_TIER, rivalryOf } from "@sabung/engine";
 import { type AcceptedResult, MatchModal } from "@sabung/ui";
+import { drawArenas, isGrandFinal } from "@sabung/shared";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { arenaPool, useArenaName } from "../../data/arenaSettings";
 import { engine } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
 import { SEASON_QUERY } from "../../data/seasonQuery";
 import { useBranding } from "../../data/branding";
+import { MarbleMatch } from "../marble/MarbleMatch";
 import { useCelebration } from "./celebrationStore";
 
 // Each competition's own colour on the match stage (Update 3); a league or B-Side cup uses its league's branding colour.
@@ -17,7 +22,11 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
   const { label, brand } = useBranding();
   const { data: match } = useQuery({ queryKey: ["match-preview", matchId], queryFn: () => engine().matchPreview(matchId!), enabled: !!matchId, staleTime: 0, gcTime: 0 });
   const { data: h2h } = useQuery({ queryKey: ["match-h2h", match?.idolA, match?.idolB], queryFn: () => engine().headToHead(match!.idolA, match!.idolB), enabled: !!match, staleTime: 0 });
-  if (!matchId || !match || match.id !== matchId) return null;
+  const arenaName = useArenaName();
+  const arenas = useMemo(() => (match ? drawArenas(arenaPool(), isGrandFinal(match.comp, match.round), match.bestOf) : []), [match?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!matchId || !match || match.id !== matchId || !arenas.length) return null;
+  const grandFinal = isGrandFinal(match.comp, match.round);
+  const logoId = brand(/^BS/.test(match.comp) ? `D1${match.comp[2]}` : match.comp).logoId;
   const line = (l: { wins: number; draws: number; losses: number; titles: number } | null | undefined) => l ? [`${l.wins}-${l.draws}-${l.losses}`, String(l.titles)] : ["–", "–"];
   const [careerA, titlesA] = line(h2h?.lineA);
   const [careerB, titlesB] = line(h2h?.lineB);
@@ -35,7 +44,7 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
 
   const accept = async ({ method, games }: AcceptedResult) => {
     try {
-      const r = await engine().acceptMatch(match.id, games, method);
+      const r = await engine().acceptMatch(match.id, games, method, arenas);
       notify({ level: "success", message: `Result saved: ${r.scoreA}–${r.scoreB}` });
       if (match.comp === "UZC" && match.round === "F") { // the Unzure Cup grand final: celebrate its champion
         const a = r.result === "A";
@@ -63,10 +72,12 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
         accent: (/^D[12]|^BS/.test(match.comp) ? brand(match.comp.startsWith("BS") ? `D1${match.comp[2]}` : match.comp).color : undefined)
           ?? ACCENT[match.comp] ?? ACCENT[match.comp.slice(0, 2)],
         kicker: label(match.comp),
-        grandFinal: match.round === "F" || match.round === "GF" || match.comp === "DSG",
+        grandFinal,
+        arena: grandFinal ? `${arenas.length} arenas · ${arenaName(arenas[0]!)} first` : arenaName(arenas[0]!),
         grudge: rivalry ? { name: rivalry.name, tier: RIVALRY_TIER[rivalry.tier], record: `${p!.wins}–${p!.draws}–${p!.losses} in ${p!.meetings} meetings` } : undefined,
       }}
       onAccept={accept}
+      marble={(done) => <MarbleMatch idolA={match.idolA} idolB={match.idolB} bestOf={match.bestOf} arenas={arenas} title={label(match.comp)} logoId={logoId} onGames={done} />}
     />
   );
 }

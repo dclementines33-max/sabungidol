@@ -1,10 +1,11 @@
-// Play one match (PRD §9; 2026-11-15: Simulate is gone): the Wheel (WheelPicker.tsx), a preset score or a score set directly (Manual).
+// Play one match (PRD §9; 2026-11-15: Simulate is gone): the Wheel (WheelPicker.tsx), a preset score or a score set directly (Manual),
+// or (2026-11-18) the Marble Race: the app passes `marble`, which renders that mode and hands back the race's games.
 // Preset and Manual build their games with gamesForScore (alternating, winner last). Facts (season
 // record, career…) sit under the header. Nothing is written until "Accept Result".
 import { type Side, finalScores, gamesForScore, seriesState, seriesTarget } from "@sabung/engine";
 import type { BestOf } from "@sabung/shared";
 import { Minus, Plus } from "../icons";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Button } from "./Button";
 import { MatchGallery } from "./MatchGallery";
 import { type HeadToHead, MatchHeader, type MatchTheme } from "./MatchHeader";
@@ -12,10 +13,10 @@ import { Modal } from "./Modal";
 import { WheelPicker } from "./WheelPicker";
 import { useIdol } from "./idolSource";
 
-export type MatchMethod = "sim" | "manual" | "wheel";
+export type MatchMethod = "sim" | "manual" | "wheel" | "marble";
 export type AcceptedResult = { method: MatchMethod; scoreA: number; scoreB: number; result: Side | "D"; games: Side[] };
 export type MatchFact = { label: string; a: string; b: string };
-type Mode = "wheel" | "preset" | "manual";
+type Mode = "wheel" | "preset" | "manual" | "marble";
 
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "wheel", label: "Wheel" },
@@ -37,7 +38,7 @@ function Stepper({ name, value, max, onChange }: { name: string; value: number; 
   );
 }
 
-export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], random, onAccept, theme }: {
+export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2h, facts = [], random, onAccept, theme, marble }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string; // e.g. "Unzure Cup · R32 · Match 4"
@@ -49,6 +50,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   random?: () => number; // wheel randomness (tests)
   onAccept: (result: AcceptedResult) => void;
   theme?: MatchTheme; // the competition's colour and name, grand final look (Update 3)
+  marble?: (done: (games: Side[]) => void) => ReactNode; // the Marble Race mode (the app owns the 3D race)
 }) {
   const a = useIdol(idolA);
   const b = useIdol(idolB);
@@ -58,7 +60,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
   const [typed, setTyped] = useState<[number, number]>([0, 0]);
   const scores = finalScores(bestOf);
   const state = seriesState(bestOf, games);
-  const method: MatchMethod = mode === "wheel" ? "wheel" : "manual";
+  const method: MatchMethod = mode === "wheel" || mode === "marble" ? mode : "manual";
   const pending: AcceptedResult | null = state.result ? { method, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result, games } : null;
   const outcome = state.result && (state.result === "D" ? "Draw" : `${state.result === "A" ? a.name : b.name} wins`);
 
@@ -107,7 +109,7 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
         </table>
       )}
       <div role="radiogroup" aria-label="How to decide the result" className="mt-6 flex flex-wrap gap-2">
-        {MODES.map((m) => (
+        {(marble ? [{ mode: "marble" as const, label: "Marble Race" }, ...MODES] : MODES).map((m) => (
           <button key={m.mode} type="button" role="radio" aria-checked={mode === m.mode} onClick={() => switchTo(m.mode)}
             className={`${mode === m.mode ? "bg-accent text-on-accent shadow-[0_8px_22px_-10px_var(--color-accent-bright)]" : "bg-stage-hi/80 text-text-secondary hover:text-text-primary"} ${CHIP}`}>
             <span className="inline-block skew-x-12">{m.label}</span>
@@ -138,7 +140,9 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
 
         {mode === "wheel" && <WheelPicker idolA={idolA} idolB={idolB} bestOf={bestOf} games={games} onChange={setGames} random={random} grand={theme?.grandFinal} />}
 
-        {mode !== "wheel" && (
+        {mode === "marble" && marble?.(setGames)}
+
+        {mode !== "wheel" && (mode !== "marble" || outcome) && (
           <p className="m-0 mt-3 text-center text-sm text-text-secondary" aria-live="polite">
             {outcome ? `${state.scoreA}–${state.scoreB} · ${outcome}` : mode === "manual" ? `Not a valid Bo${bestOf} score yet` : "Pick a score"}
           </p>
