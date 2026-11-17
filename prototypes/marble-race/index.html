@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marble Race · prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=Bungee&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+        "rapier": "https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/+esm"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="view"></canvas>
+
+  <header class="brand">
+    <p class="kicker">Sabung Idol · Marble Race prototype</p>
+    <h1 id="track-name">…</h1>
+    <p class="lap"><span id="lap">Lap – / 3</span><span id="clock">0.00</span></p>
+  </header>
+
+  <ol id="tower" class="tower" aria-label="Positions"></ol>
+  <div id="laps" class="laps" aria-label="Laps won"></div>
+  <div id="tags" aria-hidden="true"><span class="tag"></span><span class="tag"></span></div>
+  <div id="lights" class="lights" hidden><span></span><span></span><span></span><span></span><span></span></div>
+  <p id="banner" class="banner" hidden></p>
+
+  <aside id="panel" class="panel">
+    <button id="fold" class="fold" aria-expanded="true">Setup</button>
+    <div class="body">
+      <fieldset class="corner red"><legend>Red corner</legend>
+        <select id="photo-a"></select>
+        <label>Rating <output id="ra-out">95</output><input id="rating-a" type="range" min="50" max="100" value="95" /></label>
+      </fieldset>
+      <fieldset class="corner blue"><legend>Blue corner</legend>
+        <select id="photo-b"></select>
+        <label>Rating <output id="rb-out">84</output><input id="rating-b" type="range" min="50" max="100" value="84" /></label>
+      </fieldset>
+      <label>Rating advantage <output id="adv-out">1.0×</output><input id="advantage" type="range" min="0" max="2" step="0.1" value="1" /></label>
+      <p id="edge" class="edge"></p>
+      <div class="row" role="group" aria-label="Camera">
+        <button data-cam="tv" class="on">TV</button><button data-cam="chase">Chase</button><button data-cam="free">Free</button>
+      </div>
+      <div class="row" role="group" aria-label="Speed">
+        <button data-speed="1" class="on">1×</button><button data-speed="2">2×</button><button data-speed="4">4×</button>
+      </div>
+      <div class="row" role="group" aria-label="Quality">
+        <button data-quality="high" class="on">High</button><button data-quality="low">Low</button>
+      </div>
+      <div class="actions">
+        <button id="start" class="primary">Start race</button>
+        <button id="skip">Skip to result</button>
+      </div>
+      <p class="hint">Seed <output id="seed"></output> · a new race gets a new seed.</p>
+    </div>
+  </aside>
+
+  <section id="result" class="result" hidden aria-live="polite"></section>
+  <p id="loading" class="loading">Loading the arena…</p>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
