@@ -16,3 +16,5 @@ export const Snowflake = icon("snow", <><Line d="M12 2v20M3.3 7l17.4 10M3.3 17l1
 // Awards: a rosette, a gold star in the middle.
 export const Award = icon("award", <><Ink d="M6 9a6 6 0 1 0 12 0 6 6 0 1 0-12 0" /><Line d="M6 9a6 6 0 1 0 12 0 6 6 0 1 0-12 0M8.2 13.6 7 22l5-3 5 3-1.2-8.4" /><Spark tone="gold" d={star(12, 9, 3.4)} /></>);
 export const UserX = icon("user-x", <><Ink d="M5 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0" /><Line d="M5 7a4 4 0 1 0 8 0 4 4 0 1 0-8 0M2 21a7 7 0 0 1 14 0" /><Hot d="M17 8l5 5M22 8l-5 5" /></>);
+// Hall of Shame: a skull with one burning eye.
+export const Skull = icon("skull", <><Ink d="M12 3a8 8 0 0 0-8 8c0 2.6 1.2 4.4 3 5.5V21h10v-4.5c1.8-1.1 3-2.9 3-5.5a8 8 0 0 0-8-8z" /><Line d="M12 3a8 8 0 0 0-8 8c0 2.6 1.2 4.4 3 5.5V21h10v-4.5c1.8-1.1 3-2.9 3-5.5a8 8 0 0 0-8-8zM10 21v-2.5M14 21v-2.5M12 14.5l-1 2h2zM13.4 11a1.8 1.8 0 1 0 3.6 0 1.8 1.8 0 1 0-3.6 0" /><Spark d="M7 11a2 2 0 1 0 4 0 2 2 0 1 0-4 0" /></>);

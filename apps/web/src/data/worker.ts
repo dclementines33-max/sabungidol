@@ -20,6 +20,7 @@ import { awardsOf } from "./awardsWorker";
 import { idolTelemetry } from "./idolTelemetryWorker";
 import { telemetryOf } from "./telemetryWorker";
 import { overview } from "./overviewWorker";
+import { groupMatchupsOf, hallOfShameOf } from "./shameWorker";
 import { awardHistory, careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
@@ -197,6 +198,8 @@ const api = {
   idolTelemetry: async (id: string) => idolTelemetry(await open(), id),
   overview: async () => overview(await open()),
   headToHead: async (a?: string, b?: string) => headToHead(await open(), a, b),
+  hallOfShame: async (minMatches: number) => hallOfShameOf(await open(), minMatches),
+  groupMatchups: async (groupId: string) => groupMatchupsOf(await open(), groupId),
   matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),
   // Closing the season (PRD §4, §6.3).
   closePreview: async () => closePreview(await open()),

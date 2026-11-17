@@ -23,6 +23,7 @@ export * from "./components/SwapBoard";
 export * from "./components/ManualDrawModal";
 export * from "./components/WheelPicker";
 export * from "./components/MatchHeader";
+export * from "./components/GrudgeBanner";
 export * from "./components/MatchModal";
 export * from "./components/TournamentBracketTree";
 export * from "./components/SwissPlayInBracket";

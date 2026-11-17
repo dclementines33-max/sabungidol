@@ -1,12 +1,14 @@
 // Head to Head (PRD §8): pick two idols (kept in the URL: ?a=&b=), compare, the top 10 rivalries, and the
 // direct match log filtered by competition and season.
 import { SEASON_COMPETITIONS } from "@sabung/shared";
-import { SearchableIdolSelect } from "@sabung/ui";
+import { RIVALRY_TIER, pairKey } from "@sabung/engine";
+import { GrudgeBanner, SearchableIdolSelect } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { H2HCompare } from "../../components/h2h/H2HCompare";
 import { TopRivalries } from "../../components/h2h/TopRivalries";
+import { OfficialRivalries } from "../../components/rivalry/OfficialRivalries";
 import { Select } from "../../components/idolDatabase/IdolFilters";
 import { MatchLog } from "../../components/wiki/MatchLog";
 import { PageHeader } from "../../components/PageHeader";
@@ -25,6 +27,7 @@ function HeadToHead() {
   const [comp, setComp] = useState("");
   const [season, setSeason] = useState("");
   const ids = idols.map((i) => i.id);
+  const rivalry = a && b ? data?.rivalries.find((r) => pairKey(r.a, r.b) === pairKey(a, b)) : undefined;
   const pick = (side: "a" | "b") => (v: string | null) => navigate({ search: (s) => ({ ...s, [side]: v ?? undefined }), replace: true });
   return (
     <div className="space-y-10">
@@ -35,6 +38,7 @@ function HeadToHead() {
       </div>
       {a && b && a !== b && data && ( // an idol against herself has nothing to compare
         <>
+          {rivalry && <GrudgeBanner label="Official rivalry" grudge={{ name: rivalry.name, tier: RIVALRY_TIER[rivalry.tier] }} />}
           <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} games={data.games as [number, number]} formA={data.formA as ("W" | "D" | "L")[]} formB={data.formB as ("W" | "D" | "L")[]} />
           <section aria-labelledby="direct" className="space-y-3">
             <h2 id="direct" className="section-title">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
@@ -46,6 +50,7 @@ function HeadToHead() {
           </section>
         </>
       )}
+      {data && <OfficialRivalries list={data.rivalries} />}
       {data && <TopRivalries top={data.top} />}
     </div>
   );

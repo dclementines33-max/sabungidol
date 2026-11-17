@@ -28,6 +28,14 @@ describe("MatchModal (PRD §9)", () => {
     expect(screen.getByText("3–1–2")).toBeTruthy();
   });
 
+  it("official rivals get the Grudge Match banner; other pairs do not", () => {
+    open({ theme: { grudge: { name: "The Crown War", tier: "Blood Feud", record: "4–0–3 in 7 meetings" } } });
+    expect(screen.getByRole("note", { name: "Grudge match: The Crown War, Blood Feud, 4–0–3 in 7 meetings" })).toBeTruthy();
+    cleanup();
+    open();
+    expect(screen.queryByRole("note", { name: /Grudge match/ })).toBeNull();
+  });
+
   it("opens on the wheel; there is no Simulate any more (2026-11-15) and nothing is decided before a spin", () => {
     open();
     expect(screen.getByRole("radio", { name: "Wheel" }).getAttribute("aria-checked")).toBe("true");

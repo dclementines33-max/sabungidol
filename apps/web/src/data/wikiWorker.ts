@@ -1,7 +1,7 @@
 // Wiki reads in the Worker (PRD §8): career stats are computed once per change of the saved matches and
 // sliced per page here, so a page receives only what it shows (not 30,000 head-to-head pairs).
 import { type Db, type MatchFilter, countMatches, countMatchesWhere, listAchievements, listPlacements, listRatingHistory, listSeasons, queryMatches } from "@sabung/db";
-import { type PairRecord, allTimeRecords, rankRecords } from "@sabung/engine";
+import { type PairRecord, allTimeRecords, officialRivalries, rankRecords } from "@sabung/engine";
 import { careerStats, updateCareerCache } from "./careerWorker";
 import { moodOf } from "./idolMood";
 
@@ -70,7 +70,7 @@ export async function headToHead(db: Db, a?: string, b?: string) {
   const games = direct.reduce(([x, y], m) => (m.idolA === a ? [x + m.scoreA, y + m.scoreB] : [x + m.scoreB, y + m.scoreA]), [0, 0]);
   const form = async (id?: string) => (id ? (await queryMatches(db, { idolId: id }, { limit: 5, newest: true })).rows
     .map((m) => (m.result === "D" ? "D" : (m.result === "A") === (m.idolA === id) ? "W" : "L")) : []);
-  return { top, pair, lineA: line(a), lineB: line(b), games, formA: await form(a), formB: await form(b) };
+  return { top, rivalries: officialRivalries(stats.pairs), pair, lineA: line(a), lineB: line(b), games, formA: await form(a), formB: await form(b) };
 }
 
 // Hall of Champions (PRD §8): every title per season with its runner-up and the final's score (cups only;

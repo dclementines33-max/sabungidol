@@ -1,5 +1,6 @@
 // Click a match → MatchModal (PRD §9). "Simulate" plays the match when pressed (a new roll each time); the
 // accepted result is saved with its method and the season views refresh.
+import { RIVALRY_TIER, rivalryOf } from "@sabung/engine";
 import { type AcceptedResult, MatchModal } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { engine } from "../../data/engineClient";
@@ -28,6 +29,9 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
     { label: "Career W-D-L", a: careerA!, b: careerB! },
     { label: "Titles", a: titlesA!, b: titlesB! },
   ];
+
+  const p = h2h?.pair; // official rivals meeting again = a Grudge Match (2026-11-18)
+  const rivalry = p ? rivalryOf(match.idolA, match.idolB, { meetings: p.meetings, winsA: p.wins, winsB: p.losses, draws: p.draws }) : null;
 
   const accept = async ({ method, games }: AcceptedResult) => {
     try {
@@ -60,6 +64,7 @@ export function PlayMatchDialog({ matchId, onClose }: { matchId: string | null; 
           ?? ACCENT[match.comp] ?? ACCENT[match.comp.slice(0, 2)],
         kicker: label(match.comp),
         grandFinal: match.round === "F" || match.round === "GF" || match.comp === "DSG",
+        grudge: rivalry ? { name: rivalry.name, tier: RIVALRY_TIER[rivalry.tier], record: `${p!.wins}–${p!.draws}–${p!.losses} in ${p!.meetings} meetings` } : undefined,
       }}
       onAccept={accept}
     />

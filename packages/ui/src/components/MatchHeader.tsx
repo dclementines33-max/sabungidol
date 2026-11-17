@@ -5,12 +5,13 @@ import { getForm, seriesOdds } from "@sabung/engine";
 import type { BestOf } from "@sabung/shared";
 import { Trophy } from "../icons";
 import { FormBadge } from "./FormBadge";
+import { type Grudge, GrudgeBanner } from "./GrudgeBanner";
 import { IdolPhoto } from "./IdolPhoto";
 import { RatingBadge } from "./RatingBadge";
 import { useIdol } from "./idolSource";
 
 export type HeadToHead = { winsA: number; draws: number; winsB: number };
-export type MatchTheme = { accent?: string; kicker?: string; grandFinal?: boolean }; // accent = a colour token name, e.g. "brand-violet"
+export type MatchTheme = { accent?: string; kicker?: string; grandFinal?: boolean; grudge?: Grudge }; // accent = a colour token name, e.g. "brand-violet"; grudge = official rivals meet
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
 function Side({ idolId, align, glow, corner }: { idolId: string; align: "left" | "right"; glow: string; corner: string }) {
@@ -45,6 +46,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
             {theme.kicker}
           </span>
         )}
+        {theme.grudge && <div className="relative z-[1] mb-4"><GrudgeBanner grudge={theme.grudge} /></div>}
         {theme.grandFinal && (
           <p className="relative z-[1] m-0 mb-3 flex items-center justify-center gap-2 text-xs font-extrabold tracking-[0.4em] uppercase" style={{ color }}>
             <Trophy aria-hidden="true" size={16} /> Grand final <Trophy aria-hidden="true" size={16} />
@@ -53,7 +55,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
         <div className="flex items-start justify-between gap-2">
           <Side idolId={idolA} align="left" glow="var(--color-accent-bright)" corner="Red corner" />
           <div className="relative z-[1] mt-10 shrink-0 text-center">
-            <p className="m-0 font-gothic text-5xl leading-none sm:text-6xl" style={{ color, textShadow: `0 0 28px ${color}` }}>VS</p>
+            <p className={`m-0 font-gothic text-5xl leading-none sm:text-6xl ${theme.grudge ? "motion-safe:animate-pulse" : ""}`} style={{ color: theme.grudge ? "var(--color-winner)" : color, textShadow: theme.grudge ? "0 0 18px var(--color-accent-bright), 0 0 42px var(--color-winner)" : `0 0 28px ${color}` }}>VS</p>
             <p className="m-0 mt-2"><span className="chip bg-bg-base/80 text-text-primary"><span>Best of {bestOf}</span></span></p>
           </div>
           <Side idolId={idolB} align="right" glow="var(--color-cool)" corner="Blue corner" />
