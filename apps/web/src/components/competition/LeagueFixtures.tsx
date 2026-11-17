@@ -17,9 +17,10 @@ export function LeagueFixtures({ fixtures, busy, onPlay }: {
         const open = matches.filter((m) => m.scoreA === undefined).length;
         return (
           <details key={round} open={round === firstOpen} className="panel">
-            <summary className="flex cursor-pointer items-center gap-3 px-3 py-2">
-              <span className="font-mono">Matchday {Number(round.slice(2))}</span>
-              <span className="text-sm text-text-secondary">{open ? `${open} to play` : "done"}</span>
+            <summary className="flex cursor-pointer items-center gap-3 px-3 py-2.5">
+              <span className="score flex h-8 w-10 -skew-x-12 items-center justify-center bg-accent text-on-accent"><span className="skew-x-12">{Number(round.slice(2))}</span></span>
+              <span className="font-display uppercase">Matchday {Number(round.slice(2))}</span>
+              <span className={`ml-auto text-xs font-bold tracking-[0.14em] uppercase ${open ? "text-accent-bright" : "text-text-secondary"}`}>{open ? `${open} to play` : "done"}</span>
             </summary>
             <div className="space-y-1 px-3 pb-3">
               {open > 0 && <Button className="px-2 py-1" disabled={busy} onClick={() => onPlay({ round })}>Play matchday {Number(round.slice(2))}</Button>}

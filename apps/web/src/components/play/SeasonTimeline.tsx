@@ -12,10 +12,10 @@ const PHASES: [string, CompetitionKey[]][] = [
 const STATUS = {
   off: { label: "Off", className: "text-text-secondary line-through" },
   none: { label: "Starts next season", className: "text-text-secondary" },
-  waiting: { label: "Waiting", className: "text-text-secondary" },
-  next: { label: "Ready to play", className: "text-cool" },
-  running: { label: "Live", className: "text-accent-bright" },
-  finished: { label: "Done", className: "text-cool" },
+  waiting: { label: "Waiting", className: "bg-bg-base/70 text-text-secondary" },
+  next: { label: "Ready to play", className: "bg-cool text-on-fill" },
+  running: { label: "Live", className: "bg-accent-bright text-on-fill" },
+  finished: { label: "Done", className: "bg-winner/90 text-on-fill" },
 };
 
 export function SeasonTimeline({ competitions }: { competitions: readonly Competition[] }) {
@@ -23,18 +23,18 @@ export function SeasonTimeline({ competitions }: { competitions: readonly Compet
   return (
     <ol className="m-0 grid list-none gap-8 p-0 lg:grid-cols-3" aria-label="Season phases">
       {PHASES.map(([phase, keys], i) => (
-        <li key={phase} className="relative pt-14">
-          <span aria-hidden="true" className="absolute top-0 left-0 font-display text-[3.5rem] leading-none text-accent">{String(i + 1).padStart(2, "0")}</span>
-          <h2 className="relative m-0 mb-3 border-b-2 border-accent-bright pb-2 font-display text-lg">{phase}</h2>
-          <ul className="m-0 list-none space-y-2 p-0">
+        <li key={phase} className="panel relative isolate overflow-hidden p-5 pt-6">
+          <span aria-hidden="true" className="score absolute -top-3 right-2 -z-10 text-[5.5rem] text-accent/40">{String(i + 1).padStart(2, "0")}</span>
+          <h2 className="section-title mb-4 text-lg">{phase}</h2>
+          <ul className="m-0 list-none space-y-1.5 p-0">
             {keys.map((key) => {
               const c = byKey.get(key)!;
               return (
                 <li key={key}>
-                  <Link to="/play/$comp" params={{ comp: PANEL_OF[key] }} className="flex items-center gap-3 border-b border-border px-1 py-2 hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-                    <span className="min-w-0 flex-1">{c.name}</span>
+                  <Link to="/play/$comp" params={{ comp: PANEL_OF[key] }} className="flex items-center gap-3 rounded-[4px] bg-stage-hi/60 px-3 py-2 transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+                    <span className="min-w-0 flex-1 font-display text-sm uppercase">{c.name}</span>
                     <span className="font-mono text-xs text-text-secondary tabular-nums">{c.played}</span>
-                    <span className={`w-28 text-right text-xs ${STATUS[c.status].className}`}>{STATUS[c.status].label}</span>
+                    <span className={`chip shrink-0 ${STATUS[c.status].className}`}><span>{STATUS[c.status].label}</span></span>
                   </Link>
                 </li>
               );

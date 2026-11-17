@@ -6,27 +6,27 @@ export type GroupRow = { idolId: string; rank: number; played: number; wins: num
 export function GroupTable({ name, rows, through }: { name: string; rows: GroupRow[]; through: number }) {
   const lookup = useIdolLookup();
   return (
-    <table className="w-full border-collapse text-sm tabular-nums">
-      <caption className="pb-2 text-left font-display text-lg">{name}</caption>
-      <thead><tr className="text-left text-[10px] tracking-[0.18em] text-text-secondary uppercase">{["#", "Idol", "P", "W-D-L", "±", "Pts", ""].map((h, i) => <th key={i} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
+    <table className="board text-sm">
+      <caption className="section-title pb-3 text-left text-lg">{name}</caption>
+      <thead><tr>{["#", "Idol", "P", "W-D-L", "±", "Pts", ""].map((h, i) => <th key={i} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
       <tbody>
         {rows.map((r) => {
           const idol = lookup(r.idolId);
           const lolos = r.played > 0 && r.rank <= through;
           return (
-            <tr key={r.idolId} className={`border-t border-border/60 ${r.rank <= through ? "bg-cool/10" : ""}`}>
-              <td className={`px-1 font-display ${r.rank <= through ? "text-cool" : "text-text-secondary"}`}>{r.rank}</td>
-              <td className="px-1 py-1">
+            <tr key={r.idolId}>
+              <td className={`rank w-10 ${r.rank <= through ? "text-cool" : "text-text-secondary"}`} style={r.rank <= through ? { boxShadow: "inset 4px 0 0 var(--color-cool)" } : undefined}>{r.rank}</td>
+              <td>
                 <span className="flex items-center gap-2">
-                  <IdolPhoto idolId={r.idolId} size={64} className="h-9 w-7 shrink-0" />
+                  <IdolPhoto idolId={r.idolId} size={64} className="h-9 w-7 shrink-0 rounded-[3px]" />
                   <span className="min-w-0"><span className="block max-w-40 truncate font-semibold">{idol?.name}</span><span className="block font-mono text-[10px] text-text-secondary">{idol?.groupName ?? "Solo"} · {idol?.rating}</span></span>
                 </span>
               </td>
-              <td className="px-1 font-mono">{r.played}</td>
-              <td className="px-1 font-mono">{r.wins}-{r.draws}-{r.losses}</td>
-              <td className="px-1 font-mono">{r.gameDiff > 0 ? `+${r.gameDiff}` : r.gameDiff}</td>
-              <td className="px-1 font-display text-base">{r.points}</td>
-              <td className="px-1 text-xs font-bold text-cool uppercase">{lolos ? "through" : ""}</td>
+              <td className="font-mono">{r.played}</td>
+              <td className="font-mono">{r.wins}-{r.draws}-{r.losses}</td>
+              <td className="font-mono">{r.gameDiff > 0 ? `+${r.gameDiff}` : r.gameDiff}</td>
+              <td className="pts">{r.points}</td>
+              <td className="text-xs font-bold tracking-[0.12em] text-cool uppercase">{lolos ? "through" : ""}</td>
             </tr>
           );
         })}

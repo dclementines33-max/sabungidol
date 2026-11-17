@@ -23,7 +23,7 @@ export function GroupStage({ tables, cells, stage, through, busy, onOpen }: {
       <div role="group" aria-label="Pick a group" className="flex flex-wrap gap-1">
         {tables.map((_, i) => (
           <button key={i} type="button" aria-pressed={i === g} onClick={() => setG(i)}
-            className={`size-9 font-display text-sm ${i === g ? "bg-accent text-on-accent shadow-lg shadow-accent/30" : "bg-surface-hover/60 text-text-secondary hover:text-text-primary"} focus-visible:outline-2 focus-visible:outline-accent-bright`}>
+            className={`size-9 -skew-x-12 score text-sm ${i === g ? "bg-accent text-on-accent shadow-[0_8px_22px_-8px_var(--color-accent-bright)]" : "bg-stage-hi/80 text-text-secondary hover:text-text-primary"} focus-visible:outline-2 focus-visible:outline-accent-bright`}>
             {LETTERS[i]}
           </button>
         ))}

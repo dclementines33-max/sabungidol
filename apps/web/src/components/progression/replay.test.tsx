@@ -50,7 +50,7 @@ describe("replay", () => {
     render(<IdolSourceProvider source={source}><TimingTower rows={rows} label="Standings D1A after matchday 2" /></IdolSourceProvider>);
     const items = screen.getAllByRole("listitem");
     expect(items.map((li) => li.textContent)).toEqual(["1▲1up 1b6Leader", "2▼1down 1a3−3", "3–no changec0−6"]);
-    expect(items[1]!.style.transform).toBe("translateY(30px)");
+    expect(items[1]!.style.transform).toBe("translateY(36px)");
   });
 
   it("line race up to a matchday: only the first points are drawn", () => {

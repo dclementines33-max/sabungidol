@@ -35,7 +35,7 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
           const waiting = open.filter((m) => m.round === r);
           return (
             <div key={r} className="w-48 shrink-0">
-              <h3 className="m-0 mb-2 bg-surface-hover/60 px-2 py-1 text-[10px] font-bold tracking-[0.2em] uppercase">Round {r + 1}</h3>
+              <h3 className="m-0 mb-2 -skew-x-12 bg-accent px-2 py-1 text-[10px] font-bold tracking-[0.2em] text-on-accent uppercase">Round {r + 1}</h3>
               {buckets(seededIds.length, r).map((b) => {
                 const mine = (m: { a: string }) => rec(m.a).wins === b.wins && rec(m.a).losses === b.losses;
                 const done = played.filter(mine);
@@ -48,12 +48,12 @@ export function SwissPlayInBracket({ group, seededIds, rounds, open = [] }: { gr
                       {done.map((m) => {
                         const [sa, sb] = m.score?.split("–") ?? [];
                         return (
-                          <li key={`${m.a}-${m.b}`} className="bg-surface/80 p-0.5 text-xs">
+                          <li key={`${m.a}-${m.b}`} className="bg-stage-hi/70 p-0.5 text-xs">
                             {([m.a, m.b] as const).map((id, i) => (
-                              <span key={id} className={`flex items-center gap-1.5 pr-1 ${id === m.winner ? "bg-accent/30 font-bold text-text-primary" : "text-text-secondary"}`}>
+                              <span key={id} className={`flex items-center gap-1.5 pr-1 ${id === m.winner ? "bg-accent/45 font-bold text-text-primary shadow-[inset_3px_0_0_var(--color-winner)]" : "text-text-secondary"}`}>
                                 <IdolPhoto idolId={id} size={64} className="h-6 w-5 shrink-0" />
                                 <span className="flex-1 truncate">{name(id)}</span>
-                                <span className={`w-4 text-center font-mono tabular-nums ${id === m.winner ? "text-accent-bright" : ""}`}>{i === 0 ? (sa ?? "") : (sb ?? "")}</span>
+                                <span className={`score w-4 text-center ${id === m.winner ? "text-winner" : ""}`}>{i === 0 ? (sa ?? "") : (sb ?? "")}</span>
                               </span>
                             ))}
                           </li>

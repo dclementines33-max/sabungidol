@@ -46,22 +46,22 @@ export function SeasonClose({ done }: { done: boolean }) {
   });
 
   return (
-    <section aria-labelledby="season-close" className="space-y-4">
+    <section aria-labelledby="season-close" className="stage space-y-5 rounded-card p-5 sm:p-8">
       <h2 id="season-close" className="section-title">Close the season</h2>
       {!done && <Button onClick={() => engine().closePreview().then((c) => block(c.blockers))}>Start New Season</Button>}
       {done && close && (
         <>
           {close.badges.length > 0 && (
             <div>
-              <h3 className="m-0 mb-2 text-sm font-medium">New badges this season</h3>
+              <h3 className="kicker m-0 mb-3">New badges this season</h3>
               <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-                {close.badges.map((b) => <li key={`${b.idolId}-${b.badge}`} className="rounded-control bg-accent/40 px-2 py-1 text-sm"><span className="text-accent-bright">{BADGES[b.badge]}</span> · {name(b.idolId)}</li>)}
+                {close.badges.map((b) => <li key={`${b.idolId}-${b.badge}`} className="chip bg-stage-hi text-text-primary shadow-[inset_0_-2px_0_var(--color-winner)]"><span><span className="text-winner">{BADGES[b.badge]}</span> · {name(b.idolId)}</span></li>)}
               </ul>
             </div>
           )}
           <div className="grid gap-4 md:grid-cols-2">
             {([["Promoted to D1 (+2)", close.promoted], ["Relegated to D2 (−2)", close.relegated]] as const).map(([title, ids]) => (
-              <div key={title}><h3 className="m-0 mb-1 text-sm font-medium">{title}</h3><p className="m-0 text-sm text-text-secondary">{ids.map(name).join(", ")}</p></div>
+              <div key={title} className="panel p-4"><h3 className="kicker m-0 mb-2">{title}</h3><p className="m-0 text-sm text-text-secondary">{ids.map(name).join(", ")}</p></div>
             ))}
           </div>
           <p className="m-0 text-sm text-text-secondary">Rating Progression: {close.progression.length} idols change (optional). Save ratings to see the season verdict first.</p>

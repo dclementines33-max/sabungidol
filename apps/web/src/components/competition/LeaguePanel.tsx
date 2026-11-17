@@ -13,6 +13,7 @@ import { averageRating } from "./averageRating";
 import { arenaOf } from "./arenaTheme";
 import { CompetitionCover } from "./CompetitionCover";
 import { LeagueFixtures } from "./LeagueFixtures";
+import { LeagueOverview } from "./LeagueOverview";
 import { LeagueStandings } from "./LeagueStandings";
 import { Tabs } from "./Tabs";
 
@@ -38,7 +39,7 @@ export function LeaguePanel({ codes, zoneKey, playoff, actions }: { codes: strin
       {codes.length > 1 && (
         <div className="flex flex-wrap gap-1" role="group" aria-label="League">
           {codes.map((c) => (
-            <Button key={c} aria-pressed={c === comp} className={`gap-2 border-l-4 px-3 ${c === comp ? "bg-surface-hover" : ""}`} style={{ borderLeftColor: brand(c).color ? `var(--color-${brand(c).color})` : undefined }} onClick={() => setComp(c)}>
+            <Button key={c} aria-pressed={c === comp} className={`px-3 ${c === comp ? "bg-surface-hover text-text-primary brightness-125" : "text-text-secondary"}`} style={{ boxShadow: `inset 0 -3px 0 var(--color-${brand(c).color ?? "accent-bright"})${c === comp ? ", 0 10px 26px -12px var(--color-accent-bright)" : ""}` }} onClick={() => setComp(c)}>
               <CompetitionLogo logoId={brand(c).logoId} className="size-5" />{brand(c).name}
             </Button>
           ))}
@@ -61,9 +62,7 @@ export function LeaguePanel({ codes, zoneKey, playoff, actions }: { codes: strin
       </div>
       <Tabs label={`Panel ${comp}`} tabs={[
         { id: "overview", label: "Overview", content: () => (
-          <ol className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0" aria-label="Top five">
-            {view.standings.slice(0, 5).map((r) => <li key={r.idolId}><IdolCard idolId={r.idolId} /></li>)}
-          </ol>
+          <LeagueOverview rows={view.standings} />
         ) },
         { id: "table", label: "Standings", content: () => <LeagueStandings zoneKey={zoneKey} rows={view.standings} form={view.form} positions={view.positions} /> },
         { id: "fixtures", label: "Fixtures", content: () => (

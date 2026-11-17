@@ -14,7 +14,7 @@ export function MatchList({ cells, busy, onOpen, roundLabel = (r) => r }: {
     <div className="space-y-3">
       {rounds.map((round) => (
         <div key={round}>
-          <h4 className="m-0 mb-1 text-xs tracking-widest text-text-secondary uppercase">{roundLabel(round)}</h4>
+          <h4 className="kicker m-0 mb-2">{roundLabel(round)}</h4>
           <ul className="m-0 list-none space-y-1 p-0">
             {cells.filter((c) => c.round === round).sort((x, y) => x.slot - y.slot).map((c) => (
               <li key={c.key}><MatchRow a={c.a} b={c.b} score={c.score} busy={busy} onOpen={() => onOpen(c.id)} /></li>

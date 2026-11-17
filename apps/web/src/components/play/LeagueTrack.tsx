@@ -49,18 +49,18 @@ export function LeagueTrack({ t }: { t: Timeline }) {
       <ol ref={list} tabIndex={0} aria-label="Timeline" onPointerDown={touch} onWheel={touch} onKeyDown={touch}
         className="m-0 flex min-w-0 snap-x snap-mandatory list-none gap-4 overflow-x-auto p-0 pb-3 focus-visible:outline-2 focus-visible:outline-accent-bright">
         {t.points.map((p, i) => (
-          <li key={`${p.comp}${p.stage}${p.round}`} aria-current={i === frame.at ? "step" : undefined} className={`flex w-[min(18rem,78vw)] shrink-0 snap-start flex-col ${shown(i) ? "" : "text-text-secondary"}`}>
-            <p className="m-0 flex items-center gap-2 border-t border-border-strong pt-2">
-              <span aria-hidden="true" className={`-mt-[13px] size-3 shrink-0 rounded-full ${i <= frame.at ? "bg-accent-bright" : "bg-surface-hover"}`} />
-              <span className="kicker">{pointLabel(p, label, false)}</span>
+          <li key={`${p.comp}${p.stage}${p.round}`} aria-current={i === frame.at ? "step" : undefined} className={`panel flex w-[min(18rem,78vw)] shrink-0 snap-start flex-col p-4 transition-shadow ${i === frame.at ? "shadow-[0_0_0_1px_var(--color-accent-bright),0_0_44px_-14px_var(--color-accent-bright)]" : ""} ${shown(i) ? "" : "text-text-secondary"}`}>
+            <p className="m-0 flex items-center gap-2">
+              <span aria-hidden="true" className={`size-2.5 shrink-0 rotate-45 ${i <= frame.at ? "bg-accent-bright shadow-[0_0_10px_var(--color-accent-bright)]" : "bg-surface-hover"}`} />
+              <span className="kicker no-slash">{pointLabel(p, label, false)}</span>
             </p>
             {shown(i) && <ul className="m-0 mt-3 flex max-h-64 list-none flex-col gap-3 overflow-y-auto p-0">
               {p.stories.map((s, j) => (
                 <li key={j} className="flex items-start gap-3">
-                  <IdolPhoto idolId={starOf(s)} size={64} className="w-10 shrink-0 rounded-control" />
+                  <IdolPhoto idolId={starOf(s)} size={256} className="photo-frame w-14 shrink-0" />
                   <span className="min-w-0">
                     <span lang="id" className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)}</span>
-                    <span lang="id" className="block font-display text-sm leading-tight">{headlineOf(s, name, label)}</span>
+                    <span lang="id" className="block font-display text-base leading-tight">{headlineOf(s, name, label)}</span>
                   </span>
                 </li>
               ))}
@@ -68,7 +68,7 @@ export function LeagueTrack({ t }: { t: Timeline }) {
           </li>
         ))}
         {t.finale && (
-          <li aria-current={frame.at === t.points.length ? "step" : undefined} className="w-[min(20rem,82vw)] shrink-0 snap-start border-t-2 border-accent-bright pt-2">
+          <li aria-current={frame.at === t.points.length ? "step" : undefined} className="stage w-[min(20rem,82vw)] shrink-0 snap-start rounded-card p-4 shadow-[inset_0_3px_0_var(--color-winner)]">
             {shown(t.points.length) ? <TimelineFinale finale={t.finale} name={name} label={label} /> : <p className="kicker m-0">Finale</p>}
           </li>
         )}
@@ -81,7 +81,7 @@ export function LeagueTrack({ t }: { t: Timeline }) {
       )}
       <section aria-label="Live standings" className="space-y-2">
         <p className="m-0 flex items-center gap-3">
-          <span className="tag bg-accent text-on-accent">Live</span>
+          <span className="chip bg-accent-bright text-on-fill"><span className="flex items-center gap-1.5"><span aria-hidden="true" className="size-1.5 rounded-full bg-on-fill motion-safe:animate-pulse" />Live</span></span>
           <span className="kicker">{label(t.track!)} · after matchday {frame.day}{lastDay ? ` / ${lastDay}` : ""}</span>
         </p>
         {view && frame.day > 0 ? (

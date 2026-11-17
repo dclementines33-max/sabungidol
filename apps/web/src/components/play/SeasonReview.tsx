@@ -20,13 +20,13 @@ export function SeasonReview({ t, name, label }: { t: Timeline; name: Name; labe
     <div className="space-y-8">
       {headlines.length > 0 && (
         <section aria-label="Season headlines">
-          <p className="kicker m-0">Headlines of the season</p>
+          <h3 className="section-title text-xl">Headlines of the season</h3>
           <ol className="m-0 mt-3 grid list-none gap-4 p-0 md:grid-cols-3">
             {headlines.map(({ s, comp }) => (
-              <li key={`${comp}|${s.kind}`} className="flex flex-col gap-2 border-t-2 pt-3" style={{ borderColor: toneOf(s) }}>
-                <IdolPhoto idolId={starOf(s)} size={256} className="photo-frame w-20" />
+              <li key={`${comp}|${s.kind}`} className="stage flex flex-col gap-3 rounded-card p-5" style={{ boxShadow: `inset 0 3px 0 ${toneOf(s)}` }}>
+                <IdolPhoto idolId={starOf(s)} size={256} className="photo-frame w-28" />
                 <span lang="id" className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)} · {label(comp)}</span>
-                <span lang="id" className="font-display text-lg leading-tight">{headlineOf(s, name, label)}</span>
+                <span lang="id" className="font-display text-xl leading-tight">{headlineOf(s, name, label)}</span>
               </li>
             ))}
           </ol>
@@ -34,16 +34,16 @@ export function SeasonReview({ t, name, label }: { t: Timeline; name: Name; labe
       )}
       {news.length > 0 && (
         <section aria-label="Champions">
-          <p className="kicker m-0">Champions</p>
+          <h3 className="section-title text-xl">Champions</h3>
           <ul className="m-0 mt-3 grid list-none gap-x-6 gap-y-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
             {news.map((n) => {
               const line = storiesOf(n).find((s) => !shown.has(s as AnyStory)) ?? n.summary;
               return (
-                <li key={n.title} className="flex items-start gap-3 border-t border-border pt-3">
-                  <IdolPhoto idolId={n.summary?.idol ?? starOf(n.stories[0]!)} size={64} className="w-12 shrink-0 rounded-control" />
+                <li key={n.title} className="panel flex items-start gap-4 p-4">
+                  <IdolPhoto idolId={n.summary?.idol ?? starOf(n.stories[0]!)} size={256} className="photo-frame w-16 shrink-0" />
                   <span className="min-w-0">
-                    <span className="block text-xs tracking-widest text-text-secondary uppercase">{label(n.title)}</span>
-                    <span className="block font-display text-base uppercase">{name(n.summary?.idol ?? starOf(n.stories[0]!))}</span>
+                    <span className="kicker block text-winner">{label(n.title)}</span>
+                    <span className="block font-display text-lg uppercase">{name(n.summary?.idol ?? starOf(n.stories[0]!))}</span>
                     {line && <span lang="id" className="block text-sm text-text-secondary">{headlineOf(line, name, label)}</span>}
                   </span>
                 </li>
@@ -53,14 +53,14 @@ export function SeasonReview({ t, name, label }: { t: Timeline; name: Name; labe
         </section>
       )}
       {t.finale && (t.finale.promoted.length > 0 || t.finale.relegated.length > 0) && (
-        <section aria-label="Promotion and relegation" className="grid gap-4 sm:grid-cols-2">
+        <section aria-label="Promotion and relegation" className="panel grid gap-4 p-4 sm:grid-cols-2">
           <Names title="Promoted" ids={t.finale.promoted} name={name} tone="cool" />
           <Names title="Relegated" ids={t.finale.relegated} name={name} tone="danger" />
         </section>
       )}
       {moments.length > 0 && (
         <section aria-label="Key moments">
-          <p className="kicker m-0">Key moments</p>
+          <h3 className="section-title text-xl">Key moments</h3>
           <ul className="m-0 mt-3 grid list-none gap-3 p-0 md:grid-cols-2">
             {moments.map(({ s, p }, i) => <NewsItem key={i} s={s} tag={pointLabel(p, label, true)} name={name} label={label} />)}
           </ul>

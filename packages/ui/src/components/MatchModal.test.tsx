@@ -23,7 +23,7 @@ describe("MatchModal (PRD §9)", () => {
   it("shows both idols, the format and the chance to win", () => {
     open({ h2h: { winsA: 3, draws: 1, winsB: 2 } });
     expect(screen.getAllByText("Mina Kim").length).toBeGreaterThan(0); // header and wheel stage
-    expect(screen.getByText("Bo5")).toBeTruthy();
+    expect(screen.getByText("Best of 5")).toBeTruthy();
     expect(screen.getByText(/Win odds: Mina Kim \d+%, Yuna \d+%/)).toBeTruthy();
     expect(screen.getByText("3–1–2")).toBeTruthy();
   });

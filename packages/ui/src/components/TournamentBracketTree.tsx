@@ -22,11 +22,11 @@ const roundName = (round: string, count: number, section: string) =>
 function Side({ idolId, score, won, highlight, big }: { idolId?: string; score?: string; won: boolean; highlight: boolean; big?: boolean }) {
   const idol = useIdolLookup()(idolId ?? "");
   return (
-    <span className={`flex ${big ? "h-14 text-base" : "h-8"} items-center gap-2 pr-1 ${won ? "bg-accent/30 text-text-primary" : "bg-bg-base/50 text-text-secondary"} ${highlight ? "shadow-[inset_3px_0_0_var(--color-accent-bright)]" : ""}`}>
+    <span className={`flex ${big ? "h-14 text-base" : "h-8"} items-center gap-2 pr-1 ${won ? "bg-[linear-gradient(90deg,color-mix(in_oklab,var(--color-accent)_70%,transparent),color-mix(in_oklab,var(--color-stage-hi)_80%,transparent))] text-text-primary shadow-[inset_3px_0_0_var(--color-winner)]" : "bg-bg-base/60 text-text-secondary"} ${highlight ? "shadow-[inset_3px_0_0_var(--color-accent-bright)]" : ""}`}>
       {idolId ? <IdolPhoto idolId={idolId} size={big ? 256 : 64} className={`${big ? "h-14 w-12" : "h-8 w-7"} shrink-0`} /> : <span className={`${big ? "h-14 w-12" : "h-8 w-7"} shrink-0 bg-surface-hover/40`} />}
-      <span className={`flex-1 truncate ${won ? "font-bold" : ""}`}>{idolId ? (idol?.name ?? idolId) : <span className="sr-only">TBD</span>}</span>
+      <span className={`flex-1 truncate ${won ? "font-display uppercase" : ""}`}>{idolId ? (idol?.name ?? idolId) : <span className="sr-only">TBD</span>}</span>
       {idol && <span className="font-mono text-[10px] text-text-secondary">{idol.rating}</span>}
-      <span className={`${big ? "w-8 text-2xl" : "w-5"} text-center font-mono tabular-nums ${won ? "text-accent-bright" : ""}`}>{score ?? ""}</span>
+      <span className={`${big ? "w-8 text-2xl" : "w-6 text-sm"} score text-center ${won ? "text-winner" : ""}`}>{score ?? ""}</span>
     </span>
   );
 }
@@ -113,7 +113,7 @@ export function TournamentBracketTree({ cells, highlightIdol, onMatchClick }: {
                     const pairs = joins ? Array.from({ length: matches.length / 2 }, (_, i) => matches.slice(i * 2, i * 2 + 2)) : matches.map((m) => [m]);
                     return (
                       <div key={round} className="flex flex-col">
-                        <h4 className="m-0 mb-3 bg-surface-hover/60 px-3 py-1 text-center text-[10px] font-bold tracking-[0.2em] uppercase">{roundName(round, matches.length, section)}</h4>
+                        <h4 className="m-0 mb-3 -skew-x-12 bg-accent px-3 py-1 text-center text-[10px] font-bold tracking-[0.2em] text-on-accent uppercase shadow-[0_8px_20px_-10px_var(--color-accent-bright)]">{roundName(round, matches.length, section)}</h4>
                         <ol className="m-0 flex flex-1 list-none flex-col justify-around p-0" style={{ minHeight: tallest * CARD_PX }} aria-label={`Round ${round}`}>
                           {pairs.map((pair, p) => (
                             <li key={p} className="relative flex flex-1 flex-col justify-around">

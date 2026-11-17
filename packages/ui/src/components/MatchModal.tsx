@@ -22,7 +22,7 @@ const MODES: { mode: Mode; label: string }[] = [
   { mode: "preset", label: "Score presets" },
   { mode: "manual", label: "Manual" },
 ];
-const CHIP = "rounded-control bg-surface-hover/60 px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright";
+const CHIP = "-skew-x-12 rounded-[3px] px-4 py-1.5 text-xs font-bold tracking-[0.12em] uppercase focus-visible:outline-2 focus-visible:outline-accent-bright";
 
 function Stepper({ name, value, max, onChange }: { name: string; value: number; max: number; onChange: (v: number) => void }) {
   return (
@@ -30,7 +30,7 @@ function Stepper({ name, value, max, onChange }: { name: string; value: number; 
       <span className="max-w-32 truncate text-sm text-text-secondary">{name}</span>
       <div className="flex items-center gap-2">
         <Button aria-label={`Lower ${name}'s score`} className="p-2" disabled={value === 0} onClick={() => onChange(value - 1)}><Minus size={16} aria-hidden="true" /></Button>
-        <output aria-label={`${name}'s score`} className="w-10 text-center font-mono text-3xl tabular-nums">{value}</output>
+        <output aria-label={`${name}'s score`} className="score w-12 text-center text-4xl">{value}</output>
         <Button aria-label={`Raise ${name}'s score`} className="p-2" disabled={value === max} onClick={() => onChange(value + 1)}><Plus size={16} aria-hidden="true" /></Button>
       </div>
     </div>
@@ -97,10 +97,10 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
         <table className="mt-4 w-full text-sm tabular-nums">
           <tbody>
             {facts.map((f) => (
-              <tr key={f.label} className="border-t border-border">
-                <td className="w-2/5 py-1 text-left font-mono text-accent-bright">{f.a}</td>
+              <tr key={f.label} className="odd:bg-stage-hi/50">
+                <td className="w-2/5 px-2 py-1.5 text-left font-mono text-accent-bright">{f.a}</td>
                 <th scope="row" className="py-1 text-center text-xs font-normal tracking-widest text-text-secondary uppercase">{f.label}</th>
-                <td className="w-2/5 py-1 text-right font-mono text-cool">{f.b}</td>
+                <td className="w-2/5 px-2 py-1.5 text-right font-mono text-cool">{f.b}</td>
               </tr>
             ))}
           </tbody>
@@ -109,8 +109,8 @@ export function MatchModal({ open, onOpenChange, title, idolA, idolB, bestOf, h2
       <div role="radiogroup" aria-label="How to decide the result" className="mt-6 flex flex-wrap gap-2">
         {MODES.map((m) => (
           <button key={m.mode} type="button" role="radio" aria-checked={mode === m.mode} onClick={() => switchTo(m.mode)}
-            className={`${mode === m.mode ? "bg-surface-hover text-text-primary" : "text-text-secondary"} ${CHIP}`}>
-            {m.label}
+            className={`${mode === m.mode ? "bg-accent text-on-accent shadow-[0_8px_22px_-10px_var(--color-accent-bright)]" : "bg-stage-hi/80 text-text-secondary hover:text-text-primary"} ${CHIP}`}>
+            <span className="inline-block skew-x-12">{m.label}</span>
           </button>
         ))}
       </div>

@@ -27,14 +27,14 @@ export function HonoursIdol({ d, kicker, mark, lead = false, wide = false, stori
       <div className={`flex w-full min-w-0 flex-col items-center gap-4 ${wide ? "lg:flex-1 lg:items-start" : ""}`}>
       <div>
         <p className="kicker m-0">{kicker}</p>
-        <h3 className={`m-0 font-display uppercase ${lead ? "text-headline" : "text-xl"}`}>{idol.name}</h3>
+        <h3 className={`m-0 font-display uppercase ${lead ? "text-headline text-winner [text-shadow:0_0_40px_rgb(240_199_94/0.35)]" : "text-xl"}`}>{idol.name}</h3>
       </div>
       <SeasonStatLine d={d} wide={wide} />
       {delta !== null && <p className={`-mt-2 m-0 text-sm ${delta > 0 ? "text-cool" : delta < 0 ? "text-danger" : "text-muted"}`}>{delta > 0 ? `+${delta}` : delta} rating this season</p>}
-      {d.titles.length > 0 && <ul aria-label="Titles" className={`m-0 flex list-none flex-wrap justify-center gap-2 p-0 ${wide ? "lg:justify-start" : ""}`}>{d.titles.map((t) => <li key={t} className="tag bg-accent text-on-accent">{label(t)}</li>)}</ul>}
+      {d.titles.length > 0 && <ul aria-label="Titles" className={`m-0 flex list-none flex-wrap justify-center gap-2 p-0 ${wide ? "lg:justify-start" : ""}`}>{d.titles.map((t) => <li key={t} className="tag bg-winner text-on-fill">{label(t)}</li>)}</ul>}
       {d.places.length > 0 && (
         <ul aria-label="Final places" className={`m-0 flex list-none flex-wrap justify-center gap-x-4 gap-y-1 p-0 text-sm text-text-secondary ${wide ? "lg:justify-start" : "max-w-md"}`}>
-          {d.places.map((p) => <li key={p.comp}><span className={p.rank === 1 ? "text-accent-bright" : "text-text-primary"}>#{p.rank}</span> {label(p.comp)}</li>)}
+          {d.places.map((p) => <li key={p.comp}><span className={`score ${p.rank === 1 ? "text-winner" : "text-text-primary"}`}>#{p.rank}</span> {label(p.comp)}</li>)}
         </ul>
       )}
       {stories.length > 0 && (

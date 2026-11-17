@@ -17,7 +17,7 @@ export function SeasonStatLine({ d, small = false, wide = false }: { d: HonoursD
   return (
     <dl className={`m-0 grid w-full grid-cols-3 border-y border-border ${small ? "gap-x-3 gap-y-1 py-2" : wide ? "gap-x-4 gap-y-3 py-3 sm:grid-cols-6" : "max-w-md gap-x-4 gap-y-3 py-3"}`}>
       {stats.map(([k, v]) => (
-        <div key={k}><dt className="text-xs tracking-widest text-text-secondary uppercase">{k}</dt><dd className={`m-0 font-display whitespace-nowrap tabular-nums ${small ? "text-sm" : "text-base sm:text-lg"}`}>{v}</dd></div>
+        <div key={k}><dt className="text-xs tracking-widest text-text-secondary uppercase">{k}</dt><dd className={`score m-0 whitespace-nowrap ${small ? "text-sm" : "text-base sm:text-lg"}`}>{v}</dd></div>
       ))}
     </dl>
   );

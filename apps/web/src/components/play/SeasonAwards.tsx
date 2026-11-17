@@ -36,11 +36,11 @@ function Winner({ a, d, name, lead }: { a: Award; d?: HonoursDetail; name: (id: 
   const t = AWARD_TEXT[a.key];
   const group = a.key === "mama";
   return (
-    <figure aria-label={t.what} className={`m-0 flex min-w-0 flex-col gap-3 ${lead ? "items-center text-center" : "border-t border-border pt-3"}`}>
+    <figure aria-label={t.what} className={`m-0 flex min-w-0 flex-col gap-3 ${lead ? "stage items-center rounded-card p-6 text-center shadow-[inset_0_3px_0_var(--color-winner),0_0_60px_-24px_var(--color-winner)]" : "panel p-4"}`}>
       <div className={`flex gap-3 ${lead ? "flex-col items-center" : "items-center"}`}>
-        {!group && <IdolPhoto idolId={a.id} size={lead ? 256 : 64} className={lead ? "photo-frame w-32" : "w-12 shrink-0 rounded-control"} />}
+        {!group && <IdolPhoto idolId={a.id} size={lead ? 256 : 64} className={lead ? "photo-frame w-36" : "photo-frame w-14 shrink-0"} />}
         <figcaption className="min-w-0">
-          <span className={lead ? "block font-gothic text-4xl text-accent-bright" : "block text-xs font-bold tracking-[0.2em] text-accent-bright uppercase"}>{t.name}</span>
+          <span className={lead ? "block font-gothic text-4xl text-winner [text-shadow:0_0_30px_rgb(240_199_94/0.4)]" : "kicker block text-winner"}>{t.name}</span>
           <span className={`block font-display uppercase ${lead ? "text-2xl" : "text-base"}`}>{name(a.id)}</span>
           <span className="block text-sm text-text-secondary">{t.what} · {t.value(a.value)}</span>
         </figcaption>
@@ -59,7 +59,7 @@ export function AwardList({ awards, stats = [], groupName = (id) => id }: { awar
   const card = (a: Award, lead: boolean) => <Winner key={a.key} a={a} d={a.key === "mama" ? undefined : stats.find((s) => s.id === a.id)} name={nameOf(a)} lead={lead} />;
   return (
     <section aria-labelledby="awards" className="space-y-8">
-      <h3 id="awards" className="kicker m-0 text-center">Season awards</h3>
+      <h3 id="awards" className="section-title justify-center">Season awards</h3>
       <div className="grid gap-10 sm:grid-cols-2">{awards.filter((a) => HEADLINE.includes(a.key)).map((a) => card(a, true))}</div>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-6">{awards.filter((a) => !HEADLINE.includes(a.key)).map((a) => card(a, false))}</div>
     </section>
