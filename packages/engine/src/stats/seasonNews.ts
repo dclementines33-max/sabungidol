@@ -1,5 +1,7 @@
 // More Season Story kinds (2026-11-15): the season's biggest rivalry, double/treble titles, a career title milestone,
 // a strong idol's losing run, and an unbeaten league season. Pure, from the season's matches (in play order) and titles.
+// 2026-11-17: revenge (league leg 2 comeback), domination (league sweep), de-revenge (bracket comeback), heated-rivalry (top-tier cross-tournament).
+import { prestigeOf } from "../season/expectation";
 import type { SimMatch, Title } from "../season/types";
 
 export type NewsStory =
@@ -7,7 +9,11 @@ export type NewsStory =
   | { kind: "multi-title"; idol: string; titles: string[] }
   | { kind: "title-milestone"; idol: string; total: number }
   | { kind: "slump"; matchId: string; idol: string; losses: number; rating: number }
-  | { kind: "unbeaten"; idol: string; league: string; wins: number; draws: number };
+  | { kind: "unbeaten"; idol: string; league: string; wins: number; draws: number }
+  | { kind: "revenge"; idol: string; foe: string; comp: string }
+  | { kind: "domination"; idol: string; foe: string; comp: string }
+  | { kind: "de-revenge"; idol: string; foe: string; comp: string }
+  | { kind: "heated-rivalry"; a: string; b: string; meetings: number; winsA: number; winsB: number };
 
 const MILESTONES = [5, 10, 15, 20, 25, 30, 40, 50, 75, 100];
 const MIN_MEETINGS = 3;
@@ -62,6 +68,72 @@ export function seasonNews(matches: SimMatch[], titles: Partial<Record<string, T
       const draws = own.filter((m) => m.result === "D").length;
       out.push({ kind: "unbeaten", idol, league, wins: own.length - draws, draws });
     }
+
+    // Revenge and domination: for each pair in this league, track who won each leg.
+    const pairWins = new Map<string, string[]>(); // sorted pair key → winners in play order
+    for (const m of list) {
+      if (m.result === "D") continue;
+      const key = [m.idolA, m.idolB].sort().join("|");
+      const winner = m.result === "A" ? m.idolA : m.idolB;
+      pairWins.set(key, [...(pairWins.get(key) ?? []), winner]);
+    }
+    for (const [key, winners] of [...pairWins].sort(([a], [b]) => a.localeCompare(b))) {
+      if (winners.length !== 2) continue;
+      const [a, b] = key.split("|") as [string, string];
+      if (winners[0] !== winners[1]) {
+        // Leg 1 loser won leg 2 = revenge
+        const idol = winners[1]!, foe = idol === a ? b : a;
+        out.push({ kind: "revenge", idol, foe, comp: league });
+      } else {
+        // Same winner both legs = domination
+        const idol = winners[0]!, foe = idol === a ? b : a;
+        out.push({ kind: "domination", idol, foe, comp: league });
+      }
+    }
   }
+
+  // DE bracket revenge: idol lost to foe earlier in the same comp, then beat them in a later match.
+  const brackets = new Map<string, SimMatch[]>();
+  for (const m of matches) if (m.stage !== "LG" && m.stage !== "SW") brackets.set(m.comp, [...(brackets.get(m.comp) ?? []), m]);
+  for (const [comp, list] of [...brackets].sort(([a], [b]) => a.localeCompare(b))) {
+    const pairWins = new Map<string, string[]>();
+    for (const m of list) {
+      if (m.result === "D") continue;
+      const key = [m.idolA, m.idolB].sort().join("|");
+      const winner = m.result === "A" ? m.idolA : m.idolB;
+      pairWins.set(key, [...(pairWins.get(key) ?? []), winner]);
+    }
+    for (const [key, winners] of [...pairWins].sort(([a], [b]) => a.localeCompare(b))) {
+      if (winners.length < 2 || winners[0] === winners[winners.length - 1]) continue;
+      // Last match winner differs from first = revenge
+      const idol = winners[winners.length - 1]!, foe = key.split("|").find((id) => id !== idol)!;
+      out.push({ kind: "de-revenge", idol, foe, comp });
+    }
+  }
+
+  // Heated rivalry: top-tier idols meeting across top-tier tournaments. prestige ≥ 0.8, initial rating ≥ 90, ≥3 meetings, ≥2 comps.
+  const TOP_PRESTIGE = 0.8, TOP_RATING = 90, MIN_HEATED = 3, MIN_COMPS = 2;
+  const initRating = new Map<string, number>();
+  for (const m of matches) {
+    if (!initRating.has(m.idolA)) initRating.set(m.idolA, m.ratingA);
+    if (!initRating.has(m.idolB)) initRating.set(m.idolB, m.ratingB);
+  }
+  const isTop = (id: string) => (initRating.get(id) ?? 0) >= TOP_RATING;
+  const heatedPairs = new Map<string, { wins: [number, number]; comps: Set<string> }>();
+  for (const m of matches) {
+    if ((prestigeOf(m.comp) ?? 0) < TOP_PRESTIGE || !isTop(m.idolA) || !isTop(m.idolB)) continue;
+    const [a, b] = [m.idolA, m.idolB].sort() as [string, string];
+    const key = `${a}|${b}`;
+    const d = heatedPairs.get(key) ?? { wins: [0, 0], comps: new Set<string>() };
+    if (m.result !== "D") { const w = m.result === "A" ? m.idolA : m.idolB; if (w === a) d.wins[0]++; else d.wins[1]++; }
+    d.comps.add(m.comp);
+    heatedPairs.set(key, d);
+  }
+  for (const [key, { wins, comps }] of [...heatedPairs].sort(([a], [b]) => a.localeCompare(b))) {
+    if (wins[0] + wins[1] < MIN_HEATED || comps.size < MIN_COMPS) continue;
+    const [a, b] = key.split("|") as [string, string];
+    out.push({ kind: "heated-rivalry", a, b, meetings: wins[0] + wins[1], winsA: wins[0], winsB: wins[1] });
+  }
+
   return out;
 }

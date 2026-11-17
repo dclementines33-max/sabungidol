@@ -8,7 +8,7 @@ import type { SimMatch, Title } from "../season/types";
 export type TitleStory =
   | { kind: "underdog-champion"; idol: string; title: string; rating: number; favourite: string; favouriteRating: number; above: number }
   | { kind: "favourite-flop"; idol: string; title: string; rating: number; champion: string; rank: number | null; stage: string; round: string }
-  | { kind: "title-race"; idol: string; runnerUp: string; title: string; margin: number; how: "level" | "narrow" | "runaway" }
+  | { kind: "title-race"; idol: string; runnerUp: string; title: string; margin: number; how: "level" | "narrow" | "comfortable" | "runaway" }
   | { kind: "final-thriller"; idol: string; runnerUp: string; title: string; score: string }
   // The plain facts (league points + margin, or the final's score): the finale's fallback, never Season Story news.
   | { kind: "title-summary"; idol: string; runnerUp: string; title: string; points: number | null; margin: number | null; score: string | null };
@@ -54,8 +54,8 @@ export function titleNews(matches: SimMatch[], titles: Partial<Record<string, Ti
 
     if (top) {
       const margin = top[0].points - top[1].points;
-      const how = margin === 0 ? "level" : margin <= NARROW ? "narrow" : margin >= RUNAWAY ? "runaway" : null;
-      if (how) out.push({ kind: "title-race", idol: t.champion, runnerUp: t.runnerUp, title, margin, how });
+      const how = margin === 0 ? "level" : margin <= NARROW ? "narrow" : margin >= RUNAWAY ? "runaway" : "comfortable";
+      out.push({ kind: "title-race", idol: t.champion, runnerUp: t.runnerUp, title, margin, how });
     }
     if (!league && final && lo >= 1 && hi - lo === 1) out.push({ kind: "final-thriller", idol: t.champion, runnerUp: t.runnerUp, title, score: `${hi}–${lo}` });
   }

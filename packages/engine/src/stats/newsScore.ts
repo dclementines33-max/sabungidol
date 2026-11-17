@@ -46,6 +46,10 @@ export function newsScore(s: AnyStory): number {
     // Title news: an underdog by how far below the favourite and past how many better-rated idols; level points = tiebreak.
     case "underdog-champion": return Math.min(95, 35 + 2 * (s.favouriteRating - s.rating) + 2 * s.above + 15 * prestige(s.title));
     case "favourite-flop": return Math.min(80, 30 + 30 * prestige(s.title) + ((s.rank !== null ? s.rank >= 4 : !["F", "GF"].includes(s.round)) ? 10 : 0));
+    case "revenge": return 55;
+    case "domination": return 45;
+    case "de-revenge": return 65;
+    case "heated-rivalry": return Math.min(85, 35 + 10 * s.meetings);
     case "title-race": return s.how === "level" ? 85 : s.how === "narrow" ? 75 - 5 * s.margin : Math.min(80, 45 + 2 * s.margin);
     case "final-thriller": return 45 + 30 * prestige(s.title);
     case "title-summary": return 0; // facts, not news

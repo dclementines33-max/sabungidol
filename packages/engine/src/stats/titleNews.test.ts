@@ -53,6 +53,8 @@ describe("titleNews", () => {
     expect(race((x, y) => (x === "b" && y === "c" ? "D" : top(x, y)))).toMatchObject({ how: "narrow", margin: 2 });
     // a wins everything; the rest draw: 18 vs 4 points.
     expect(race(winsAll("a"))).toMatchObject({ how: "runaway", margin: 14 });
+    // a and b each beat c and d, but a beats b once and draws once: a wins by 4 (comfortable range 3–9).
+    expect(race((x, y) => (x === "a" && y === "b" ? "A" : x === "b" && y === "a" ? "D" : ["a", "b"].includes(x) ? "A" : ["a", "b"].includes(y) ? "B" : "D"))).toMatchObject({ how: "comfortable" });
     const { matches, titles } = league({ a: 85, b: 85, c: 80, d: 80 }, winsAll("a"));
     expect(titleNews(matches, titles)[0]).toEqual({ kind: "title-summary", idol: "a", runnerUp: titles.D1A!.runnerUp, title: "D1A", points: 18, margin: 14, score: null });
   });
