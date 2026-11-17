@@ -11,7 +11,7 @@ file only when the task touches it. Keep this file current: update it at the end
 
 ## ▶ RESUME HERE (saved 2026-11-18, router-5 — Marble Race IN THE APP, latest)
 
-**Built (commits cb31bc4, 2a03377, 392a736, 1dae90c). Full e2e 56 pass / 3 skip / 2 load flakes (firstOpen second
+**Built (commits cb31bc4, 2a03377, 392a736, 1dae90c), DEPLOYED to production 524d335d (user said "deploy"). Full e2e 56 pass / 3 skip / 2 load flakes (firstOpen second
 tab, worker < 10 s; both pass alone).** The user asked: marble race in the app, arenas on
 every match, a Marble Race panel, arena stats everywhere. Decisions: old/archived matches stay WITHOUT arena (no
 backfill); LED = automatic (competition name, both idols, competition logo) + the user's own pictures.
