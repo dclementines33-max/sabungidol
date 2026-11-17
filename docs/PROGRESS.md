@@ -9,7 +9,17 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-18, router-4 — latest)
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble race prototype, latest)
+
+**3D marble race prototype (commit 8b22f9d), SEPARATE from the app:** `prototypes/marble-race/` (not a workspace
+package, no install: three 0.170 + Rapier 0.14 from jsDelivr; `node prototypes/marble-race/server.mjs` → :5190, or
+launch.json "marble"). 1 track (Seoul Neon Circuit), 3 laps, each lap = one game, both marbles regroup at the lift.
+README there has the file map, the physics findings and the calibration (95 v 84 → 64% of laps, 95 v 70 → 86%).
+User plan: later 24 tracks (F1-like, reusable for another project), used only in the match dialog as one more way to
+decide a single match (next to Spotlight Picker / Manual), result only, nothing saved, no replay. Waiting for the
+user's feedback on the prototype before more tracks or any app integration.
+
+## ▶ RESUME HERE (saved 2026-11-18, router-4)
 
 **Built 2026-11-18 (commit 6b54d56), user picked from the idea lists. Full e2e 56 pass / 3 skip. Deployed to production 3070203c (user said "deploy").**
 - **Official rivalries + Grudge Match:** engine `stats/rivalry.ts` (tested): rivalryOf / officialRivalries from the career pairs: Eternal Rivalry (10+ meetings, close ≥0.7), Blood Feud (6+, ≥0.55), Rising Rivalry (4+, ≥0.6), Nemesis (5+, one-sided ≤0.4); fixed name per pair (hash → 18 names), heat; sorted by tier then heat. `headToHead()` now also returns `rivalries`. Web: `components/rivalry/` (useRivalries hook = query ["rivalries"], RivalryCard poster, OfficialRivalries section in Head to Head with the hottest as a big poster); H2H shows an "Official rivalry" GrudgeBanner for the picked pair; PlayMatchDialog passes `theme.grudge` → MatchHeader shows the burning GrudgeBanner and a gold pulsing VS (ui `GrudgeBanner.tsx`, tested in MatchModal.test); MatchRow marks a grudge pair with a gold VS + "Grudge match · name" line.
