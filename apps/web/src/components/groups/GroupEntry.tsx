@@ -12,8 +12,8 @@ import type { GroupStat, TitleLine } from "./groupStats";
 const NAME = Object.fromEntries(SEASON_COMPETITIONS.map((c) => [c.key, c.name]));
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
-export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: {
-  rank: number; g: GroupStat; logoId?: string | null; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[];
+export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, mama = [] }: {
+  rank: number; g: GroupStat; logoId?: string | null; open: boolean; onToggle: () => void; career: Map<string, CareerRow>; titles: TitleLine[]; mama?: number[]; // seasons won MAMA
 }) {
   const comps = Object.keys(g.byComp);
   const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""], ["Avg rating", g.avgRating.toFixed(1), ""]];
@@ -28,6 +28,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles }: 
           </h2>
           <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} titles</span> · {g.members.length} members · {g.matches.toLocaleString("en-GB")} matches · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Group page</Link></p>
           <p className="m-0 mt-1 text-sm text-text-secondary">Top member <IdolLink id={g.best} /></p>
+          {mama.length > 0 && <p className="m-0 mt-1 text-sm"><span className="font-bold tracking-[0.2em] text-accent-bright uppercase">MAMA {mama.length}×</span> <span className="text-text-secondary">{mama.map((n) => `S${n}`).join(" · ")}</span></p>}
           <TierMix tiers={g.tiers} name={g.name} />
           {comps.length > 0 && (
             <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`${g.name} titles`}>

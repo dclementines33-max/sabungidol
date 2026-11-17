@@ -40,7 +40,7 @@ function IdolProfile() {
       <ProfileEdit idol={idol} />
       {!profile ? <p className="text-text-secondary">Crunching the numbers…</p> : (
         <Tabs label="Idol profile" tabs={[
-          { id: "overview", label: "Overview", content: () => <ProfileOverview badges={profile.badges} titles={profile.placements.filter((p) => p.finalRank === 1)} history={profile.ratingHistory} rating={idol.rating} mood={profile.mood} /> },
+          { id: "overview", label: "Overview", content: () => <ProfileOverview badges={profile.badges} titles={profile.placements.filter((p) => p.finalRank === 1)} awards={profile.awards} history={profile.ratingHistory} rating={idol.rating} mood={profile.mood} /> },
           { id: "career", label: "Career", content: () => (
             <div className="space-y-10">
             <CareerScope rows={profile.rows} />

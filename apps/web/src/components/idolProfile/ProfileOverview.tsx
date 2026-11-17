@@ -1,11 +1,13 @@
-// Idol Profile → Overview (PRD §8): form and morale right now, badges, the trophy cabinet (PRD §16), rating history.
+// Idol Profile → Overview (PRD §8): form and morale right now, badges, the trophy cabinet (PRD §16), the award cabinet, rating history.
 import { BADGES } from "@sabung/shared";
+import { AwardCabinet } from "./AwardCabinet";
 import { RatingChart } from "./RatingChart";
 import { TrophyCabinet } from "./TrophyCabinet";
 
 type Props = {
   badges: { badge: string; season: number }[];
   titles: { comp: string; season: number }[];
+  awards?: { key: string; season: number }[];
   history: { old: number; new: number }[];
   rating: number;
   mood?: { form: string; morale: number; moraleName: string; last: string[] } | null;
@@ -13,7 +15,7 @@ type Props = {
 
 const H3 = "m-0 text-xs tracking-widest text-text-secondary uppercase";
 
-export function ProfileOverview({ badges, titles, history, rating, mood }: Props) {
+export function ProfileOverview({ badges, titles, awards = [], history, rating, mood }: Props) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       {mood && (
@@ -36,6 +38,10 @@ export function ProfileOverview({ badges, titles, history, rating, mood }: Props
       <section aria-labelledby="titles" className="space-y-2">
         <h3 id="titles" className={H3}>Trophy cabinet</h3>
         <TrophyCabinet titles={titles} />
+      </section>
+      <section aria-labelledby="award-cabinet" className="space-y-2 lg:col-span-2">
+        <h3 id="award-cabinet" className={H3}>Award cabinet</h3>
+        <AwardCabinet awards={awards} />
       </section>
       <section aria-labelledby="rating-history" className="space-y-2 lg:col-span-2">
         <h3 id="rating-history" className={H3}>Rating history</h3>

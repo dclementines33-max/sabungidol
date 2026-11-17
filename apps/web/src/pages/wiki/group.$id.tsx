@@ -6,6 +6,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef } from "react";
 import { CompetitionLogo } from "../../components/CompetitionLogo";
 import { GroupEntry } from "../../components/groups/GroupEntry";
+import { useMama } from "../../components/groups/useMama";
 import { groupStats } from "../../components/groups/groupStats";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
@@ -25,6 +26,7 @@ function GroupPage() {
   const { data: titles = [] } = useQuery({ queryKey: ["titles-by-comp"], queryFn: () => engine().titlesByComp(), staleTime: 0, enabled: on });
   const stats = useMemo(() => groupStats(idols, combined ?? [], titles), [idols, combined, titles]);
   const career = useMemo(() => new Map((combined ?? []).map((r) => [r.idolId, r])), [combined]);
+  const mama = useMama();
   const g = stats.find((x) => x.id === id);
   const base = groups.find((x) => x.id === id); // Update 3: a new group has a page before it has members
   const logoId = base?.logoId;
@@ -55,7 +57,7 @@ function GroupPage() {
         <ul className="m-0 flex list-none flex-wrap gap-4 p-0" aria-label={`${g.name} member cards`}>
           {g.members.map((m) => <li key={m}><Link to="/wiki/idols/$id" params={{ id: m }} className="block focus-visible:outline-2 focus-visible:outline-accent-bright"><IdolCard idolId={m} /></Link></li>)}
         </ul>
-        <ol className="m-0 list-none p-0"><GroupEntry rank={stats.indexOf(g) + 1} g={g} logoId={logoId} open onToggle={() => {}} career={career} titles={titles} /></ol>
+        <ol className="m-0 list-none p-0"><GroupEntry rank={stats.indexOf(g) + 1} g={g} logoId={logoId} open onToggle={() => {}} career={career} titles={titles} mama={mama(id)} /></ol>
       </>}
     </div>
   );

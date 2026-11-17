@@ -40,6 +40,7 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   await expect(page.locator("#idol-name")).toBeVisible();
   await expect(page.getByRole("tab", { name: "Overview" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByRole("heading", { name: "Trophy cabinet" })).toBeVisible(); // PRD §16 trophy cabinet
+  await expect(page.getByRole("heading", { name: "Award cabinet" })).toBeVisible(); // 2026-11-17 season awards
   await expect(page.getByRole("region", { name: "This season · right now" })).toContainText(/Form.*Morale/); // 2026-11-17 form + morale
   expect(await axe(page)).toEqual([]);
   await page.getByRole("button", { name: "Edit profile" }).click(); // step 9: edit from the profile
@@ -125,6 +126,8 @@ test("All-time Records: top 10 cards, see all, search keeps the rank", async () 
   await page.getByLabel("Search a name").fill(name!);
   await expect(wins.getByRole("listitem").first()).toContainText(`${rank}${name}`);
   await page.getByLabel("Search a name").fill("");
+  for (const award of ["MVI", "Idol of the Season", "MAMA"]) await expect(page.getByRole("region", { name: award, exact: true }).getByRole("listitem")).toHaveCount(1); // award history: Season 1
+  await expect(page.getByRole("region", { name: "MVI", exact: true })).toContainText("S1");
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/records.png" });
 });
@@ -181,6 +184,7 @@ test("Season Story: news cards linking to their matches", async () => {
 test("Girl Group Stats: table and a group's members", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/groups");
+  await expect(page.getByText(/^MAMA 1×$/)).toBeVisible({ timeout: 60_000 }); // the Season 1 MAMA group
   const first = page.getByRole("heading", { level: 2 }).getByRole("button").first();
   await first.click({ timeout: 60_000 });
   const name = await first.textContent();

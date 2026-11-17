@@ -40,6 +40,7 @@ export async function idolProfile(db: Db, id: string) {
     rivals: rivalsOf(stats.pairs, id),
     records,
     mood: await moodOf(db, id),
+    awards: (await awardHistory(db)).filter((a) => a.key !== "mama" && a.id === id).map((a) => ({ key: a.key, season: a.season, value: a.value })),
   };
 }
 
@@ -95,15 +96,10 @@ export async function records(db: Db, minMatches: number) {
   const upsets = rankRecords(stats.upsets.map((u) => ({ idolId: u.matchId, value: u.gap, matches: 0 })), "total")
     .map((e) => ({ ...e, ...stats.upsets.find((u) => u.matchId === e.idolId)! }));
   const meetings = rankRecords(Object.entries(stats.pairs).map(([key, p]) => ({ idolId: key, value: p.meetings, matches: 0 })), "total").slice(0, 100);
-  const sotsRaw = await idolOfSeason(db);
-  const sots = rankRecords(sotsRaw.map((r) => ({ idolId: r.idolId, value: r.value, matches: 0 })), "total")
-    .map((e) => ({ ...e, seasons: sotsRaw.find((r) => r.idolId === e.idolId)!.seasons }));
-  return { categories: allTimeRecords(stats.rows, { minMatches }), upsets, meetings, idolOfSeason: sots };
+  return { categories: allTimeRecords(stats.rows, { minMatches }), upsets, meetings }; // Idol of the Season: the Awards section (awardHistory)
 }
 
-// Idol of the Season: who finished #1 of the Season Honours podium most often, with the seasons. The per-season #1 is kept in the career cache.
-export async function idolOfSeason(db: Db) {
-  const wins = new Map<string, number[]>();
-  for (const [number, idolId] of Object.entries((await updateCareerCache(db)).tops)) wins.set(idolId, [...(wins.get(idolId) ?? []), Number(number)]);
-  return [...wins].map(([idolId, ns]) => ({ idolId, value: ns.length, seasons: ns.sort((a, b) => a - b) }));
+// Every season's award winners, oldest season first (MAMA ids are group ids). Kept in the career cache.
+export async function awardHistory(db: Db) {
+  return Object.entries((await updateCareerCache(db)).awards).flatMap(([n, list]) => list.map((a) => ({ season: Number(n), ...a }))).sort((a, b) => a.season - b.season);
 }

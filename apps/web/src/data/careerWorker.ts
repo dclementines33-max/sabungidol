@@ -4,41 +4,47 @@
 // again from zero; the Fase 4 gate checks both give the same.
 import { type Db, type SeasonRow, listSeasons, readCache, replaceAchievements, replacePlacements, writeCache } from "@sabung/db";
 import {
-  type AchievementState, type CareerState, type MatchRecords, careerRows, emptyAchievements, foldMatchRecords, foldSeason, runSeason,
-  seasonAchievements, seasonPlacements, seasonScores, seasonTop,
+  type AchievementState, type AwardKey, type CareerState, type MatchRecords, careerRows, emptyAchievements, foldMatchRecords, foldSeason, promotionPlan, runSeason,
+  seasonAchievements, seasonEndAwards, seasonPlacements, seasonScores, seasonTop,
 } from "@sabung/engine";
+import { awardExtra } from "./awardExtra";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
-type Cache = { seasons: string[]; state: CareerState; records: MatchRecords; achievements: AchievementState; tops: Record<number, string> }; // tops: season number → its Season Honours #1
-const KEY = "career-v3"; // v3: + tops (a new key folds every season again once)
+// tops: season number → its Season Honours #1; awards: season number → its award winners (MAMA ids are group ids).
+export type AwardWin = { key: AwardKey; id: string; value: number };
+type Cache = { seasons: string[]; state: CareerState; records: MatchRecords; achievements: AchievementState; tops: Record<number, string>; awards: Record<number, AwardWin[]> };
+const KEY = "career-v4"; // v3: + tops, v4: + awards (a new key folds every season again once)
 
 async function replay(db: Db, season: SeasonRow) {
   const input = await seasonInput(db, season);
   const result = runSeason({ ...input, saved: await seasonMatches(db, season.id), target: () => false });
   const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
   const leagues = { ...input.leagues, ...(input.theIdols ? { IDL: input.theIdols } : {}) } as Record<string, string[]>;
-  if (!result.done) return { result, placements: [], scores: new Map<string, number>(), top: undefined };
+  if (!result.done) return { result, input, leagues, placements: [], scores: new Map<string, number>(), top: undefined };
   const scores = seasonScores(result.matches, result.titles, leagues); // §6.2 season score
-  return { result, placements: seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0), scores, top: seasonTop(scores)[0] };
+  return { result, input, leagues, placements: seasonPlacements(result.matches, result.titles, leagues, (id) => rating.get(id) ?? 0), scores, top: seasonTop(scores)[0] };
 }
 
 // Folds the finished seasons the cache does not have yet; with rebuild, all of them from zero.
 export async function updateCareerCache(db: Db, rebuild = false): Promise<Cache & { live: SeasonRow | null }> {
   const seasons = (await listSeasons(db)).filter((s) => s.status === "live" || s.status === "archived").sort((a, b) => a.number - b.number);
   const stored = rebuild ? undefined : await readCache<Cache>(db, KEY);
-  let cache: Cache = stored?.tops ? stored : { seasons: [], state: {}, records: { pairs: {}, upsets: [] }, achievements: emptyAchievements(), tops: {} }; // an older cache shape is rebuilt
+  let cache: Cache = stored?.awards ? stored : { seasons: [], state: {}, records: { pairs: {}, upsets: [] }, achievements: emptyAchievements(), tops: {}, awards: {} }; // an older cache shape is rebuilt
   let live: SeasonRow | null = null;
-  let changed = rebuild || !stored?.tops;
+  let changed = rebuild || !stored?.awards;
   for (const season of seasons) {
     if (cache.seasons.includes(season.id)) continue;
-    const { result, placements, scores, top } = await replay(db, season);
+    const { result, input, leagues, placements, scores, top } = await replay(db, season);
     if (!result.done) { live = season; break; } // only the last season can be unfinished
     await replacePlacements(db, season.id, placements);
     const state = foldSeason(cache.state, season.number, result.matches, placements);
     const badges = seasonAchievements(cache.achievements, season.number, placements, cache.state, state, scores);
     await replaceAchievements(db, season.id, badges.badges);
-    cache = { seasons: [...cache.seasons, season.id], state, records: foldMatchRecords(cache.records, season.number, result.matches), achievements: badges.state, tops: top ? { ...cache.tops, [season.number]: top } : cache.tops };
+    const rating = new Map(input.idols.map((i) => [i.id, i.rating]));
+    const plan = promotionPlan(result.matches, input.leagues, (id) => rating.get(id) ?? 0);
+    const awards = seasonEndAwards(result.matches, result.titles, leagues, plan, awardExtra(input.idols, badges.badges)).map(({ key, id, value }) => ({ key, id, value }));
+    cache = { seasons: [...cache.seasons, season.id], state, records: foldMatchRecords(cache.records, season.number, result.matches), achievements: badges.state, tops: top ? { ...cache.tops, [season.number]: top } : cache.tops, awards: { ...cache.awards, [season.number]: awards } };
     changed = true;
   }
   if (changed) await writeCache(db, KEY, "career", cache, cache.seasons.length);

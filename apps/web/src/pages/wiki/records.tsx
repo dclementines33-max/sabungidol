@@ -7,6 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { LEAGUE_ARENAS } from "../../components/competition/arenaTheme";
 import { Select } from "../../components/idolDatabase/IdolFilters";
+import { AwardRecords } from "../../components/records/AwardRecords";
 import { RecordCard, type RecordRow } from "../../components/records/RecordCard";
 import { IdolLink } from "../../components/wiki/IdolLink";
 import { engine } from "../../data/engineClient";
@@ -19,14 +20,11 @@ function AllTimeRecords() {
   const [search, setSearch] = useState("");
   const lookup = useIdolLookup();
   const { data, isPending } = useQuery({ queryKey: ["records", minMatches], queryFn: () => engine().records(Number(minMatches)), staleTime: 0, enabled: typeof Worker !== "undefined" });
+  const { data: awards = [] } = useQuery({ queryKey: ["award-history"], queryFn: () => engine().awardHistory(), staleTime: 0, enabled: typeof Worker !== "undefined" });
   if (isPending || !data) return <p className="text-text-secondary">Crunching the records…</p>;
   const q = search.trim().toLowerCase();
   const hit = (...ids: string[]) => !q || ids.some((id) => lookup(id)?.name.toLowerCase().includes(q));
   const cards: { title: string; rows: RecordRow[] }[] = [
-    {
-      title: "Idol of the Season",
-      rows: data.idolOfSeason.filter((s) => hit(s.idolId)).map((s) => ({ key: s.idolId, idolId: s.idolId, rank: rankLabel(s), who: <><IdolLink id={s.idolId} /> <span className="text-text-secondary">{s.seasons.map((n) => `S${n}`).join(" · ")}</span></>, value: `${s.value}×` })),
-    },
     ...data.categories.map((c) => ({
       title: c.label,
       rows: c.entries.filter((e) => hit(e.idolId)).map((e) => ({ key: e.idolId, idolId: e.idolId, rank: rankLabel(e), who: <IdolLink id={e.idolId} />, value: c.kind === "percent" ? `${(e.value * 100).toFixed(1)}%` : String(e.value) })),
@@ -53,6 +51,8 @@ function AllTimeRecords() {
         </label>
         <Select label="Minimum matches (% records)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
       </div>
+      <AwardRecords history={awards} hit={(id) => hit(id)} />
+      <h2 className="kicker m-0">Career records</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {cards.map((c, i) => <RecordCard key={c.title} title={c.title} rows={c.rows} arena={LEAGUE_ARENAS[i % 6]!.arena} />)}
       </div>

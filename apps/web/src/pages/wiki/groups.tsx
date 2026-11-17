@@ -8,6 +8,7 @@ import { Tabs } from "../../components/competition/Tabs";
 import { AllGroups } from "../../components/groups/AllGroups";
 import { GroupHighlights } from "../../components/groups/GroupHighlights";
 import { GroupEntry } from "../../components/groups/GroupEntry";
+import { useMama } from "../../components/groups/useMama";
 import { groupStats } from "../../components/groups/groupStats";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
@@ -24,6 +25,7 @@ function GirlGroupStats() {
   const stats = useMemo(() => groupStats(idols, combined ?? [], titles), [idols, combined, titles]);
   const career = useMemo(() => new Map((combined ?? []).map((r) => [r.idolId, r])), [combined]);
   const [open, setOpen] = useState<string | null>(null);
+  const mama = useMama();
   const logoOf = new Map(groups.map((g) => [g.id, g.logoId]));
   if (!combined) return <p className="text-text-secondary">Crunching the numbers…</p>;
   return (
@@ -37,7 +39,7 @@ function GirlGroupStats() {
       <Tabs label="Girl group" tabs={[
         { id: "rank", label: "Rankings", content: () => (
           <ol className="m-0 list-none p-0">
-            {stats.map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} logoId={logoOf.get(g.id)} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} />)}
+            {stats.map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} logoId={logoOf.get(g.id)} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} mama={mama(g.id)} />)}
           </ol>
         ) },
         { id: "all", label: "All groups", content: () => <AllGroups groups={groups} idols={idols} /> },

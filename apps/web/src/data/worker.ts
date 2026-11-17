@@ -19,7 +19,7 @@ import { podiumOf } from "./honoursWorker";
 import { awardsOf } from "./awardsWorker";
 import { telemetryOf } from "./telemetryWorker";
 import { overview } from "./overviewWorker";
-import { careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
+import { awardHistory, careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
 import { DB_IN_OTHER_TAB, holdDatabaseLock } from "./dbLock";
@@ -187,6 +187,7 @@ const api = {
   seasonList: async () => seasonList(await open()),
   champions: async () => champions(await open()),
   records: async (minMatches: number) => records(await open(), minMatches),
+  awardHistory: async () => awardHistory(await open()),
   seasonArchive: async (seasonId: string) => seasonArchive(await open(), seasonId),
   seasonStory: async (seasonId: string) => storyOf(await open(), seasonId),
   podiumDetail: async (seasonId: string, ids: string[]) => podiumOf(await open(), seasonId, ids),

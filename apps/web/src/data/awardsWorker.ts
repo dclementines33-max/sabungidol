@@ -3,7 +3,7 @@
 // MAMA from each idol's group, Golden Disk ties broken by this season's badges. Only for a finished season.
 import { type Db, listAchievements, listSeasons } from "@sabung/db";
 import { promotionPlan, runSeason, seasonEndAwards } from "@sabung/engine";
-import { awardExtra } from "./seasonClose";
+import { awardExtra } from "./awardExtra";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
