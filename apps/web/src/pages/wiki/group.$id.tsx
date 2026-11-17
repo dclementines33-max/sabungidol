@@ -34,9 +34,13 @@ function GroupPage() {
   if (!combined) return <p className="text-text-secondary">Crunching the numbers…</p>;
   if (!g && !base) return <p className="text-text-secondary">Group not found. <Link to="/wiki/groups" className="text-accent-bright underline">Back to Girl Group Stats</Link></p>;
   const upload = async (file: File) => {
-    await engine().setGroupLogo(id, await engine().savePhoto(file));
-    await queryClient.invalidateQueries({ queryKey: ["groups"] });
-    notify({ level: "success", message: `${name} logo saved` });
+    try {
+      await engine().setGroupLogo(id, await engine().savePhoto(file));
+      await queryClient.invalidateQueries({ queryKey: ["groups"] });
+      notify({ level: "success", message: `${name} logo saved` });
+    } catch (error) {
+      notify({ level: "error", code: "E-GROUP-001", message: "Logo not saved.", context: error instanceof Error ? error.message : String(error) });
+    }
   };
   return (
     <div className="space-y-10">

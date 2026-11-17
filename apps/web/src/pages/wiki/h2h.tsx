@@ -28,10 +28,10 @@ function HeadToHead() {
   return (
     <div className="space-y-10">
       <div key={`${idols.length}|${a}|${b}`} className="grid gap-4 sm:grid-cols-2">
-        <SearchableIdolSelect label="First idol" idolIds={ids} value={a ?? null} onChange={pick("a")} />
-        <SearchableIdolSelect label="Second idol" idolIds={ids} value={b ?? null} onChange={pick("b")} />
+        <SearchableIdolSelect label="First idol" idolIds={ids.filter((i) => i !== b)} value={a ?? null} onChange={pick("a")} />
+        <SearchableIdolSelect label="Second idol" idolIds={ids.filter((i) => i !== a)} value={b ?? null} onChange={pick("b")} />
       </div>
-      {a && b && data && (
+      {a && b && a !== b && data && ( // an idol against herself has nothing to compare
         <>
           <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} games={data.games as [number, number]} formA={data.formA as ("W" | "D" | "L")[]} formB={data.formB as ("W" | "D" | "L")[]} />
           <section aria-labelledby="direct" className="space-y-3">
