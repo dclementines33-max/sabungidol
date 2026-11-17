@@ -27,5 +27,5 @@ export function ChampionCover({ seasonName, champion, championSeason }: { season
 }
 
 function ChampionName({ id }: { id: string }) {
-  return <p className="m-0 max-w-[12ch] font-display text-hero break-words">{useIdol(id).name}</p>;
+  return <p className="m-0 max-w-[12ch] font-display text-hero break-words text-winner [text-shadow:0_6px_40px_rgb(0_0_0/0.6)]">{useIdol(id).name}</p>;
 }

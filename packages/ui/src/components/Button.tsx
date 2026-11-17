@@ -4,7 +4,7 @@
 import type { ComponentProps } from "react";
 
 const VARIANT = {
-  primary: "bg-[linear-gradient(100deg,var(--color-accent),color-mix(in_oklab,var(--color-accent-bright)_55%,var(--color-accent)))] text-on-accent shadow-[0_10px_30px_-10px_var(--color-accent-bright)] hover:brightness-125",
+  primary: "bg-[linear-gradient(100deg,var(--color-accent),color-mix(in_oklab,var(--color-accent-bright)_30%,var(--color-accent)))] text-on-accent shadow-[0_10px_30px_-10px_var(--color-accent-bright)] hover:brightness-125",
   danger: "bg-danger/15 text-danger shadow-[inset_0_-2px_0_var(--color-danger)] hover:bg-danger/25",
   secondary: "bg-stage-hi text-text-primary shadow-[inset_0_1px_0_rgb(185_211_226/0.12),inset_0_-2px_0_color-mix(in_oklab,var(--color-accent-bright)_45%,transparent)] hover:bg-surface-hover",
 };

@@ -18,12 +18,12 @@ export function StoryCard({ story, lead = false }: { story: Story; lead?: boolea
   const tone = `var(--color-${TONE[s.kind]})`;
   const breaking = newsScore(s) >= BREAKING; // 2026-11-16: the biggest news gets a breaking-headline look
   return (
-    <article className={`flex w-full gap-4 border-t-2 pt-3 ${lead ? "flex-col sm:flex-row sm:items-end" : ""}`} style={{ borderColor: tone }}>
-      <IdolPhoto idolId={star} size={lead ? 1024 : 256} className={`photo-frame shrink-0 ${lead ? "w-48 sm:w-64" : "w-16"}`} />
+    <article className={`flex w-full gap-4 ${lead ? "stage flex-col rounded-card p-5 sm:flex-row sm:items-end sm:p-8" : "panel p-4"} ${breaking ? "shadow-[0_0_40px_-18px_var(--color-accent-bright)]" : ""}`} style={{ boxShadow: `inset 0 3px 0 ${tone}` }}>
+      <IdolPhoto idolId={star} size={lead ? 1024 : 256} className={`photo-frame shrink-0 self-start ${lead ? "w-48 sm:w-64" : "w-20"}`} />
       <div className="flex min-w-0 flex-col gap-2">
-        {breaking && <p className="m-0 flex items-center gap-2"><span className="tag bg-accent text-on-accent">Breaking news</span><span aria-hidden="true" className="size-2 rounded-full bg-accent-bright motion-safe:animate-pulse" /></p>}
+        {breaking && <p className="m-0"><span className="chip bg-accent-bright text-on-fill"><span className="flex items-center gap-1.5"><span aria-hidden="true" className="size-1.5 rounded-full bg-on-fill motion-safe:animate-pulse" />Breaking news</span></span></p>}
         <p lang="id" className="m-0 text-xs font-bold tracking-[0.25em] uppercase" style={{ color: tone }}>{KICKER[s.kind]}</p>
-        <h2 lang="id" className={`m-0 font-display leading-tight ${lead ? "text-section uppercase" : breaking ? "text-lg uppercase" : "text-base"}`}>{headline(s, name, label)}</h2>
+        <h2 lang="id" className={`m-0 font-display leading-tight ${lead ? "text-headline uppercase" : breaking ? "text-xl uppercase" : "text-lg"}`}>{headline(s, name, label)}</h2>
         <div>
           {"matchId" in s && "loser" in s && <Link to="/wiki/h2h" search={{ a: s.winner, b: s.loser }} className={LINK}>Match {s.matchId}</Link>}
           {s.kind === "streak" && <Link to="/wiki/idols/$id" params={{ id: s.idol }} className={LINK}>Up to {s.matchId}</Link>}

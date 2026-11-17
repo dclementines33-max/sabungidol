@@ -15,20 +15,20 @@ export function HomeLeaders({ leaders }: { leaders: Leader[] }) {
         <figure className="relative m-0 shrink-0 lg:w-80">
           <IdolPhoto idolId={top.idolId} size={1024} className="photo-frame w-full max-w-80" />
           <figcaption className="-mt-10 pl-4">
-            <span className="tag">{top.label}</span>
+            <span className="tag bg-winner">{top.label}</span>
             <IdolLink id={top.idolId} className="mt-2 block font-display text-headline break-words" />
-            <span className="font-gothic text-4xl text-accent-bright">{top.value}</span>
+            <span className="score block text-4xl text-winner [text-shadow:0_0_30px_rgb(240_199_94/0.4)]">{top.value}</span>
           </figcaption>
         </figure>
-        <ol className="m-0 flex-1 list-none space-y-4 p-0">
+        <ol className="m-0 flex-1 list-none space-y-2 p-0">
           {rest.map((l, i) => (
-            <li key={l.label} className="flex items-center gap-4 border-b border-border/60 pb-3">
-              <IdolPhoto idolId={l.idolId} size={64} className="h-12 w-10 shrink-0" />
+            <li key={l.label} className="panel flex items-center gap-4 p-3 pr-5">
+              <IdolPhoto idolId={l.idolId} size={256} className="photo-frame w-12 shrink-0" />
               <span className="min-w-0 flex-1">
                 <span className="kicker block text-text-secondary">{l.label}</span>
                 <IdolLink id={l.idolId} className="block truncate font-display text-xl" />
               </span>
-              <span className="shrink-0 font-display text-lg text-accent-bright tabular-nums sm:text-2xl">{l.value}</span>
+              <span className="score shrink-0 text-lg text-accent-bright sm:text-2xl">{l.value}</span>
             </li>
           ))}
         </ol>

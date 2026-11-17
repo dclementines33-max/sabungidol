@@ -13,7 +13,7 @@ export function OnThisDay({ matches }: { matches: Match[] }) {
           {matches.map((m) => (
             <li key={m.id} className="w-56 shrink-0 panel p-3 text-sm">
               <p className="m-0 font-mono text-xs text-text-secondary">{m.id.split("-").slice(0, 4).join(" · ")}</p>
-              <p className="m-0 mt-1"><IdolLink id={m.idolA} /> <span className="font-mono">{m.scoreA}–{m.scoreB}</span> <IdolLink id={m.idolB} /></p>
+              <p className="m-0 mt-1"><IdolLink id={m.idolA} /> <span className="score mx-1 inline-block -skew-x-12 bg-bg-base/80 px-2 text-accent-bright">{m.scoreA}–{m.scoreB}</span> <IdolLink id={m.idolB} /></p>
             </li>
           ))}
         </ul>

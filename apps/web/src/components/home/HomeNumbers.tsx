@@ -7,7 +7,7 @@ export function HomeNumbers({ idols, groups, matches, seasons }: { idols: number
         {items.map(([value, label], i) => (
           <div key={label} className="flex items-baseline gap-2">
             {i > 0 && <span aria-hidden="true" className="font-display text-hero leading-none text-accent">/</span>}
-            <dd className="m-0 font-display text-hero leading-none tabular-nums">{value.toLocaleString("en-GB")}</dd>
+            <dd className="score m-0 text-hero leading-none">{value.toLocaleString("en-GB")}</dd>
             <dt className="kicker max-w-[8ch] text-text-secondary">{label}</dt>
           </div>
         ))}

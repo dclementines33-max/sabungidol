@@ -19,10 +19,10 @@ export function HomeSeason({ name, status, progress, played, phase, news }: Prop
           <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">This season</span><span className="kicker">{status === "live" ? "Live" : status}</span></p>
           <h2 id="season-now" className="m-0 text-headline leading-none">{name}</h2>
           <p className="m-0 text-text-secondary">{played.toLocaleString("en-GB")} matches{phase ? ` · now: ${phase}` : ""}</p>
-          <p className="m-0 font-display text-hero leading-none tabular-nums">{pct}<span className="text-2xl">%</span></p>
-          <span className="block h-2 overflow-hidden rounded-full bg-surface" aria-hidden="true"><span className="block h-full bg-accent-bright" style={{ width: `${pct}%` }} /></span>
-          <Link to="/play" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 font-display text-on-accent hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-            {status === "draft" ? "Start season" : "Continue season"} <ArrowRight aria-hidden="true" size={18} />
+          <p className="score m-0 text-hero leading-none">{pct}<span className="text-2xl">%</span></p>
+          <span className="block h-3 -skew-x-12 overflow-hidden bg-bg-base/70" aria-hidden="true"><span className="block h-full bg-[linear-gradient(90deg,var(--color-accent),var(--color-accent-bright))] shadow-[0_0_20px_var(--color-accent-bright)]" style={{ width: `${pct}%` }} /></span>
+          <Link to="/play" className="inline-flex -skew-x-12 items-center gap-2 rounded-[3px] bg-[linear-gradient(100deg,var(--color-accent),color-mix(in_oklab,var(--color-accent-bright)_30%,var(--color-accent)))] px-5 py-2 font-display text-on-accent shadow-[0_10px_30px_-10px_var(--color-accent-bright)] hover:brightness-125 focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <span className="inline-flex skew-x-12 items-center gap-2">{status === "draft" ? "Start season" : "Continue season"} <ArrowRight aria-hidden="true" size={18} /></span>
           </Link>
         </div>
       </div>
