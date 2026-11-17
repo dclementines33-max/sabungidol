@@ -11,7 +11,20 @@ file only when the task touches it. Keep this file current: update it at the end
 
 ## ▶ RESUME HERE (saved 2026-11-17, router — latest)
 
-**Production = e54fe94c** (deployed 2026-11-17 by router-3, full e2e 51 pass / 3 skip): design round 2 "Fight Night" (338fc79…5ffe358, fcdfdf7). User rule: when a task is done, tell the user and deploy without asking. Next: task 3, icons.
+**Production = e54fe94c** (deployed 2026-11-17 by router-3, full e2e 51 pass / 3 skip): design round 2 "Fight Night" (338fc79…5ffe358, fcdfdf7). Nothing in flight.
+
+**For the next router session (the user starts it themself):**
+- **Next = task 3:** replace EVERY icon in the app with experimental, surreal, unique icons that fit the Sabung Idol / Fight Night theme, nothing template-like. They replace the Y2K chrome icons (8e0aeec). Heavy + design → Opus (opus-extra `local_8a390b00…`, already on high effort and knows the Fight Night system). Also give it the trophy gold that sits on an icon.
+- **User rules:**
+  - When a task is done, verify it (git log + tests + full e2e), deploy, then tell the user. No asking.
+  - Design or heavy work goes to Opus, never Sonnet. Token cost is OK for design.
+  - Reply briefly, in Indonesian.
+- **Worker reports may NOT reach the router automatically.** After sending a task, check `git log` and the shared notes (`side-session-notes/local_cf80d055…/`: bughunt.md, design-pass.md, design-r2.md) whenever the user asks, and don't wait for a report.
+- **Possible follow-ups:**
+  - Simulator page is ~7,700 px long: shortening it is a structure change and needs the user's call.
+  - Not restyled in depth: Input Data forms, Engine Lab chart, Rating Manager controls, Command palette, wheel picker.
+  - Known load flakes in full parallel e2e (they pass alone): wiki Career Stats, earlyInput, cupPanels. Rerun the one test before calling it a failure.
+- Workers: Opus `local_8a390b00-7bed-4ad1-aba4-3ff61d999e97` (opus-extra, use this one), Opus `local_8f32ea43…` (stopped by the user earlier), Sonnet `local_704a78b5-c197-4e98-a1bc-9170e57410b4`.
 
 Before that, **production = 2ce73987** (deployed 2026-11-17, full e2e 52 pass / 1 skip; wiki Career Stats can time out under load, passes on rerun). It adds the bug hunt (484d020…4e570f7), backup clamp + API empty part (3529c2d, 6339d8a), broadcast hold per story (9416d79), and the design pass on the display scale (11aa62a…660e947). Next: the user may want a bolder design pass; then task 3, new icons everywhere.
 
@@ -27,9 +40,6 @@ Still open with the user:
 
 User approved both: backup import clamps idol rating 1–100 and name ≤ 60 chars; API rejects empty part string with 400.
 
-Sessions:
-- Workers: Sonnet `local_704a78b5…`, Opus `local_8f32ea43…`.
-- The Opus Extra QA session (`local_8a390b00…`) was stopped by the user and wrote no findings.
 
 `apps/web/e2e/zzshots.e2e.ts` is untracked: a worker's screenshot helper that was never committed.
 
