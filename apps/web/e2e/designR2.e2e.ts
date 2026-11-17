@@ -17,7 +17,25 @@ async function pageShot(page: Page, state: string, name: string, path?: string) 
     if (path) await page.goto(path);
     await settle(page);
     await page.screenshot({ path: `test-results/r2-${SHOT}-${state}-${name}-${width}.png`, fullPage: true });
+    if (width < 400) await logOverflow(page, `${state}/${name}`);
   }
+}
+// The phone page must not scroll sideways: name the text that sticks out when it does (text has no element edge).
+async function logOverflow(page: Page, where: string) {
+  const wide = await page.evaluate(() => {
+    if (document.documentElement.scrollWidth <= innerWidth) return [];
+    const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const out: [number, string][] = [];
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      const r = document.createRange(); r.selectNodeContents(n);
+      const right = r.getBoundingClientRect().right;
+      if (right > innerWidth + 1) out.push([right, `"${n.textContent!.slice(0, 24)}" in ${n.parentElement!.tagName}.${String(n.parentElement!.className).slice(0, 70)} → ${Math.round(right)}`]);
+    }
+    const boxes = [...document.querySelectorAll("main *")].filter((e) => e.getBoundingClientRect().right > innerWidth + 1 && !e.parentElement?.closest("[class*=overflow]"))
+      .map((e): [number, string] => [e.getBoundingClientRect().right, `<${e.tagName}.${String(e.className).slice(0, 70)}> → ${Math.round(e.getBoundingClientRect().right)}`]);
+    return [...out, ...boxes].sort((a, b) => b[0] - a[0]).slice(0, 3).map((x) => x[1]);
+  });
+  if (wide.length) console.log(`OVERFLOW ${where}: ${wide.join(" | ")}`);
 }
 // What is on screen now (a popup) at both widths, without navigating.
 async function screenShot(page: Page, state: string, name: string) {

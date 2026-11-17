@@ -23,7 +23,7 @@ export function StoryCard({ story, lead = false }: { story: Story; lead?: boolea
       <div className="flex min-w-0 flex-col gap-2">
         {breaking && <p className="m-0"><span className="chip bg-accent-bright text-on-fill"><span className="flex items-center gap-1.5"><span aria-hidden="true" className="size-1.5 rounded-full bg-on-fill motion-safe:animate-pulse" />Breaking news</span></span></p>}
         <p lang="id" className="m-0 text-xs font-bold tracking-[0.25em] uppercase" style={{ color: tone }}>{KICKER[s.kind]}</p>
-        <h2 lang="id" className={`m-0 font-display leading-tight ${lead ? "text-headline uppercase" : breaking ? "text-xl uppercase" : "text-lg"}`}>{headline(s, name, label)}</h2>
+        <h2 lang="id" className={`m-0 font-display leading-tight [overflow-wrap:anywhere] ${lead ? "text-headline uppercase" : breaking ? "text-xl uppercase" : "text-lg"}`}>{headline(s, name, label)}</h2>
         <div>
           {"matchId" in s && "loser" in s && <Link to="/wiki/h2h" search={{ a: s.winner, b: s.loser }} className={LINK}>Match {s.matchId}</Link>}
           {s.kind === "streak" && <Link to="/wiki/idols/$id" params={{ id: s.idol }} className={LINK}>Up to {s.matchId}</Link>}

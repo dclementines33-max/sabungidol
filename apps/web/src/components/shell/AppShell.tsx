@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <NavRail collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
         <div className="flex min-w-0 flex-1 flex-col">
           <Header onSearch={openPalette} />
-          <main id="content" tabIndex={-1} className="flex-1 px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
+          <main id="content" tabIndex={-1} className="min-w-0 flex-1 overflow-x-clip px-4 pt-4 pb-24 focus:outline-none sm:pb-8 md:px-8">
             <PinnedNotices />
             <DatabaseResetOffer />
             {children}

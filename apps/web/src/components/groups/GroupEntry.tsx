@@ -18,7 +18,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
   const comps = Object.keys(g.byComp);
   const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""], ["Avg rating", g.avgRating.toFixed(1), ""]];
   return (
-    <li className={`relative mb-3 p-5 ${rank <= 3 ? "stage rounded-card shadow-[inset_0_3px_0_var(--color-winner)]" : "panel"}`}>
+    <li className={`relative mb-3 min-w-0 p-5 ${rank <= 3 ? "stage rounded-card shadow-[inset_0_3px_0_var(--color-winner)]" : "panel"}`}>
       <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
         <span aria-hidden="true" className={`score leading-none ${rank <= 3 ? "text-7xl text-winner [text-shadow:0_0_30px_rgb(240_199_94/0.4)]" : "text-4xl text-accent-bright opacity-80"}`}>{rank}</span>
         <CompetitionLogo logoId={logoId} className={rank <= 3 ? "size-16" : "size-10"} />

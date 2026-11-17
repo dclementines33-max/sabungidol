@@ -12,7 +12,7 @@ type Props = { name: string; status: string; progress: number; played: number; p
 export function HomeSeason({ name, status, progress, played, phase, news }: Props) {
   const pct = Math.round(progress * 100);
   return (
-    <section aria-labelledby="season-now" className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+    <section aria-labelledby="season-now" className="grid gap-6 lg:grid-cols-[1.4fr_1fr] [&>*]:min-w-0">
       <div className="relative isolate overflow-hidden rounded-card bg-cover bg-[position:30%_25%]" style={{ backgroundImage: BG }}>
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-bg-base/60 md:hidden" />
         <div className="ml-auto max-w-md space-y-4 px-5 py-8 sm:px-8">

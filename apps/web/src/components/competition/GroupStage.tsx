@@ -28,8 +28,8 @@ export function GroupStage({ tables, cells, stage, through, busy, onOpen }: {
           </button>
         ))}
       </div>
-      <div className="grid items-start gap-8 lg:grid-cols-[1.2fr_1fr]">
-        <div>
+      <div className="grid items-start gap-8 lg:grid-cols-[1.2fr_1fr] [&>*]:min-w-0">
+        <div className="overflow-x-auto">
           <p aria-hidden="true" className="m-0 -mb-6 font-gothic text-[5rem] leading-none text-accent/40">{letter}</p>
           <GroupTable name={`Group ${letter}`} rows={tables[g]!} through={through} />
           <p className="kicker m-0 mt-2 text-text-secondary">Top {through} go through · Win 3 · Draw 1</p>
