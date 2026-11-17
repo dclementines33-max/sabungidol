@@ -12,7 +12,7 @@ export function HomeFact({ facts }: { facts: Fact[] }) {
     <section aria-labelledby="fact" className="relative isolate overflow-hidden py-6 pl-4 sm:pl-16">
       <span aria-hidden="true" className="pointer-events-none absolute -top-10 left-0 -z-10 font-gothic text-[12rem] leading-none text-accent/30">“</span>
       <p className="kicker m-0 text-accent-bright">Random fact</p>
-      <h2 id="fact" className="m-0 mt-2 max-w-[22ch] text-[clamp(1.75rem,4vw,3rem)]">{fact.label}</h2>
+      <h2 id="fact" className="m-0 mt-2 max-w-[22ch] text-section">{fact.label}</h2>
       <div className="mt-4 flex flex-wrap items-end gap-5">
         {fact.ids.map((id, k) => (
           <figure key={id} className={`m-0 ${k === 1 ? "sm:translate-y-6" : ""}`}>

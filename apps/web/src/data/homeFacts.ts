@@ -23,10 +23,10 @@ export function homeLeaders(rows: CareerRow[]): Leader[] {
   const topLeague = [...league].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
   const pick = (label: string, row: CareerRow | undefined, value: (r: CareerRow) => string): Leader[] => (row ? [{ label, idolId: row.idolId, value: value(row) }] : []);
   return [
-    ...pick("Most titles (all)", best(all, (r) => r.titles), (r) => `${r.titles} titles`),
-    ...pick("Unzure Cup titles", best(comp("UZC"), (r) => r.titles), (r) => `${r.titles} titles`),
-    ...(topLeague && topLeague[1] > 0 ? [{ label: "League titles", idolId: topLeague[0], value: `${topLeague[1]} titles` }] : []),
-    ...pick("The Idols titles", best(comp("IDL"), (r) => r.titles), (r) => `${r.titles} titles`),
+    ...pick("Most titles (all)", best(all, (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
+    ...pick("Unzure Cup titles", best(comp("UZC"), (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
+    ...(topLeague && topLeague[1] > 0 ? [{ label: "League titles", idolId: topLeague[0], value: `${topLeague[1]} title${topLeague[1] === 1 ? "" : "s"}` }] : []),
+    ...pick("The Idols titles", best(comp("IDL"), (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
     ...pick("Most matches", best(all, (r) => r.matches), (r) => `${r.matches} matches`),
     ...pick("Most wins", best(all, (r) => r.wins), (r) => `${r.wins} wins`),
     ...pick("Most losses", best(all, (r) => r.losses), (r) => `${r.losses} losses`),

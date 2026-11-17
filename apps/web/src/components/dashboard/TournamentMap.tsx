@@ -29,7 +29,7 @@ export function TournamentMap() {
   const name = (key: string) => (key === "D1" ? "Division 1" : key === "D2" ? "Division 2" : key === "BS" ? "B-Side Cup" : key === "MBK" ? "Music Bank Cup" : key === "SWS" ? "Swiss Play-in" : key === "LCQ" ? "Last Chance Qualifier" : label(key));
   return (
     <section aria-labelledby="map" className="space-y-6">
-      <h2 id="map" className="m-0 text-[clamp(2rem,5vw,3.5rem)]">Season map</h2>
+      <h2 id="map" className="section-title">Season map</h2>
       <ShowMore more label="Show formats and entrants">{(open) => (<>
       <ol className="m-0 flex list-none flex-col gap-10 p-0 lg:flex-row lg:gap-6">
         {ACTS.map((a, i) => (

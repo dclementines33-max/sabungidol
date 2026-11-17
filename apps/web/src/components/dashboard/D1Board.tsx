@@ -25,7 +25,7 @@ export function D1Board() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="kicker m-0">Division 1 · title race</p>
-          <h2 className="m-0 text-[clamp(2rem,5vw,3.75rem)]">{brand(comp).name}</h2>
+          <h2 className="m-0 mt-1 text-section">{brand(comp).name}</h2>
         </div>
         <div role="group" aria-label="Pick a Division 1 league" className="flex flex-wrap gap-1">
           {D1_LEAGUES.map((c) => (

@@ -7,7 +7,7 @@ type Match = { id: string; idolA: string; idolB: string; scoreA: number; scoreB:
 export function OnThisDay({ matches }: { matches: Match[] }) {
   return (
     <section aria-labelledby="on-this-day" className="space-y-3">
-      <h2 id="on-this-day" className="m-0 font-display text-xl uppercase">On This Day</h2>
+      <h2 id="on-this-day" className="section-title">On This Day</h2>
       {matches.length === 0 ? <p className="m-0 text-sm text-text-secondary">No earlier season on this matchday yet.</p> : (
         <ul className="m-0 flex list-none gap-3 overflow-x-auto p-0 pb-2" aria-label="Matches on the same day">
           {matches.map((m) => (

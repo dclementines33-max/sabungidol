@@ -17,9 +17,9 @@ export function HomeSeason({ name, status, progress, played, phase, news }: Prop
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-bg-base/60 md:hidden" />
         <div className="ml-auto max-w-md space-y-4 px-5 py-8 sm:px-8">
           <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">This season</span><span className="kicker">{status === "live" ? "Live" : status}</span></p>
-          <h2 id="season-now" className="m-0 text-[clamp(2rem,5vw,3.5rem)] leading-none">{name}</h2>
+          <h2 id="season-now" className="m-0 text-headline leading-none">{name}</h2>
           <p className="m-0 text-text-secondary">{played.toLocaleString("en-GB")} matches{phase ? ` · now: ${phase}` : ""}</p>
-          <p className="m-0 font-display text-[clamp(3.5rem,7vw,5.5rem)] leading-none tabular-nums">{pct}<span className="text-2xl">%</span></p>
+          <p className="m-0 font-display text-hero leading-none tabular-nums">{pct}<span className="text-2xl">%</span></p>
           <span className="block h-2 overflow-hidden rounded-full bg-surface" aria-hidden="true"><span className="block h-full bg-accent-bright" style={{ width: `${pct}%` }} /></span>
           <Link to="/play" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 font-display text-on-accent hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
             {status === "draft" ? "Start season" : "Continue season"} <ArrowRight aria-hidden="true" size={18} />
@@ -27,7 +27,7 @@ export function HomeSeason({ name, status, progress, played, phase, news }: Prop
         </div>
       </div>
       <section aria-labelledby="top-news" className="space-y-4">
-        <p className="m-0 flex items-baseline justify-between gap-3"><span id="top-news" className="kicker">Top stories</span><Link to="/story" className="text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary">All stories</Link></p>
+        <div className="flex items-end justify-between gap-3"><h2 id="top-news" className="section-title">Top stories</h2><Link to="/story" className="text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary">All stories</Link></div>
         {news.length ? <ul className="m-0 list-none space-y-4 p-0">{news.map((s, i) => <li key={i} className="flex"><StoryCard story={s} /></li>)}</ul> : <p className="m-0 text-sm text-text-secondary">No stories this season yet.</p>}
       </section>
     </section>

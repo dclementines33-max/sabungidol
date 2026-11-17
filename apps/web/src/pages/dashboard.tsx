@@ -35,9 +35,9 @@ function Dashboard() {
   return (
     <div className="space-y-16">
       <header className="relative isolate">
-        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-14 right-0 -z-10 m-0 font-display text-[clamp(4rem,11vw,8rem)] leading-none opacity-30">{Math.round(o.progress * 100)}%</p>
+        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-14 right-0 -z-10 m-0 font-display text-ornament leading-none opacity-30">{Math.round(o.progress * 100)}%</p>
         <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">Dashboard</span><span className="kicker">{o.season.status === "live" ? "Live" : o.season.status}</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">{o.season.name}</h2>
+        <h2 className="m-0 mt-3 text-hero">{o.season.name}</h2>
         <p className="m-0 text-lg text-text-secondary">{o.played.toLocaleString("en-GB")} matches · {Math.round(o.progress * 100)}% competitions done{phase ? ` · now: ${phase.name}` : ""}</p>
       </header>
       <SectionBoundary name="Unzure champion"><ChampionCover seasonName={o.season.name} champion={o.lastUnzure?.champion ?? null} championSeason={o.lastUnzure?.season} /></SectionBoundary>

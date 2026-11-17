@@ -12,12 +12,12 @@ export function AllTimeTop({ row }: { row: CareerRow }) {
   return (
     <section aria-labelledby="all-time-top" className="relative isolate overflow-hidden rounded-card bg-cover bg-[position:20%_35%]" style={{ backgroundImage: BG }}>
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-bg-base/60 md:hidden" />
-      <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-2 -z-10 m-0 font-display text-[clamp(7rem,22vw,18rem)] leading-none opacity-60">Nº1</p>
+      <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-2 -z-10 m-0 font-display text-ornament-xl leading-none opacity-60">Nº1</p>
       <div className="ml-auto grid max-w-3xl items-end gap-6 px-5 pt-10 pb-8 sm:px-10 md:grid-cols-[auto_1fr] md:pt-20">
         <IdolPhoto idolId={row.idolId} size={1024} className="photo-frame w-44 -rotate-2 sm:w-56" />
         <div className="min-w-0">
           <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">#1 of all time</span><span className="kicker">Ranked by titles · Career Stats</span></p>
-          <h2 id="all-time-top" className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words"><IdolLink id={row.idolId} /></h2>
+          <h2 id="all-time-top" className="m-0 mt-3 text-headline text-balance"><IdolLink id={row.idolId} /></h2>
           <p className="m-0 mt-1 font-gothic text-2xl text-accent-bright">{idol.groupName ?? "Soloist"}</p>
           <dl className="m-0 mt-6 flex flex-wrap gap-x-8 gap-y-3">
             {stats.map(([value, label]) => (
