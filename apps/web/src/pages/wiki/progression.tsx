@@ -20,7 +20,7 @@ function Chapter({ n, title, note, children }: { n: string; title: string; note:
   return (
     <section aria-labelledby={`ch-${n}`} className="relative isolate space-y-5">
       <span aria-hidden="true" className="absolute -top-8 -left-2 -z-10 font-gothic text-[6rem] leading-none text-accent/25">{n}</span>
-      <h2 id={`ch-${n}`} className="m-0 text-[clamp(1.75rem,4vw,3rem)]">{title}</h2>
+      <h2 id={`ch-${n}`} className="m-0 text-section">{title}</h2>
       <p className="m-0 max-w-prose text-text-secondary">{note}</p>
       {children}
     </section>
@@ -38,7 +38,7 @@ function Progression() {
     <div className="space-y-20">
       <header>
         <p className="m-0 flex items-center gap-3"><span className="tag">Season Progression</span><span className="kicker">{season.name}</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5.5rem)]">The season's storyline</h2>
+        <h2 className="m-0 mt-3 text-hero">The season's storyline</h2>
       </header>
       <Chapter n="01" title="Division 1 title race" note="The top three's points in each league after every matchday.">
         <RaceGrid />

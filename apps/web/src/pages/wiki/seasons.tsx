@@ -21,7 +21,7 @@ type ArchiveData = Awaited<ReturnType<typeof seasonArchive>>; // Comlink splits 
 export const Route = createFileRoute("/wiki/seasons")({ component: SeasonArchive });
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
-  return <section className="space-y-3"><h2 className="m-0 font-display text-2xl uppercase">{title}</h2>{children}</section>;
+  return <section className="space-y-3"><h2 className="section-title">{title}</h2>{children}</section>;
 }
 
 function SeasonArchive() {

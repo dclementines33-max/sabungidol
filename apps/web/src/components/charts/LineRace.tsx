@@ -3,7 +3,7 @@
 // points (a replay); the scales stay those of the whole season so the lines grow across a fixed frame.
 import { useIdolLookup } from "@sabung/ui";
 
-export const RACE_COLORS = ["var(--color-accent-bright)", "var(--color-cool)", "#f5c451", "#b07cff", "#5fd3a8", "#ff8a4c"];
+export const RACE_COLORS = ["var(--color-accent-bright)", "var(--color-cool)", "var(--color-tier-splus)", "var(--color-brand-violet)", "var(--color-brand-teal)", "var(--color-brand-amber)"];
 const W = 640;
 const H = 280;
 const PAD = { l: 34, r: 110, t: 12, b: 26 };
