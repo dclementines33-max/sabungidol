@@ -47,6 +47,9 @@ async function screenShot(page: Page, state: string, name: string) {
   await page.setViewportSize({ width: 1280, height: 900 });
 }
 
+// Pictures only (no assertions) and slow: runs on request, SHOTS=1 (e.g. SHOTS=1 SHOT=after pnpm --filter @sabung/web exec playwright test designR2.e2e.ts).
+test.skip(!process.env.SHOTS, "screenshot run: set SHOTS=1");
+
 test("design round 2: every page and popup, filled", async ({ page }) => {
   test.setTimeout(1_500_000);
   await page.setViewportSize({ width: 1280, height: 900 });

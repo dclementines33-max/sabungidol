@@ -12,6 +12,9 @@ const GROUPS: Record<string, [string, string][]> = {
   settings: [["settings", "/studio/settings"], ["ratings", "/studio/ratings"]],
 };
 
+// Pictures only (no assertions) and slow: runs on request, SHOTS=1 (e.g. SHOTS=1 SHOT=after pnpm --filter @sabung/web exec playwright test design.e2e.ts).
+test.skip(!process.env.SHOTS, "screenshot run: set SHOTS=1");
+
 test("design screenshots of every page group", async ({ page }) => {
   test.setTimeout(600_000);
   const shot = process.env.SHOT ?? "after";
