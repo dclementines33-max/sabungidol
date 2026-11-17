@@ -9,6 +9,25 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
+## ▶ RESUME HERE (saved 2026-11-17, router — latest)
+
+**Production = 0370e680** (deployed 2026-11-17, full e2e 51 pass / 1 skip). It contains:
+- D1 title news for every margin, plus revenge, domination, de-revenge and heated-rivalry news (0d2a63b).
+- Simulate popups are full-screen and opaque. A league plays as the timeline plus live standings on one clock; a cup plays as a news page (6a4deba).
+- `--font-gothic` is now Bungee, and the blackletter font is removed. All-time Records has two tabs, Records and Awards; Awards uses the Hall of Champions style (b7bee98).
+- Career Stats has award columns in Combined and a new Awards tab, with MAMA left out (0ef2b34; e2e in 3dac18f).
+
+Still open with the user:
+- The message that stopped at "ada bug," was never explained.
+- The 12 record ideas: none picked yet.
+- Whether backup imports should clamp idol fields to their valid range.
+
+Sessions:
+- Workers: Sonnet `local_704a78b5…`, Opus `local_8f32ea43…`.
+- The Opus Extra QA session (`local_8a390b00…`) was stopped by the user and wrote no findings.
+
+`apps/web/e2e/zzshots.e2e.ts` is untracked: a worker's screenshot helper that was never committed.
+
 ## ▶ RESUME HERE (saved 2026-11-17, Sonnet light session)
 
 **NEWS KINDS (Commit 0d2a63b):** D1 title-race now fires for ALL margin ranges (added "comfortable" 3–9 pts to titleNews; was silently null). New kinds in seasonNews: `revenge` (league leg-2 comeback), `domination` (league sweep), `de-revenge` (bracket: lost first, wins later), `heated-rivalry` (top-tier idols ≥90 rating meeting across ≥2 top-tier comps prestige ≥0.8, ≥3 meetings). newsScore + storyText updated for all four. 9 new tests in seasonNews.test.ts, comfortable test in titleNews.test.ts. 186 tests pass, web typecheck clean.
