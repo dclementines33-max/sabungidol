@@ -180,7 +180,7 @@
   .studio-flow { counter-reset: studio; }
   .studio-section { position: relative; counter-increment: studio; border-top: 2px solid color-mix(in oklab, var(--color-accent-bright) 35%, transparent); padding-top: 1.5rem; }
   .studio-section::before { content: counter(studio, decimal-leading-zero); position: absolute; top: -0.5rem; right: 0; font-family: var(--font-gothic); font-size: 3.5rem; line-height: 1; color: color-mix(in oklab, var(--color-accent) 45%, transparent); pointer-events: none; }
-  .studio-section > h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); text-transform: uppercase; }
+  .studio-section > h2 { font-size: var(--text-section); text-transform: uppercase; }
   .panel { background: linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65)); border-radius: var(--radius-card); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(185 211 226 / 0.06); }
 
   /* Idol card (2026-11-17, premium trading card): data-tier picks the frame. S+ prismatic foil, S gold foil — both with a

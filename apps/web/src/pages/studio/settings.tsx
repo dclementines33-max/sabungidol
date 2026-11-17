@@ -43,7 +43,7 @@ function Settings() {
     <div className="space-y-8">
       <PageHeader tag="Settings" title="Season and data settings" note="Season, league rosters, branding, rules, backup and data." />
       <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-        <nav aria-label="Settings sections" className="lg:sticky lg:top-6 lg:self-start">
+        <nav aria-label="Settings sections" className="min-w-0 lg:sticky lg:top-6 lg:self-start">
           <ol className="m-0 flex list-none gap-1 overflow-x-auto p-0 pb-2 lg:flex-col lg:overflow-visible">
             {VIEWS.map((v) => {
               const on = v.id === view;
