@@ -1,7 +1,7 @@
 // Every panel the shell links to (PRD §8), in the order the agreed shell shows them.
 // phase = the PRD §15 phase that builds the panel; until then it shows a placeholder.
 import {
-  Archive, ChartColumn, Contact, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
+  Archive, ChartColumn, Contact, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Marble, Medal,
   Newspaper, Ranks, Settings, Skull, Swords, Tiers, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type Icon as IconType,
 } from "@sabung/ui/icons";
 
@@ -51,6 +51,7 @@ export const SPACES: NavSpace[] = [
       { label: "Input Data", to: "/studio/input", icon: FilePlus2, phase: 2 },
       { label: "Rating Manager", to: "/studio/ratings", icon: Gauge, phase: 3 },
       { label: "Inactive Manager", to: "/studio/inactive", icon: UserRoundX, phase: 2 },
+      { label: "Marble Race", to: "/studio/marble", icon: Marble, phase: 3 },
       { label: "Settings", to: "/studio/settings", icon: Settings, phase: 2 },
     ],
   },

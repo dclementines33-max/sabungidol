@@ -43,3 +43,5 @@ export const Trophy = icon("trophy", <><Ink d="M7 3h10v6a5 5 0 0 1-10 0z" /><Lin
 export const Ranks = icon("ranks", <><Ink d="M8 9h8v12H8z" /><Line d="M2 21v-7h6M8 21V9h8v12M16 13h6v8M1 21h22" /><Spark tone="gold" d={star(12, 4.2, 3.2)} /><Cut cx={12} cy={4.2} r={0.6} /></>);
 // Tier List (new panel): three rows, the top label gold.
 export const Tiers = icon("tiers", <><Ink d="M3 10h4v4H3z" /><Line d="M3 4h18v4H3zM3 10h18v4H3zM3 16h18v4H3zM7 4v16" /><Spark tone="gold" d="M3 4h4v4H3z" /><Hot d="M10 6h5M10 12h7M10 18h3" /></>);
+// Marble Race: a glass marble with a swirl through it, a spark of light on the glass.
+export const Marble = icon("marble", <><Ink d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /><Line d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M5 16c4 0 7-3 8-8M11 21c0-4 3-7 9-8" /><Spark d={star(8, 7.5, 2.6)} /></>);

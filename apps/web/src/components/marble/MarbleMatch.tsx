@@ -2,15 +2,13 @@
 // whole screen (a nested dialog, so focus and Esc stay right). The LED screens show the competition, both idols' photos,
 // the competition logo and one of the user's own LED photos. The finished race hands its games back to the dialog,
 // which saves them like any other result.
-import * as Dialog from "@radix-ui/react-dialog";
 import type { Side } from "@sabung/engine";
 import { Button, useIdol, useIdolPhoto } from "@sabung/ui";
-import { Suspense, lazy, useState } from "react";
+import { useState } from "react";
 import { useArenaName, useArenaSettings } from "../../data/arenaSettings";
 import { photoUrl, requestPhoto, usePhotoUrls } from "../../data/photoCache";
 import type { RaceLed } from "../../marble/controller";
-
-const MarbleStage = lazy(() => import("./MarbleStage"));
+import { RaceDialog } from "./RaceDialog";
 
 export function MarbleMatch({ idolA, idolB, bestOf, arenas, title, logoId, onGames }: {
   idolA: string; idolB: string; bestOf: number; arenas: string[]; title: string; logoId?: string | null; onGames: (games: Side[]) => void;
@@ -43,25 +41,14 @@ export function MarbleMatch({ idolA, idolB, bestOf, arenas, title, logoId, onGam
       <p className="m-0 mt-2 text-sm text-text-secondary">One run = one game. The higher rating gets a small edge; boost pads and bumpers keep it open.</p>
       <Button variant="primary" className="mt-4" onClick={() => { setRun((n) => n + 1); setOpen(true); }}>Start the marble race</Button>
 
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Portal>
-          <Dialog.Content aria-describedby={undefined} className="fixed inset-0 z-50">
-            <Dialog.Title className="sr-only">Marble race · {a.name} vs {b.name}</Dialog.Title>
-            {open && (
-              <Suspense fallback={<p className="score fixed inset-0 m-0 grid place-items-center bg-bg-base text-2xl">Loading the arena…</p>}>
-                <MarbleStage key={run} title={title} onLeave={() => setOpen(false)}
-                  options={{ players, bestOf, arenaIds: arenas, advantage: setup.advantage, led: screens, names }}
-                  actions={(s) => (
-                    <>
-                      <Button variant="primary" onClick={() => { onGames(s.games); setOpen(false); }}>Use this result</Button>
-                      <Button onClick={() => setRun((n) => n + 1)}>Race again</Button>
-                    </>
-                  )} />
-              </Suspense>
-            )}
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <RaceDialog open={open} onOpenChange={setOpen} label={`Marble race · ${a.name} vs ${b.name}`} title={title} run={run}
+        options={{ players, bestOf, arenaIds: arenas, advantage: setup.advantage, led: screens, names }}
+        actions={(s) => (
+          <>
+            <Button variant="primary" onClick={() => { onGames(s.games); setOpen(false); }}>Use this result</Button>
+            <Button onClick={() => setRun((n) => n + 1)}>Race again</Button>
+          </>
+        )} />
     </div>
   );
 }

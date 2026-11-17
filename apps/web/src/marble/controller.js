@@ -9,10 +9,10 @@ import { createDirector } from "./director.js";
 import { createMarble } from "./marbles.js";
 import { createMatch, games, isOver, playHeadless, standing } from "./match.js";
 import { DT, R, createGame } from "./race.js";
+import { COLORS } from "./colors";
 import { createScene, freeGroup } from "./scene.js";
 
-export const COLORS = ["#ff4d63", "#9fd8ff", "#f0c75e", "#7ee787", "#c084fc", "#fb923c", "#22d3ee", "#f472b6", "#a3e635", "#fde047",
-  "#60a5fa", "#f87171", "#34d399", "#e879f9", "#fca5a5", "#93c5fd", "#fdba74", "#5eead4", "#d9f99d", "#e5e7eb"];
+export { COLORS };
 
 let rapier = null;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

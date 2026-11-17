@@ -51,6 +51,11 @@ export function useIdolLookup(): IdolSource["idol"] {
   return useSource().idol;
 }
 
+// The whole source, for a screen that needs many idols' photos at once (the Marble Race field).
+export function useIdolSource(): IdolSource {
+  return useSource();
+}
+
 export function useIdolPhoto(id: string, size: PhotoSize): string | undefined {
   return useSource().photo(id, size);
 }

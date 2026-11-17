@@ -7,7 +7,7 @@ const labels = (query: string) => filterItems(items, query).map((i) => i.label);
 describe("command palette items (PRD §8)", () => {
   it("has every panel, the 9 competitions and the commands", () => {
     expect(items.filter((i) => i.group === "Competitions")).toHaveLength(9);
-    expect(items.filter((i) => i.to).length).toBe(21 + 9); // Update 2: + Idol Profile, Season Progression; 2026-11-17: + Ranking, Tier List; 2026-11-18: + Hall of Shame
+    expect(items.filter((i) => i.to).length).toBe(22 + 9); // Update 2: + Idol Profile, Season Progression; 2026-11-17: + Ranking, Tier List; 2026-11-18: + Hall of Shame, Marble Race
     expect(items.filter((i) => i.command).map((i) => i.command)).toEqual(["toggle-rail", "mark-read"]);
     expect(new Set(items.map((i) => i.id)).size).toBe(items.length);
   });
@@ -28,7 +28,7 @@ describe("command palette items (PRD §8)", () => {
   });
 
   it("the group name finds a whole space", () => {
-    expect(labels("studio")).toEqual(["Input Data", "Rating Manager", "Inactive Manager", "Settings"]);
+    expect(labels("studio")).toEqual(["Input Data", "Rating Manager", "Inactive Manager", "Marble Race", "Settings"]);
   });
 
   it("nothing found is an empty list", () => {
