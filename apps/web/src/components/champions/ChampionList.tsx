@@ -27,7 +27,7 @@ export function ChampionList({ titles }: { titles: Champion[] }) {
         const list = titles.filter((t) => t.season === season);
         return (
           <li key={season} className={`relative ${!many && i % 2 ? "sm:ml-[18%]" : ""}`}>
-            <p aria-hidden="true" className="m-0 font-gothic text-[clamp(3rem,8vw,5rem)] leading-none text-accent/40">{season}</p>
+            <p aria-hidden="true" className="m-0 font-gothic text-hero leading-none text-accent/40">{season}</p>
             <h3 className="kicker m-0 -mt-4 mb-4 text-accent-bright">Season {season}</h3>
             <div className={many ? "flex flex-wrap gap-x-8 gap-y-6" : ""}>
               {list.map((t) => (

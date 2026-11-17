@@ -21,7 +21,7 @@ function GroupHall({ wins }: { wins: Win[] }) {
         const g = groups.find((x) => x.id === w.id);
         return (
           <li key={w.season} className="flex items-center gap-5">
-            <span aria-hidden="true" className="w-20 shrink-0 font-gothic text-[clamp(2.5rem,6vw,4rem)] leading-none text-accent/40">{w.season}</span>
+            <span aria-hidden="true" className="w-20 shrink-0 font-gothic text-hero leading-none text-accent/40">{w.season}</span>
             <CompetitionLogo logoId={g?.logoId} className="size-16 shrink-0" />
             <div className="min-w-0">
               <p className="kicker m-0">Season {w.season}</p>

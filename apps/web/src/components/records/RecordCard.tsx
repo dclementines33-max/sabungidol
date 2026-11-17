@@ -11,7 +11,7 @@ export function RecordCard({ title, rows, arena }: { title: string; rows: Record
   const shown = all ? rows : rows.slice(0, 10);
   return (
     <section data-arena={arena} className="flex flex-col panel p-4" aria-label={title}
-      style={{ backgroundImage: "radial-gradient(22rem 12rem at 100% 0%, color-mix(in oklab, var(--color-accent-bright) 22%, transparent), transparent 70%), linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65))" }}>
+      style={{ backgroundImage: "radial-gradient(22rem 12rem at 100% 0%, color-mix(in oklab, var(--color-accent-bright) 22%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in oklab, var(--color-surface-hover) 55%, transparent), color-mix(in oklab, var(--color-bg-raised) 65%, transparent))" }}>
       <h3 className="kicker m-0 mb-3">{title}</h3>
       {rows.length === 0 ? <p className="m-0 text-sm text-text-secondary">None yet.</p> : (
         <ol className="m-0 max-h-[32rem] list-none space-y-1 overflow-auto p-0 text-sm">

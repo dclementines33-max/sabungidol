@@ -8,6 +8,7 @@ import { Crown } from "lucide-react";
 import { ChampionList } from "../../components/champions/ChampionList";
 import { WallOfFame } from "../../components/champions/WallOfFame";
 import { Tabs } from "../../components/competition/Tabs";
+import { PageHeader } from "../../components/PageHeader";
 import { engine } from "../../data/engineClient";
 
 export const Route = createFileRoute("/wiki/champions")({ component: HallOfChampions });
@@ -20,6 +21,8 @@ function HallOfChampions() {
   if (!data?.length) return <EmptyState icon={Crown} title="No champions yet" description="Champions show up here once the first season is done." />;
   const comps = SEASON_COMPETITIONS.filter((c) => c.key !== "SWS" && c.key !== "LCQ");
   return (
+    <div className="space-y-8">
+    <PageHeader tag="Hall of Champions" title="Every title, every season" note="Pick a competition: most titles first, then every final." />
     <Tabs label="Competition" tabs={comps.map((c) => {
       const titles = data.filter((t) => keyOf(t.key) === c.key);
       return {
@@ -32,5 +35,6 @@ function HallOfChampions() {
         ) : <p className="text-text-secondary">No {c.name} champion yet.</p>),
       };
     })} />
+    </div>
   );
 }

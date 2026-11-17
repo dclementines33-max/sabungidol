@@ -30,7 +30,7 @@ function CareerStats() {
     <div className="space-y-6">
       <header>
         <p className="m-0"><span className="tag">Career Stats</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Career numbers</h2>
+        <h2 className="m-0 mt-3 text-hero">Career numbers</h2>
         <p className="m-0 text-text-secondary">Each tab follows its format: Swiss and LCQ have no titles, Unzure shows group through/out, knockout cups show best finish.</p>
       </header>
       <div role="group" aria-label="Scope" className="flex flex-wrap items-end gap-3">
