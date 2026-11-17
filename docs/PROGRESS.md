@@ -11,7 +11,7 @@ file only when the task touches it. Keep this file current: update it at the end
 
 ## ▶ RESUME HERE (saved 2026-11-17, router-4 — latest)
 
-**Built this session (commits df95ac8, 953604b, 2f39190), deploy status: see the memory note's last line.**
+**Built this session (commits df95ac8, 953604b, 2f39190). Full e2e 50 pass / 3 skip (Season Progression flaked once; simulator axe at line 31 failed 1 of 3 runs alone, timing). NOT deployed: the classifier blocked wrangler deploy; the user runs it.**
 - **Home:** the all-time #1 shows its award count; The rulers has "Most awards" (awardCounts in data/homeFacts.ts, MAMA left out; overview.allTimeTopAwards).
 - **Icons (task 3 done):** own kit in `packages/ui/src/icons` (import from `@sabung/ui/icons`; draw.tsx = factory + pieces Ink/Line/Hot/Spark/Eye/Cut/star/cog; nav/actions/status.tsx). lucide-react and the Y2K chrome (ChromeIconDefs, svg.lucide rule) are GONE. Style rules in tokens.css `svg.si`: forward lean, ink mass at 22%, one spark cut out of the background (red; .icon-tone turns it gold), the spark pops on hover/active. Names match the old lucide ones; the type is `Icon`. Sheet at /dev/icons (not in the menu). New: Ranks, Tiers, ArrowUp/Down, Pencil, Trash, RotateCcw, Shuffle, Grip, Sparkles.
 - **Ranking** `/wiki/ranking` (pages/wiki/ranking.tsx, components/ranking/): Sabung Index (sabungIndex.ts, tested: titles × prestige × 12; 4/2/1 per runner-up/third/final; awards 16 MVI/IOTS else 8; win rate up to 40, full at 60 matches; 0.6 per rating point over 50; feats; a group = best 4 members + 20 per MAMA) → RankPodium (top 3) + RankBoard (4–10, IndexBar = where the points come from). Tab My Top 10 (MyTop10.tsx): fill from the index, drag or arrows, a podium of the user's top 3.
