@@ -35,7 +35,7 @@ function GirlGroupStats() {
     <div className="space-y-8">
       <header>
         <p className="m-0 flex items-center gap-3"><span className="tag">Girl Group Stats</span><span className="kicker">{groups.length} groups</span></p>
-        <h2 className="m-0 mt-3 text-[clamp(2.5rem,7vw,5rem)]">Girl group rankings</h2>
+        <h2 className="m-0 mt-3 text-hero">Girl group rankings</h2>
         <p className="m-0 text-text-secondary">Ranked by the members' total titles. Click a group for each member's numbers.</p>
       </header>
       <GroupHighlights stats={stats} />

@@ -45,11 +45,11 @@ function GroupPage() {
   return (
     <div className="space-y-10">
       <header className="relative isolate flex flex-wrap items-end gap-6">
-        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-0 -z-10 m-0 font-display text-[clamp(4rem,14vw,10rem)] leading-none whitespace-nowrap opacity-40">{name}</p>
+        <p aria-hidden="true" className="outline-text pointer-events-none absolute -top-4 right-0 -z-10 m-0 font-display text-ornament leading-none whitespace-nowrap opacity-40">{name}</p>
         <CompetitionLogo logoId={logoId} className="size-28" />
         <div>
           <p className="m-0"><span className="tag">{g ? `Girl group #${stats.indexOf(g) + 1}` : "New girl group"}</span></p>
-          <h2 className="m-0 mt-3 text-[clamp(2.5rem,8vw,6rem)] leading-none">{name}</h2>
+          <h2 className="m-0 mt-3 text-hero leading-none">{name}</h2>
           <div className="mt-3 flex gap-2">
             <Button onClick={() => picker.current?.click()}>{logoId ? "Replace logo" : "Upload logo"}</Button>
             <input ref={picker} type="file" accept="image/*" hidden aria-label={`Logo ${name}`} onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); e.target.value = ""; }} />

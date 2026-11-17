@@ -56,9 +56,9 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
       <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 sm:gap-6">
         <Side id={a} align="left" />
         <div className="pb-6 text-center">
-          <p aria-hidden="true" className="m-0 font-gothic text-[clamp(3rem,9vw,6rem)] leading-none text-accent">vs</p>
+          <p aria-hidden="true" className="m-0 font-gothic text-ornament leading-none text-accent">vs</p>
           <p className="kicker m-0 mt-2 text-text-secondary">Head-to-head record</p>
-          <p className="m-0 font-display text-[clamp(1.5rem,4vw,2.5rem)] tabular-nums" aria-label={`Won ${w}, drawn ${d}, lost ${l}`}>
+          <p className="m-0 font-display text-section tabular-nums" aria-label={`Won ${w}, drawn ${d}, lost ${l}`}>
             <span className="text-accent-bright">{w}</span>–{d}–<span className="text-cool">{l}</span>
           </p>
           <span aria-hidden="true" className="mx-auto mt-2 flex h-2 w-40 overflow-hidden bg-surface-hover/50">

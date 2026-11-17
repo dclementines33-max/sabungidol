@@ -9,6 +9,7 @@ import { H2HCompare } from "../../components/h2h/H2HCompare";
 import { TopRivalries } from "../../components/h2h/TopRivalries";
 import { Select } from "../../components/idolDatabase/IdolFilters";
 import { MatchLog } from "../../components/wiki/MatchLog";
+import { PageHeader } from "../../components/PageHeader";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
 
@@ -27,6 +28,7 @@ function HeadToHead() {
   const pick = (side: "a" | "b") => (v: string | null) => navigate({ search: (s) => ({ ...s, [side]: v ?? undefined }), replace: true });
   return (
     <div className="space-y-10">
+      <PageHeader tag="Head to Head" title="Who wins when they meet" note="Pick two idols for their tale of the tape and every direct match." />
       <div key={`${idols.length}|${a}|${b}`} className="grid gap-4 sm:grid-cols-2">
         <SearchableIdolSelect label="First idol" idolIds={ids.filter((i) => i !== b)} value={a ?? null} onChange={pick("a")} />
         <SearchableIdolSelect label="Second idol" idolIds={ids.filter((i) => i !== a)} value={b ?? null} onChange={pick("b")} />
@@ -35,7 +37,7 @@ function HeadToHead() {
         <>
           <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} games={data.games as [number, number]} formA={data.formA as ("W" | "D" | "L")[]} formB={data.formB as ("W" | "D" | "L")[]} />
           <section aria-labelledby="direct" className="space-y-3">
-            <h2 id="direct" className="m-0 font-display text-xl uppercase">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
+            <h2 id="direct" className="section-title">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
             <div className="flex flex-wrap gap-3">
               <Select label="Competition" value={comp} onChange={setComp} options={[["", "All"], ...SEASON_COMPETITIONS.map((c): [string, string] => [c.key, c.name])]} />
               <Select label="Season" value={season} onChange={setSeason} options={[["", "All"], ...seasons.map((s): [string, string] => [s.id, s.name])]} />

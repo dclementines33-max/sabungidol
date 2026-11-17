@@ -31,9 +31,19 @@ test("design screenshots of every page group", async ({ page }) => {
         } else await page.goto(path);
         await page.waitForTimeout(2500); // let the worker queries settle
         await page.screenshot({ path: `test-results/design-${group}-${name}-${shot}-${width}.png`, fullPage: true });
-        const wide = await page.evaluate(() => [...document.querySelectorAll("main *")].filter((e) => e.getBoundingClientRect().right > innerWidth + 1 && !e.closest("[class*=overflow-x]"))
-          .slice(0, 3).map((e) => `${e.tagName}.${String(e.className).slice(0, 60)} → ${Math.round(e.getBoundingClientRect().right)}`));
-        if (width < 400 && wide.length) console.log(`OVERFLOW ${group}/${name}:`, wide.join(" | ")); // the phone page must not scroll sideways
+        // the phone page must not scroll sideways: name the widest elements when it does
+        const wide = await page.evaluate(() => {
+          if (document.documentElement.scrollWidth <= innerWidth) return [];
+          const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+          const out: [number, string][] = [];
+          for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+            const r = document.createRange(); r.selectNodeContents(n);
+            const right = r.getBoundingClientRect().right;
+            if (right > innerWidth + 1) out.push([right, `"${n.textContent!.slice(0, 30)}" in ${n.parentElement!.tagName}.${String(n.parentElement!.className).slice(0, 50)} → ${Math.round(right)}`]);
+          }
+          return out.sort((a, b) => b[0] - a[0]).slice(0, 3).map((x) => x[1]);
+        });
+        if (width < 400 && wide.length) console.log(`OVERFLOW ${group}/${name}:`, wide.join(" | "));
       }
     }
   }

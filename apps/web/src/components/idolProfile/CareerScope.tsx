@@ -46,7 +46,7 @@ export function CareerScope({ rows }: { rows: CareerRow[] }) {
         {big.map(([label, value], i) => (
           <div key={label} className={i % 2 ? "sm:mt-6" : ""}>
             <dt className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{label}</dt>
-            <dd className="m-0 font-display text-[clamp(2rem,5vw,3.5rem)] leading-none tabular-nums">{value}</dd>
+            <dd className="m-0 font-display text-headline leading-none tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>

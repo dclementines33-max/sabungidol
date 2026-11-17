@@ -10,7 +10,7 @@ export function TopRivalries({ top }: { top: Rivalry[] }) {
   const name = (id: string) => lookup(id)?.name ?? id;
   return (
     <section aria-labelledby="rivalries" className="space-y-2">
-      <h2 id="rivalries" className="m-0 text-[clamp(1.75rem,4vw,3rem)]">Heated Rivalries</h2>
+      <h2 id="rivalries" className="m-0 text-section">Heated Rivalries</h2>
       <p className="kicker m-0 text-text-secondary">Top 10 most frequent matchups</p>
       {top.length === 0 ? <p className="text-sm text-text-secondary">No matches yet.</p> : (
         <ol className="m-0 list-none p-0 text-sm">

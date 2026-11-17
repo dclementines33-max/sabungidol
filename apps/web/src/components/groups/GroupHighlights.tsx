@@ -17,11 +17,11 @@ export function GroupHighlights({ stats }: { stats: GroupStat[] }) {
   if (roster) items.push(["Biggest roster", roster, `${roster.members.length} members`]);
   if (!items.length) return null;
   return (
-    <ul aria-label="Highlights" className="m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4">
+    <ul aria-label="Highlights" className="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-4">
       {items.map(([label, g, value]) => (
         <li key={label} className="panel px-4 py-3">
           <p className="kicker m-0">{label}</p>
-          <p className="m-0 font-display text-2xl tabular-nums text-accent-bright">{value}</p>
+          <p className="m-0 font-display text-xl tabular-nums text-accent-bright sm:text-2xl">{value}</p>
           <Link to="/wiki/group/$id" params={{ id: g!.id }} className="text-sm underline underline-offset-4">{g!.name}</Link>
         </li>
       ))}

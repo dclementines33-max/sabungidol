@@ -23,7 +23,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
         <span aria-hidden="true" className={`font-gothic leading-none text-accent-bright ${rank <= 3 ? "text-7xl" : "text-4xl opacity-70"}`}>{rank}</span>
         <CompetitionLogo logoId={logoId} className={rank <= 3 ? "size-16" : "size-10"} />
         <div className="min-w-0 flex-1">
-          <h2 className="m-0 text-[clamp(1.5rem,3.5vw,2.5rem)]">
+          <h2 className="m-0 text-section">
             <button type="button" aria-expanded={open} onClick={onToggle} className="text-left hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g.name}</button>
           </h2>
           <p className="kicker m-0 text-text-secondary"><span className="text-accent-bright">{g.titles} titles</span> · {g.members.length} members · {g.matches.toLocaleString("en-GB")} matches · <Link to="/wiki/group/$id" params={{ id: g.id }} className="text-text-primary underline underline-offset-4">Group page</Link></p>
@@ -42,7 +42,7 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
           ))}
         </dl>
       </div>
-      <ul className="m-0 mt-4 flex list-none gap-1 p-0" aria-label={`Member ${g.name}`}>
+      <ul className="m-0 mt-4 flex list-none flex-wrap gap-1 p-0" aria-label={`Member ${g.name}`}>
         {g.members.map((id) => <li key={id} className={id === g.best ? "outline-2 outline-brand-gold" : ""}><IdolPhoto idolId={id} size={64} className="h-12 w-10" /></li>)}
       </ul>
       {open && (
