@@ -5,7 +5,7 @@ import { IdolPhoto, useIdolLookup } from "@sabung/ui";
 import { useBranding } from "../../data/branding";
 import { IdolLink } from "../wiki/IdolLink";
 
-export type Champion = { season: number; key: string; champion: string; runnerUp: string | null; third?: string | null; score: string | null };
+export type Champion = { season: number; key: string; champion: string; runnerUp: string | null; third?: string | null; score: string | null; detail?: string }; // detail: a season award's number
 
 function Podium({ t }: { t: Champion }) {
   return (
@@ -38,6 +38,7 @@ export function ChampionList({ titles }: { titles: Champion[] }) {
                     <IdolLink id={t.champion} className={`block truncate font-display ${many ? "text-xl" : "text-3xl"}`} />
                     <p className="m-0 text-sm text-accent-bright">{lookup(t.champion)?.groupName ?? "Soloist"}</p>
                     {t.score && <p className="m-0 font-mono text-sm">Final {t.score}</p>}
+                    {t.detail && <p className="m-0 font-mono text-sm">{t.detail}</p>}
                     <Podium t={t} />
                   </div>
                 </article>

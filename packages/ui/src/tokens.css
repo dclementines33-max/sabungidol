@@ -44,7 +44,7 @@
 
   --font-display: "Archivo Variable", system-ui, sans-serif; /* headlines: wide, heavy, capitals (base layer) */
   --font-sans: "Archivo Variable", system-ui, sans-serif;
-  --font-gothic: "UnifrakturMaguntia", serif; /* ornaments only */
+  --font-gothic: "Bungee", system-ui, sans-serif; /* ornaments: big numbers, award names (2026-11-17: was UnifrakturMaguntia blackletter, too hard to read) */
   --font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
   --text-*: initial;

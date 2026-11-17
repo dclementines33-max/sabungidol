@@ -1,37 +1,63 @@
-// All-time Records → Awards (2026-11-17): one leaderboard per season award, in award order — who won it, how often and
-// in which seasons (ranked by wins, ties share a rank). MAMA lists girl groups. Data: the career cache (award history).
-import { AWARDS, rankLabel, rankRecords } from "@sabung/engine";
+// All-time Records → Awards (2026-11-17, user: "like the Hall of Champions", own section in the same panel): one tab per
+// season award, each like a Hall of Champions tab — the winners as a poster wall (most wins first), then the winner of
+// every season with the award's number. MAMA lists girl groups (logo, name). Data: the award history (career cache).
+import { AWARDS } from "@sabung/engine";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { engine } from "../../data/engineClient";
-import { LEAGUE_ARENAS } from "../competition/arenaTheme";
+import { ChampionList } from "../champions/ChampionList";
+import { WallOfFame } from "../champions/WallOfFame";
+import { CompetitionLogo } from "../CompetitionLogo";
+import { Tabs } from "../competition/Tabs";
 import { AWARD_TEXT } from "../play/awardText";
-import { IdolLink } from "../wiki/IdolLink";
-import { RecordCard, type RecordRow } from "./RecordCard";
 
-type Win = { season: number; key: string; id: string };
+type Win = { season: number; key: string; id: string; value: number };
 
-export function AwardRecords({ history, hit }: { history: Win[]; hit: (id: string) => boolean }) {
+function GroupHall({ wins }: { wins: Win[] }) {
   const { data: groups = [] } = useQuery({ queryKey: ["groups"], queryFn: () => engine().listGroups(), enabled: typeof Worker !== "undefined" });
-  const rowsOf = (key: string): RecordRow[] => {
-    const seasons = new Map<string, number[]>();
-    for (const w of history) if (w.key === key) seasons.set(w.id, [...(seasons.get(w.id) ?? []), w.season]);
-    return rankRecords([...seasons].map(([id, ns]) => ({ idolId: id, value: ns.length, matches: 0 })), "total")
-      .filter((e) => key === "mama" || hit(e.idolId))
-      .map((e) => {
-        const tag = <span className="text-text-secondary">{seasons.get(e.idolId)!.map((n) => `S${n}`).join(" · ")}</span>;
-        const who = key === "mama"
-          ? <Link to="/wiki/group/$id" params={{ id: e.idolId }} className="underline-offset-4 hover:underline">{groups.find((g) => g.id === e.idolId)?.name ?? e.idolId}</Link>
-          : <IdolLink id={e.idolId} />;
-        return { key: e.idolId, idolId: key === "mama" ? undefined : e.idolId, rank: rankLabel(e), who: <>{who} {tag}</>, value: `${e.value}×` };
-      });
-  };
   return (
-    <section aria-labelledby="award-records" className="space-y-3">
-      <h2 id="award-records" className="kicker m-0">Awards</h2>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {AWARDS.map((key, i) => <RecordCard key={key} title={AWARD_TEXT[key].name} rows={rowsOf(key)} arena={LEAGUE_ARENAS[i % 6]!.arena} />)}
-      </div>
-    </section>
+    <ol className="m-0 list-none space-y-8 p-0" aria-label="MAMA by season">
+      {wins.map((w) => {
+        const g = groups.find((x) => x.id === w.id);
+        return (
+          <li key={w.season} className="flex items-center gap-5">
+            <span aria-hidden="true" className="w-20 shrink-0 font-gothic text-[clamp(2.5rem,6vw,4rem)] leading-none text-accent/40">{w.season}</span>
+            <CompetitionLogo logoId={g?.logoId} className="size-16 shrink-0" />
+            <div className="min-w-0">
+              <p className="kicker m-0">Season {w.season}</p>
+              <Link to="/wiki/group/$id" params={{ id: w.id }} className="block truncate font-display text-2xl hover:text-accent-bright focus-visible:outline-2 focus-visible:outline-accent-bright">{g?.name ?? w.id}</Link>
+              <p className="m-0 font-mono text-sm text-text-secondary">{AWARD_TEXT.mama.value(w.value)}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+export function AwardHall({ history }: { history: Win[] }) {
+  return (
+    <Tabs label="Award" tabs={AWARDS.map((key) => {
+      const t = AWARD_TEXT[key];
+      const wins = history.filter((w) => w.key === key).sort((a, b) => b.season - a.season);
+      return {
+        id: key, label: t.name,
+        content: () => (
+          <div className="space-y-8">
+            <header>
+              <h3 className="m-0 font-gothic text-3xl text-accent-bright">{t.name}</h3>
+              <p className="m-0 font-display text-lg">{t.what}</p>
+              <p className="m-0 text-sm text-text-secondary">{t.how}</p>
+            </header>
+            {!wins.length ? <p className="text-text-secondary">No {t.name} winner yet.</p>
+              : key === "mama" ? <GroupHall wins={wins} />
+              : <>
+                  <WallOfFame champions={wins.map((w) => w.id)} title="Most wins" unit="wins" />
+                  <ChampionList titles={wins.map((w) => ({ season: w.season, key, champion: w.id, runnerUp: null, score: null, detail: t.value(w.value) }))} />
+                </>}
+          </div>
+        ),
+      };
+    })} />
   );
 }

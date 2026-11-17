@@ -1,5 +1,5 @@
-// All-time Records (PRD §8, §7.3): one leaderboard card per category, biggest upsets and most H2H meetings.
-// Minimum matches for percentages is adjustable; a name search hides rows but keeps the global rank.
+// All-time Records (PRD §8, §7.3): two sections in one panel — Records (one leaderboard card per category, biggest upsets,
+// most H2H meetings; min matches adjustable; a name search hides rows but keeps the rank) and Awards (AwardHall).
 import { rankLabel } from "@sabung/engine";
 import { useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +7,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { LEAGUE_ARENAS } from "../../components/competition/arenaTheme";
 import { Select } from "../../components/idolDatabase/IdolFilters";
-import { AwardRecords } from "../../components/records/AwardRecords";
+import { Tabs } from "../../components/competition/Tabs";
+import { AwardHall } from "../../components/records/AwardRecords";
 import { RecordCard, type RecordRow } from "../../components/records/RecordCard";
 import { IdolLink } from "../../components/wiki/IdolLink";
 import { engine } from "../../data/engineClient";
@@ -43,7 +44,9 @@ function AllTimeRecords() {
   ];
   return (
     <div className="space-y-6">
-      <PageHeader tag="Records" title="All-time records" note="Every category is ranked; search a name without changing the ranks." />
+      <PageHeader tag="Records" title="All-time records" note="Every category is ranked; search a name without changing the ranks. Season awards have their own section." />
+      <Tabs label="Records section" tabs={[{ id: "records", label: "Records", content: () => (
+      <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
         <label className="text-sm text-text-secondary">
           Search a name
@@ -51,11 +54,11 @@ function AllTimeRecords() {
         </label>
         <Select label="Minimum matches (% records)" value={minMatches} onChange={setMinMatches} options={["10", "25", "50", "100", "200"].map((n): [string, string] => [n, n])} />
       </div>
-      <AwardRecords history={awards} hit={(id) => hit(id)} />
-      <h2 className="kicker m-0">Career records</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {cards.map((c, i) => <RecordCard key={c.title} title={c.title} rows={c.rows} arena={LEAGUE_ARENAS[i % 6]!.arena} />)}
       </div>
+      </div>
+      ) }, { id: "awards", label: "Awards", content: () => <AwardHall history={awards} /> }]} />
     </div>
   );
 }

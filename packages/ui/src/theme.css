@@ -2,6 +2,6 @@
    variable file for body text and for wide or condensed headlines (font-stretch 62–125%); the blackletter is
    only for ornaments (big numbers, stamps), never for running text. */
 @import "@fontsource-variable/archivo/wdth.css";
-@import "@fontsource/unifrakturmaguntia";
+@import "@fontsource/bungee";
 @import "@fontsource-variable/geist-mono";
 @import "./tokens.css";

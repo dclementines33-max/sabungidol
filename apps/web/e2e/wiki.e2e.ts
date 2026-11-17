@@ -126,10 +126,18 @@ test("All-time Records: top 10 cards, see all, search keeps the rank", async () 
   await page.getByLabel("Search a name").fill(name!);
   await expect(wins.getByRole("listitem").first()).toContainText(`${rank}${name}`);
   await page.getByLabel("Search a name").fill("");
-  for (const award of ["MVI", "Idol of the Season", "MAMA"]) await expect(page.getByRole("region", { name: award, exact: true }).getByRole("listitem")).toHaveCount(1); // award history: Season 1
-  await expect(page.getByRole("region", { name: "MVI", exact: true })).toContainText("S1");
   expect(await axe(page)).toEqual([]);
   await page.screenshot({ path: "test-results/records.png" });
+  // Awards: their own section, laid out like the Hall of Champions (award history: Season 1)
+  await page.getByRole("tab", { name: "Awards" }).click();
+  await expect(page.getByRole("tab", { name: "MVI", selected: true })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Champions by season" }).getByRole("listitem")).toHaveCount(1);
+  await expect(page.getByRole("region", { name: "Most wins" }).getByRole("listitem")).toHaveCount(1); // the poster wall
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/records-awards.png", fullPage: true });
+  await page.getByRole("tab", { name: "MAMA" }).click();
+  await expect(page.getByRole("list", { name: "MAMA by season" }).getByRole("listitem")).toHaveCount(1);
+  expect(await axe(page)).toEqual([]);
 });
 
 test("Match Database: count, filters, cursor paging, Reset Filters", async () => {
