@@ -120,7 +120,7 @@ export function seasonProgression(matches: SimMatch[], titles: Partial<Record<st
   const rows = baseProgression(matches, titles, leagues, plan);
   const bonus = awardBonus(awardsFrom(rows, matches, titles, extra), new Map(rows.map((r) => [r.idolId, r.score])), extra.groups);
   return rows.map((r) => {
-    const b = bonus.get(r.idolId) ?? 0;
-    return b ? { ...r, new: Math.min(100, r.new + b), award: b, reason: [r.reason, `awards +${b}`].filter(Boolean).join(", ") } : r;
+    const b = Math.min(100, r.new + (bonus.get(r.idolId) ?? 0)) - r.new; // what the bonus really adds under the 100 cap
+    return b ? { ...r, new: r.new + b, award: b, reason: [r.reason, `awards +${b}`].filter(Boolean).join(", ") } : r;
   });
 }

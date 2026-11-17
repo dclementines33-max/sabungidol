@@ -51,4 +51,11 @@ describe("season close (PRD §6.2–6.3, §4)", () => {
     expect(rows.find((r) => r.award >= 2)!.reason).toMatch(/awards \+[23]/); // MVI / Idol of the Season
     expect(seasonProgression(season.matches, season.titles, leagues, plan)).toEqual(rows);
   });
+
+  it("reports only the award bonus that fits under 100", () => {
+    const top = season.matches.map((m) => ({ ...m, ratingA: 100, ratingB: 100 }));
+    const rows = seasonProgression(top, season.titles, leagues, promotionPlan(top, input.leagues, () => 100));
+    expect(rows.some((r) => r.new === 100)).toBe(true);
+    expect(rows.filter((r) => r.new === 100 && r.old === 100).every((r) => r.award === 0 && !/awards/.test(r.reason))).toBe(true);
+  });
 });
