@@ -9,12 +9,25 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-17, router — latest)
+## ▶ RESUME HERE (saved 2026-11-17, router-4 — latest)
+
+**Built this session (commits df95ac8, 953604b, 2f39190), deploy status: see the memory note's last line.**
+- **Home:** the all-time #1 shows its award count; The rulers has "Most awards" (awardCounts in data/homeFacts.ts, MAMA left out; overview.allTimeTopAwards).
+- **Icons (task 3 done):** own kit in `packages/ui/src/icons` (import from `@sabung/ui/icons`; draw.tsx = factory + pieces Ink/Line/Hot/Spark/Eye/Cut/star/cog; nav/actions/status.tsx). lucide-react and the Y2K chrome (ChromeIconDefs, svg.lucide rule) are GONE. Style rules in tokens.css `svg.si`: forward lean, ink mass at 22%, one spark cut out of the background (red; .icon-tone turns it gold), the spark pops on hover/active. Names match the old lucide ones; the type is `Icon`. Sheet at /dev/icons (not in the menu). New: Ranks, Tiers, ArrowUp/Down, Pencil, Trash, RotateCcw, Shuffle, Grip, Sparkles.
+- **Ranking** `/wiki/ranking` (pages/wiki/ranking.tsx, components/ranking/): Sabung Index (sabungIndex.ts, tested: titles × prestige × 12; 4/2/1 per runner-up/third/final; awards 16 MVI/IOTS else 8; win rate up to 40, full at 60 matches; 0.6 per rating point over 50; feats; a group = best 4 members + 20 per MAMA) → RankPodium (top 3) + RankBoard (4–10, IndexBar = where the points come from). Tab My Top 10 (MyTop10.tsx): fill from the index, drag or arrows, a podium of the user's top 3.
+- **Tier List** `/wiki/tiers` (pages/wiki/tiers.tsx, components/tierList/): presets (Classic S+–F, Stan scale, S–D, Blank), several lists per kind, rename/recolour/move/delete/add tiers, Fill by rating (tiers named like the rating tiers), pool with search + group filter (beside the board from md, sticky at the bottom on phones). tierOps.ts is pure + tested.
+- Shared: `components/KindSwitch.tsx` (Idols / Girl groups), `components/dnd/usePointerDrag.ts` (pointer DnD: mouse after 4 px, finger after a 0.22 s hold; data-drop / data-drop-axis / data-drag-index; a click without a drag still selects), `components/ranking/useEntries.ts` (idols or groups as entries; groups come from the idol rows).
+- **Saved where:** My Top 10 and tier lists live in this browser (`data/userLists.ts`, zustand persist key "sabung-user-lists", rehydrated after mount). NOT in backups or cloud sync (shortcut comment there).
+- RULE: Tailwind breakpoints here are sm 640 / **md 1024 / lg 1440** (tokens.css): `lg:` means a big desktop, not 1024.
+- Found, not fixed: the `["groups"]` query (listGroups) can stay empty on a fresh install (cached before the default idols load); Girl Group Stats logos/All groups may show nothing until a reload.
+- e2e: `ranking.e2e.ts` (podium, groups, My Top 10 drag + reload, tier drag, tap-to-place, axe, 375 px) and the rewritten `icons.e2e.ts`.
+
+## ▶ RESUME HERE (saved 2026-11-17, router-3)
 
 **Production = e54fe94c** (deployed 2026-11-17 by router-3, full e2e 51 pass / 3 skip): design round 2 "Fight Night" (338fc79…5ffe358, fcdfdf7). Nothing in flight.
 
 **For the next router session (the user starts it themself):**
-- **Next = task 3:** replace EVERY icon in the app with experimental, surreal, unique icons that fit the Sabung Idol / Fight Night theme, nothing template-like. They replace the Y2K chrome icons (8e0aeec). Heavy + design → Opus (opus-extra `local_8a390b00…`, already on high effort and knows the Fight Night system). Also give it the trophy gold that sits on an icon.
+- ~~Next = task 3~~ (done by router-4, see above): replace EVERY icon in the app with experimental, surreal, unique icons that fit the Sabung Idol / Fight Night theme, nothing template-like. They replace the Y2K chrome icons (8e0aeec). Heavy + design → Opus (opus-extra `local_8a390b00…`, already on high effort and knows the Fight Night system). Also give it the trophy gold that sits on an icon.
 - **User rules:**
   - When a task is done, verify it (git log + tests + full e2e), deploy, then tell the user. No asking.
   - Design or heavy work goes to Opus, never Sonnet. Token cost is OK for design.
