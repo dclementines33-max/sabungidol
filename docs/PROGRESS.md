@@ -9,7 +9,18 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble race prototype, latest)
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match preview, latest)
+
+**Marble Match preview (commit 3896070), still SEPARATE from the app:** `prototypes/marble-match/` (:5191, launch.json
+"marble-match"). 8 arenas (Seoul + Busan sprint, Tokyo pachinko/funnel, Frostbite gauntlet, Jeju spiral, Arena of
+Kings sumo, Split Decision fork, Hanok Cascade), 1 run = 1 game, Bo3/4/5/7 with the app's series rules, a random
+different arena per game, Skip game / Skip match; result = games ["A","B",…] for acceptMatch. README there: file map,
+per-arena favourite win rates, physics lessons. v1 prototype frozen: `prototypes/marble-race` + git tag
+`marble-race-prototype-v1` (user: base for a future big project — do not change it).
+**Next (user decides):** feedback on the preview, then integration as a mode in the app's match dialog (lazy-loaded,
+three + Rapier as npm deps, result only, nothing saved).
+
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble race prototype)
 
 **3D marble race prototype (commit 8b22f9d), SEPARATE from the app:** `prototypes/marble-race/` (not a workspace
 package, no install: three 0.170 + Rapier 0.14 from jsDelivr; `node prototypes/marble-race/server.mjs` → :5190, or
