@@ -7,9 +7,10 @@ import type { NewsStory } from "./seasonNews";
 import type { MomentStory } from "./seasonMoments";
 import type { CareerStory } from "./careerNews";
 import type { TitleStory } from "./titleNews";
+import type { ArenaStory } from "./arenaStats";
 import type { Story } from "./seasonStory";
 
-export type AnyStory = Story | DramaStory | NewsStory | MomentStory | CareerStory | TitleStory;
+export type AnyStory = Story | DramaStory | NewsStory | MomentStory | CareerStory | TitleStory | ArenaStory;
 
 export const BREAKING = 80; // from this score a story gets the breaking-news headline
 const prestige = (title: string) => PRESTIGE[competitionKeyOf(title.split("-")[0]!)];
@@ -50,6 +51,8 @@ export function newsScore(s: AnyStory): number {
     case "domination": return 45;
     case "de-revenge": return 65;
     case "heated-rivalry": return Math.min(85, 35 + 10 * s.meetings);
+    case "arena-fortress": return Math.min(80, 30 + 6 * s.wins);
+    case "arena-curse": return Math.min(75, 25 + 8 * s.losses + (s.rating - 85));
     case "title-race": return s.how === "level" ? 85 : s.how === "narrow" ? 75 - 5 * s.margin : Math.min(80, 45 + 2 * s.margin);
     case "final-thriller": return 45 + 30 * prestige(s.title);
     case "title-summary": return 0; // facts, not news

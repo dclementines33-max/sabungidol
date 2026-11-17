@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 const PRD_PANELS = [
-  "Home", "Dashboard", "Sabung Idol", "Season Story", "Idol Database", "Idol Profile", "Girl Group Stats", "Career Stats", "Ranking", "Tier List", "Head to Head",
+  "Home", "Dashboard", "Sabung Idol", "Season Story", "Idol Database", "Idol Profile", "Girl Group Stats", "Career Stats", "Ranking", "Tier List", "Head to Head", "Arenas",
   "Hall of Champions", "All-time Records", "Hall of Shame", "Match Database", "Season Progression", "Season Archive", "Input Data", "Rating Manager", "Inactive Manager", "Marble Race", "Settings",
 ];
 

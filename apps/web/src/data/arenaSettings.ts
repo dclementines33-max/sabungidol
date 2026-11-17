@@ -38,8 +38,10 @@ export const useArenaSettings = create<State>()(persist((set) => ({
 // The arena ids in the draw.
 export const arenaPool = () => { const off = useArenaSettings.getState().off; return ARENAS.map((a) => a.id).filter((id) => !off.includes(id)); };
 
-// An arena's shown name (the user's, else the default); unknown ids stay as they are.
+// An arena's shown name (the user's, else the default); unknown ids stay as they are. arenaLabel = outside React.
+const nameIn = (names: Record<string, string>, id: string) => names[id] || ARENAS.find((a) => a.id === id)?.name || id;
+export const arenaLabel = (id: string) => nameIn(useArenaSettings.getState().names, id);
 export function useArenaName() {
   const names = useArenaSettings((s) => s.names);
-  return (id: string) => names[id] || ARENAS.find((a) => a.id === id)?.name || id;
+  return (id: string) => nameIn(names, id);
 }

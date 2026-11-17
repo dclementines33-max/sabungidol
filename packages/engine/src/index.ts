@@ -33,6 +33,7 @@ export * from "./stats/seasonStory";
 export * from "./stats/seasonDrama";
 export * from "./stats/seasonNews";
 export * from "./stats/titleNews";
+export * from "./stats/arenaStats";
 export * from "./stats/seasonAwards";
 export * from "./stats/seasonTelemetry";
 export * from "./stats/newsScore";

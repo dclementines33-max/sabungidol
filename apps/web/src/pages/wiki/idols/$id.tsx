@@ -9,6 +9,7 @@ import { CareerScope } from "../../../components/idolProfile/CareerScope";
 import { ProfileEdit } from "../../../components/idolProfile/ProfileEdit";
 import { ProfileHero } from "../../../components/idolProfile/ProfileHero";
 import { ProfileOverview } from "../../../components/idolProfile/ProfileOverview";
+import { ProfileArenas } from "../../../components/idolProfile/ProfileArenas";
 import { ProfileRecords } from "../../../components/idolProfile/ProfileRecords";
 import { ProfileGallery } from "../../../components/idolProfile/ProfileGallery";
 import { ProfileRivals } from "../../../components/idolProfile/ProfileRivals";
@@ -50,6 +51,7 @@ function IdolProfile() {
           ) },
           { id: "seasons", label: "Seasons", content: () => <ProfileSeasons placements={profile.placements} /> },
           { id: "matches", label: "Matches", content: () => <MatchLog filter={{ idolId: id }} label={`Match ${idol.name}`} /> },
+          { id: "arenas", label: "Arenas", content: () => <ProfileArenas idolId={id} name={idol.name} /> },
           { id: "rivals", label: "Rivals", content: () => <ProfileRivals idolId={id} rivals={profile.rivals} /> },
           { id: "records", label: "Records", content: () => <ProfileRecords records={profile.records} /> },
           { id: "gallery", label: `Gallery (${idol.gallery.length})`, content: () => <ProfileGallery idolId={idol.id} name={idol.name} photos={idol.gallery} /> },

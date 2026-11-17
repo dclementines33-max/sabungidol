@@ -6,7 +6,7 @@ import type { Db } from "./openDb";
 import { matches } from "./schema";
 
 export type MatchFilter = { seasonId?: string; comps?: string[]; stage?: string; round?: string; idolId?: string; vsId?: string; result?: "W" | "D" | "L" };
-export type MatchRow = { id: string; seasonId: string; comp: string; stage: string; round: string; idolA: string; idolB: string; scoreA: number; scoreB: number; result: string; ratingA: number; ratingB: number };
+export type MatchRow = { id: string; seasonId: string; comp: string; stage: string; round: string; idolA: string; idolB: string; scoreA: number; scoreB: number; result: string; ratingA: number; ratingB: number; arenas: string[] | null };
 
 function where(f: MatchFilter) {
   const m = matches;
@@ -31,7 +31,7 @@ export async function queryMatches(db: Db, f: MatchFilter, { after, limit = 50, 
   const m = matches;
   const rows: MatchRow[] = await db.select({
     id: m.id, seasonId: m.seasonId, comp: m.comp, stage: m.stage, round: m.round, idolA: m.idolA, idolB: m.idolB,
-    scoreA: m.scoreA, scoreB: m.scoreB, result: m.result, ratingA: m.ratingA, ratingB: m.ratingB,
+    scoreA: m.scoreA, scoreB: m.scoreB, result: m.result, ratingA: m.ratingA, ratingB: m.ratingB, arenas: m.arenas,
   }).from(m).where(and(where(f), after ? (newest ? lt(m.id, after) : gt(m.id, after)) : undefined))
     .orderBy(newest ? desc(m.id) : asc(m.id)).limit(limit + 1);
   return { rows: rows.slice(0, limit), next: rows.length > limit ? rows[limit - 1]!.id : null };

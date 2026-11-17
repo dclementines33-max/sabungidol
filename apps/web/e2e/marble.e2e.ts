@@ -40,6 +40,24 @@ test("Marble Race decides a league match", async ({ page }) => {
   await modal.getByRole("button", { name: "Accept Result" }).click();
   await expect(page.getByText(/Result saved: \d–\d/)).toBeVisible();
   await closeHighlights(page);
+
+  // a bulk simulation gives every match an arena too; the Arenas page and Career Stats show them
+  await page.getByRole("button", { name: "Play next matchday" }).click();
+  await expect(page.getByText(/matches played/).first()).toBeVisible({ timeout: 60_000 });
+  await closeHighlights(page);
+  await page.goto("/wiki/arenas");
+  await expect(page.getByText("Most used arena")).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("Arena ruler")).toBeVisible();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({ path: "test-results/arenas-page.png", fullPage: true });
+  await page.setViewportSize({ width: 375, height: 800 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+
+  // the ruler's own profile: her arenas
+  await page.locator("div.panel", { hasText: "Arena ruler" }).getByRole("link").click();
+  await page.getByRole("tab", { name: "Arenas" }).click();
+  await expect(page.getByText("Favourite arena")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("table", { name: /per arena/ })).toBeVisible();
 });
 
 test("Marble Race panel: rename and draw arenas, a test Grand Prix, nothing saved", async ({ page }) => {

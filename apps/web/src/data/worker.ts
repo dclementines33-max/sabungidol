@@ -21,6 +21,7 @@ import { idolTelemetry } from "./idolTelemetryWorker";
 import { telemetryOf } from "./telemetryWorker";
 import { overview } from "./overviewWorker";
 import { groupMatchupsOf, hallOfShameOf } from "./shameWorker";
+import { type ArenaRead, arenaRead } from "./arenaWorker";
 import { awardHistory, careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
 import { type PlayProgress, type PlayTarget, cupView, leagueView, playSeason, requestPause, seasonOverview } from "./seasonRunner";
 import { markOpened, resetIfRequested, wipeIfRequested } from "./databaseReset";
@@ -64,8 +65,7 @@ const api = {
   matchCount: async (): Promise<number> => countMatches(await open()),
 
   // Idols and groups (PRD §3, §8).
-  listIdols: async () => listIdols(await open()),
-  listGroups: async () => listGroups(await open()),
+  listIdols: async () => listIdols(await open()), listGroups: async () => listGroups(await open()),
   setGroupLogo: async (groupId: string, logoId: string | null) => setGroupLogo(await open(), groupId, logoId),
   addGroup: async (name: string) => addGroup(await open(), name),
   updateIdolDetails: async (rows: IdolDetails[], dryRun: boolean) => updateIdolDetails(await open(), rows, dryRun),
@@ -172,8 +172,7 @@ const api = {
   previewImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, true),
   applyImport: async (bytes: Uint8Array, mode: ImportMode) => importSabung(await open(), DATABASE, bytes, mode, false),
   saveSnapshot: async (reason: string) => saveSnapshot(await open(), DATABASE, reason),
-  listSnapshots: async () => listSnapshots(DATABASE),
-  readSnapshot: async (name: string) => readSnapshot(DATABASE, name),
+  listSnapshots: async () => listSnapshots(DATABASE), readSnapshot: async (name: string) => readSnapshot(DATABASE, name),
   backupDue: async () => backupDue(await open()),
   // Rating Manager (PRD §6.4–6.6): proposals for the draft, then one save with rating_history.
   lastSeasonProgression: async () => lastSeasonProgression(await open()),
@@ -181,6 +180,7 @@ const api = {
   applyRatings: async (changes: RatingChange[], source: string) => applyRatings(await open(), changes, source),
   // Career stats (PRD §7): cached per finished season, rebuildable from the matches.
   careerStats: async () => careerStats(await open()),
+  arenaRead: async (kind: ArenaRead, args: unknown[]) => arenaRead(await open(), kind, args),
   rebuildStats: async () => rebuildStats(await open()),
   // Wiki pages (PRD §8).
   idolProfile: async (id: string) => idolProfile(await open(), id),

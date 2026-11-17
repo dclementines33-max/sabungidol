@@ -6,6 +6,8 @@ import { GrudgeBanner, SearchableIdolSelect } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { ArenaRecordTable } from "../../components/arenas/ArenaRecordTable";
+import { useArenaRead } from "../../components/arenas/useArenaRead";
 import { H2HCompare } from "../../components/h2h/H2HCompare";
 import { TopRivalries } from "../../components/h2h/TopRivalries";
 import { OfficialRivalries } from "../../components/rivalry/OfficialRivalries";
@@ -40,6 +42,7 @@ function HeadToHead() {
         <>
           {rivalry && <GrudgeBanner label="Official rivalry" grudge={{ name: rivalry.name, tier: RIVALRY_TIER[rivalry.tier] }} />}
           <H2HCompare a={a} b={b} pair={data.pair} lineA={data.lineA} lineB={data.lineB} games={data.games as [number, number]} formA={data.formA as ("W" | "D" | "L")[]} formB={data.formB as ("W" | "D" | "L")[]} />
+          <PairArenas a={a} b={b} />
           <section aria-labelledby="direct" className="space-y-3">
             <h2 id="direct" className="section-title">Direct Match Log ({data.pair?.meetings ?? 0} Matches)</h2>
             <div className="flex flex-wrap gap-3">
@@ -53,5 +56,17 @@ function HeadToHead() {
       {data && <OfficialRivalries list={data.rivalries} />}
       {data && <TopRivalries top={data.top} />}
     </div>
+  );
+}
+
+// Where they met (2026-11-18): the pair's W-D-L per arena, from the first idol's side.
+function PairArenas({ a, b }: { a: string; b: string }) {
+  const lines = useArenaRead("pair", a, b);
+  if (!lines?.length) return null;
+  return (
+    <section aria-labelledby="pair-arenas" className="space-y-3">
+      <h2 id="pair-arenas" className="section-title">Where they met</h2>
+      <ArenaRecordTable lines={lines} label="Meetings per arena, first idol's record" />
+    </section>
   );
 }

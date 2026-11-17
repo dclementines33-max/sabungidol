@@ -22,3 +22,4 @@ export * from "./ratings";
 export * from "./stats";
 export * from "./matchQuery";
 export * from "./sync";
+export * from "./arenaMatches";

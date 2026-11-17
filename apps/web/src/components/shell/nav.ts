@@ -36,6 +36,7 @@ export const SPACES: NavSpace[] = [
       { label: "Ranking", to: "/wiki/ranking", icon: Ranks, phase: 4 },
       { label: "Tier List", to: "/wiki/tiers", icon: Tiers, phase: 4 },
       { label: "Head to Head", to: "/wiki/h2h", icon: GitCompareArrows, phase: 4 },
+      { label: "Arenas", to: "/wiki/arenas", icon: Marble, phase: 4 },
       { label: "Hall of Champions", to: "/wiki/champions", icon: Crown, phase: 4 },
       { label: "All-time Records", to: "/wiki/records", icon: Medal, phase: 4 },
       { label: "Hall of Shame", to: "/wiki/shame", icon: Skull, phase: 4 },

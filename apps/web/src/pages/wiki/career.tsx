@@ -5,6 +5,7 @@ import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS } from "@sabung/shared";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { ArenaLeaders } from "../../components/arenas/ArenaLeaders";
 import { AwardTable } from "../../components/careerStats/AwardTable";
 import { CAREER_SORTS, CareerTable } from "../../components/careerStats/CareerTable";
 import { Tabs } from "../../components/competition/Tabs";
@@ -25,7 +26,7 @@ function CareerStats() {
   const allowed = useMemo(() => new Set(filterIdols(idols, leagueOf, { ...NO_FILTER, ...scope }).map((i) => i.id)), [idols, leagueOf, scope]);
   const groups = [...new Map(idols.flatMap((i) => (i.groupId ? [[i.groupId, i.groupName!] as [string, string]] : []))).entries()].sort((a, b) => a[1].localeCompare(b[1]));
   const set = (key: keyof typeof scope) => (value: string) => setScope({ ...scope, [key]: value });
-  const tabs = [{ key: "ALL", name: "Combined" }, ...SEASON_COMPETITIONS, { key: "AWARDS", name: "Awards" }];
+  const tabs = [{ key: "ALL", name: "Combined" }, ...SEASON_COMPETITIONS, { key: "AWARDS", name: "Awards" }, { key: "ARENAS", name: "Arenas" }];
   return (
     <div className="space-y-6">
       <header>
@@ -39,7 +40,7 @@ function CareerStats() {
         <Select label="League" value={scope.league} onChange={set("league")} options={[["", "All"], ...[...D1_LEAGUES, ...D2_LEAGUES].map((c): [string, string] => [c, c]), ["reserve", "Reserve"]]} />
         <Select label="Sort by" value={sort} onChange={(v) => setSort(v as keyof CareerRow)} options={CAREER_SORTS} />
       </div>
-      <Tabs label="Competition" tabs={tabs.map((t) => ({ id: t.key, label: t.name, content: () => t.key === "AWARDS" ? <AwardTable key="AWARDS" allowed={allowed} /> : <CareerTable key={t.key} comp={t.key} label={t.name} allowed={allowed} sort={sort} /> }))} />
+      <Tabs label="Competition" tabs={tabs.map((t) => ({ id: t.key, label: t.name, content: () => t.key === "ARENAS" ? <ArenaLeaders key="ARENAS" /> : t.key === "AWARDS" ? <AwardTable key="AWARDS" allowed={allowed} /> : <CareerTable key={t.key} comp={t.key} label={t.name} allowed={allowed} sort={sort} /> }))} />
     </div>
   );
 }
