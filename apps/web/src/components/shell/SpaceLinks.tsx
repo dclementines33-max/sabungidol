@@ -16,7 +16,7 @@ function NavLink({ item, label, onNavigate }: { item: NavItem; label: LabelMode;
       activeOptions={{ exact: true }}
       onClick={onNavigate}
       title={label === "always" ? undefined : item.label}
-      className="flex items-center gap-3 rounded-control border-l-2 border-transparent px-3 py-2 text-sm text-text-secondary hover:bg-surface-hover hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright data-[status=active]:border-accent-bright data-[status=active]:bg-surface data-[status=active]:text-text-primary"
+      className="flex items-center gap-3 rounded-control border-l-2 border-transparent px-3 py-2 text-sm text-text-secondary hover:bg-surface-hover hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright data-[status=active]:border-accent-bright data-[status=active]:bg-[linear-gradient(90deg,color-mix(in_oklab,var(--color-accent)_70%,transparent),transparent)] data-[status=active]:font-semibold data-[status=active]:text-text-primary"
     >
       <Icon aria-hidden="true" size={18} strokeWidth={1.5} className="shrink-0" />
       <span className={`${labelClass[label]} truncate`}>{item.label}</span>

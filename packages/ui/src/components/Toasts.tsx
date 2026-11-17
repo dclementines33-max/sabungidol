@@ -12,7 +12,7 @@ function Toast({ notice, onDismiss }: { notice: Notice; onDismiss: (id: string) 
   }, [notice.id, onDismiss]);
   const { color, icon: Icon } = LEVEL[notice.level];
   return (
-    <div role="status" className="flex items-center gap-3 panel bg-surface px-4 py-3 text-sm shadow-lg">
+    <div role="status" className="stage flex items-center gap-3 rounded-[4px] px-4 py-3 text-sm shadow-[inset_4px_0_0_var(--color-accent-bright),0_18px_40px_-12px_rgb(0_0_0/0.9)]">
       <Icon aria-hidden="true" size={18} strokeWidth={1.5} className={color} />
       <span className="flex-1">{notice.message}</span>
       {notice.undo && (

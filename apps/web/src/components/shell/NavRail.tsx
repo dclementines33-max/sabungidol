@@ -9,16 +9,16 @@ export function NavRail({ collapsed, onToggle }: { collapsed: boolean; onToggle:
   return (
     <nav
       aria-label="Main navigation"
-      className={`${collapsed ? "w-16" : "w-16 md:w-60"} sticky top-0 hidden h-dvh shrink-0 flex-col overflow-y-auto border-r border-border bg-bg-raised px-2 py-4 sm:flex`}
+      className={`${collapsed ? "w-16" : "w-16 md:w-60"} sticky top-0 hidden h-dvh shrink-0 flex-col overflow-y-auto bg-[linear-gradient(180deg,var(--color-stage),var(--color-bg-base)_70%)] px-2 py-4 shadow-[inset_-1px_0_0_rgb(255_77_99/0.18)] sm:flex`}
     >
-      <Link to="/" className="mb-6 block px-3 font-display text-xl text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright">
+      <Link to="/" className="mb-6 block px-3 font-gothic text-2xl leading-none text-text-primary [text-shadow:0_0_24px_rgb(255_77_99/0.45)] focus-visible:outline-2 focus-visible:outline-accent-bright">
         <span className={collapsed ? "" : "md:hidden"} aria-hidden="true">SI</span>
         <span className={collapsed ? "sr-only" : "sr-only md:not-sr-only"}>Sabung Idol</span>
       </Link>
       <div className="flex-1 space-y-6">
         {SPACES.map((space) => (
           <section key={space.id} aria-labelledby={`rail-${space.id}`}>
-            <h2 id={`rail-${space.id}`} className={`${collapsed ? "sr-only" : "sr-only md:not-sr-only"} m-0 mb-1 block px-3 text-xs tracking-wide text-text-secondary uppercase`}>
+            <h2 id={`rail-${space.id}`} className={`${collapsed ? "sr-only" : "sr-only md:not-sr-only"} kicker m-0 mb-1 block px-3`}>
               {space.label}
             </h2>
             <SpaceLinks space={space} label={label} />

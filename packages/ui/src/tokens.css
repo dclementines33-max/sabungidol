@@ -27,6 +27,10 @@
   --color-tier-c: #87a4b5;
   --color-tier-d: #6b8a9e;
   --color-tier-f: #25435d;
+  /* Fight Night (design round 2): the winner's gold, the stage floor and the ring light. */
+  --color-winner: #f0c75e;
+  --color-stage: #14040a;
+  --color-stage-hi: #2a0912;
 
   /* Competition branding: the 12 curated colours users pick from (PRD §10.1). */
   --color-brand-gold: #e9b44c;
@@ -125,6 +129,8 @@
   html {
     color-scheme: dark;
     background:
+      conic-gradient(from 160deg at 18% -12%, transparent 0deg, rgb(255 77 99 / 0.07) 14deg, transparent 30deg),
+      conic-gradient(from 168deg at 82% -12%, transparent 0deg, rgb(185 211 226 / 0.05) 12deg, transparent 26deg),
       radial-gradient(70rem 40rem at 0% -10%, rgb(125 0 24 / 0.35), transparent 60%),
       radial-gradient(60rem 50rem at 110% 110%, rgb(37 67 93 / 0.45), transparent 60%),
       var(--color-bg-base);
@@ -156,12 +162,14 @@
 
 @layer components {
   /* Swiss-punk tag: light text block on the dark page, capitals. */
-  .tag { display: inline-block; background: var(--color-text-primary); color: var(--color-on-fill); padding: 2px 8px; font-size: var(--text-xs); font-weight: 800; font-stretch: 120%; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tag { display: inline-block; background: var(--color-text-primary); color: var(--color-on-fill); padding: 2px 12px; font-size: var(--text-xs); font-weight: 800; font-stretch: 120%; letter-spacing: 0.08em; text-transform: uppercase; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
   /* Small uppercase kicker above a headline. */
   .kicker { font-size: var(--text-xs); font-weight: 700; font-stretch: 120%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-bright); }
+  .kicker::before { content: ""; display: inline-block; width: 0.5em; height: 0.85em; margin-right: 0.55em; vertical-align: -0.1em; background: currentColor; transform: skewX(-20deg); }
+  .kicker.no-slash::before, .tag + .kicker::before { display: none; }
   /* A section's headline: the display scale's section size and a short crimson rule above it (a line, never a box). */
-  .section-title { position: relative; margin: 0; padding-top: 0.875rem; font-size: var(--text-section); line-height: 1; }
-  .section-title::before { content: ""; position: absolute; top: 0; left: 0; width: 3rem; height: 3px; background: linear-gradient(90deg, var(--color-accent-bright), var(--color-accent)); }
+  .section-title { position: relative; margin: 0; display: flex; align-items: center; gap: 0.45em; font-size: var(--text-section); line-height: 1; }
+  .section-title::before { content: ""; flex: none; width: 0.32em; height: 0.95em; background: linear-gradient(180deg, var(--color-accent-bright), var(--color-accent)); transform: skewX(-14deg); box-shadow: 0 0 18px -2px color-mix(in oklab, var(--color-accent-bright) 70%, transparent); }
   /* Huge words drawn as outlines only, behind photos (editorial). */
   .outline-text { color: transparent; -webkit-text-stroke: 1.5px var(--color-text-secondary); }
   /* Thin marks in the four corners instead of a frame. */
@@ -181,7 +189,15 @@
   .studio-section { position: relative; counter-increment: studio; border-top: 2px solid color-mix(in oklab, var(--color-accent-bright) 35%, transparent); padding-top: 1.5rem; }
   .studio-section::before { content: counter(studio, decimal-leading-zero); position: absolute; top: -0.5rem; right: 0; font-family: var(--font-gothic); font-size: 3.5rem; line-height: 1; color: color-mix(in oklab, var(--color-accent) 45%, transparent); pointer-events: none; }
   .studio-section > h2 { font-size: var(--text-section); text-transform: uppercase; }
-  .panel { background: linear-gradient(180deg, rgb(52 10 19 / 0.55), rgb(11 3 6 / 0.65)); border-radius: var(--radius-card); box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(185 211 226 / 0.06); }
+  .panel {
+    border-radius: var(--radius-card);
+    background:
+      linear-gradient(225deg, var(--color-bg-base) 0 10px, transparent 10.5px),
+      linear-gradient(90deg, var(--color-accent-bright), transparent 45%) top left / 100% 2px no-repeat,
+      repeating-linear-gradient(-55deg, rgb(255 255 255 / 0.018) 0 2px, transparent 2px 9px),
+      linear-gradient(160deg, color-mix(in oklab, var(--color-stage-hi) 70%, transparent), color-mix(in oklab, var(--color-bg-raised) 80%, transparent) 70%);
+    box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.85), inset 0 1px 0 rgb(185 211 226 / 0.05);
+  }
 
   /* Idol card (2026-11-17, premium trading card): data-tier picks the frame. S+ prismatic foil, S gold foil — both with a
      holo sheen that sweeps on hover (still with reduced motion) — A crimson metal, B silver, C/D steel, F matte navy.

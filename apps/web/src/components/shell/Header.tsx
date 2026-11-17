@@ -13,8 +13,8 @@ export function Header({ onSearch }: { onSearch?: () => void }) {
   const markRead = useNotices((s) => s.markRead);
   const season = useCurrentSeason();
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-bg-base px-4 py-3 md:px-8">
-      <h1 className="m-0 min-w-0 flex-1 truncate font-display text-xl md:text-2xl">{panelFor(pathname)?.label ?? "Not found"}</h1>
+    <header className="sticky top-0 z-20 flex items-center gap-3 bg-bg-base/90 px-4 py-3 shadow-[0_1px_0_rgb(255_77_99/0.2),0_12px_30px_-18px_black] backdrop-blur md:px-8">
+      <h1 className="section-title min-w-0 flex-1 truncate text-xl md:text-2xl">{panelFor(pathname)?.label ?? "Not found"}</h1>
       <span className="hidden rounded-control bg-surface-hover/60 px-2 py-0.5 text-xs text-text-secondary sm:inline" data-testid="season-chip">
         {season ? `${season.name} · ${season.status === "draft" ? "Draft" : season.status}` : "No season yet"}
       </span>
