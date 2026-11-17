@@ -7,6 +7,7 @@ import { engine } from "../../data/engineClient";
 import { AWARD_TEXT } from "../play/awardText";
 import { IdolLink } from "../wiki/IdolLink";
 import { AWARD_IDOL_KEYS } from "../wiki/careerColumns";
+import { cell } from "./careerCsv";
 
 type AwardRow = { idolId: string; total: number } & Record<string, number>;
 
@@ -35,7 +36,7 @@ export function AwardTable({ allowed }: { allowed: Set<string> }) {
   if (!rows.length) return <p className="text-text-secondary">No awards for idols in this scope yet.</p>;
   const download = () => {
     const header = ["Idol", "Total", ...AWARD_IDOL_KEYS.map((k) => HEADERS[k]!)].join(",");
-    const csv = [header, ...rows.map((r) => [lookup(r.idolId)?.name ?? r.idolId, r.total, ...AWARD_IDOL_KEYS.map((k) => r[k] ?? 0)].join(","))].join("\n");
+    const csv = [header, ...rows.map((r) => [lookup(r.idolId)?.name ?? r.idolId, r.total, ...AWARD_IDOL_KEYS.map((k) => r[k] ?? 0)].map(cell).join(","))].join("\n");
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     link.download = "career-awards.csv";
