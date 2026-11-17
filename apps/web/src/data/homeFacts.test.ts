@@ -1,6 +1,6 @@
 import type { CareerRow } from "@sabung/engine";
 import { describe, expect, it } from "vitest";
-import { allTimeTop, homeFacts, homeLeaders } from "./homeFacts";
+import { allTimeTop, awardCounts, homeFacts, homeLeaders } from "./homeFacts";
 
 const row = (idolId: string, comp: string, over: Partial<CareerRow>) => ({ idolId, comp, matches: 0, wins: 0, losses: 0, titles: 0, winRate: 0, bestWinStreak: 0, bestUnbeatenStreak: 0, reverseSweeps: 0, giantKills: 0, finals: 0, ...over }) as CareerRow;
 
@@ -16,6 +16,13 @@ describe("home numbers", () => {
     const by = Object.fromEntries(homeLeaders(rows).map((l) => [l.label, l.idolId]));
     expect(by).toMatchObject({ "Most titles (all)": "a", "Unzure Cup titles": "b", "League titles": "b", "Most matches": "b", "Most losses": "b", "Best win rate": "a" });
     expect(by["The Idols titles"]).toBeUndefined(); // nobody has one yet
+  });
+
+  it("most awards: season awards counted per idol, MAMA (a group award) left out", () => {
+    const awards = awardCounts([{ key: "mvi", id: "b" }, { key: "encore", id: "b" }, { key: "mvi", id: "a" }, { key: "mama", id: "a" }, { key: "mama", id: "a" }]);
+    expect(awards.get("a")).toBe(1);
+    expect(homeLeaders(rows, awards).find((l) => l.label === "Most awards")).toMatchObject({ idolId: "b", value: "2 awards" });
+    expect(homeLeaders(rows).some((l) => l.label === "Most awards")).toBe(false); // no awards yet
   });
 
   it("all-time #1 = most titles, ties broken by more matches (Career Stats order)", () => {

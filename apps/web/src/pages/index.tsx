@@ -36,7 +36,7 @@ function Home() {
   if (!o) return <p className="text-text-secondary">Loading season…</p>;
   return (
     <div className="space-y-10">
-      {o.allTimeTop && <SectionBoundary name="All-time #1"><AllTimeTop row={o.allTimeTop} /></SectionBoundary>}
+      {o.allTimeTop && <SectionBoundary name="All-time #1"><AllTimeTop row={o.allTimeTop} awards={o.allTimeTopAwards} /></SectionBoundary>}
       <SectionBoundary name="This season"><HomeSeason name={o.season.name} status={o.season.status} progress={o.progress} played={o.played}
         phase={o.competitions.find((c) => c.status === "running" || c.status === "next")?.name}
         news={topNews(stories ?? [], 4)} /></SectionBoundary>

@@ -15,18 +15,27 @@ function best(rows: CareerRow[], score: (r: CareerRow) => number) {
 export const allTimeTop = (rows: CareerRow[]): CareerRow | null =>
   rows.filter((r) => r.comp === "ALL" && r.matches > 0).sort(careerOrder("titles"))[0] ?? null;
 
-export function homeLeaders(rows: CareerRow[]): Leader[] {
+// Season awards won per idol (MAMA is a group award, left out).
+export function awardCounts(history: { key: string; id: string }[]): Map<string, number> {
+  const n = new Map<string, number>();
+  for (const a of history) if (a.key !== "mama") n.set(a.id, (n.get(a.id) ?? 0) + 1);
+  return n;
+}
+
+export function homeLeaders(rows: CareerRow[], awards = new Map<string, number>()): Leader[] {
   const all = rows.filter((r) => r.comp === "ALL");
   const comp = (key: string) => rows.filter((r) => r.comp === key);
   const league = new Map<string, number>();
   for (const r of rows) if (r.comp === "D1" || r.comp === "D2") league.set(r.idolId, (league.get(r.idolId) ?? 0) + r.titles);
   const topLeague = [...league].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+  const topAwards = [...awards].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
   const pick = (label: string, row: CareerRow | undefined, value: (r: CareerRow) => string): Leader[] => (row ? [{ label, idolId: row.idolId, value: value(row) }] : []);
   return [
     ...pick("Most titles (all)", best(all, (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
     ...pick("Unzure Cup titles", best(comp("UZC"), (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
     ...(topLeague && topLeague[1] > 0 ? [{ label: "League titles", idolId: topLeague[0], value: `${topLeague[1]} title${topLeague[1] === 1 ? "" : "s"}` }] : []),
     ...pick("The Idols titles", best(comp("IDL"), (r) => r.titles), (r) => `${r.titles} title${r.titles === 1 ? "" : "s"}`),
+    ...(topAwards ? [{ label: "Most awards", idolId: topAwards[0], value: `${topAwards[1]} award${topAwards[1] === 1 ? "" : "s"}` }] : []),
     ...pick("Most matches", best(all, (r) => r.matches), (r) => `${r.matches} matches`),
     ...pick("Most wins", best(all, (r) => r.wins), (r) => `${r.wins} wins`),
     ...pick("Most losses", best(all, (r) => r.losses), (r) => `${r.losses} losses`),

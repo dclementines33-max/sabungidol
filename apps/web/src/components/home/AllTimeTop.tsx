@@ -6,9 +6,9 @@ import { IdolLink } from "../wiki/IdolLink";
 
 const BG = "linear-gradient(90deg, rgb(1 0 3 / 0.3), rgb(1 0 3 / 0.85) 50%, var(--color-bg-base) 85%), linear-gradient(0deg, rgb(125 0 24 / 0.55), transparent 60%), url(/home/porch.webp)";
 
-export function AllTimeTop({ row }: { row: CareerRow }) {
+export function AllTimeTop({ row, awards }: { row: CareerRow; awards: number }) {
   const idol = useIdol(row.idolId);
-  const stats = [[row.titles, "titles"], [row.matches, "matches"], [`${row.wins}–${row.draws}–${row.losses}`, "W–D–L"], [`${(row.winRate * 100).toFixed(1)}%`, "win rate"]] as const;
+  const stats = [[row.titles, "titles"], [awards, awards === 1 ? "award" : "awards"], [row.matches, "matches"], [`${row.wins}–${row.draws}–${row.losses}`, "W–D–L"], [`${(row.winRate * 100).toFixed(1)}%`, "win rate"]] as const;
   return (
     <section aria-labelledby="all-time-top" className="relative isolate overflow-hidden rounded-card bg-cover bg-[position:20%_35%]" style={{ backgroundImage: BG }}>
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-bg-base/60 md:hidden" />
