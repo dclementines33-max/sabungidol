@@ -186,10 +186,11 @@
   /* Studio sections (R4): a numbered editorial chapter — a crimson rule on top, the number in blackletter on the right,
      a big headline. The page that holds them resets the counter with .studio-flow. */
   .studio-flow { counter-reset: studio; }
-  .studio-section { position: relative; counter-increment: studio; border-top: 2px solid color-mix(in oklab, var(--color-accent-bright) 35%, transparent); padding-top: 1.5rem; }
-  .studio-section::before { content: counter(studio, decimal-leading-zero); position: absolute; top: -0.5rem; right: 0; font-family: var(--font-gothic); font-size: 3.5rem; line-height: 1; color: color-mix(in oklab, var(--color-accent) 45%, transparent); pointer-events: none; }
-  .studio-section > h2 { font-size: var(--text-section); text-transform: uppercase; }
-  .panel {
+  .studio-section { position: relative; counter-increment: studio; padding: 1.5rem; }
+  .studio-section::before { content: counter(studio, decimal-leading-zero); position: absolute; top: 0.25rem; right: 0.75rem; font-family: var(--font-gothic); font-size: 3.5rem; line-height: 1; color: color-mix(in oklab, var(--color-accent) 45%, transparent); pointer-events: none; }
+  .studio-section > h2 { font-size: var(--text-section); text-transform: uppercase; display: flex; align-items: center; gap: 0.45em; }
+  .studio-section > h2::before { content: ""; flex: none; width: 0.32em; height: 0.95em; background: linear-gradient(180deg, var(--color-accent-bright), var(--color-accent)); transform: skewX(-14deg); }
+  .panel, .studio-section {
     border-radius: var(--radius-card);
     background:
       linear-gradient(225deg, var(--color-bg-base) 0 10px, transparent 10.5px),

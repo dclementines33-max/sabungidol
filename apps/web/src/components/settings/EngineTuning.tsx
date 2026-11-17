@@ -37,7 +37,7 @@ export function EngineTuning({ season }: { season: SeasonRow }) {
         ))}
       </div>
       <div className="flex flex-wrap gap-4">{field("scale", "Odds constant (PRD: 40)", ...TUNING_LIMITS.scale)}{field("sigma", "Variance σ per match (PRD: 4)", ...TUNING_LIMITS.sigma)}</div>
-      <div className="overflow-x-auto"><table className="border-collapse text-sm tabular-nums">
+      <div className="overflow-x-auto"><table className="board w-auto text-sm">
         <caption className="pb-2 text-left text-text-secondary">Favourite's win chance, before variance and form</caption>
         <thead><tr className="text-left text-text-secondary">{["Rating gap", "Per game", "Bo3", "Bo5", "Bo7", "Bo4 W/D/L"].map((h) => <th key={h} scope="col" className="px-3 py-1 font-medium">{h}</th>)}</tr></thead>
         <tbody>

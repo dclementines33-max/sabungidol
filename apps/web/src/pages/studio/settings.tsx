@@ -50,7 +50,7 @@ function Settings() {
               return (
                 <li key={v.id} className="shrink-0">
                   <Link to="/studio/settings" search={{ s: v.id }} aria-current={on ? "page" : undefined}
-                    className={`flex items-baseline gap-3 border-b-2 px-3 py-2 lg:border-b-0 lg:border-l-2 lg:py-3 focus-visible:outline-2 focus-visible:outline-accent-bright ${on ? "border-accent-bright bg-surface/60 text-text-primary" : "border-transparent text-text-secondary hover:bg-surface/40 hover:text-text-primary"}`}>
+                    className={`flex items-baseline gap-3 border-b-2 px-3 py-2 lg:border-b-0 lg:border-l-2 lg:py-3 focus-visible:outline-2 focus-visible:outline-accent-bright ${on ? "border-accent-bright bg-[linear-gradient(90deg,color-mix(in_oklab,var(--color-accent)_65%,transparent),transparent)] text-text-primary" : "border-transparent text-text-secondary hover:bg-surface/40 hover:text-text-primary"}`}>
                     <span>
                       <span className={`block font-display whitespace-nowrap ${v.id === "danger" ? "text-danger" : ""}`}>{v.label}</span>
                       <span className="hidden text-xs text-text-secondary lg:block">{v.note}</span>

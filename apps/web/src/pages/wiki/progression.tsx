@@ -18,9 +18,9 @@ export const Route = createFileRoute("/wiki/progression")({ component: Progressi
 
 function Chapter({ n, title, note, children }: { n: string; title: string; note: string; children: ReactNode }) {
   return (
-    <section aria-labelledby={`ch-${n}`} className="relative isolate space-y-5">
-      <span aria-hidden="true" className="absolute -top-8 -left-2 -z-10 font-gothic text-[6rem] leading-none text-accent/25">{n}</span>
-      <h2 id={`ch-${n}`} className="m-0 text-section">{title}</h2>
+    <section aria-labelledby={`ch-${n}`} className="panel relative isolate space-y-5 overflow-hidden p-5 sm:p-8">
+      <span aria-hidden="true" className="score absolute -top-4 right-3 -z-10 text-ornament leading-none text-accent/25">{n}</span>
+      <h2 id={`ch-${n}`} className="section-title">{title}</h2>
       <p className="m-0 max-w-prose text-text-secondary">{note}</p>
       {children}
     </section>

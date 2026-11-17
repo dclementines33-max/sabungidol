@@ -30,9 +30,9 @@ export function IdolColumn({ title, idols, selected, onToggle, actionLabel, onMo
       onDragOver={(e) => { e.preventDefault(); setOver(true); }}
       onDragLeave={() => setOver(false)}
       onDrop={drop}
-      className={`${over ? "border-accent-bright" : "border-border"} flex min-w-0 flex-1 flex-col gap-3 rounded-card border bg-bg-raised p-4`}
+      className={`${over ? "shadow-[0_0_0_2px_var(--color-accent-bright),0_0_40px_-10px_var(--color-accent-bright)]" : ""} panel flex min-w-0 flex-1 flex-col gap-3 p-4`}
     >
-      <h2 className="m-0 font-display text-lg">{title} <span className="font-mono text-sm text-text-secondary">({idols.length})</span></h2>
+      <h2 className="section-title text-lg">{title} <span className="font-mono text-sm text-text-secondary">({idols.length})</span></h2>
       <input type="search" aria-label={`Search ${title}`} placeholder="Name or group…" value={search} onChange={(e) => setSearch(e.target.value)}
         className="rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-3 py-2 text-text-primary focus-visible:outline-2 focus-visible:outline-accent-bright" />
       <div className="flex flex-wrap items-center gap-2">

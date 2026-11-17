@@ -25,7 +25,7 @@ export function SeasonSettings({ season }: { season: SeasonRow }) {
     <section className={SECTION} aria-labelledby="set-season">
       <h2 id="set-season" className="m-0 font-display">Season</h2>
       <label className="block max-w-sm text-sm text-text-secondary">Season name<input value={name} maxLength={60} onChange={(e) => setName(e.target.value)} className={FIELD} /></label>
-      <table className="w-full border-collapse text-sm">
+      <table className="board text-sm">
         <thead><tr className="text-left text-text-secondary"><th className="py-1 font-medium">Competitions</th><th className="py-1 font-medium">Best of N per stage</th></tr></thead>
         <tbody>
           {SEASON_COMPETITIONS.map((c) => {

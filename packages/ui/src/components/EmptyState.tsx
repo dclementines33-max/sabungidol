@@ -9,9 +9,9 @@ export function EmptyState({ icon: Icon, title, description, action }: {
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
+    <div className="stage flex flex-col items-center gap-2 rounded-card px-4 py-14 text-center">
       <Icon aria-hidden="true" size={48} strokeWidth={1.5} className="text-text-secondary" />
-      <p className="m-0 mt-2 font-display text-lg">{title}</p>
+      <p className="m-0 mt-2 font-display text-section uppercase">{title}</p>
       {description && <p className="m-0 max-w-sm text-sm text-text-secondary">{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
