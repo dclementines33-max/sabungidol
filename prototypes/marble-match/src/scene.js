@@ -3,6 +3,7 @@
 // gate with the arena's name and a checkered finish arch. The previous arena is freed from the GPU.
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { stage } from "./stage.js";
 
 const canvasTex = (w, h, draw) => {
   const c = document.createElement("canvas"); c.width = w; c.height = h;
@@ -66,6 +67,7 @@ export function createScene(canvas, quality) {
     rim.position.copy(mid).add(new THREE.Vector3(-reach, 12, -reach));
     if (deco) freeGroup(deco);
     deco = decorations(arena, game);
+    deco.add(stage(arena, game.groundY, mid, reach)); // lightsticks, LED screens, spotlights
     scene.add(group, deco);
     return { mid, reach };
   }

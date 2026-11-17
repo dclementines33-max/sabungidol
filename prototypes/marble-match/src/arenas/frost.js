@@ -1,7 +1,7 @@
-// 4 · Frostbite Gauntlet: a slippery ice run through spinning bars, swinging hammers and sliding gates.
+// 4 · Ice Concept Gauntlet: a slippery ice run through spinning bars, swinging hammers and sliding gates.
 export default {
-  id: "frost", name: "Frostbite Gauntlet", tagline: "Ice · spinners · hammers · sliding gates",
-  theme: { sky: ["#020617", "#0c4a6e", "#7dd3fc"], wall: "#0ea5e9", wallDark: "#075985", floor: "#cfe8f7", floorAlt: "#b9dcf2", kerb: ["#38bdf8", "#ffffff"], rail: "#e0f2fe", rail2: "#38bdf8", pillar: "#334155", ground: "#0b1724", glow: "#7dd3fc", hazard: "#f43f5e" },
+  id: "frost", name: "Ice Concept Gauntlet", tagline: "Winter concept · spinners · hammers · gates",
+  theme: { cup: "Swiss Play-In", sky: ["#020617", "#0c4a6e", "#7dd3fc"], wall: "#0ea5e9", wallDark: "#075985", floor: "#cfe8f7", floorAlt: "#b9dcf2", kerb: ["#38bdf8", "#ffffff"], rail: "#e0f2fe", rail2: "#38bdf8", pillar: "#334155", ground: "#0b1724", glow: "#7dd3fc", hazard: "#f43f5e" },
   build(kit) {
     const t = kit.trough([
       [0, 34, 0], [14, 32, 0], [26, 29.6, 4], [32, 27.6, 12], [30, 25.6, 22], [20, 23.4, 26], [8, 21.2, 24], [0, 19.2, 30],

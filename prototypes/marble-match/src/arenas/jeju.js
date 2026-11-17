@@ -1,9 +1,9 @@
-// 5 · Jeju Spiral Tower: three banked turns of a helix around a glowing tower, then a dash to the line.
+// 5 · Encore Tower: three banked turns of a helix around a glowing tower, then a dash to the line.
 import * as THREE from "three";
 
 export default {
-  id: "jeju", name: "Jeju Spiral Tower", tagline: "Three-turn helix · constant G",
-  theme: { sky: ["#03140f", "#064e3b", "#10b981"], wall: "#059669", wallDark: "#064e3b", floor: "#1a2622", floorAlt: "#22312b", kerb: ["#34d399", "#ecfdf5"], rail: "#6ee7b7", rail2: "#fde68a", pillar: "#1f3a33", ground: "#04120d", glow: "#34d399", hazard: "#fde68a" },
+  id: "jeju", name: "Encore Tower", tagline: "Three-turn encore spiral round the tower",
+  theme: { cup: "Last Chance Qualifier", sky: ["#03140f", "#064e3b", "#10b981"], wall: "#059669", wallDark: "#064e3b", floor: "#1a2622", floorAlt: "#22312b", kerb: ["#34d399", "#ecfdf5"], rail: "#6ee7b7", rail2: "#fde68a", pillar: "#1f3a33", ground: "#04120d", glow: "#34d399", hazard: "#fde68a" },
   build(kit) {
     const pts = [];
     for (let k = 0; k <= 36; k++) { const a = (k / 12) * Math.PI * 2; pts.push([Math.cos(a) * 8, 36 - (k / 12) * 8, Math.sin(a) * 8]); }

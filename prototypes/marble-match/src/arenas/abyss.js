@@ -1,12 +1,12 @@
-// 15 · Abyss Trench: a giant glass spiral down into the deep, a wide trench run guarded by jellyfish spinners, boosts.
+// 15 · B-Side Abyss: a giant glass spiral down into the deep, a wide trench run guarded by jellyfish spinners, boosts.
 import * as THREE from "three";
 import { boost, pipe } from "../kit/extras.js";
 import { after } from "./join.js";
 
 const taper = (f) => (f > 0.8 ? 2.6 - 1.2 * ((f - 0.8) / 0.2) : 2.6);
 export default {
-  id: "abyss", name: "Abyss Trench", tagline: "Giant glass spiral · trench run · jellyfish",
-  theme: { sky: ["#000814", "#001d3d", "#003566"], wall: "#0077b6", wallDark: "#023e8a", floor: "#03045e", floorAlt: "#04086e", kerb: ["#00f5d4", "#7b2cbf"], rail: "#00f5d4", rail2: "#9b5de5", pillar: "#012a4a", ground: "#000510", glow: "#00f5d4", hazard: "#f15bb5", boost: "#00f5d4", glass: "#7cf6ff", groundStyle: "deep" },
+  id: "abyss", name: "B-Side Abyss", tagline: "Deep cut · giant glass spiral · trench run",
+  theme: { cup: "B-Side Cup", sky: ["#000814", "#001d3d", "#003566"], wall: "#0d9488", wallDark: "#134e4a", floor: "#03045e", floorAlt: "#04086e", kerb: ["#5eead4", "#7b2cbf"], rail: "#00f5d4", rail2: "#9b5de5", pillar: "#012a4a", ground: "#000510", glow: "#00f5d4", hazard: "#f15bb5", boost: "#00f5d4", glass: "#7cf6ff", groundStyle: "deep" },
   build(kit) {
     const a = kit.trough([[0, 38, 0], [10, 36.8, 0], [16, 36, 0], [18.5, 35.75, 0]], { width: taper, checker: "start" });
     const spiral = [];

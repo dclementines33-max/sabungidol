@@ -1,12 +1,12 @@
-// 14 · Dragon Slalom: a lantern-lit slalom with bumper posts at every apex, then a wide bobsled half-pipe where the
+// 14 · Fan Chant Slalom: a lantern-lit slalom with bumper posts at every apex, then a wide bobsled half-pipe where the
 // marbles ride the walls, then a boost into the final straight.
 import * as THREE from "three";
 import { boost } from "../kit/extras.js";
 import { after } from "./join.js";
 
 export default {
-  id: "dragon", name: "Dragon Slalom", tagline: "Lantern slalom · bobsled half-pipe",
-  theme: { sky: ["#1a0005", "#8b0000", "#ffb703"], wall: "#c1121f", wallDark: "#780000", floor: "#1b0d0a", floorAlt: "#2a1410", kerb: ["#ffb703", "#c1121f"], rail: "#ffb703", rail2: "#ff595e", pillar: "#3d0c02", ground: "#160302", glow: "#ffb703", hazard: "#ffb703", boost: "#ffd60a", groundStyle: "rings" },
+  id: "dragon", name: "Fan Chant Slalom", tagline: "Lightstick slalom · bobsled half-pipe",
+  theme: { cup: "Fan Meeting", sky: ["#1a0005", "#8b0000", "#ffb703"], wall: "#c1121f", wallDark: "#780000", floor: "#1b0d0a", floorAlt: "#2a1410", kerb: ["#ffb703", "#c1121f"], rail: "#ffb703", rail2: "#ff595e", pillar: "#3d0c02", ground: "#160302", glow: "#ffb703", hazard: "#ffb703", boost: "#ffd60a", groundStyle: "rings" },
   build(kit) {
     const a = kit.trough([[0, 34, 0], [8, 33, 2.5], [16, 32, -2.5], [24, 31, 2.5], [32, 30, -2.5], [40, 29, 2.5], [48, 28, -2.5], [56, 27, 0], [62, 26.2, -4]], { checker: "start" });
     for (let k = 1; k <= 6; k++) { // a bumper post at each apex, on its inside

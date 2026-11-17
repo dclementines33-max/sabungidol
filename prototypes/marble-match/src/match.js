@@ -1,7 +1,7 @@
 // A match. Two marbles: a Best-of-N series with the app's rules (engine seriesRules: Bo3/5/7 first to 2/3/4, Bo4 first
 // to 3 or 2–2 = draw); the result is the games' winners in order ("A" = marble 0, "B" = marble 1), what the app's
 // acceptMatch takes. Three to twenty marbles: a Grand Prix of N races with F1 points (25-18-15-12-10-8-6-4-2-1), ties
-// broken by wins. Every game is on a different arena, drawn at random for the match.
+// broken by wins. The system draws ONE arena for the whole match; a grand final changes arena every game (all different).
 import * as THREE from "three";
 import { drawArenas } from "./arenas/index.js";
 import { createGame, rng } from "./race.js";
@@ -10,8 +10,10 @@ import { freeGroup } from "./scene.js";
 export const POINTS = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
 export const seriesTarget = (bestOf) => (bestOf === 4 ? 3 : (bestOf + 1) / 2);
 
-export function createMatch({ bestOf, ratings, advantage, seed }) {
-  return { bestOf, ratings, advantage, seed, gp: ratings.length > 2, arenas: drawArenas(rng(seed)), results: [], gameSeed: (g) => (seed * 31 + g * 7919) | 0 };
+export function createMatch({ bestOf, ratings, advantage, seed, grandFinal = false }) {
+  const drawn = drawArenas(rng(seed));
+  const arenas = grandFinal ? drawn : Array.from({ length: Math.max(bestOf, drawn.length) }, () => drawn[0]); // arenas[g] = game g's arena
+  return { bestOf, ratings, advantage, seed, grandFinal, gp: ratings.length > 2, arenas, results: [], gameSeed: (g) => (seed * 31 + g * 7919) | 0 };
 }
 
 export const games = (match) => match.results.map((r) => (r[0] === 0 ? "A" : "B"));

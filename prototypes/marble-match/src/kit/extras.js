@@ -13,16 +13,21 @@ const chevrons = (color) => {
   return t;
 };
 
-// A boost pad over samples i0…i1 of a trough section: a strip of flowing chevrons and a glowing arch at its start.
-export function boost(kit, sec, f0, f1, { power = 14, color = kit.theme.boost ?? "#39ff88" } = {}) {
-  const i0 = Math.round(f0 * (sec.n - 1)), i1 = Math.round(f1 * (sec.n - 1));
-  kit.boosts.push({ sec, i0, i1, power });
+// A small boost pad somewhere in the stretch f0…f1 of a trough — where exactly, and how far across, is drawn every game:
+// only a marble that happens to roll over it gets the push (race.js; harder the further behind it is).
+export function boost(kit, sec, f0, f1, { power = 14, color = kit.theme.boost ?? "#39ff88", len = 1.4, width = 0.8, u } = {}) {
+  const span = Math.max(2, Math.round(len / sec.step));
+  const lo = Math.round(f0 * (sec.n - 1)), hi = Math.max(lo, Math.round(f1 * (sec.n - 1)) - span);
+  const i0 = Math.min(sec.n - 1 - span, lo + Math.floor(kit.rand() * (hi - lo + 1))), i1 = i0 + span;
+  const room = Math.max(0, (sec.half ? sec.half(i0) : 1.3) - 0.6 - width / 2);
+  const uc = u ?? (kit.rand() * 2 - 1) * room;
+  kit.boosts.push({ sec, i0, i1, power, u0: uc - width / 2 - 0.15, u1: uc + width / 2 + 0.15 }); // a marble touching the edge counts
   const pos = [], uv = [], idx = [];
   for (let i = i0; i <= i1; i++) {
-    for (const u of [-0.75, 0.75]) { sec.pts[i].clone().addScaledVector(sec.side[i], u).addScaledVector(sec.up[i], 0.03).toArray(pos, pos.length); }
-    const v = ((i - i0) * sec.step) / 1.2;
+    for (const du of [-width / 2, width / 2]) sec.pts[i].clone().addScaledVector(sec.side[i], uc + du).addScaledVector(sec.up[i], 0.03).toArray(pos, pos.length);
+    const v = ((i - i0) * sec.step) / (width * 0.9);
     uv.push(0, v, 1, v);
-    if (i < i1) { const a = (i - i0) * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+    if (i < i1) { const k = (i - i0) * 2; idx.push(k, k + 2, k + 1, k + 1, k + 2, k + 3); }
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
@@ -33,10 +38,27 @@ export function boost(kit, sec, f0, f1, { power = 14, color = kit.theme.boost ??
   const strip = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }));
   strip.renderOrder = 1;
   kit.group.add(strip);
-  const arch = new THREE.Mesh(new THREE.TorusGeometry(1.45, 0.06, 6, 24, Math.PI), new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 2 }));
-  arch.position.copy(sec.pts[i0]);
-  arch.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(sec.side[i0], sec.up[i0], sec.T[i0].clone().negate()));
-  kit.group.add(arch);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), new THREE.MeshBasicMaterial({ color, toneMapped: false }));
+  glow.position.copy(sec.pts[i0]).addScaledVector(sec.side[i0], uc).addScaledVector(sec.up[i0], 0.15);
+  kit.group.add(glow);
+}
+
+// Each game, a few things land in new places: 3–6 bumper posts and 5 small boost pads on the wider troughs (never next to
+// a moving piece). The same arena never plays the same way twice.
+export function scatter(kit, sections) {
+  const troughs = sections.flatMap((s) => s.branches ?? [s]).filter((s) => s.kind === "trough" && s.n > 60);
+  if (!troughs.length) return;
+  const pick = () => troughs[Math.floor(kit.rand() * troughs.length)];
+  const bumpers = 3 + Math.floor(kit.rand() * 4);
+  for (let k = 0; k < bumpers; k++) for (let tries = 0; tries < 12; tries++) {
+    const sec = pick(), i = Math.floor((0.15 + 0.7 * kit.rand()) * (sec.n - 1));
+    if (sec.half(i) < 1.2 || kit.busy.some((b) => b.sec === sec && Math.abs(b.i - i) < 16)) continue;
+    const u = (kit.rand() * 2 - 1) * (sec.half(i) - 0.8);
+    kit.pin(sec.pts[i].clone().addScaledVector(sec.side[i], u).addScaledVector(sec.up[i], 0.45), sec.up[i], { r: 0.17, bounce: 0.6 });
+    kit.busy.push({ sec, i });
+    break;
+  }
+  for (let k = 0; k < 5; k++) { const f = 0.12 + 0.76 * kit.rand(); boost(kit, pick(), f, f + 0.03); }
 }
 
 // A closed glass tube along points (radius r): the inside is the physics surface, the glass is see-through with rings.
@@ -72,6 +94,7 @@ export function pipe(kit, points, { radius = 0.72, rings = 9 } = {}) {
 
 // A tumble drum: a barrel spinning about its (slightly downhill) axis with fins inside that lift and drop the marbles.
 export function drum(kit, { from, to, radius = 1.5, speed = 1.8, fins = 4 }) {
+  speed *= 0.8 + 0.4 * kit.rand(); // a new rhythm every game
   const axis = to.clone().sub(from), length = axis.length();
   axis.normalize();
   const mid = from.clone().add(to).multiplyScalar(0.5);

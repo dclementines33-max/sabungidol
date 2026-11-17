@@ -1,11 +1,11 @@
-// 11 · Magma Core: one and a quarter laps down round a volcano, wrecking balls swinging over the run, a jump over the
+// 11 · Pyro Stage Inferno: one and a quarter laps down round a volcano, wrecking balls swinging over the run, a jump over the
 // lava, boosts that let the back of the field fight back.
 import * as THREE from "three";
 import { boost } from "../kit/extras.js";
 
 export default {
-  id: "magma", name: "Magma Core", tagline: "Round the volcano · wrecking balls · lava jump",
-  theme: { sky: ["#0a0000", "#3d0700", "#ff4800"], wall: "#2b0f0a", wallDark: "#140806", floor: "#151010", floorAlt: "#1d1412", kerb: ["#ff6b00", "#ffd166"], rail: "#ff6b00", rail2: "#ffd166", pillar: "#2a1410", ground: "#200500", glow: "#ff4800", hazard: "#ffd166", boost: "#ffd166", groundStyle: "lava" },
+  id: "magma", name: "Pyro Stage Inferno", tagline: "Pyro stage · wrecking balls · fire jump",
+  theme: { cup: "Grand Final", sky: ["#0a0000", "#3d0700", "#ff4800"], wall: "#2b0f0a", wallDark: "#140806", floor: "#151010", floorAlt: "#1d1412", kerb: ["#ff6b00", "#ffd166"], rail: "#ff6b00", rail2: "#ffd166", pillar: "#2a1410", ground: "#200500", glow: "#ff4800", hazard: "#ffd166", boost: "#ffd166", groundStyle: "lava" },
   build(kit) {
     const pts = [];
     for (let k = 0; k <= 30; k++) { const ang = (k / 24) * Math.PI * 2, r = 17 + 1.6 * Math.sin(3 * ang); pts.push(new THREE.Vector3(Math.cos(ang) * r, 34 - k * 0.72, Math.sin(ang) * r)); }

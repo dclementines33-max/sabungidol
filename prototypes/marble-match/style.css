@@ -125,3 +125,5 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .podium .p1 { padding-top: 0; } .podium .p1 img { width: 96px; height: 96px; }
 .gpt { width: 100%; } .gpt th { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 4px 10px; }
 @media (max-width: 700px) { .scoreboard .who { display: none; } .scoreboard .mid { min-width: 110px; } .brand { top: 70px; } }
+.panel .check { display: flex; gap: 8px; align-items: flex-start; font-size: 11px; line-height: 1.4; color: var(--text); }
+.panel .check input { accent-color: var(--hot); margin-top: 2px; }

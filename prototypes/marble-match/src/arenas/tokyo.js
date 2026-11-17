@@ -1,11 +1,11 @@
-// 3 · Tokyo Pachinko: a steep pin board scatters the marbles, a chute feeds a coin funnel, the hole drops them onto the
+// 3 · Lightstick Ocean: a steep pin board scatters the marbles, a chute feeds a coin funnel, the hole drops them onto the
 // home straight. Pure chaos — the pin board decides more than speed.
 import * as THREE from "three";
 import { funnel, plinko } from "../kit/shapes.js";
 
 export default {
-  id: "tokyo", name: "Tokyo Pachinko", tagline: "Pin board · coin funnel · pure chaos",
-  theme: { sky: ["#02010a", "#1e1b4b", "#6d28d9"], wall: "#7c3aed", wallDark: "#3b0764", floor: "#111027", floorAlt: "#17153a", kerb: ["#22d3ee", "#f0abfc"], rail: "#22d3ee", rail2: "#f0abfc", pillar: "#2a2850", ground: "#07051a", glow: "#a855f7", hazard: "#22d3ee" },
+  id: "tokyo", name: "Lightstick Ocean", tagline: "Lightstick pin board · fan-chant funnel",
+  theme: { cup: "The Idols", sky: ["#02010a", "#1e1b4b", "#6d28d9"], wall: "#7c3aed", wallDark: "#3b0764", floor: "#111027", floorAlt: "#17153a", kerb: ["#22d3ee", "#f0abfc"], rail: "#22d3ee", rail2: "#f0abfc", pillar: "#2a2850", ground: "#07051a", glow: "#a855f7", hazard: "#22d3ee" },
   build(kit) {
     const a = kit.trough([[0, 30.6, 0], [6, 29.6, 0], [11, 28.6, 0]], { checker: "start" });
     const board = plinko(kit, { top: new THREE.Vector3(12, 27.9, 0), dir: new THREE.Vector3(1, 0, 0), width: 9, length: 20, slope: 0.42 });

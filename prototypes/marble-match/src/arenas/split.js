@@ -1,11 +1,11 @@
-// 7 · Split Decision: a fork plate with a wedge sends each marble left (long, smooth) or right (short, pinned and
+// 7 · Survival Split: a fork plate with a wedge sends each marble left (long, smooth) or right (short, pinned and
 // spinner-guarded); both branches drop onto a merge plate before the final straight.
 import * as THREE from "three";
 import { plinko } from "../kit/shapes.js";
 
 export default {
-  id: "split", name: "Split Decision", tagline: "Fork in the road · long & smooth or short & brutal",
-  theme: { sky: ["#050505", "#1c1917", "#57534e"], wall: "#d4a017", wallDark: "#7a5c0a", floor: "#141414", floorAlt: "#1d1d1d", kerb: ["#facc15", "#0a0a0a"], rail: "#facc15", rail2: "#fafafa", pillar: "#262626", ground: "#080808", glow: "#facc15", hazard: "#ef4444" },
+  id: "split", name: "Survival Split", tagline: "Survival show · pick a path · long or brutal",
+  theme: { cup: "Survival Round", sky: ["#050505", "#1c1917", "#57534e"], wall: "#d4a017", wallDark: "#7a5c0a", floor: "#141414", floorAlt: "#1d1d1d", kerb: ["#facc15", "#0a0a0a"], rail: "#facc15", rail2: "#fafafa", pillar: "#262626", ground: "#080808", glow: "#facc15", hazard: "#ef4444" },
   build(kit) {
     const a = kit.trough([[0, 32, 0], [10, 30.6, 0], [18, 29.3, 0], [22, 28.8, 0]], { checker: "start" });
     const fork = plinko(kit, { top: new THREE.Vector3(22.6, 28.3, 0), dir: new THREE.Vector3(1, 0, 0), width: 5.3, length: 5, slope: 0.25, pins: false, exit: null });

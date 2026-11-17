@@ -50,7 +50,7 @@ function showEdge() {
 }
 $("advantage").addEventListener("input", showEdge);
 drawField();
-$("try").innerHTML = `<option value="">— a full match —</option>` + ARENAS.map((a) => `<option value="${a.id}">${a.name}</option>`).join("");
+$("try").innerHTML = `<option value="">— the system picks —</option>` + ARENAS.map((a) => `<option value="${a.id}">${a.name}</option>`).join("");
 
 let bestOf = 5, speed = 1, phase = "idle", acc = 0, slowmo = 1, token = 0;
 let match = null, game = null, group = null, marbles = [], players = [], hud = null, tags = [];
@@ -105,8 +105,8 @@ function startMatch() {
   const seed = (Math.random() * 2 ** 31) | 0;
   $("seed").textContent = seed;
   players = field.map((f, k) => (f.photo >= 0 ? { name: photos[f.photo].name, photo: `/photos/${photos[f.photo].file.split("/").map(encodeURIComponent).join("/")}` } : { name: `Marble ${k + 1}`, photo: null }));
-  match = createMatch({ bestOf: one ? 1 : bestOf, ratings: ratings(), advantage: +$("advantage").value, seed });
-  if (one) match.arenas = [one];
+  match = createMatch({ bestOf, ratings: ratings(), advantage: +$("advantage").value, seed, grandFinal: $("grand").checked && !one });
+  if (one) match.arenas = match.arenas.map(() => one); // a chosen arena for the whole match
   hud = createHud(players);
   $("start").disabled = true;
   $("panel").classList.add("folded"); $("fold").setAttribute("aria-expanded", "false");

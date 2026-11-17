@@ -1,7 +1,7 @@
-// 8 · Hanok Cascade: a steep mountain-road descent, six straights joined by tight banked hairpins.
+// 8 · Music Bank Cascade: a steep mountain-road descent, six straights joined by tight banked hairpins.
 export default {
-  id: "cascade", name: "Hanok Cascade", tagline: "Switchbacks · six hairpins",
-  theme: { sky: ["#140713", "#6b1d3a", "#f9a8d4"], wall: "#be185d", wallDark: "#831843", floor: "#2a1520", floorAlt: "#341a28", kerb: ["#f9a8d4", "#fff1f2"], rail: "#fbcfe8", rail2: "#fda4af", pillar: "#3b1f2b", ground: "#12060c", glow: "#f472b6", hazard: "#fde68a" },
+  id: "cascade", name: "Music Bank Cascade", tagline: "Music Bank · six banked hairpins",
+  theme: { cup: "Music Bank Cup", sky: ["#140713", "#6b1d3a", "#f9a8d4"], wall: "#be185d", wallDark: "#831843", floor: "#2a1520", floorAlt: "#341a28", kerb: ["#f9a8d4", "#fff1f2"], rail: "#fbcfe8", rail2: "#fda4af", pillar: "#3b1f2b", ground: "#12060c", glow: "#f472b6", hazard: "#fde68a" },
   build(kit) {
     const pts = [];
     let y = 34;

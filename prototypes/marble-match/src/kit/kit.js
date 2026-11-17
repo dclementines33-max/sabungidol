@@ -26,7 +26,7 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
   const fixedBody = (pos, rot) => world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(pos.x, pos.y, pos.z).setRotation(rot ?? new THREE.Quaternion()));
 
   const kit = {
-    theme, group, mat, RAPIER, world, rand, boosts: [], scrolls, // rand: the game's seeded randomness; boosts: pads; scrolls: textures that flow
+    theme, group, mat, RAPIER, world, rand, boosts: [], scrolls, busy: [], // busy: where moving pieces stand (random bumpers keep away) // rand: the game's seeded randomness; boosts: pads; scrolls: textures that flow
     fixedMesh(positions, indices, { friction = 0.45, restitution = 0.15, oneSided = true } = {}) {
       const flags = oneSided ? RAPIER.TriMeshFlags.FIX_INTERNAL_EDGES : 0;
       world.createCollider(RAPIER.ColliderDesc.trimesh(positions, indices, flags).setFriction(friction).setRestitution(restitution));
@@ -64,12 +64,14 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
     },
     // a bar spinning flat over the floor around `pos` (a section sample), crossing the whole width
     spinner(sec, i, { length = 2.3, speed = 1.4, phase = 0 } = {}) {
+      kit.busy.push({ sec, i }); phase += rand() * 6.3; speed *= (0.8 + 0.4 * rand()) * (rand() < 0.5 ? -1 : 1); // a new rhythm every game
       const up = sec.up[i], base = alignUp(up), pos = sec.pts[i].clone().addScaledVector(up, 0.33);
       return kit.mover((t) => ({ pos, rot: base.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, phase + speed * t)) }),
         [{ size: new THREE.Vector3(length, 0.22, 0.2) }, { size: new THREE.Vector3(0.36, 0.5, 0.36), round: true, material: kit.mat.rail }]);
     },
     // a pendulum hammer swinging across the trough, hung from a gantry
     hammer(sec, i, { height = 3.2, swing = 0.95, speed = 2.2, phase = 0, ball = false } = {}) { // ball: a wrecking ball
+      kit.busy.push({ sec, i }); phase += rand() * 6.3; speed *= 0.85 + 0.3 * rand();
       const up = sec.up[i], T = sec.T[i], pivot = sec.pts[i].clone().addScaledVector(up, height);
       const base = frameRot(sec, i);
       for (const s of [-1, 1]) kit.box({ pos: sec.pts[i].clone().addScaledVector(sec.side[i], s * 1.9).addScaledVector(up, height / 2), size: new THREE.Vector3(0.16, height, 0.16), rot: base, material: mat.steel });
@@ -80,6 +82,7 @@ export function createKit({ RAPIER, world, group, theme, rand = Math.random }) {
     },
     // a block sliding from wall to wall
     gate(sec, i, { speed = 1.6, phase = 0, travel = 0.75 } = {}) {
+      kit.busy.push({ sec, i }); phase += rand() * 6.3; speed *= 0.8 + 0.4 * rand();
       const up = sec.up[i], side = sec.side[i], base = frameRot(sec, i);
       const mid = sec.pts[i].clone().addScaledVector(up, 0.4);
       return kit.mover((t) => ({ pos: mid.clone().addScaledVector(side, travel * Math.sin(speed * t + phase)), rot: base }), [{ size: new THREE.Vector3(1.0, 0.8, 0.4) }]);

@@ -21,10 +21,10 @@ export function createHud(players) {
       const s = standing(match), a = match.arenas[g];
       if (!match.gp) {
         $("scoreboard").innerHTML = `<div class="side red">${face(players[0], COLORS[0])}<span class="who">${name(0)}</span><b class="pts">${s.a}</b></div>
-          <div class="mid"><span>Best of ${match.bestOf} · first to ${seriesTarget(match.bestOf)}</span><strong>Game ${g + 1}</strong><small>${a.name}</small></div>
+          <div class="mid"><span>${match.grandFinal ? "Grand final · " : ""}Best of ${match.bestOf} · first to ${seriesTarget(match.bestOf)}</span><strong>Game ${g + 1}</strong><small>${a.name}</small></div>
           <div class="side blue"><b class="pts">${s.b}</b><span class="who">${name(1)}</span>${face(players[1], COLORS[1])}</div>`;
       } else {
-        $("scoreboard").innerHTML = `<div class="mid"><span>Grand Prix · ${match.ratings.length} marbles</span><strong>Race ${g + 1} / ${match.bestOf}</strong><small>${a.name}</small></div>`
+        $("scoreboard").innerHTML = `<div class="mid"><span>${match.grandFinal ? "Grand final · " : ""}Grand Prix · ${match.ratings.length} marbles</span><strong>Race ${g + 1} / ${match.bestOf}</strong><small>${a.name}</small></div>`
           + s.table.slice(0, 3).map((k, i) => `<div class="gp" style="--c:${COLORS[k]}"><b>${i + 1}</b>${face(players[k], COLORS[k])}<span class="who">${name(k)}</span><b class="pts">${s.points[k]}</b></div>`).join("");
       }
     },

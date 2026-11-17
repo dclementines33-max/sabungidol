@@ -1,5 +1,22 @@
 # Marble Match (preview, separate from the app)
 
+**Update 2026-11-18 (round 3):**
+- **Format (for the app):** the system draws ONE arena for a whole match (a Bo5 = 5 games on it); a **grand final**
+  changes arena every game. The "Arena" picker forces one arena for the whole match.
+- **Variety** (the same arena never plays the same twice): every game 3–6 bumper posts and 5 small boost pads land in
+  new places (`scatter` in `src/kit/extras.js`, never next to a moving piece); spinners / hammers / gates / drums get a
+  new phase and speed (spinners a new direction); each marble's grip, bounce and drag vary a little and the start
+  gate gives each its own shove and spin; **slipstream**: a marble 0.6–5 m behind another is pulled along (2.2 m/s² at
+  its closest) — overtakes. Measured (6 equal marbles, 5–8 races): lead changes per race 1.2–11 (Fight Night Circuit
+  0.5 → 2.1), winners spread over every grid slot, winning time spread ±1–4 s (was ±0.6).
+- **Boost pads are small** (1.4 × 0.8 m, somewhere in their stretch, at a random spot across): only a marble that rolls
+  over one gets the push — luck — still harder the further behind it is. Favourite 95 v 84 now wins 69%.
+- **Themes are Sabung Idol:** arenas renamed after the app's world (Fight Night Circuit, Comeback Sprint, Lightstick
+  Ocean, Ice Concept Gauntlet, Encore Tower, Daesang Bowl, Survival Split, Music Bank Cascade, Inkigayo Overdrive,
+  Unzure Glass Spiral, Pyro Stage Inferno, Album Press 9, Rookie Sky Bridges, Fan Chant Slalom, B-Side Abyss), each
+  with its cup on giant "SABUNG IDOL" LED screens, a sea of lightsticks round the arena and stage spotlights
+  (`src/stage.js`, looks only). Unzure = violet, Nugu = lime, B-Side = teal, like the app.
+
 **Update 2026-11-18 (round 2):** a scoreboard on top; a field of **2–20 marbles** (2 = a Best-of-N series as below, 3+ =
 a **Grand Prix**: 3/4/5/7 races, F1 points 25-18-15-12-10-8-6-4-2-1, ties by wins, podium + table at the end); 7 more
 arenas (15 in all, no second sumo) built for close racing with **boost pads**: they push up to a top speed that is

@@ -48,5 +48,7 @@ export function addTrough(kit, points, opts = {}) {
   kit.group.add(mesh);
   g.rails.forEach((c, i) => kit.group.add(new THREE.Mesh(new THREE.TubeGeometry(c, Math.ceil(sec.n / 2), 0.07, 6), i ? kit.mat.rail2 : kit.mat.rail)));
   for (let i = 10; i < sec.n - 6; i += 16) kit.pillar(sec.pts[i].clone().addScaledVector(sec.up[i], -0.05));
+  sec.kind = "trough";
+  sec.half = (i) => (typeof opts.width === "function" ? opts.width(i / (sec.n - 1)) : opts.width ?? 2.6) / 2; // half the width at sample i
   return sec;
 }

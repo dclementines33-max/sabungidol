@@ -1,11 +1,11 @@
-// 12 · Factory 9: two spinning tumble drums with fins, hammers and gates between them, boosts after each drum.
+// 12 · Album Press 9: two spinning tumble drums with fins, hammers and gates between them, boosts after each drum.
 import * as THREE from "three";
 import { boost, drum } from "../kit/extras.js";
 
 const into = (f) => (f > 0.88 ? 2.6 - 1.2 * ((f - 0.88) / 0.12) : 2.6); // narrows to fit inside a drum's mouth
 export default {
-  id: "factory", name: "Factory 9", tagline: "Tumble drums · hammers · gates · hazard stripes",
-  theme: { sky: ["#0b0b0b", "#262626", "#f59e0b"], wall: "#f5b700", wallDark: "#3a3a3a", floor: "#2a2a2a", floorAlt: "#333333", kerb: ["#f5b700", "#111111"], rail: "#f5b700", rail2: "#ff3b30", pillar: "#4b4b4b", ground: "#121212", glow: "#f59e0b", hazard: "#ff3b30", boost: "#ff3b30", groundStyle: "grid" },
+  id: "factory", name: "Album Press 9", tagline: "Album factory · tumble presses · hammers",
+  theme: { cup: "B-Side Cup", sky: ["#0b0b0b", "#262626", "#f59e0b"], wall: "#f5b700", wallDark: "#3a3a3a", floor: "#2a2a2a", floorAlt: "#333333", kerb: ["#f5b700", "#111111"], rail: "#f5b700", rail2: "#ff3b30", pillar: "#4b4b4b", ground: "#121212", glow: "#f59e0b", hazard: "#ff3b30", boost: "#ff3b30", groundStyle: "grid" },
   build(kit) {
     const a = kit.trough([[0, 30, 0], [10, 28.8, 0], [20, 27.4, 0], [26, 26.6, 0], [30.8, 26.3, 0]], { width: into, checker: "start" });
     const d1 = drum(kit, { from: new THREE.Vector3(30.2, 27.5, 0), to: new THREE.Vector3(37.2, 26.8, 0), speed: 1.7 });

@@ -1,11 +1,11 @@
-// 10 · Crystal Corkscrew: glass tubes — a three-turn corkscrew and a blind S-bend — between open troughs with boosts.
+// 10 · Unzure Glass Spiral: glass tubes — a three-turn corkscrew and a blind S-bend — between open troughs with boosts.
 import * as THREE from "three";
 import { boost, pipe } from "../kit/extras.js";
 
 const taper = (f) => (f > 0.85 ? 2.6 - 1.2 * ((f - 0.85) / 0.15) : 2.6); // narrows into a tube's mouth
 export default {
-  id: "crystal", name: "Crystal Corkscrew", tagline: "Glass tubes · 3-turn corkscrew · blind S-bend",
-  theme: { sky: ["#001219", "#005f73", "#94d2bd"], wall: "#0a9396", wallDark: "#005f73", floor: "#dff6f3", floorAlt: "#cfeeea", kerb: ["#ee9b00", "#ffffff"], rail: "#94d2bd", rail2: "#ee9b00", pillar: "#3d5a5c", ground: "#001219", glow: "#94d2bd", hazard: "#ee9b00", boost: "#ee9b00", glass: "#c9fff6", groundStyle: "rings" },
+  id: "crystal", name: "Unzure Glass Spiral", tagline: "Unzure Cup · glass corkscrew · blind S-bend",
+  theme: { cup: "Unzure Cup", sky: ["#0b0418", "#2e1065", "#a99bf0"], wall: "#7c3aed", wallDark: "#3b1d7a", floor: "#ece8ff", floorAlt: "#ddd6fe", kerb: ["#f0c75e", "#ffffff"], rail: "#c4b5fd", rail2: "#f0c75e", pillar: "#3b2d5c", ground: "#0b0418", glow: "#a99bf0", hazard: "#f0c75e", boost: "#f0c75e", glass: "#e4dcff", groundStyle: "rings" },
   build(kit) {
     const a = kit.trough([[0, 36, 0], [10, 34.8, 0], [18, 33.6, 2], [22, 33, 3], [24.5, 32.85, 3.2]], { width: taper, checker: "start" });
     const helix = [];
