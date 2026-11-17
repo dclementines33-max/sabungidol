@@ -22,7 +22,7 @@ test("Perbarui data idol: preview, apply, role on the profile", async ({ page })
   await page.goto("/wiki/idols");
   await page.getByRole("list", { name: "Idol" }).getByRole("link").filter({ has: page.getByText("Rei", { exact: true }) }).first().click();
   await expect(page.getByText(/Main Rapper, Sub-Vocalist/).first()).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText(/· JP ·/).first()).toBeVisible();
+  await expect(page.getByText(/Japan/).first()).toBeVisible();
 
   // The same file put into "Add idols → File CSV/JSON" (the user did that): existing idols are refused as new ones,
   // but a button updates their birthday and nationality.
