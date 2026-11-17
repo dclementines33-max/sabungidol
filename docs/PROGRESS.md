@@ -29,6 +29,10 @@ Sessions:
 
 `apps/web/e2e/zzshots.e2e.ts` is untracked: a worker's screenshot helper that was never committed.
 
+## ▶ RESUME HERE (saved 2026-11-17, Opus design pass)
+
+**DESIGN PASS (task 2, not deployed):** 9416d79 broadcast fix (same-matchday stories each hold), then one commit per page group: 11aa62a home, a2d1e3d competition, 1146f9c archive, 33fcb8d idols, 05822ff records, 660e947 settings. RULE: headline sizes come from the display scale in tokens.css (`text-section` < `text-headline` < `text-hero`, `text-ornament`/`-xl` for giant decorative words/numbers) — never a hand-written `text-[clamp(...)]` (0 left); a section headline without a kicker = `.section-title` (crimson rule, no box); a page starts with `PageHeader` or a hero. Phone check: `SHOT=after GROUP=<group> pnpm --filter @sabung/web exec playwright test design.e2e.ts` saves `test-results/design-*` and logs what overflows at 375 px. Playwright outputDir is `test-results/.runs` (screenshots in test-results/ now survive runs). Audit + table: `side-session-notes/local_cf80d055-9fbf-4c54-904c-c2bf6b3af1be/design-pass.md`. Icons untouched (task 3).
+
 ## ▶ RESUME HERE (saved 2026-11-17, Opus bug hunt)
 
 **BUG HUNT + FIXES (from 28c15ea, not deployed):** 484d020 engine (award bonus shown = real gain under the 100 cap), 78341ef panels (shared Tabs falls back when the active tab disappears + nowrap at 375 px; Season Recap survives a missing photo file; archive picker falls back when its season is gone), f4c099d wiki (group logo upload error E-GROUP-001; H2H refuses same idol both sides), 8f94cee career (Awards CSV quotes names), 4e570f7 backup (broken manifest = "not a backup"; branding logo error E-BRAND-001). Home/dashboard: nothing new. Report + open questions: `side-session-notes/local_cf80d055-9fbf-4c54-904c-c2bf6b3af1be/bughunt.md`.
