@@ -168,7 +168,7 @@
   .kicker::before { content: ""; display: inline-block; width: 0.5em; height: 0.85em; margin-right: 0.55em; vertical-align: -0.1em; background: currentColor; transform: skewX(-20deg); }
   .kicker.no-slash::before, .tag + .kicker::before { display: none; }
   /* A section's headline: the display scale's section size and a short crimson rule above it (a line, never a box). */
-  .section-title { position: relative; margin: 0; display: flex; align-items: center; gap: 0.45em; font-size: var(--text-section); line-height: 1; }
+  .section-title { position: relative; margin: 0; display: flex; align-items: center; gap: 0.45em; font-family: var(--font-display); font-stretch: 115%; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; font-size: var(--text-section); line-height: 1; }
   .section-title::before { content: ""; flex: none; width: 0.32em; height: 0.95em; background: linear-gradient(180deg, var(--color-accent-bright), var(--color-accent)); transform: skewX(-14deg); box-shadow: 0 0 18px -2px color-mix(in oklab, var(--color-accent-bright) 70%, transparent); }
   /* Huge words drawn as outlines only, behind photos (editorial). */
   .outline-text { color: transparent; -webkit-text-stroke: 1.5px var(--color-text-secondary); }

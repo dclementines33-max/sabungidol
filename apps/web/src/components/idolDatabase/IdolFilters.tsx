@@ -9,9 +9,9 @@ export type View = "grid" | "table";
 
 export function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: [string, string][] }) {
   return (
-    <label className="text-sm text-text-secondary">
+    <label className="kicker no-slash text-text-secondary">
       {label}
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 block rounded-none border-0 border-b-2 border-border-strong bg-surface/70 px-2 py-1 text-text-primary">
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="mt-1.5 block min-w-44 rounded-[3px] border-0 bg-stage-hi px-3 py-2 font-display text-sm tracking-normal text-text-primary normal-case shadow-[inset_0_-2px_0_var(--color-accent-bright)] focus-visible:outline-2 focus-visible:outline-accent-bright">
         {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
       </select>
     </label>

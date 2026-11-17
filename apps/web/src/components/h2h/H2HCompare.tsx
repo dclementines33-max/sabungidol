@@ -70,7 +70,7 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
         <Side id={b} align="right" />
       </div>
       <table className="w-full border-collapse text-sm">
-        <caption className="section-title pb-4 text-left text-lg">Tale of the tape</caption>
+        <caption className="section-title pb-4 text-left font-display text-lg uppercase">Tale of the tape</caption>
         <tbody>
           {rows.map(([label, va, vb]) => (
             <tr key={label} className="odd:bg-stage-hi/50">

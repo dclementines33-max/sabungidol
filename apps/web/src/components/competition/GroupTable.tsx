@@ -7,7 +7,7 @@ export function GroupTable({ name, rows, through }: { name: string; rows: GroupR
   const lookup = useIdolLookup();
   return (
     <table className="board text-sm">
-      <caption className="section-title pb-3 text-left text-lg">{name}</caption>
+      <caption className="section-title pb-3 text-left font-display text-lg uppercase">{name}</caption>
       <thead><tr>{["#", "Idol", "P", "W-D-L", "±", "Pts", ""].map((h, i) => <th key={i} scope="col" className="px-1 pb-1 font-bold">{h}</th>)}</tr></thead>
       <tbody>
         {rows.map((r) => {
