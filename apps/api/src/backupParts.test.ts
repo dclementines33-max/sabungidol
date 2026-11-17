@@ -37,6 +37,7 @@ it("a big backup goes up in parts and comes back joined, in order; another user 
   expect((await put(0, parts[0]!, a.cookie, "not-a-uuid")).status).toBe(400);
   expect((await call(`/api/backups/upload/${upload}/0`, { method: "PUT", body: parts[0] })).status).toBe(401);
   expect((await put(99, parts[0]!)).status).toBe(400);
+  expect((await call(`/api/backups/upload/${upload}/`, { method: "PUT", headers: { cookie: a.cookie }, body: parts[0] })).status).toBe(400); // empty part (trailing slash)
   for (const [i, p] of parts.entries()) expect((await put(i, p)).status).toBe(201);
   expect((await call(`/api/backups/upload/${upload}?name=evil.exe&parts=3&size=6`, { method: "POST", headers: { cookie: a.cookie } })).status).toBe(400);
   const done = await call(`/api/backups/upload/${upload}?name=sabung-base-2026-11-16.sabung&parts=3&size=6`, { method: "POST", headers: { cookie: a.cookie } });

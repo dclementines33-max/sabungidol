@@ -29,7 +29,7 @@ export async function handle(request: Request, { db, auth, files }: Deps): Promi
     if (!upload || !UPLOAD_ID.test(upload)) return error(400, "Bad upload id.");
     if (part !== undefined && request.method === "PUT") {
       const i = Number(part);
-      if (!Number.isInteger(i) || i < 0 || i >= MAX_PARTS) return error(400, "Bad part number.");
+      if (!part || !Number.isInteger(i) || i < 0 || i >= MAX_PARTS) return error(400, "Bad part number.");
       const body = await request.arrayBuffer();
       if (body.byteLength === 0 || body.byteLength > MAX_PART_BYTES) return error(413, "A part is empty or over 25 MB.");
       await uploadPart(files, userId, upload, i, body);
