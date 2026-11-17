@@ -86,7 +86,8 @@ export const matches = pgTable("matches", {
   scoreA: smallint().notNull(),
   scoreB: smallint().notNull(),
   result: text().notNull(), // A / B / D
-  method: text().notNull(), // sim / manual / wheel
+  method: text().notNull(), // sim / manual / wheel / marble
+  arenas: text().array(), // 2026-11-18: arena ids (one; a grand final one per game); null = played before arenas existed
   ratingA: smallint().notNull(),
   ratingB: smallint().notNull(),
   formA: text().notNull(),

@@ -2,6 +2,7 @@
 // a notice when it ends, and every season view refreshed afterwards.
 import { useIdolLookup } from "@sabung/ui";
 import { useState } from "react";
+import { arenaPool } from "../../data/arenaSettings";
 import { engine, onProgress } from "../../data/engineClient";
 import { notify } from "../../data/notices";
 import { queryClient } from "../../data/queryClient";
@@ -18,7 +19,7 @@ export function usePlaySeason() {
   const play = async (target: PlayTarget) => {
     setProgress({ done: 0, total: 1 });
     try {
-      const result = await engine().playSeason(target, onProgress(setProgress));
+      const result = await engine().playSeason(target, onProgress(setProgress), arenaPool());
       notify({ level: "success", message: `${result.added.toLocaleString("en-GB")} matches played${result.paused ? " (paused)" : ""}${result.done ? ". Season complete!" : ""}` });
       if (result.added > 1 && result.highlights.length) useSimTimeline.getState().show(result.highlights); // bulk plays only
       result.notices.forEach((message) => notify({ level: "info", message: withNames(message, (id) => lookup(id)?.name) }, { log: false }));

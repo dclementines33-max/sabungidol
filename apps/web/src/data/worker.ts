@@ -161,8 +161,8 @@ const api = {
   leagueView: async (comp: string) => leagueView(await open(), comp),
   cupView: async (comps: string[], seasonId?: string) => cupView(await open(), comps, seasonId),
   matchPreview: async (id: string) => matchPreview(await open(), id),
-  acceptMatch: async (id: string, games: ("A" | "B")[], method: "sim" | "manual" | "wheel") => acceptMatch(await open(), id, games, method),
-  playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void) => playSeason(await open(), target, onProgress),
+  acceptMatch: async (id: string, games: ("A" | "B")[], method: "sim" | "manual" | "wheel" | "marble", arenas?: string[]) => acceptMatch(await open(), id, games, method, arenas),
+  playSeason: async (target: PlayTarget, onProgress: (p: PlayProgress) => void, arenas?: string[]) => playSeason(await open(), target, onProgress, arenas),
   pauseSeason: () => requestPause(),
   // Integrity check (PRD §14.2).
   integrityCheck: async () => integrityCheck(await open(), DATABASE),

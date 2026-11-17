@@ -3,7 +3,7 @@
 // reuses that saved result and every later match follows from it.
 import { type Db, saveMatches } from "@sabung/db";
 import { type Side, moraleName, moraleTrack, runSeason, seriesState } from "@sabung/engine";
-import { seasonBestOf } from "@sabung/shared";
+import { ARENA_IDS, seasonBestOf } from "@sabung/shared";
 import { seasonInput } from "./seasonRunner";
 import { seasonMatches } from "./seasonMatches";
 
@@ -42,13 +42,16 @@ export async function matchPreview(db: Db, id: string) {
 }
 
 
-export async function acceptMatch(db: Db, id: string, games: Side[], method: "sim" | "manual" | "wheel") {
+// `arenas` = what the match dialog drew (one, or one per game for a grand final; extra ones beyond the games are cut).
+export async function acceptMatch(db: Db, id: string, games: Side[], method: "sim" | "manual" | "wheel" | "marble", arenas: string[] = []) {
   const { seasonId, match, bestOf } = await playable(db, id);
   const state = seriesState(bestOf, games);
   // The series must end exactly on the last game, with only A/B games.
   if (!state.result || seriesState(bestOf, games.slice(0, -1)).result || games.some((g) => g !== "A" && g !== "B")) {
     throw new Error(`Those games aren't a valid Bo${bestOf} result.`);
   }
-  await saveMatches(db, seasonId, [{ ...match, games, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result }], method);
+  if (arenas.some((a) => !ARENA_IDS.has(a))) throw new Error("Unknown arena.");
+  const played = arenas.length > 1 ? arenas.slice(0, games.length) : arenas;
+  await saveMatches(db, seasonId, [{ ...match, games, scoreA: state.scoreA, scoreB: state.scoreB, result: state.result, arenas: played.length ? played : null }], method);
   return { scoreA: state.scoreA, scoreB: state.scoreB, result: state.result };
 }

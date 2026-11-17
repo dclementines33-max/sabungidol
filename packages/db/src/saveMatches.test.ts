@@ -51,7 +51,15 @@ describe("saving a season (PRD §12, §13)", () => {
     const original = season.matches.find((m) => m.games.length === 7)!;
     const [row] = await db.select().from(matches).where(sql`${matches.id} = ${original.id}`);
     expect(gamesFromMask(row.games, row.scoreA + row.scoreB)).toEqual(original.games);
-    expect(row).toMatchObject({ idolA: original.idolA, result: original.result, method: "sim", formA: original.formA });
+    expect(row).toMatchObject({ idolA: original.idolA, result: original.result, method: "sim", formA: original.formA, arenas: null });
+  });
+
+  it("stores the arenas a match was played on, and the marble method", async () => {
+    const m = season.matches[0]!;
+    await db.delete(matches).where(sql`${matches.id} = ${m.id}`);
+    await saveMatches(db, "S01", [{ ...m, arenas: ["jeju"] }], "marble");
+    const [row] = await db.select().from(matches).where(sql`${matches.id} = ${m.id}`);
+    expect(row).toMatchObject({ arenas: ["jeju"], method: "marble" });
   });
 
   it("refuses a duplicate idol: same name in the same group, or two soloists", async () => {

@@ -5,7 +5,7 @@
 import { type Db, type SeasonRow, currentSeason, listSeasons, deleteMatches, leagueRosters, listIdols, listSeasonMatches, mostMetPairs, saveMatches } from "@sabung/db";
 import { type MatchRef, type SeasonInput, type SimMatch, computeStandings, runSeason, seasonScores, seasonTop, simHighlights } from "@sabung/engine";
 import { bracketSkeleton } from "./bracketSkeleton";
-import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, readSeasonConfig } from "@sabung/shared";
+import { D1_LEAGUES, D2_LEAGUES, SEASON_COMPETITIONS, type StageCode, competitionKeyOf, drawArenas, isGrandFinal, readSeasonConfig } from "@sabung/shared";
 import { seasonMatches } from "./seasonMatches";
 
 export type PlayTarget =
@@ -76,7 +76,8 @@ export function allows(target: PlayTarget, frontier: MatchRef[]): (m: MatchRef) 
   }
 }
 
-export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: PlayProgress) => void) {
+// `arenas` = the arena pool the user left on (Marble Race panel): every match saved gets its arena(s) from it.
+export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: PlayProgress) => void, arenas: string[] = []) {
   pauseRequested = false;
   const input = await seasonInput(db);
   let saved: SimMatch[] = await listSeasonMatches(db, input.seasonId); // fresh: playSeason extends it as it saves
@@ -94,7 +95,7 @@ export async function playSeason(db: Db, target: PlayTarget, onProgress: (p: Pla
     const fresh = result.matches.filter((m) => !known.has(m.id));
     const rounds = new Map<string, SimMatch[]>();
     for (const m of fresh) rounds.set(`${m.comp}-${m.stage}-${m.round}`, [...(rounds.get(`${m.comp}-${m.stage}-${m.round}`) ?? []), m]);
-    for (const batch of rounds.values()) await saveMatches(db, input.seasonId, batch);
+    for (const batch of rounds.values()) await saveMatches(db, input.seasonId, batch.map((m) => ({ ...m, arenas: drawArenas(arenas, isGrandFinal(m.comp, m.round), m.games.length) })));
     added += fresh.length;
     saved = result.matches;
     onProgress({ done: added, total: Math.max(estimate, added) });
