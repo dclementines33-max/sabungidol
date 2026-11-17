@@ -4,7 +4,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button, IdolPhoto, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
-import { Trophy } from "lucide-react";
+import { Trophy } from "@sabung/ui/icons";
 import type { CSSProperties } from "react";
 import { engine } from "../../data/engineClient";
 import { queryClient } from "../../data/queryClient";

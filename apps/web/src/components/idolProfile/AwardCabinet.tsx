@@ -1,7 +1,7 @@
 // Award cabinet on the Idol Profile (2026-11-17): every season award she won, in award order, with the seasons.
 // Same plain shelves as the trophy cabinet.
 import { AWARDS } from "@sabung/engine";
-import { Award } from "lucide-react";
+import { Award } from "@sabung/ui/icons";
 import { AWARD_TEXT } from "../play/awardText";
 
 export function AwardCabinet({ awards }: { awards: { key: string; season: number }[] }) {

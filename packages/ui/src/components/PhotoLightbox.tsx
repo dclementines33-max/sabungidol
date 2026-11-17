@@ -1,6 +1,6 @@
 // One gallery photo shown large, with ‹ › on the left and right middle of a fixed-size frame, so the buttons
 // stay put whatever the photo's shape. Arrow keys step too; both ends wrap around.
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "../icons";
 import type { ReactNode } from "react";
 import { Modal } from "./Modal";
 import { useGalleryPhoto, useIdolPhoto } from "./idolSource";

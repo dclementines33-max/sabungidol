@@ -3,7 +3,7 @@
 import { EmptyState, VirtualTable } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { UserX } from "lucide-react";
+import { UserX } from "@sabung/ui/icons";
 import { Tabs } from "../../../components/competition/Tabs";
 import { CareerScope } from "../../../components/idolProfile/CareerScope";
 import { ProfileEdit } from "../../../components/idolProfile/ProfileEdit";

@@ -3,7 +3,7 @@
 import { EmptyState, StatTile } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Archive } from "lucide-react";
+import { Archive } from "@sabung/ui/icons";
 import { type ReactNode, useState } from "react";
 import { ArchiveBrackets } from "../../components/archive/ArchiveBrackets";
 import { RecapButton } from "../../components/archive/RecapButton";

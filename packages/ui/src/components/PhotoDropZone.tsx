@@ -1,6 +1,6 @@
 // Drop many photos at once, or pick them (PRD §8, §9). Dropping is a shortcut; the button is the
 // way that works with a keyboard and on phones.
-import { ImagePlus } from "lucide-react";
+import { ImagePlus } from "../icons";
 import { type DragEvent, useRef, useState } from "react";
 import { Button } from "./Button";
 

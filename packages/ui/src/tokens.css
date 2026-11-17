@@ -95,20 +95,22 @@
   }
 }
 
-/* Y2K chrome icons (2026-11-17, user option A): every lucide icon (svg.lucide) is stroked with the shared gradient in
-   ChromeIconDefs (top to bottom: highlight, mid, dark band, bright rim) with a soft ice glow. The fallback colour after
-   url() is used where the defs aren't mounted. .icon-tone keeps an icon's own meaning colour (gold trophies, warnings). */
-:root {
-  --chrome-hi: #ffffff;
-  --chrome-mid: #b9d3e2;
-  --chrome-lo: #6f8ea4;
-  --chrome-rim: #e8f4ff;
-  --chrome-glow: rgb(159 216 255 / 0.55);
-}
+/* Sabung Idol icons (2026-11-17, task 3; replaced the Y2K chrome stroke): packages/ui/src/icons. Outline in currentColor,
+   a translucent ink mass, one spark (red by default, cut out of the page by a dark rim). .icon-tone = the icon itself carries
+   a meaning colour (red warnings, gold trophies), so its spark turns gold to stay visible. */
 @layer base { /* base: a utility on the icon (drop-shadow, size) still wins */
-  svg.lucide { stroke: url(#y2k-chrome) var(--chrome-mid); stroke-width: 2.25; filter: drop-shadow(0 0 2px var(--chrome-glow)); }
-  svg.lucide.icon-tone { stroke: currentColor; }
+  svg.si { overflow: visible; --icon-spark: var(--color-accent-bright); }
+  svg.si.icon-tone { --icon-spark: var(--color-winner); }
+  svg.si .si-ink { fill: currentColor; fill-opacity: 0.22; stroke: none; }
+  svg.si .si-spark { fill: var(--icon-spark); stroke: var(--color-bg-base); stroke-width: 1.4px; paint-order: stroke; }
+  svg.si .si-gold { fill: var(--color-winner); }
+  svg.si .si-cool { fill: var(--color-cool); }
+  svg.si .si-cut { fill: var(--color-bg-base); stroke: none; }
+  svg.si .si-hot { stroke: var(--icon-spark); }
+  svg.si .si-spark, svg.si .si-hot { transition: transform var(--duration-fast, 160ms) ease-out; transform-box: fill-box; transform-origin: center; }
+  :is(a, button):hover > svg.si .si-spark, [aria-current="page"] > svg.si .si-spark { transform: scale(1.25) rotate(-8deg); }
 }
+@media (prefers-reduced-motion: reduce) { svg.si .si-spark { transition: none; } }
 
 :root {
   --duration-fast: 160ms;

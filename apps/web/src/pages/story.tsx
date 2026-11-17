@@ -5,7 +5,7 @@ import { newsScore } from "@sabung/engine";
 import { EmptyState } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Newspaper } from "lucide-react";
+import { Newspaper } from "@sabung/ui/icons";
 import { useState } from "react";
 import { Select } from "../components/idolDatabase/IdolFilters";
 import { StoryCard } from "../components/story/StoryCard";

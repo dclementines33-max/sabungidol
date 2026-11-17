@@ -1,5 +1,5 @@
 // A notification (PRD §14.1) and how each level looks. Stored in event_log and the NotificationCenter.
-import { Ban, CircleCheck, CircleX, Info, TriangleAlert } from "lucide-react";
+import { Ban, CircleCheck, CircleX, Info, TriangleAlert } from "../icons";
 
 export type NoticeLevel = "info" | "success" | "warning" | "blocker" | "error";
 

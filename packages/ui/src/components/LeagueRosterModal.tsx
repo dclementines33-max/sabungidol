@@ -1,7 +1,7 @@
 // Edit one league's roster (PRD §9): exactly 20, no duplicates, warn about idols in another league.
 // Paste names to add many at once, or to replace the whole roster; unknown or ambiguous names are listed, never guessed.
 import { LEAGUE_SIZE, checkRoster } from "@sabung/shared";
-import { TriangleAlert, X } from "lucide-react";
+import { TriangleAlert, X } from "../icons";
 import { type ReactNode, useState } from "react";
 import { Button } from "./Button";
 import { IdolPhoto } from "./IdolPhoto";

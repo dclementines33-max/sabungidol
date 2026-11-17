@@ -1,6 +1,6 @@
 // Left rail (agreed shell): icons only from 640 px, full width from 1024 px unless the user collapsed it.
 import { Link } from "@tanstack/react-router";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "@sabung/ui/icons";
 import { SPACES } from "./nav";
 import { SpaceLinks } from "./SpaceLinks";
 

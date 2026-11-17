@@ -1,7 +1,7 @@
 // The links of one space (Play, Wiki or Studio), shared by the rail and the mobile sheet.
 // Play also holds the 9 competition panels under an expandable "Competitions".
 import { Link, useLocation } from "@tanstack/react-router";
-import { ChevronRight, Trophy } from "lucide-react";
+import { ChevronRight, Trophy } from "@sabung/ui/icons";
 import { COMPETITIONS, type NavItem, type NavSpace } from "./nav";
 
 // label = how a text label shows: always, never (icon only, still read by screen readers), or from 1024 px.

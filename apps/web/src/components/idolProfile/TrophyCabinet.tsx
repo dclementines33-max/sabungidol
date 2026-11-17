@@ -1,6 +1,6 @@
 // Trophy cabinet on the Idol Profile (PRD §16): one shelf per competition with a trophy per title and its season,
 // the big competitions in gold, the rest in the accent colour. Design round 2: each shelf a lit display-case panel.
-import { Trophy } from "lucide-react";
+import { Trophy } from "@sabung/ui/icons";
 import { useBranding } from "../../data/branding";
 
 const GOLD = new Set(["UZC", "IDL-PO", "DSG", "INK"]);

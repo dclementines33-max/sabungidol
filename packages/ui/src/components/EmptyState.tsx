@@ -1,9 +1,9 @@
 // What a panel shows when it has nothing yet, and what to do next (PRD §9 proposal).
-import type { LucideIcon } from "lucide-react";
+import type { Icon as IconType } from "../icons";
 import type { ReactNode } from "react";
 
 export function EmptyState({ icon: Icon, title, description, action }: {
-  icon: LucideIcon;
+  icon: IconType;
   title: string;
   description?: string;
   action?: ReactNode;

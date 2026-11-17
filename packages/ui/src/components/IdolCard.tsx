@@ -3,7 +3,7 @@
 // foil with a holo sheen, plainer metal down to F), a FUT-style column top-left (rating, solid tier badge, flag image), the
 // group logo top-right, and a dark name plate: group, NAME, age and titles. Rating and tier in the bold display font.
 import { tierOf } from "@sabung/shared";
-import { Trophy } from "lucide-react";
+import { Trophy } from "../icons";
 import { Flag } from "./Flag";
 import { IdolPhoto } from "./IdolPhoto";
 import { TIER_FILL } from "./RatingBadge";

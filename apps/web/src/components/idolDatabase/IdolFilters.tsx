@@ -2,7 +2,7 @@
 import type { IdolRow } from "@sabung/db";
 import { D1_LEAGUES, D2_LEAGUES, TIERS } from "@sabung/shared";
 import { Button, countryName } from "@sabung/ui";
-import { LayoutGrid, Table } from "lucide-react";
+import { LayoutGrid, Table } from "@sabung/ui/icons";
 import type { IdolFilter } from "./filterIdols";
 
 export type View = "grid" | "table";

@@ -1,5 +1,5 @@
 // Bell with the history of every notification (PRD §14.1): filter by level, export.
-import { Bell } from "lucide-react";
+import { Bell } from "../icons";
 import { useId, useState } from "react";
 import { Button } from "./Button";
 import { LEVEL, type Notice, type NoticeLevel } from "./notice";

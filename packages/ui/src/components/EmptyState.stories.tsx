@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Users } from "lucide-react";
+import { Users } from "../icons";
 import { EmptyState } from "./EmptyState";
 
 const meta: Meta<typeof EmptyState> = {

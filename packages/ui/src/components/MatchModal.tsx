@@ -3,7 +3,7 @@
 // record, career…) sit under the header. Nothing is written until "Accept Result".
 import { type Side, finalScores, gamesForScore, seriesState, seriesTarget } from "@sabung/engine";
 import type { BestOf } from "@sabung/shared";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "../icons";
 import { useState } from "react";
 import { Button } from "./Button";
 import { MatchGallery } from "./MatchGallery";

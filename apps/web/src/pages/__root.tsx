@@ -1,7 +1,7 @@
 // The HTML document around every screen, and the shell inside it.
 import { EmptyState } from "@sabung/ui";
 import { HeadContent, Link, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
-import { SearchX } from "lucide-react";
+import { SearchX } from "@sabung/ui/icons";
 import type { ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { AppShell } from "../components/shell/AppShell";

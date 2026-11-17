@@ -1,7 +1,7 @@
 // Mobile bottom bar (agreed shell, below 640 px): Home, Play, Wiki, Search, Studio.
 // Play / Wiki / Studio open a sheet with that space's panels.
 import { Link, useLocation } from "@tanstack/react-router";
-import { BookOpen, House, Search, Swords, Wrench } from "lucide-react";
+import { BookOpen, House, Search, Swords, Wrench } from "@sabung/ui/icons";
 import { useState } from "react";
 import { type NavSpace, SPACES, spaceOf } from "./nav";
 import { NavSheet } from "./NavSheet";

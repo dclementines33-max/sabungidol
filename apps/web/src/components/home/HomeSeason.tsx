@@ -2,7 +2,7 @@
 // with the season name, the phase now, progress and a link to continue; beside it only the most important news (topNews).
 import type { AnyStory } from "@sabung/engine";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@sabung/ui/icons";
 import { StoryCard } from "../story/StoryCard";
 
 const BG = "linear-gradient(90deg, rgb(1 0 3 / 0.25), rgb(1 0 3 / 0.85) 50%, var(--color-bg-base) 90%), linear-gradient(0deg, rgb(37 67 93 / 0.6), transparent 60%), url(/home/sky.webp)";

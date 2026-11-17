@@ -3,7 +3,7 @@
 // Zoom, drag to pan, highlight one idol's path. Off-screen cards are skipped by the browser (content-visibility).
 // Update 3: the (grand) final sits at the right end, joined to the last rounds, larger; the 3rd place match under it.
 import type { BracketCell } from "@sabung/engine";
-import { Minus, Plus, Trophy } from "lucide-react";
+import { Minus, Plus, Trophy } from "../icons";
 import { useRef, useState } from "react";
 import { Button } from "./Button";
 import { IdolPhoto } from "./IdolPhoto";

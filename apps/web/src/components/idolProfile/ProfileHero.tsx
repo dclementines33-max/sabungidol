@@ -5,7 +5,7 @@ import type { IdolRow } from "@sabung/db";
 import { tierOf } from "@sabung/shared";
 import { Flag, IdolPhoto, RatingBadge, SearchableIdolSelect, countryName } from "@sabung/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { GitCompareArrows } from "lucide-react";
+import { GitCompareArrows } from "@sabung/ui/icons";
 import { useBranding } from "../../data/branding";
 
 const age = (birthday: string | null) => (birthday ? Math.floor((Date.now() - Date.parse(birthday)) / 31_557_600_000) : null);

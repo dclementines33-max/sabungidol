@@ -1,9 +1,9 @@
 // What the command palette can find (PRD §8): every panel, the 9 competitions, and the commands
 // that exist so far. Idols, groups and season commands join when their data exists (Fase 2–3).
-import { type LucideIcon, PanelLeft, CheckCheck } from "lucide-react";
+import { type Icon as IconType, PanelLeft, CheckCheck } from "@sabung/ui/icons";
 import { COMPETITIONS, SPACES } from "./nav";
 
-export type PaletteItem = { id: string; label: string; group: string; icon: LucideIcon; to?: string; command?: string };
+export type PaletteItem = { id: string; label: string; group: string; icon: IconType; to?: string; command?: string };
 
 export function paletteItems(): PaletteItem[] {
   const panels = SPACES.flatMap((space) =>

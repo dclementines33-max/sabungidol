@@ -3,7 +3,7 @@
 import { Button, EmptyState } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { SearchX, Users } from "lucide-react";
+import { SearchX, Users } from "@sabung/ui/icons";
 import { useMemo, useState } from "react";
 import { IdolDatabaseGrid } from "../../../components/idolDatabase/IdolDatabaseGrid";
 import { IdolDatabaseTable } from "../../../components/idolDatabase/IdolDatabaseTable";

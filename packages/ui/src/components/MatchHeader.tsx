@@ -3,7 +3,7 @@
 // (engine, before variance) and a short head-to-head. A grand final gets gold, a trophy and more light.
 import { getForm, seriesOdds } from "@sabung/engine";
 import type { BestOf } from "@sabung/shared";
-import { Trophy } from "lucide-react";
+import { Trophy } from "../icons";
 import { FormBadge } from "./FormBadge";
 import { IdolPhoto } from "./IdolPhoto";
 import { RatingBadge } from "./RatingBadge";

@@ -2,7 +2,7 @@
 // Enter runs, Esc closes. Full screen on mobile (the Search button), a centred box from 640 px.
 import * as Dialog from "@radix-ui/react-dialog";
 import { useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { Search } from "@sabung/ui/icons";
 import { useEffect, useId, useMemo, useState } from "react";
 import { filterItems, type PaletteItem, paletteItems } from "./paletteItems";
 

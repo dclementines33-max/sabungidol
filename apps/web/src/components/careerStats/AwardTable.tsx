@@ -2,7 +2,7 @@
 import { Button, IdolPhoto, VirtualTable, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Download } from "lucide-react";
+import { Download } from "@sabung/ui/icons";
 import { engine } from "../../data/engineClient";
 import { AWARD_TEXT } from "../play/awardText";
 import { IdolLink } from "../wiki/IdolLink";

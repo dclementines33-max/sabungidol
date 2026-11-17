@@ -4,7 +4,7 @@ import { SEASON_COMPETITIONS, competitionKeyOf } from "@sabung/shared";
 import { EmptyState } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Crown } from "lucide-react";
+import { Crown } from "@sabung/ui/icons";
 import { ChampionList } from "../../components/champions/ChampionList";
 import { WallOfFame } from "../../components/champions/WallOfFame";
 import { Tabs } from "../../components/competition/Tabs";

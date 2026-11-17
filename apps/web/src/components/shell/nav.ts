@@ -2,10 +2,10 @@
 // phase = the PRD §15 phase that builds the panel; until then it shows a placeholder.
 import {
   Archive, ChartColumn, Contact, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
-  Newspaper, Settings, Swords, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type LucideIcon,
-} from "lucide-react";
+  Newspaper, Settings, Swords, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type Icon as IconType,
+} from "@sabung/ui/icons";
 
-export type NavItem = { label: string; to: string; icon: LucideIcon; phase: number };
+export type NavItem = { label: string; to: string; icon: IconType; phase: number };
 export type NavSpace = { id: "play" | "wiki" | "studio"; label: string; items: NavItem[] };
 
 // The 9 competition panels (PRD §8). Division 1/2 each hold their six leagues as tabs.
@@ -65,6 +65,7 @@ export function panelFor(pathname: string): NavItem | undefined {
   if (path === "/dev/crash") return { label: "Error Test", to: path, icon: Gauge, phase: 1 };
   if (path === "/dev/photos") return { label: "Photo Test", to: path, icon: Gauge, phase: 2 };
   if (path === "/dev/data") return { label: "Fill Database", to: path, icon: Gauge, phase: 2 };
+  if (path === "/dev/icons") return { label: "Icon Kit", to: path, icon: Gauge, phase: 2 };
   return ALL.find((item) => item.to === path);
 }
 

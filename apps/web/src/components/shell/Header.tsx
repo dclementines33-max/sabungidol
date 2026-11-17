@@ -1,7 +1,7 @@
 // Top of the content area (agreed shell): page title, season chip, search, notifications.
 import { NotificationCenter } from "@sabung/ui";
 import { useLocation } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { Search } from "@sabung/ui/icons";
 import { exportNotices, useNotices } from "../../data/notices";
 import { useCurrentSeason } from "../../data/seasonQuery";
 import { panelFor } from "./nav";

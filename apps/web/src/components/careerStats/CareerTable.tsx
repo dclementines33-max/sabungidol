@@ -4,7 +4,7 @@ import { type CareerRow, careerOrder } from "@sabung/engine";
 import { Button, IdolPhoto, VirtualTable, useIdolLookup } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Download } from "lucide-react";
+import { Download } from "@sabung/ui/icons";
 import { engine } from "../../data/engineClient";
 import { CAREER_COLUMNS, columnsFor, makeAwardColumns } from "../wiki/careerColumns";
 import { IdolLink } from "../wiki/IdolLink";

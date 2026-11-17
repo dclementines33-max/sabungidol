@@ -1,6 +1,6 @@
 // Form chip (PRD §5.2, §9): fire for On Fire / Hot Streak, ice for Cold Slump; tooltip = last results.
 import type { Form, Result } from "@sabung/engine";
-import { Flame, Snowflake } from "lucide-react";
+import { Flame, Snowflake } from "../icons";
 
 const STYLE: Record<Form["name"], { color: string; icon?: typeof Flame }> = {
   "On Fire": { color: "text-accent-bright", icon: Flame },

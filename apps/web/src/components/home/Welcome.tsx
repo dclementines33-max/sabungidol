@@ -3,7 +3,7 @@
 // comes with Play (Fase 3).
 import { StatTile } from "@sabung/ui";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, DatabaseBackup, Image, Settings, Users } from "lucide-react";
+import { ArrowRight, DatabaseBackup, Image, Settings, Users } from "@sabung/ui/icons";
 import type { ReactNode } from "react";
 
 const STEPS: { to: "/wiki/idols" | "/studio/input" | "/studio/settings"; icon: typeof Users; title: string; text: string; backup?: true }[] = [

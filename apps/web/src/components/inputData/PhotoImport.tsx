@@ -2,7 +2,7 @@
 // checks every match (and picks where unsure) before anything is saved. A new photo replaces the old.
 import type { IdolRow } from "@sabung/db";
 import { Button, PhotoDropZone, SearchableIdolSelect } from "@sabung/ui";
-import { X } from "lucide-react";
+import { X } from "@sabung/ui/icons";
 import { useEffect, useMemo, useState } from "react";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";

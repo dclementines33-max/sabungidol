@@ -3,7 +3,7 @@
 import { Button } from "@sabung/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Pause, Play, SkipForward } from "lucide-react";
+import { Pause, Play, SkipForward } from "@sabung/ui/icons";
 import { useState } from "react";
 import { SeasonClose } from "../../components/play/SeasonClose";
 import { SeasonHonours } from "../../components/play/SeasonHonours";

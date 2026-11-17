@@ -2,7 +2,7 @@
 // idol (same matching as Photo Import) and checked by the user before saving. Saving replaces that idol's gallery.
 import type { IdolRow } from "@sabung/db";
 import { Button, SearchableIdolSelect } from "@sabung/ui";
-import { FolderOpen, X } from "lucide-react";
+import { FolderOpen, X } from "@sabung/ui/icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";

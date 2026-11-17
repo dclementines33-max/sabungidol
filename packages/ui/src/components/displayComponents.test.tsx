@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
-import { Users } from "lucide-react";
+import { Users } from "../icons";
 import { afterEach, describe, expect, it } from "vitest";
 import { EmptyState } from "./EmptyState";
 import { FormBadge } from "./FormBadge";
