@@ -82,6 +82,13 @@ test("Career Stats: Combined and per competition, columns, scope, CSV", async ()
   await page.getByRole("button", { name: "Export CSV" }).click();
   expect((await download).suggestedFilename()).toBe("career-d1.csv");
   await page.screenshot({ path: "test-results/career-stats.png" });
+  // Awards tab: idol award totals and per-type columns.
+  await page.getByRole("tab", { name: "Awards" }).click();
+  await expect(page.getByRole("columnheader", { name: "Total" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("columnheader", { name: "MVI" })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "IOTS" })).toBeVisible();
+  expect(await axe(page)).toEqual([]);
+  await page.screenshot({ path: "test-results/career-awards.png" });
 });
 
 test("Head to Head: top rivalries open a pair, record and direct match log", async () => {
