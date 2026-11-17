@@ -20,7 +20,8 @@ file only when the task touches it. Keep this file current: update it at the end
 Still open with the user:
 - The message that stopped at "ada bug," was never explained.
 - The 12 record ideas: none picked yet.
-- Whether backup imports should clamp idol fields to their valid range.
+
+User approved both: backup import clamps idol rating 1–100 and name ≤ 60 chars; API rejects empty part string with 400.
 
 Sessions:
 - Workers: Sonnet `local_704a78b5…`, Opus `local_8f32ea43…`.

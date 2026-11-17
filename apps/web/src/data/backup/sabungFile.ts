@@ -62,6 +62,8 @@ export async function readSabung(bytes: Uint8Array, schemaVersion: number): Prom
     if (tables[name]!.length !== rows) throw new Error(`Backup damaged: ${name} has ${tables[name]!.length} rows, the manifest says ${rows}.`);
   }
   for (let v = manifest.schemaVersion; v < schemaVersion; v++) tables = UPGRADES[v]?.(tables) ?? tables;
+  // Clamp idol fields to valid ranges so bad data in old backups does not break the import.
+  if (tables.idols) tables.idols = tables.idols.map((r) => ({ ...r, name: String(r.name ?? "").trim().slice(0, 60), rating: Math.max(1, Math.min(100, Number(r.rating) || 1)) }));
   const photos = Object.fromEntries(Object.entries(files).filter(([p]) => p.startsWith("photos/") && !p.endsWith("/")).map(([p, b]) => [p.slice(7), b]));
   return { manifest, tables, photos };
 }

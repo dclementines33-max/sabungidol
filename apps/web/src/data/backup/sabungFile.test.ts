@@ -31,4 +31,12 @@ describe(".sabung file", () => {
     const { bytes } = await writeSabung("idols", tables, {}, 1);
     expect((await readSabung(bytes, 2)).tables).toEqual(tables);
   });
+
+  it("clamps idol fields: rating to 1–100, name trimmed to 60 chars", async () => {
+    const bad = { idols: [{ id: "x", name: "  " + "A".repeat(70), rating: 150 }, { id: "y", name: "B", rating: 0 }], groups: [] };
+    const { bytes } = await writeSabung("idols", bad, {}, 1);
+    const { tables: t } = await readSabung(bytes, 1);
+    expect(t.idols![0]).toMatchObject({ name: "A".repeat(60), rating: 100 });
+    expect(t.idols![1]).toMatchObject({ rating: 1 });
+  });
 });
