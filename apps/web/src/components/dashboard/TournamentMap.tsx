@@ -1,6 +1,7 @@
 // The season's shape on the Dashboard (Update 2): the order of the phases and every competition's entrants, format and
-// best-of, as a flowing three-act line (no cards).
+// best-of, as a flowing three-act line (no cards). Compact: names and best-of only; entrants and format on "Show details".
 import { useBranding } from "../../data/branding";
+import { ShowMore } from "../ShowMore";
 
 const ACTS: { act: string; title: string; items: { key: string; who: string; format: string; bo: string }[] }[] = [
   { act: "01", title: "Opener", items: [
@@ -29,23 +30,25 @@ export function TournamentMap() {
   return (
     <section aria-labelledby="map" className="space-y-6">
       <h2 id="map" className="m-0 text-[clamp(2rem,5vw,3.5rem)]">Season map</h2>
+      <ShowMore more label="Show formats and entrants">{(open) => (<>
       <ol className="m-0 flex list-none flex-col gap-10 p-0 lg:flex-row lg:gap-6">
         {ACTS.map((a, i) => (
           <li key={a.act} className={`relative flex-1 border-t-2 border-accent-bright pt-4 ${i === 1 ? "lg:mt-10" : i === 2 ? "lg:mt-20" : ""}`}>
             <span aria-hidden="true" className="absolute -top-9 right-0 font-gothic text-5xl text-accent/60">{a.act}</span>
             <h3 className="m-0 font-display text-xl">{a.title}</h3>
-            <ul className="m-0 mt-3 list-none space-y-3 p-0">
+            <ul className={`m-0 mt-3 list-none p-0 ${open ? "space-y-3" : "space-y-1"}`}>
               {a.items.map((c) => (
                 <li key={c.key}>
                   <p className="m-0 font-bold">{name(c.key)} <span className="font-mono text-xs text-accent-bright">{c.bo}</span></p>
-                  <p className="m-0 text-sm text-text-secondary">{c.who} · {c.format}</p>
+                  {open && <p className="m-0 text-sm text-text-secondary">{c.who} · {c.format}</p>}
                 </li>
               ))}
             </ul>
           </li>
         ))}
       </ol>
-      <p className="m-0 text-sm text-text-secondary">Swiss 3–0 / 3–1 go to Unzure, 3–2 to the LCQ. D1: 1–6 straight to Unzure, 7–16 to Swiss, 18–20 go down. D2: 1–3 go up.</p>
+      {open && <p className="m-0 text-sm text-text-secondary">Swiss 3–0 / 3–1 go to Unzure, 3–2 to the LCQ. D1: 1–6 straight to Unzure, 7–16 to Swiss, 18–20 go down. D2: 1–3 go up.</p>}
+      </>)}</ShowMore>
     </section>
   );
 }

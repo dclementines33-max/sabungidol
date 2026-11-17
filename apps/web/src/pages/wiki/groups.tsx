@@ -9,6 +9,9 @@ import { AllGroups } from "../../components/groups/AllGroups";
 import { GroupHighlights } from "../../components/groups/GroupHighlights";
 import { GroupEntry } from "../../components/groups/GroupEntry";
 import { useMama } from "../../components/groups/useMama";
+import { ShowMore } from "../../components/ShowMore";
+
+const COMPACT = 10; // groups ranked before "Show all"
 import { groupStats } from "../../components/groups/groupStats";
 import { engine } from "../../data/engineClient";
 import { IDOLS_QUERY } from "../../data/IdolDataProvider";
@@ -38,9 +41,11 @@ function GirlGroupStats() {
       <GroupHighlights stats={stats} />
       <Tabs label="Girl group" tabs={[
         { id: "rank", label: "Rankings", content: () => (
+          <ShowMore more={stats.length > COMPACT} label={`Show all ${stats.length} groups`}>{(all) => (
           <ol className="m-0 list-none p-0">
-            {stats.map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} logoId={logoOf.get(g.id)} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} mama={mama(g.id)} />)}
+            {(all ? stats : stats.slice(0, COMPACT)).map((g, i) => <GroupEntry key={g.id} rank={i + 1} g={g} logoId={logoOf.get(g.id)} open={open === g.id} onToggle={() => setOpen(open === g.id ? null : g.id)} career={career} titles={titles} mama={mama(g.id)} />)}
           </ol>
+          )}</ShowMore>
         ) },
         { id: "all", label: "All groups", content: () => <AllGroups groups={groups} idols={idols} /> },
       ]} />

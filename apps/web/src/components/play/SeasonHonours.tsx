@@ -3,12 +3,14 @@
 // shortens to a quick fade (no delay) with prefers-reduced-motion.
 import { IdolCard } from "@sabung/ui";
 import { useBranding } from "../../data/branding";
+import { ShowMore } from "../ShowMore";
 import { PodiumDetail } from "./PodiumDetail";
 import { SeasonAwards } from "./SeasonAwards";
 
 type Title = { champion: string; runnerUp: string };
 const ORDER = ["DSG", "UZC", "IDL", "IDL-PO", "INK", "NUG"];
 const NO_DELAY = "motion-reduce:[animation-delay:0ms]";
+const COMPACT = 6; // champions shown before "Show all"
 
 export function SeasonHonours({ seasonId, titles, top }: { seasonId: string; titles: Partial<Record<string, Title>>; top: string[] }) {
   const { label } = useBranding();
@@ -22,14 +24,16 @@ export function SeasonHonours({ seasonId, titles, top }: { seasonId: string; tit
       <SeasonAwards seasonId={seasonId} />
       <div>
         <h3 className="kicker mb-4 text-center">Every champion</h3>
+        <ShowMore more={keys.length > COMPACT} label={`Show all ${keys.length} champions`}>{(open) => (
         <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
-          {keys.map((key, i) => (
+          {(open ? keys : keys.slice(0, COMPACT)).map((key, i) => (
             <li key={key} className={`animate-rise ${NO_DELAY} space-y-2`} style={{ animationDelay: `${i * 90}ms` }}>
               <p className="m-0 text-xs tracking-widest text-accent-bright uppercase">{label(key)}</p>
               <IdolCard idolId={titles[key]!.champion} />
             </li>
           ))}
         </ul>
+        )}</ShowMore>
       </div>
     </section>
   );

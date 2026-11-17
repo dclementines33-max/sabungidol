@@ -184,7 +184,8 @@ test("Season Story: news cards linking to their matches", async () => {
 test("Girl Group Stats: table and a group's members", async () => {
   test.setTimeout(120_000);
   await page.goto("/wiki/groups");
-  await expect(page.getByText(/^MAMA 1×$/)).toBeVisible({ timeout: 60_000 }); // the Season 1 MAMA group
+  await page.getByRole("button", { name: /^Show all \d+ groups$/ }).click({ timeout: 60_000 }); // compact: top 10 first
+  await expect(page.getByText(/^MAMA 1×$/)).toBeVisible(); // the Season 1 MAMA group
   const first = page.getByRole("heading", { level: 2 }).getByRole("button").first();
   await first.click({ timeout: 60_000 });
   const name = await first.textContent();
@@ -224,7 +225,10 @@ test("Season Progression: six title races, positions, progress, titles per group
   await page.goto("/wiki/progression");
   await expect(page.getByRole("img", { name: /^Title race / })).toHaveCount(6, { timeout: 60_000 });
   await expect(page.getByRole("img", { name: /^Positions / })).toHaveCount(2); // a D1 league + The Idols (Update 3)
-  await expect(page.getByRole("list", { name: "Titles by girl group" }).getByRole("listitem").first()).toBeVisible();
+  const byGroup = page.getByRole("list", { name: "Titles by girl group" });
+  await expect(byGroup.getByRole("listitem")).toHaveCount(5); // compact
+  await page.getByRole("button", { name: /^Show all \d+ groups$/ }).click();
+  expect(await byGroup.getByRole("listitem").count()).toBeGreaterThan(5);
   const telemetry = page.getByRole("region", { name: "Telemetry" }); // 2026-11-17: games won vs what the rating expected
   await expect(telemetry.getByRole("img", { name: /^Games won against expectation for \d+ idols/ })).toBeVisible();
   await expect(telemetry.getByRole("region", { name: "Over-performers" }).getByRole("listitem")).toHaveCount(5);
