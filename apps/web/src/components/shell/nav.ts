@@ -2,7 +2,7 @@
 // phase = the PRD §15 phase that builds the panel; until then it shows a placeholder.
 import {
   Archive, ChartColumn, Contact, Crown, Database, FilePlus2, Gauge, GitCompareArrows, House, LayoutDashboard, Medal,
-  Newspaper, Settings, Swords, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type Icon as IconType,
+  Newspaper, Ranks, Settings, Swords, Tiers, TrendingUp, Trophy, UserRoundX, Users, UsersRound, type Icon as IconType,
 } from "@sabung/ui/icons";
 
 export type NavItem = { label: string; to: string; icon: IconType; phase: number };
@@ -33,6 +33,8 @@ export const SPACES: NavSpace[] = [
       { label: "Idol Profile", to: "/wiki/profile", icon: Contact, phase: 4 },
       { label: "Girl Group Stats", to: "/wiki/groups", icon: UsersRound, phase: 4 },
       { label: "Career Stats", to: "/wiki/career", icon: ChartColumn, phase: 4 },
+      { label: "Ranking", to: "/wiki/ranking", icon: Ranks, phase: 4 },
+      { label: "Tier List", to: "/wiki/tiers", icon: Tiers, phase: 4 },
       { label: "Head to Head", to: "/wiki/h2h", icon: GitCompareArrows, phase: 4 },
       { label: "Hall of Champions", to: "/wiki/champions", icon: Crown, phase: 4 },
       { label: "All-time Records", to: "/wiki/records", icon: Medal, phase: 4 },
