@@ -28,6 +28,10 @@ Sessions:
 
 `apps/web/e2e/zzshots.e2e.ts` is untracked: a worker's screenshot helper that was never committed.
 
+## ▶ RESUME HERE (saved 2026-11-17, Opus bug hunt)
+
+**BUG HUNT + FIXES (from 28c15ea, not deployed):** 484d020 engine (award bonus shown = real gain under the 100 cap), 78341ef panels (shared Tabs falls back when the active tab disappears + nowrap at 375 px; Season Recap survives a missing photo file; archive picker falls back when its season is gone), f4c099d wiki (group logo upload error E-GROUP-001; H2H refuses same idol both sides), 8f94cee career (Awards CSV quotes names), 4e570f7 backup (broken manifest = "not a backup"; branding logo error E-BRAND-001). Home/dashboard: nothing new. Report + open questions: `side-session-notes/local_cf80d055-9fbf-4c54-904c-c2bf6b3af1be/bughunt.md`.
+
 ## ▶ RESUME HERE (saved 2026-11-17, Sonnet light session)
 
 **NEWS KINDS (Commit 0d2a63b):** D1 title-race now fires for ALL margin ranges (added "comfortable" 3–9 pts to titleNews; was silently null). New kinds in seasonNews: `revenge` (league leg-2 comeback), `domination` (league sweep), `de-revenge` (bracket: lost first, wins later), `heated-rivalry` (top-tier idols ≥90 rating meeting across ≥2 top-tier comps prestige ≥0.8, ≥3 meetings). newsScore + storyText updated for all four. 9 new tests in seasonNews.test.ts, comfortable test in titleNews.test.ts. 186 tests pass, web typecheck clean.
