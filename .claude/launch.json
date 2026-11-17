@@ -33,6 +33,14 @@
         "prototypes/marble-race/server.mjs"
       ],
       "port": 5190
+    },
+    {
+      "name": "marble-match",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
+      "runtimeArgs": [
+        "prototypes/marble-match/server.mjs"
+      ],
+      "port": 5191
     }
   ]
 }

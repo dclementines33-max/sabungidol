@@ -1,5 +1,8 @@
 # Marble Race (prototype, separate from the app)
 
+**Frozen as v1** (git tag `marble-race-prototype-v1`, 2026-11-18): kept unchanged as the base for a future project.
+The match version for the app lives in `prototypes/marble-match/`.
+
 Two marbles (idol photos inside glass balls) race 3 laps on a 3D track. Physics decides the winner; each lap = one game.
 Nothing is saved. Not connected to Sabung Idol yet.
 
