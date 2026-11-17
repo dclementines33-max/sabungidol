@@ -3,7 +3,7 @@
 import { useIdol } from "@sabung/ui";
 import type { HonoursDetail } from "./HonoursIdol";
 
-export function SeasonStatLine({ d, small = false }: { d: HonoursDetail; small?: boolean }) {
+export function SeasonStatLine({ d, small = false, wide = false }: { d: HonoursDetail; small?: boolean; wide?: boolean }) {
   const idol = useIdol(d.id);
   const r = d.record;
   const stats: [string, string][] = [
@@ -15,7 +15,7 @@ export function SeasonStatLine({ d, small = false }: { d: HonoursDetail; small?:
     ["Rating", d.rating ? `${d.rating.old} → ${d.rating.new}` : String(d.startRating ?? idol.rating)],
   ];
   return (
-    <dl className={`m-0 grid w-full grid-cols-3 border-y border-border ${small ? "gap-x-3 gap-y-1 py-2" : "max-w-md gap-x-4 gap-y-3 py-3"}`}>
+    <dl className={`m-0 grid w-full grid-cols-3 border-y border-border ${small ? "gap-x-3 gap-y-1 py-2" : wide ? "gap-x-4 gap-y-3 py-3 sm:grid-cols-6" : "max-w-md gap-x-4 gap-y-3 py-3"}`}>
       {stats.map(([k, v]) => (
         <div key={k}><dt className="text-xs tracking-widest text-text-secondary uppercase">{k}</dt><dd className={`m-0 font-display whitespace-nowrap tabular-nums ${small ? "text-sm" : "text-base sm:text-lg"}`}>{v}</dd></div>
       ))}

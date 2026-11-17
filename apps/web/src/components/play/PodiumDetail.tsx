@@ -34,7 +34,7 @@ export function PodiumDetail({ seasonId, top, unzure }: { seasonId: string; top:
       </ol>
       {uzc && (
         <div data-arena="uzc" className="border-t border-border pt-10">
-          <HonoursIdol d={uzc} kicker="Unzure Cup champion" mark="UZC" stories={newsOf(uzc.id)} />
+          <HonoursIdol d={uzc} kicker="Unzure Cup champion" mark="UZC" wide stories={newsOf(uzc.id)} />
         </div>
       )}
     </>

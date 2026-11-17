@@ -39,9 +39,12 @@ test("Sabung Idol: start, league phase, whole season, honours", async ({ page })
   const top = page.getByRole("list", { name: "Season top 3" });
   await expect(top.getByRole("article", { name: /^Idol of the Season: / })).toBeVisible();
   await expect(top.getByRole("list", { name: "Final places" })).toHaveCount(3); // places from the replay, not only after Close Season
-  await expect(page.getByRole("article", { name: /^Unzure Cup champion: / })).toBeVisible();
+  const uzc = page.getByRole("article", { name: /^Unzure Cup champion: / });
+  await expect(uzc).toBeVisible();
+  expect((await uzc.boundingBox())!.width).toBeGreaterThan(900); // full width of the honours block, not a narrow column
   await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => null)))); // honours cards arrive one by one; axe must not sample them mid-fade (the breaking-news dot pulses forever)
   expect(await axe(page)).toEqual([]);
+  await uzc.screenshot({ path: "test-results/honours-unzure.png" });
 
   await page.goto("/studio/settings?s=data");
   await expect(page.getByText("No problems found.")).toBeVisible({ timeout: 30_000 }); // no integrity errors
