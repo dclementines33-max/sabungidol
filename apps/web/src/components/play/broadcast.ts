@@ -13,14 +13,15 @@ export function broadcastFrames(points: { stage: string; round: string }[], fina
   const league = days.filter((d): d is number => d !== null);
   const last = Math.max(lastDay, ...league);
   const frames: Frame[] = [];
-  let at = 0;
+  let at = -1;
   // shortcut: starts at the first matchday with a story (the timeline doesn't say which matchday the play began on).
   for (let day = league.length ? Math.min(...league) : last + 1; day <= last; day++) {
     const next = days.reduce<number>((n, d, i) => (d !== null && d <= day ? i : n), -1);
-    frames.push({ at: Math.max(0, next), day, ms: frames.length === 0 || next > at ? STORY_MS : DAY_MS });
+    if (next > at) for (let i = at + 1; i <= next; i++) frames.push({ at: i, day, ms: STORY_MS }); // each story on this matchday holds on its own
+    else frames.push({ at, day, ms: DAY_MS });
     at = Math.max(at, next);
   }
   const after = points.length + (finale ? 1 : 0);
-  for (let i = league.length ? at + 1 : 0; i < after; i++) frames.push({ at: i, day: last, ms: STORY_MS });
+  for (let i = at + 1; i < after; i++) frames.push({ at: i, day: last, ms: STORY_MS });
   return frames;
 }

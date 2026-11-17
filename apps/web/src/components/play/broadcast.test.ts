@@ -13,6 +13,10 @@ describe("broadcastFrames", () => {
     const f = broadcastFrames([lg(37), { stage: "UB", round: "QF" }], false, 38);
     expect(f.map((x) => [x.day, x.at])).toEqual([[37, 0], [38, 0], [38, 1]]);
   });
+  it("two stories on one matchday each get their own hold", () => {
+    const f = broadcastFrames([lg(3), lg(3), lg(4)], false, 4);
+    expect(f.map((x) => [x.day, x.at, x.ms])).toEqual([[3, 0, STORY_MS], [3, 1, STORY_MS], [4, 2, STORY_MS]]);
+  });
   it("no league story: just the final standings with each point", () => {
     expect(broadcastFrames([{ stage: "UB", round: "SF" }], true, 38).map((x) => [x.day, x.at])).toEqual([[38, 0], [38, 1]]);
   });
