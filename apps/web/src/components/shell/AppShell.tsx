@@ -1,6 +1,6 @@
 // The frame around every screen (agreed shell, Fase 1 step 7): skip link, rail, header, content, bottom bar,
 // plus the notification layers (PRD §14.1): pinned warnings/errors, toasts, blocker dialog.
-import { BlockerDialog, Toasts } from "@sabung/ui";
+import { BlockerDialog, ChromeIconDefs, Toasts } from "@sabung/ui";
 import { type ReactNode, useEffect, useState } from "react";
 import { trackLastAction } from "../../data/errorReport";
 import { useNotices } from "../../data/notices";
@@ -52,6 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
+      <ChromeIconDefs />
       <div className="flex min-h-dvh">
         <NavRail collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
         <div className="flex min-w-0 flex-1 flex-col">

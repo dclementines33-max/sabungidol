@@ -3,6 +3,7 @@ export * from "./components/RatingBadge";
 export * from "./components/FormBadge";
 export * from "./components/IdolPhoto";
 export * from "./components/IdolCard";
+export * from "./components/ChromeIconDefs";
 export * from "./components/Flag";
 export * from "./components/StatTile";
 export * from "./components/EmptyState";

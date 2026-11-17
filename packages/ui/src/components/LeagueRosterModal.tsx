@@ -68,7 +68,7 @@ export function LeagueRosterModal({ open, onOpenChange, league, title, logo, ros
             <IdolPhoto idolId={id} size={64} className="w-6" />
             <span className="flex-1 truncate">{name(id)}</span>
             {elsewhere.has(id) && (
-              <TriangleAlert size={16} strokeWidth={1.5} className="text-accent-bright" aria-label={`also in ${elsewhere.get(id)}`} />
+              <TriangleAlert size={16} strokeWidth={1.5} className="icon-tone text-accent-bright" aria-label={`also in ${elsewhere.get(id)}`} />
             )}
             <button
               type="button"

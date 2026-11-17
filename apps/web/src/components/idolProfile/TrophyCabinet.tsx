@@ -19,7 +19,7 @@ export function TrophyCabinet({ titles }: { titles: { comp: string; season: numb
             <ul className="m-0 flex list-none flex-wrap items-end gap-4 p-0">
               {won.map((t) => (
                 <li key={t.season} className="flex flex-col items-center">
-                  <Trophy aria-hidden="true" size={GOLD.has(comp) ? 40 : 30} strokeWidth={1.4} className={GOLD.has(comp) ? "text-[#f5c451] drop-shadow-[0_0_12px_rgb(245_196_81/0.5)]" : "text-accent-bright"} />
+                  <Trophy aria-hidden="true" size={GOLD.has(comp) ? 40 : 30} strokeWidth={1.4} className={GOLD.has(comp) ? "icon-tone text-[#f5c451] drop-shadow-[0_0_12px_rgb(245_196_81/0.5)]" : "icon-tone text-accent-bright"} />
                   <span className="font-mono text-[10px] text-text-secondary">S{t.season}</span>
                 </li>
               ))}

@@ -13,10 +13,11 @@ export type Notice = {
   undo?: () => void;
 };
 
+// icon-tone: alarm levels keep their colour instead of the chrome icon stroke (tokens.css).
 export const LEVEL = {
   info: { label: "Info", color: "text-cool", icon: Info },
   success: { label: "Success", color: "text-cool", icon: CircleCheck },
-  warning: { label: "Warning", color: "text-accent-bright", icon: TriangleAlert },
-  blocker: { label: "Blocker", color: "text-accent-bright", icon: Ban },
-  error: { label: "Error", color: "text-danger", icon: CircleX },
+  warning: { label: "Warning", color: "icon-tone text-accent-bright", icon: TriangleAlert },
+  blocker: { label: "Blocker", color: "icon-tone text-accent-bright", icon: Ban },
+  error: { label: "Error", color: "icon-tone text-danger", icon: CircleX },
 } as const;

@@ -12,7 +12,7 @@ export function AwardCabinet({ awards }: { awards: { key: string; season: number
         const won = awards.filter((a) => a.key === key);
         return (
           <li key={key} className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b-2 border-border-strong pb-2">
-            <Award aria-hidden="true" size={key === "mvi" || key === "iots" ? 32 : 24} strokeWidth={1.4} className="text-accent-bright" />
+            <Award aria-hidden="true" size={key === "mvi" || key === "iots" ? 32 : 24} strokeWidth={1.4} className="icon-tone text-accent-bright" />
             <span className="kicker text-text-primary">{AWARD_TEXT[key].name} <span className="text-accent-bright">{won.length}×</span></span>
             <span className="font-mono text-xs text-text-secondary">{won.map((a) => `S${a.season}`).join(" · ")}</span>
           </li>
