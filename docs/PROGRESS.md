@@ -9,7 +9,42 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match round 3, latest)
+## ▶ RESUME HERE (saved 2026-11-18, router-5 — Marble Race IN THE APP, latest)
+
+**Built (commits cb31bc4, 2a03377, 392a736, 1dae90c). Full e2e 56 pass / 3 skip / 2 load flakes (firstOpen second
+tab, worker < 10 s; both pass alone).** The user asked: marble race in the app, arenas on
+every match, a Marble Race panel, arena stats everywhere. Decisions: old/archived matches stay WITHOUT arena (no
+backfill); LED = automatic (competition name, both idols, competition logo) + the user's own pictures.
+- **Data:** `matches.arenas text[]` (migration 0005; null = before arenas). `packages/shared/src/arenas.ts`: ARENAS (15
+  ids, default names, tagline, glow), `isGrandFinal(comp, round)` (F, GF, any DSG), `drawArenas(pool, grandFinal, games)`.
+  Every save gets arenas: `acceptMatch(id, games, method, arenas)` (method "marble" new) and `playSeason(target, onProgress,
+  arenaPool())` (bulk: one draw per match). `saveMatches` takes `arenas?` per match. Backups carry the column as is.
+- **Arena settings** = `apps/web/src/data/arenaSettings.ts` (zustand persist "sabung-arenas", THIS BROWSER ONLY like tier
+  lists): names (renames), off (not in the draw, ≥1 stays on), led (≤8 JPEG data URLs 640×320), setup (camera, speed,
+  quality, rating edge). `useArenaName()` / `arenaLabel()` = shown name; stats store ids only.
+- **3D race:** `apps/web/src/marble/` = the prototype's JS ported (three 0.170 + @dimforge/rapier3d-compat 0.14 from npm,
+  lazy chunk MarbleStage) + `controller.js` (+ .d.ts) instead of main.js: createRace({canvas, tags, quality, onUpdate}) →
+  start/skipGame/skipMatch/setSpeed/setCamera/follow(k)/dispose; snapshots drive the React overlay. `stage.js` LED: text
+  screens (SABUNG IDOL + led.title + arena) alternate with photo screens (≤3). `marble/colors.ts` = marble colours (no 3D).
+  React: `components/marble/` MarbleStage (canvas per start — sharing one canvas lost the WebGL context under StrictMode),
+  RaceHud (scoreboard, clickable standing = follow a marble, game chips, intro, lights, banner), RaceResult, RaceDialog
+  (Radix full-screen, nests over the match dialog), MarbleMatch (the mode inside MatchModal). MatchModal (ui) got a
+  `marble` render prop + method "marble"; MatchHeader `theme.arena`. PlayMatchDialog draws arenas once per open.
+- **Panel** Studio → Marble Race `/studio/marble` (pages/studio/marble.tsx): TestRace (2–20 idols, Bo/races, arena or
+  draw, grand final), ArenaList (rename, in the draw, test here), LedPhotos, RaceDefaults. Menu icon `Marble` (ui icons/nav).
+- **Stats:** engine `stats/arenaStats.ts` (tested): appearances (grand final = per game W/L on its arena), idolArenaRecords,
+  arenaUsage, arenaHonours (most used, ruler, globetrotter, specialist ≥5), arenaNews (arena-fortress ≥4 W unbeaten,
+  arena-curse 85+ rated ≥3 L no W; top 3 each) → AnyStory/newsScore/storyText. db `listArenaMatches`. Worker
+  `data/arenaWorker.ts` ONE entry `arenaRead(kind, args[])` (overview | idol | pair), typed by `components/arenas/useArenaRead`.
+  UI: Wiki → Arenas `/wiki/arenas` (honours, usage bars + ruler, best per arena, all time / season), Career Stats tab
+  "Arenas", Idol Profile tab "Arenas" (favourite/nightmare + table), H2H "Where they met", MatchLog shows arenas.
+- Not done: arena awards are NOT in the rating-bonus season awards (separate honours); MatchRow in competition panels
+  doesn't show the arena (no match id there); bundle budget was already over (202.7 KB vs 180, three/Rapier are lazy).
+- e2e `marble.e2e.ts` (race in the dialog + follow + accept, bulk matchday, Arenas page axe + 375 px, profile tab; panel
+  rename/off/test GP/reload). Screens: test-results/marble-race.png, marble-result.png, marble-panel.png, arenas-page.png.
+- RULE: the app's type scale stops at text-3xl (64 px); use text-section/headline/hero, never text-4xl+.
+
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match round 3)
 
 **Marble Match round 3 (commit 8588898), still separate:** USER RULE for the app later: a match uses ONE arena drawn by
 the system for all its games; only a grand final changes arena every game. Small lucky boost pads; per-game random
