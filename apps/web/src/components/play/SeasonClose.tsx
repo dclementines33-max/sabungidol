@@ -47,7 +47,7 @@ export function SeasonClose({ done }: { done: boolean }) {
 
   return (
     <section aria-labelledby="season-close" className="space-y-4">
-      <h2 id="season-close" className="m-0 font-display text-xl">Close the season</h2>
+      <h2 id="season-close" className="section-title">Close the season</h2>
       {!done && <Button onClick={() => engine().closePreview().then((c) => block(c.blockers))}>Start New Season</Button>}
       {done && close && (
         <>

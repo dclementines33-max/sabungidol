@@ -60,11 +60,11 @@ function Stage({ now, close }: { now: Celebration; close: () => void }) {
           <div className="relative mx-auto flex min-h-full max-w-4xl flex-col items-center gap-6 px-4 py-12 text-center">
             <p className="kicker m-0">Unzure Cup · Grand Final</p>
             <div className="relative animate-rise">
-              <p aria-hidden="true" className="outline-text pointer-events-none absolute top-1/3 left-1/2 -z-10 -translate-x-1/2 m-0 font-display text-[clamp(4rem,14vw,10rem)] leading-none whitespace-nowrap opacity-70">Champion</p>
+              <p aria-hidden="true" className="outline-text pointer-events-none absolute top-1/3 left-1/2 -z-10 -translate-x-1/2 m-0 font-display text-ornament leading-none whitespace-nowrap opacity-70">Champion</p>
               <IdolPhoto idolId={now.champion} size={1024} className="photo-frame w-56 sm:w-72" />
               <Trophy aria-hidden="true" className="icon-tone absolute -right-8 -bottom-6 size-20 drop-shadow-[0_0_24px_var(--color-accent-bright)] text-accent-bright" />
             </div>
-            <Dialog.Title className="m-0 font-display text-[clamp(2.5rem,7vw,4.5rem)] leading-none">{name(now.champion)}</Dialog.Title>
+            <Dialog.Title className="m-0 font-display text-hero leading-none">{name(now.champion)}</Dialog.Title>
             <p className="m-0 text-lg text-text-secondary">wins the Unzure Cup · {now.score} against {name(now.runnerUp)}</p>
             {steps.length > 0 && (
               <section aria-label="Run to the title" className="w-full">

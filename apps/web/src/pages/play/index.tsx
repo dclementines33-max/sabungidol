@@ -56,10 +56,10 @@ function SabungIdol() {
     <div className="space-y-8">
       <header className="relative isolate overflow-hidden rounded-card px-5 pt-6 pb-8 sm:px-10"
         style={{ background: "radial-gradient(40rem 22rem at 100% 0%, rgb(37 67 93 / 0.6), transparent 70%), linear-gradient(110deg, var(--color-surface-hover), var(--color-bg-base) 70%)" }}>
-        <p aria-hidden="true" className="pointer-events-none absolute -top-6 right-4 -z-10 m-0 font-gothic text-[clamp(7rem,22vw,16rem)] leading-none text-accent/60">{season.number}</p>
+        <p aria-hidden="true" className="pointer-events-none absolute -top-6 right-4 -z-10 m-0 font-gothic text-ornament-xl leading-none text-accent/60">{season.number}</p>
         <p className="m-0 flex flex-wrap items-center gap-3"><span className="tag">Season Simulator</span><span className="kicker">{overview.done ? "Season complete" : "Live"}</span></p>
-        <h2 className="m-0 mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">{season.name}</h2>
-        <p className="m-0 mt-3 flex items-baseline gap-3"><span className="font-display text-[clamp(2rem,5vw,3.5rem)] tabular-nums">{overview.played.toLocaleString("en-GB")}</span><span className="kicker text-text-secondary">matches played</span></p>
+        <h2 className="m-0 mt-4 text-hero">{season.name}</h2>
+        <p className="m-0 mt-3 flex items-baseline gap-3"><span className="font-display text-headline tabular-nums">{overview.played.toLocaleString("en-GB")}</span><span className="kicker text-text-secondary">matches played</span></p>
       </header>
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="primary" disabled={running || overview.done} onClick={() => play({ kind: "all" })}><Play aria-hidden="true" size={16} strokeWidth={1.5} /> Simulate Whole Season</Button>

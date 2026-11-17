@@ -18,8 +18,8 @@ export function SeasonHonours({ seasonId, titles, top }: { seasonId: string; tit
   return (
     <section data-arena="uzc" className="relative isolate space-y-10 overflow-hidden rounded-card px-4 py-8 sm:px-8" aria-labelledby="honours"
       style={{ background: "radial-gradient(40rem 30rem at 50% 0%, color-mix(in oklab, var(--color-accent-bright) 28%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 40%, var(--color-bg-base)), var(--color-bg-base) 80%)" }}>
-      <p aria-hidden="true" className="outline-text pointer-events-none absolute inset-x-0 top-2 -z-10 m-0 text-center font-display text-[clamp(4rem,16vw,12rem)] leading-none opacity-40">Honours</p>
-      <h2 id="honours" className="m-0 text-center font-display text-2xl uppercase">Season Honours</h2>
+      <p aria-hidden="true" className="outline-text pointer-events-none absolute inset-x-0 top-2 -z-10 m-0 text-center font-display text-ornament leading-none opacity-40">Honours</p>
+      <h2 id="honours" className="m-0 text-center text-section">Season Honours</h2>
       {top.length === 3 && <PodiumDetail seasonId={seasonId} top={top} unzure={titles.UZC?.champion} />}
       <SeasonAwards seasonId={seasonId} />
       <div>

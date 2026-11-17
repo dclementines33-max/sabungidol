@@ -28,8 +28,8 @@ export function GalaStage({ cells, title, busy, onOpen }: { cells: CupCell[]; ti
               <Fighter id={c.a} won={c.winner === c.a} lost={!!c.winner && c.winner !== c.a} align="left" />
               <div className="text-center">
                 {c.score
-                  ? <p className="m-0 font-display text-[clamp(2.5rem,7vw,5rem)] leading-none tabular-nums">{sa}<span className="text-text-secondary">–</span>{sb}</p>
-                  : <p className="m-0 font-gothic text-[clamp(3rem,8vw,6rem)] leading-none text-accent">vs</p>}
+                  ? <p className="m-0 font-display text-hero leading-none tabular-nums">{sa}<span className="text-text-secondary">–</span>{sb}</p>
+                  : <p className="m-0 font-gothic text-ornament leading-none text-accent">vs</p>}
                 {open && <p className="kicker m-0 mt-2 text-text-primary">Click to play</p>}
               </div>
               <Fighter id={c.b} won={c.winner === c.b} lost={!!c.winner && c.winner !== c.b} align="right" />
@@ -37,7 +37,7 @@ export function GalaStage({ cells, title, busy, onOpen }: { cells: CupCell[]; ti
           </>
         );
         const cls = "relative isolate block w-full overflow-hidden px-4 py-8 text-left";
-        const bg = { background: "radial-gradient(30rem 16rem at 50% 0%, rgb(255 200 80 / 0.22), transparent 70%), radial-gradient(40rem 20rem at 50% 120%, rgb(255 77 99 / 0.3), transparent 70%)" };
+        const bg = { background: "radial-gradient(30rem 16rem at 50% 0%, color-mix(in oklab, var(--color-brand-gold) 22%, transparent), transparent 70%), radial-gradient(40rem 20rem at 50% 120%, color-mix(in oklab, var(--color-accent-bright) 30%, transparent), transparent 70%)" };
         return open
           ? <button key={c.key} type="button" disabled={busy} onClick={() => onOpen(c.id)} style={bg} className={`${cls} hover:brightness-125 focus-visible:outline-2 focus-visible:outline-accent-bright disabled:cursor-wait`}><span className="sr-only">Play </span>{body}</button>
           : <section key={c.key} aria-label={title(c)} style={bg} className={cls}>{body}</section>;

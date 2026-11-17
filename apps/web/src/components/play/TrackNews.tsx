@@ -14,7 +14,7 @@ function Card({ s, lead, name, label }: { s: TimelineStory; lead: boolean; name:
       <IdolPhoto idolId={starOf(s)} size={lead ? 256 : 64} className={lead ? "photo-frame w-40 shrink-0" : "w-14 shrink-0 self-start rounded-control"} />
       <span lang="id" className="min-w-0">
         <span className="block text-xs font-bold tracking-[0.2em] uppercase" style={{ color: toneOf(s) }}>{kickerOf(s)}</span>
-        <span className={`block font-display leading-tight ${lead ? "mt-1 text-[clamp(1.4rem,3vw,2.2rem)]" : "text-base"}`}>{headlineOf(s, name, label)}</span>
+        <span className={`block font-display leading-tight ${lead ? "mt-1 text-section" : "text-base"}`}>{headlineOf(s, name, label)}</span>
       </span>
     </li>
   );

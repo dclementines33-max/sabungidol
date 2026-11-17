@@ -21,13 +21,13 @@ export function HonoursIdol({ d, kicker, mark, lead = false, wide = false, stori
   return (
     <article className={`flex min-w-0 flex-col items-center gap-4 text-center ${wide ? "lg:flex-row lg:items-start lg:gap-12 lg:text-left" : ""}`} aria-label={`${kicker}: ${idol.name}`}>
       <div className="relative">
-        <p aria-hidden="true" className={`outline-text pointer-events-none absolute top-0 right-[70%] -z-10 m-0 font-display leading-none ${lead ? "text-[clamp(8rem,18vw,14rem)]" : "text-[clamp(6rem,12vw,9rem)]"}`}>{mark}</p>
+        <p aria-hidden="true" className={`outline-text pointer-events-none absolute top-0 right-[70%] -z-10 m-0 font-display leading-none ${lead ? "text-ornament-xl" : "text-ornament-xl"}`}>{mark}</p>
         <IdolPhoto idolId={d.id} size={1024} className={`photo-frame ${lead ? "w-56 shadow-[0_0_90px_-10px_var(--color-accent-bright)] sm:w-72" : "w-40 sm:w-48"}`} />
       </div>
       <div className={`flex w-full min-w-0 flex-col items-center gap-4 ${wide ? "lg:flex-1 lg:items-start" : ""}`}>
       <div>
         <p className="kicker m-0">{kicker}</p>
-        <h3 className={`m-0 font-display uppercase ${lead ? "text-[clamp(2rem,4vw,3rem)]" : "text-xl"}`}>{idol.name}</h3>
+        <h3 className={`m-0 font-display uppercase ${lead ? "text-headline" : "text-xl"}`}>{idol.name}</h3>
       </div>
       <SeasonStatLine d={d} wide={wide} />
       {delta !== null && <p className={`-mt-2 m-0 text-sm ${delta > 0 ? "text-cool" : delta < 0 ? "text-danger" : "text-muted"}`}>{delta > 0 ? `+${delta}` : delta} rating this season</p>}

@@ -40,7 +40,7 @@ export function MatchHeader({ idolA, idolB, bestOf, h2h, theme = {} }: { idolA: 
       <div className="relative -mx-6 overflow-hidden px-6 py-5"
         style={{ background: `radial-gradient(30rem 14rem at 50% 0%, color-mix(in oklab, ${color} 28%, transparent), transparent 70%), radial-gradient(18rem 12rem at 0% 100%, rgb(255 77 99 / 0.14), transparent 70%), radial-gradient(18rem 12rem at 100% 100%, rgb(185 211 226 / 0.1), transparent 70%)` }}>
         {theme.kicker && (
-          <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-gothic text-[clamp(4rem,14vw,8rem)] leading-none whitespace-nowrap opacity-[0.07]" style={{ color }}>
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-gothic text-ornament leading-none whitespace-nowrap opacity-[0.07]" style={{ color }}>
             {theme.kicker}
           </span>
         )}
