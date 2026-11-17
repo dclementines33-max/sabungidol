@@ -27,17 +27,17 @@ export function ChampionList({ titles }: { titles: Champion[] }) {
         const list = titles.filter((t) => t.season === season);
         return (
           <li key={season} className={`relative ${!many && i % 2 ? "sm:ml-[18%]" : ""}`}>
-            <p aria-hidden="true" className="m-0 font-gothic text-hero leading-none text-accent/40">{season}</p>
-            <h3 className="kicker m-0 -mt-4 mb-4 text-accent-bright">Season {season}</h3>
+            <p aria-hidden="true" className="score m-0 text-ornament leading-none text-accent/30">{season}</p>
+            <h3 className="section-title -mt-4 mb-5 text-xl">Season {season}</h3>
             <div className={many ? "flex flex-wrap gap-x-8 gap-y-6" : ""}>
               {list.map((t) => (
-                <article key={t.key} aria-label={`${label(t.key)} season ${season}`} className={`flex items-end gap-4 ${many ? "w-full sm:w-[calc(50%-1rem)] xl:w-[calc(33%-1.5rem)]" : ""}`}>
+                <article key={t.key} aria-label={`${label(t.key)} season ${season}`} className={`stage flex items-end gap-4 rounded-card p-4 shadow-[inset_0_3px_0_var(--color-winner)] ${many ? "w-full sm:w-[calc(50%-1rem)] xl:w-[calc(33%-1.5rem)]" : ""}`}>
                   <IdolPhoto idolId={t.champion} size={many ? 256 : 1024} className={`photo-frame shrink-0 ${many ? "w-20" : "w-36 sm:w-44"}`} />
                   <div className="min-w-0 pb-1">
                     {many && <p className="kicker m-0 truncate text-text-secondary">{label(t.key)}</p>}
-                    <IdolLink id={t.champion} className={`block truncate font-display ${many ? "text-xl" : "text-3xl"}`} />
+                    <IdolLink id={t.champion} className={`block truncate font-display uppercase text-winner ${many ? "text-xl" : "text-3xl"}`} />
                     <p className="m-0 text-sm text-accent-bright">{lookup(t.champion)?.groupName ?? "Soloist"}</p>
-                    {t.score && <p className="m-0 font-mono text-sm">Final {t.score}</p>}
+                    {t.score && <p className="m-0 mt-1 flex items-center gap-2 text-sm">Final <span className="score -skew-x-12 bg-accent px-2 py-0.5 text-on-accent">{t.score}</span></p>}
                     {t.detail && <p className="m-0 font-mono text-sm">{t.detail}</p>}
                     <Podium t={t} />
                   </div>

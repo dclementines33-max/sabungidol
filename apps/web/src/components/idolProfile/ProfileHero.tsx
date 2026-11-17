@@ -16,9 +16,10 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
   const { brand } = useBranding();
   const years = age(idol.birthday);
   const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality && countryName(idol.nationality), years !== null ? `${years} yrs` : null, idol.active ? null : "Inactive"].filter(Boolean);
+  const tier = `var(--color-tier-${tierOf(idol.rating).replace("+", "plus").toLowerCase()})`;
   const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Titles", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("en-GB")]];
   return (
-    <section aria-labelledby="idol-name" className="relative isolate space-y-6">
+    <section aria-labelledby="idol-name" className="stage relative isolate space-y-6 overflow-hidden rounded-card p-5 sm:p-8" style={{ boxShadow: `inset 0 3px 0 ${tier}, 0 30px 60px -30px black` }}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <p className="kicker m-0 text-text-secondary">Player dossier / career archive</p>
         <div className="w-full max-w-xs">
@@ -27,23 +28,23 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
       </div>
       <p aria-hidden="true" className="outline-text pointer-events-none absolute top-16 right-0 -z-10 m-0 max-w-full truncate font-display text-ornament leading-none opacity-40">{idol.name}</p>
       <div className="flex flex-col gap-8 md:flex-row md:items-end">
-        <IdolPhoto idolId={idol.id} size={1024} className="photo-frame w-56 shrink-0 sm:w-72" />
+        <div className="shrink-0 -rotate-2" style={{ filter: `drop-shadow(0 0 40px color-mix(in oklab, ${tier} 55%, transparent))` }}><IdolPhoto idolId={idol.id} size={1024} className="photo-frame w-56 sm:w-72" /></div>
         <div className="min-w-0 flex-1 space-y-4">
-          <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Reserve"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
+          <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Reserve"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl" style={{ color: tier }}>Tier {tierOf(idol.rating)}</span></p>
           <h2 id="idol-name" className="m-0 text-hero leading-none break-words">{idol.name}</h2>
           <p className="kicker m-0 flex items-center gap-2 text-text-secondary">{idol.nationality && <Flag code={idol.nationality} decorative />}{facts.join(" · ")}</p>
-          <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Career record ${record.wins} wins, ${record.draws} draws, ${record.losses} losses`}>
+          <p className="score m-0 flex items-baseline gap-3" aria-label={`Career record ${record.wins} wins, ${record.draws} draws, ${record.losses} losses`}>
             <span className="text-headline text-cool">{record.wins}<small className="text-sm">W</small></span>
             <span className="text-headline">{record.draws}<small className="text-sm">D</small></span>
             <span className="text-headline text-danger">{record.losses}<small className="text-sm">L</small></span>
           </p>
           <dl className="m-0 flex flex-wrap gap-x-8 gap-y-2">
             {numbers.map(([label, value]) => (
-              <div key={label} className="border-l-2 border-accent-bright pl-3"><dt className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{label}</dt><dd className="m-0 font-display text-2xl">{value}</dd></div>
+              <div key={label} className="border-l-4 border-accent-bright pl-3"><dt className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{label}</dt><dd className="score m-0 mt-1 text-3xl">{value}</dd></div>
             ))}
           </dl>
-          <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex items-center gap-2 bg-surface-hover/60 px-3 py-2 text-xs font-bold uppercase hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
-            <GitCompareArrows aria-hidden="true" size={16} /> Compare (Head to Head)
+          <Link to="/wiki/h2h" search={{ a: idol.id }} className="inline-flex -skew-x-12 items-center gap-2 rounded-[3px] bg-stage-hi px-4 py-2 text-xs font-bold tracking-[0.12em] uppercase shadow-[inset_0_-2px_0_var(--color-accent-bright)] hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-accent-bright">
+            <span className="inline-flex skew-x-12 items-center gap-2"><GitCompareArrows aria-hidden="true" size={16} /> Compare (Head to Head)</span>
           </Link>
         </div>
       </div>

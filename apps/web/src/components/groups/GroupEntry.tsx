@@ -18,9 +18,9 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
   const comps = Object.keys(g.byComp);
   const numbers: [string, string, string][] = [["Wins", String(g.wins), "text-cool"], ["Draws", String(g.draws), ""], ["Losses", String(g.losses), "text-danger"], ["Win rate", pct(g.winRate), "text-accent-bright"], ["Diff", g.gameDiff > 0 ? `+${g.gameDiff}` : String(g.gameDiff), ""], ["Avg rating", g.avgRating.toFixed(1), ""]];
   return (
-    <li className={`relative border-t border-border/60 py-6 ${rank <= 3 ? "pl-0" : "sm:pl-16"}`}>
+    <li className={`relative mb-3 p-5 ${rank <= 3 ? "stage rounded-card shadow-[inset_0_3px_0_var(--color-winner)]" : "panel"}`}>
       <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
-        <span aria-hidden="true" className={`font-gothic leading-none text-accent-bright ${rank <= 3 ? "text-7xl" : "text-4xl opacity-70"}`}>{rank}</span>
+        <span aria-hidden="true" className={`score leading-none ${rank <= 3 ? "text-7xl text-winner [text-shadow:0_0_30px_rgb(240_199_94/0.4)]" : "text-4xl text-accent-bright opacity-80"}`}>{rank}</span>
         <CompetitionLogo logoId={logoId} className={rank <= 3 ? "size-16" : "size-10"} />
         <div className="min-w-0 flex-1">
           <h2 className="m-0 text-section">
@@ -32,13 +32,13 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
           <TierMix tiers={g.tiers} name={g.name} />
           {comps.length > 0 && (
             <ul className="m-0 mt-2 flex list-none flex-wrap gap-1 p-0" aria-label={`${g.name} titles`}>
-              {comps.map((c) => <li key={c} className="bg-surface-hover/60 px-2 py-0.5 text-xs">{NAME[c] ?? c} <b className="text-accent-bright">{g.byComp[c]}</b></li>)}
+              {comps.map((c) => <li key={c} className="chip bg-stage-hi text-text-primary"><span>{NAME[c] ?? c} <b className="text-winner">{g.byComp[c]}</b></span></li>)}
             </ul>
           )}
         </div>
         <dl className="m-0 flex flex-wrap gap-x-6 gap-y-1">
           {numbers.map(([label, value, tone]) => (
-            <div key={label}><dt className="text-[10px] font-bold tracking-[0.18em] text-text-secondary uppercase">{label}</dt><dd className={`m-0 font-display text-xl tabular-nums ${tone}`}>{value}</dd></div>
+            <div key={label}><dt className="text-[10px] font-bold tracking-[0.18em] text-text-secondary uppercase">{label}</dt><dd className={`score m-0 text-xl ${tone}`}>{value}</dd></div>
           ))}
         </dl>
       </div>
@@ -47,8 +47,8 @@ export function GroupEntry({ rank, g, logoId, open, onToggle, career, titles, ma
       </ul>
       {open && (
         <div className="mt-5 overflow-x-auto">
-          <table className="w-full border-collapse text-sm tabular-nums">
-            <caption className="kicker pb-2 text-left">{g.name} member stats</caption>
+          <table className="board text-sm">
+            <caption className="kicker pb-3 text-left">{g.name} member stats</caption>
             <thead>
               <tr className="text-left text-[10px] tracking-[0.15em] text-text-secondary uppercase">
                 {["#", "Member", ...comps.map((c) => NAME[c] ?? c), "Matches", "W-D-L", "Win rate"].map((h) => <th key={h} scope="col" className="px-2 pb-1 font-bold whitespace-nowrap">{h}</th>)}

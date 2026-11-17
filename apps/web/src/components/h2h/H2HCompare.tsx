@@ -53,15 +53,15 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
   ];
   return (
     <section aria-label="Comparison" className="space-y-8">
-      <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 sm:gap-6">
+      <div className="relative isolate grid grid-cols-[1fr_auto_1fr] items-end gap-3 overflow-hidden rounded-card p-4 shadow-[inset_0_3px_0_var(--color-accent-bright),0_30px_60px_-30px_black] sm:gap-6 sm:p-8" style={{ background: "radial-gradient(30rem 14rem at 50% 0%, color-mix(in oklab, var(--color-accent-bright) 22%, transparent), transparent 70%), linear-gradient(105deg, color-mix(in oklab, var(--color-accent) 45%, transparent) 0 49.6%, transparent 49.6% 50.4%, color-mix(in oklab, var(--color-tier-f) 70%, transparent) 50.4%), repeating-linear-gradient(-55deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 10px), var(--color-stage)" }}>
         <Side id={a} align="left" />
         <div className="pb-6 text-center">
           <p aria-hidden="true" className="m-0 font-gothic text-ornament leading-none text-accent">vs</p>
           <p className="kicker m-0 mt-2 text-text-secondary">Head-to-head record</p>
-          <p className="m-0 font-display text-section tabular-nums" aria-label={`Won ${w}, drawn ${d}, lost ${l}`}>
+          <p className="score m-0 text-hero" aria-label={`Won ${w}, drawn ${d}, lost ${l}`}>
             <span className="text-accent-bright">{w}</span>–{d}–<span className="text-cool">{l}</span>
           </p>
-          <span aria-hidden="true" className="mx-auto mt-2 flex h-2 w-40 overflow-hidden bg-surface-hover/50">
+          <span aria-hidden="true" className="mx-auto mt-3 flex h-3 w-44 -skew-x-12 overflow-hidden bg-bg-base/70 shadow-[0_0_24px_-8px_var(--color-accent-bright)]">
             <span className="bg-accent-bright" style={{ width: `${(w / total) * 100}%` }} /><span className="bg-muted" style={{ width: `${(d / total) * 100}%` }} /><span className="bg-cool" style={{ width: `${(l / total) * 100}%` }} />
           </span>
           <p className="m-0 mt-2 font-mono text-xs text-text-secondary">{pair?.meetings ?? 0} matches · games {games[0]}–{games[1]}</p>
@@ -70,13 +70,13 @@ export function H2HCompare({ a, b, pair, lineA, lineB, games, formA, formB }: {
         <Side id={b} align="right" />
       </div>
       <table className="w-full border-collapse text-sm">
-        <caption className="kicker pb-3 text-left text-accent-bright">Tale of the tape</caption>
+        <caption className="section-title pb-4 text-left text-lg">Tale of the tape</caption>
         <tbody>
           {rows.map(([label, va, vb]) => (
-            <tr key={label} className="border-t border-border/60">
-              <td className="w-1/3 py-3 font-display text-lg tabular-nums">{va}</td>
+            <tr key={label} className="odd:bg-stage-hi/50">
+              <td className="score w-1/3 px-3 py-3 text-xl text-accent-bright">{va}</td>
               <th scope="row" className="text-center text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">{label}</th>
-              <td className="w-1/3 text-right font-display text-lg tabular-nums">{vb}</td>
+              <td className="score w-1/3 px-3 text-right text-xl text-cool">{vb}</td>
             </tr>
           ))}
         </tbody>

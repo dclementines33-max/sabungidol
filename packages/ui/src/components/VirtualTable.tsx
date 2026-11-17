@@ -21,15 +21,15 @@ export function VirtualTable<Row>({ rows, columns, rowKey, label, rowHeight = 48
   return (
     <div ref={scroller} style={{ maxHeight: height }} className="overflow-auto panel" tabIndex={0} role="region" aria-label={label}>
       <table className="w-full border-collapse text-sm" aria-rowcount={rows.length + 1}>
-        <thead className="sticky top-0 z-10 bg-bg-raised">
-          <tr>{columns.map((c) => <th key={c.header} scope="col" className={`px-3 py-2 text-left font-medium text-text-secondary ${c.className ?? ""}`}>{c.header}</th>)}</tr>
+        <thead className="sticky top-0 z-10 bg-stage shadow-[inset_0_-2px_0_var(--color-accent-bright)]">
+          <tr>{columns.map((c) => <th key={c.header} scope="col" className={`px-3 py-2.5 text-left text-[10px] font-extrabold tracking-[0.18em] text-text-secondary uppercase ${c.className ?? ""}`}>{c.header}</th>)}</tr>
         </thead>
         <tbody>
           {top > 0 && <tr aria-hidden="true" style={{ height: top }} />}
           {items.map((item) => {
             const row = rows[item.index]!;
             return (
-              <tr key={rowKey(row)} aria-rowindex={item.index + 2} style={{ height: rowHeight }} className="border-t border-border">
+              <tr key={rowKey(row)} aria-rowindex={item.index + 2} style={{ height: rowHeight }} className="odd:bg-stage-hi/40 hover:bg-surface-hover/70">
                 {columns.map((c) => <td key={c.header} className={`px-3 ${c.className ?? ""}`}>{c.cell(row)}</td>)}
               </tr>
             );

@@ -58,7 +58,7 @@ export function IdolTelemetry({ id, onClose }: { id: string; onClose: () => void
               <section key={s.season} aria-label={s.name} className="space-y-2">
                 <h3 className="kicker m-0">{s.name} · rating {s.overall.rating} · {pct(s.overall.actual)} won vs {pct(s.overall.expected)} expected</h3>
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm tabular-nums">
+                  <table className="board text-sm">
                     <thead>
                       <tr className="text-left text-[10px] tracking-[0.15em] text-text-secondary uppercase">
                         {["Competition", "Games", "Won", "Expected", "Result", "Achieved", "Expected", "±"].map((h, i) => <th key={i} scope="col" className="px-2 pb-1 font-bold whitespace-nowrap">{h}</th>)}

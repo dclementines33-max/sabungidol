@@ -13,7 +13,7 @@ type Props = {
   mood?: { form: string; morale: number; moraleName: string; last: string[] } | null;
 };
 
-const H3 = "m-0 text-xs tracking-widest text-text-secondary uppercase";
+const H3 = "section-title text-lg";
 
 export function ProfileOverview({ badges, titles, awards = [], history, rating, mood }: Props) {
   return (
@@ -21,9 +21,9 @@ export function ProfileOverview({ badges, titles, awards = [], history, rating, 
       {mood && (
         <section aria-labelledby="mood" className="space-y-2 lg:col-span-2">
           <h3 id="mood" className={H3}>This season · right now</h3>
-          <dl className="m-0 flex flex-wrap gap-x-10 gap-y-2">
-            <div><dt className="text-xs text-text-secondary">Form</dt><dd className="m-0 font-display text-xl uppercase">{mood.form} <span className="font-mono text-sm text-text-secondary">{mood.last.join(" ")}</span></dd></div>
-            <div><dt className="text-xs text-text-secondary">Morale</dt><dd className="m-0 font-display text-xl uppercase">{mood.moraleName} <span className="font-mono text-sm text-text-secondary">{mood.morale > 0 ? "+" : ""}{mood.morale} / ±10</span></dd></div>
+          <dl className="m-0 grid gap-3 sm:grid-cols-2">
+            <div className="panel p-4"><dt className="kicker text-text-secondary">Form</dt><dd className="m-0 mt-1 font-display text-section uppercase">{mood.form} <span className="font-mono text-sm text-text-secondary">{mood.last.join(" ")}</span></dd></div>
+            <div className="panel p-4"><dt className="kicker text-text-secondary">Morale</dt><dd className="m-0 mt-1 font-display text-section uppercase">{mood.moraleName} <span className="font-mono text-sm text-text-secondary">{mood.morale > 0 ? "+" : ""}{mood.morale} / ±10</span></dd></div>
           </dl>
         </section>
       )}
@@ -31,11 +31,11 @@ export function ProfileOverview({ badges, titles, awards = [], history, rating, 
         <h3 id="badges" className={H3}>Badge</h3>
         {badges.length ? (
           <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-            {badges.map((b) => <li key={`${b.badge}-${b.season}`} className="rounded-control bg-surface-hover/60 px-2 py-1 text-sm">{BADGES[b.badge] ?? b.badge} <span className="text-text-secondary">S{b.season}</span></li>)}
+            {badges.map((b) => <li key={`${b.badge}-${b.season}`} className="chip bg-stage-hi text-text-primary shadow-[inset_0_-2px_0_var(--color-winner)]"><span>{BADGES[b.badge] ?? b.badge} <span className="text-text-secondary">S{b.season}</span></span></li>)}
           </ul>
         ) : <p className="m-0 text-sm text-text-secondary">No badges yet.</p>}
       </section>
-      <section aria-labelledby="titles" className="space-y-2">
+      <section aria-labelledby="titles" className="space-y-2 lg:col-span-2">
         <h3 id="titles" className={H3}>Trophy cabinet</h3>
         <TrophyCabinet titles={titles} />
       </section>

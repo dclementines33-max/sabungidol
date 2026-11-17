@@ -40,10 +40,10 @@ export function IdolFilters({ idols, filter, onFilter, view, onView }: {
       )}
       <Select label="Sort by" value={filter.sort} onChange={set("sort")} options={[["rating", "Rating"], ["name", "Name"]]} />
       <div className="ml-auto flex gap-1" role="group" aria-label="View">
-        <Button aria-pressed={view === "grid"} className={`px-2 ${view === "grid" ? "bg-surface-hover" : ""}`} onClick={() => onView("grid")}>
+        <Button aria-pressed={view === "grid"} className={`px-2 ${view === "grid" ? "bg-accent text-on-accent" : ""}`} onClick={() => onView("grid")}>
           <LayoutGrid aria-hidden="true" size={16} strokeWidth={1.5} /> Cards
         </Button>
-        <Button aria-pressed={view === "table"} className={`px-2 ${view === "table" ? "bg-surface-hover" : ""}`} onClick={() => onView("table")}>
+        <Button aria-pressed={view === "table"} className={`px-2 ${view === "table" ? "bg-accent text-on-accent" : ""}`} onClick={() => onView("table")}>
           <Table aria-hidden="true" size={16} strokeWidth={1.5} /> Table
         </Button>
       </div>

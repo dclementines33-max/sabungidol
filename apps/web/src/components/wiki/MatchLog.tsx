@@ -21,13 +21,13 @@ export function MatchLog({ filter, newest = true, label = "Match" }: { filter: M
     <div className="space-y-3">
       <p className="m-0 text-sm text-text-secondary" aria-live="polite">{label}: {total ?? 0} matches</p>
       {rows.length > 0 && (
-        <ul className="m-0 list-none divide-y divide-border panel p-0 text-sm" aria-label={label}>
+        <ul className="m-0 list-none space-y-1 p-0 text-sm" aria-label={label}>
           {rows.map((m) => (
-            <li key={m.id} className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 py-2 sm:grid-cols-[11rem_minmax(0,1fr)_auto_minmax(0,1fr)]">
+            <li key={m.id} className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 rounded-[4px] bg-stage-hi/50 px-3 py-2 odd:bg-stage-hi/80 sm:grid-cols-[11rem_minmax(0,1fr)_auto_minmax(0,1fr)]">
               <span className="col-span-3 font-mono text-xs text-text-secondary sm:col-span-1">{m.id.split("-").slice(0, 4).join(" · ")}</span>
-              <span className={`truncate text-right ${m.result === "A" ? "font-semibold" : ""}`}><IdolLink id={m.idolA} /></span>
-              <span className="w-14 text-center font-mono tabular-nums">{m.scoreA}–{m.scoreB}</span>
-              <span className={`truncate ${m.result === "B" ? "font-semibold" : ""}`}><IdolLink id={m.idolB} /></span>
+              <span className={`truncate text-right ${m.result === "A" ? "font-display uppercase" : m.result === "B" ? "text-text-secondary" : ""}`}><IdolLink id={m.idolA} /></span>
+              <span className="score w-16 -skew-x-12 bg-bg-base/80 py-1 text-center shadow-[inset_0_-2px_0_var(--color-accent-bright)]">{m.scoreA}–{m.scoreB}</span>
+              <span className={`truncate ${m.result === "B" ? "font-display uppercase" : m.result === "A" ? "text-text-secondary" : ""}`}><IdolLink id={m.idolB} /></span>
             </li>
           ))}
         </ul>
