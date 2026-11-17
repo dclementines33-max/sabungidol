@@ -22,6 +22,9 @@ describe(".sabung file", () => {
     files["data/idols.ndjson"] = strToU8('{"id":"a","name":"Mina","rating":99}\n{"id":"b","name":"Yuna","rating":84}');
     await expect(readSabung(zipSync(files), 2)).rejects.toThrow("Backup damaged: idols");
     await expect(readSabung(strToU8("hello"), 2)).rejects.toThrow("a .sabung backup (not a valid ZIP)");
+    for (const manifest of ["{not json", '{"app":"sabung-idol","schemaVersion":1,"format":1}']) {
+      await expect(readSabung(zipSync({ ...files, "manifest.json": strToU8(manifest) }), 2)).rejects.toThrow("isn't a Sabung Idol backup");
+    }
   });
 
   it("reads an older backup (schema upgrades run in order)", async () => {

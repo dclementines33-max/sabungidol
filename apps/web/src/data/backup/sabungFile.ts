@@ -43,8 +43,13 @@ export async function readSabung(bytes: Uint8Array, schemaVersion: number): Prom
   } catch {
     throw new Error("This isn't a .sabung backup (not a valid ZIP).");
   }
-  const manifest = files["manifest.json"] && (JSON.parse(strFromU8(files["manifest.json"])) as Manifest);
-  if (!manifest || manifest.app !== "sabung-idol") throw new Error("This isn't a Sabung Idol backup (no manifest.json).");
+  let manifest: Manifest | undefined;
+  try {
+    manifest = JSON.parse(strFromU8(files["manifest.json"] ?? new Uint8Array())) as Manifest;
+  } catch {
+    manifest = undefined; // a broken manifest is "not a backup", not a raw SyntaxError
+  }
+  if (!manifest || manifest.app !== "sabung-idol" || !manifest.tables) throw new Error("This isn't a Sabung Idol backup (no manifest.json).");
   if (manifest.schemaVersion > schemaVersion || manifest.format > FORMAT) {
     throw new Error(`This backup comes from a newer app version (schema ${manifest.schemaVersion}, here ${schemaVersion}). Update the app first.`);
   }

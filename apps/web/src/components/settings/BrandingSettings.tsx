@@ -35,8 +35,12 @@ export function BrandingSettings({ seasonId }: { seasonId: string }) {
     await queryClient.invalidateQueries({ queryKey: key });
   };
   const uploadLogo = async (code: string, fallback: string, file: File) => {
-    const logoId = await engine().savePhoto(file);
-    edit(code, fallback, { branding: { ...rowFor(code, fallback).branding, logoId } });
+    try {
+      const logoId = await engine().savePhoto(file);
+      edit(code, fallback, { branding: { ...rowFor(code, fallback).branding, logoId } });
+    } catch (error) {
+      notify({ level: "error", code: "E-BRAND-001", message: "Logo not saved.", context: error instanceof Error ? error.message : String(error) });
+    }
   };
 
   return (
