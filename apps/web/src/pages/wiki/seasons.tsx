@@ -28,7 +28,7 @@ function SeasonArchive() {
   const { data: seasons } = useQuery({ queryKey: ["season-list"], queryFn: () => engine().seasonList(), staleTime: 0, enabled: typeof Worker !== "undefined" });
   const played = (seasons ?? []).filter((s) => s.status !== "draft");
   const [picked, setPicked] = useState<string>();
-  const seasonId = picked ?? played[0]?.id;
+  const seasonId = played.some((s) => s.id === picked) ? picked : played[0]?.id; // a picked season that is gone (reset) falls back
   const { data: archive, isPending } = useQuery({ queryKey: ["season-archive", seasonId], queryFn: () => engine().seasonArchive(seasonId!) as Promise<ArchiveData>, staleTime: 0, enabled: !!seasonId });
   if (!seasons) return <p className="text-text-secondary">Loading season…</p>;
   if (!played.length) return <EmptyState icon={Archive} title="No seasons yet" description="A season shows in the archive once it starts." />;

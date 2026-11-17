@@ -11,19 +11,19 @@ export function Tabs({ label, tabs }: { label: string; tabs: { id: string; label
     setActive(next.id);
     document.getElementById(`${base}-${next.id}`)?.focus();
   };
-  const current = tabs.find((t) => t.id === active)!;
+  const current = tabs.find((t) => t.id === active) ?? tabs[0]!; // the active tab can drop out when the list changes
   return (
     <div>
       <div role="tablist" aria-label={label} className="mb-4 flex gap-1 overflow-x-auto border-b border-border">
         {tabs.map((t, i) => (
-          <button key={t.id} id={`${base}-${t.id}`} type="button" role="tab" aria-selected={t.id === active} aria-controls={`${base}-panel`} tabIndex={t.id === active ? 0 : -1}
+          <button key={t.id} id={`${base}-${t.id}`} type="button" role="tab" aria-selected={t.id === current.id} aria-controls={`${base}-panel`} tabIndex={t.id === current.id ? 0 : -1}
             onClick={() => setActive(t.id)} onKeyDown={(e) => move(e, i)}
-            className={`-mb-px border-b-2 px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright ${t.id === active ? "border-accent-bright text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary"}`}>
+            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-accent-bright ${t.id === current.id ? "border-accent-bright text-text-primary" : "border-transparent text-text-secondary hover:text-text-primary"}`}>
             {t.label}
           </button>
         ))}
       </div>
-      <div id={`${base}-panel`} role="tabpanel" aria-labelledby={`${base}-${active}`}>{current.content()}</div>
+      <div id={`${base}-panel`} role="tabpanel" aria-labelledby={`${base}-${current.id}`}>{current.content()}</div>
     </div>
   );
 }

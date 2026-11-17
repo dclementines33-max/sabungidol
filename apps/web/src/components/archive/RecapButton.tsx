@@ -19,8 +19,9 @@ export function RecapButton({ seasonName, titles }: { seasonName: string; titles
       const entries = await Promise.all(recapOrder(Object.keys(titles)).map(async (key) => {
         const id = titles[key]!.champion;
         const photoId = idols.find((i) => i.id === id)?.photoId;
-        const blob = photoId ? await engine().photoBlob(photoId, 1024) : null;
-        return { key, label: label(key), name: lookup(id)?.name ?? id, group: lookup(id)?.groupName ?? null, photo: blob ? await createImageBitmap(blob) : null };
+        // a missing or broken photo file draws the card without that photo instead of stopping the whole recap
+        const photo = photoId ? await engine().photoBlob(photoId, 1024).then((b) => (b ? createImageBitmap(b) : null)).catch(() => null) : null;
+        return { key, label: label(key), name: lookup(id)?.name ?? id, group: lookup(id)?.groupName ?? null, photo };
       }));
       await document.fonts.ready;
       const canvas = document.createElement("canvas");
