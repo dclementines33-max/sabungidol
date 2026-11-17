@@ -45,11 +45,9 @@ function fit(points: { r: number; v: number }[]) {
   return (r: number) => mv + b * (r - mr);
 }
 
-export function expectationParts(matches: SimMatch[], placements: Placement[], leagues: Record<string, string[]>, rating: (id: string) => number,
-  move: { promoted: Set<string>; relegated: Set<string> }): Map<string, Part[]> {
-  const parts = new Map<string, Part[]>();
-  const push = (id: string, part: Part) => { if (Math.abs(part.delta) >= 0.05) parts.set(id, [...(parts.get(id) ?? []), part]); };
-
+// Achievement per idol and competition (0–100) and what her rating expected there, fitted per competition group.
+export type PlaceExpectation = { id: string; comp: string; stage: string; actual: number; expected: number };
+export function placeExpectations(matches: SimMatch[], placements: Placement[], leagues: Record<string, string[]>, rating: (id: string) => number): PlaceExpectation[] {
   // Places, per competition group (all D1 leagues together, every B-Side cup together …).
   const rows = placements.map((p) => ({ id: p.idolId, comp: p.comp, group: groupOf(p.comp), stage: stageOf(p), v: placeValue(p) }));
   const inUzc = new Set(rows.filter((x) => x.comp === "UZC").map((x) => x.id));
@@ -63,11 +61,20 @@ export function expectationParts(matches: SimMatch[], placements: Placement[], l
     }
     for (const [id, [w, n]] of won) rows.push({ id, comp, group: comp, stage: `${w}/${n}`, v: (100 * w) / n });
   }
+  const out: PlaceExpectation[] = [];
   for (const group of new Set(rows.map((x) => x.group))) {
     const mine = rows.filter((x) => x.group === group);
     const expected = fit(mine.map((x) => ({ r: rating(x.id), v: x.v })));
-    for (const x of mine) push(x.id, { key: x.comp, stage: x.stage, delta: prestigeOf(x.comp) * (x.v - expected(rating(x.id))) * K });
+    for (const x of mine) out.push({ id: x.id, comp: x.comp, stage: x.stage, actual: x.v, expected: expected(rating(x.id)) });
   }
+  return out;
+}
+
+export function expectationParts(matches: SimMatch[], placements: Placement[], leagues: Record<string, string[]>, rating: (id: string) => number,
+  move: { promoted: Set<string>; relegated: Set<string> }): Map<string, Part[]> {
+  const parts = new Map<string, Part[]>();
+  const push = (id: string, part: Part) => { if (Math.abs(part.delta) >= 0.05) parts.set(id, [...(parts.get(id) ?? []), part]); };
+  for (const x of placeExpectations(matches, placements, leagues, rating)) push(x.id, { key: x.comp, stage: x.stage, delta: prestigeOf(x.comp) * (x.actual - x.expected) * K });
 
   // Win rate over the whole season vs what the rating expects.
   const record = new Map<string, [number, number]>();

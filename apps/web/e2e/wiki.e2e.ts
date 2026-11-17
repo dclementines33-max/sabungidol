@@ -228,7 +228,17 @@ test("Season Progression: six title races, positions, progress, titles per group
   const telemetry = page.getByRole("region", { name: "Telemetry" }); // 2026-11-17: games won vs what the rating expected
   await expect(telemetry.getByRole("img", { name: /^Games won against expectation for \d+ idols/ })).toBeVisible();
   await expect(telemetry.getByRole("region", { name: "Over-performers" }).getByRole("listitem")).toHaveCount(5);
+  const dot = telemetry.locator("circle").first();
+  await dot.hover();
+  await expect(telemetry.locator("svg text").last()).toHaveText(/^.+ · \d+ · [+−]?\d/); // the hovered idol's name, at once
   await telemetry.screenshot({ path: "test-results/telemetry.png" });
+  await dot.click(); // her telemetry over every season
+  const sheet = page.getByRole("dialog", { name: / · telemetry$/ });
+  await expect(sheet.getByRole("region", { name: "Season 1" }).getByRole("row").nth(1)).toBeVisible({ timeout: 30_000 });
+  await expect(sheet.getByRole("img", { name: /^Games won per season against expectation: Season 1 \d+% vs \d+%/ })).toBeVisible();
+  await sheet.screenshot({ path: "test-results/idol-telemetry.png" });
+  expect(await axe(page)).toEqual([]);
+  await page.keyboard.press("Escape");
   const towerChapter = page.getByRole("region", { name: "Timing tower" }); // 2026-11-17: replays on demand
   await expect(towerChapter.getByRole("list", { name: /^Standings .* after matchday \d+$/ }).getByRole("listitem")).toHaveCount(20);
   await towerChapter.getByRole("button", { name: "Play", exact: true }).click();

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { IdolSourceProvider } from "@sabung/ui";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, describe, expect, it } from "vitest";
 import { Telemetry } from "./Telemetry";
 
@@ -16,6 +17,16 @@ describe("Telemetry", () => {
     expect(document.querySelectorAll("circle")).toHaveLength(3);
     expect(within(screen.getByRole("region", { name: "Over-performers" })).getByRole("listitem").textContent).toBe("mina · rating 7870% vs 50%+20");
     expect(within(screen.getByRole("region", { name: "Under-performers" })).getByRole("listitem").textContent).toBe("yuna · rating 9055% vs 75%−20");
+  });
+  it("hovering a dot names the idol at once; clicking it opens her telemetry", () => {
+    render(<QueryClientProvider client={new QueryClient()}><IdolSourceProvider source={{ idol: (id) => ({ id, name: `Name ${id}`, rating: 80 }) as never, photo: () => undefined }}>
+      <Telemetry rows={[row("mina", 78, 0.7, 0.5), row("rei", 80, 0.5, 0.5)]} />
+    </IdolSourceProvider></QueryClientProvider>);
+    const dot = document.querySelectorAll("circle")[1]!;
+    fireEvent.mouseEnter(dot);
+    expect(screen.getByRole("img").textContent).toContain("Name rei · 80 · 0");
+    fireEvent.click(dot);
+    expect(screen.getByRole("dialog", { name: "Name rei · telemetry" })).toBeTruthy();
   });
   it("nothing played yet", () => {
     render(<IdolSourceProvider source={{ idol: () => undefined, photo: () => undefined }}><Telemetry rows={[]} /></IdolSourceProvider>);

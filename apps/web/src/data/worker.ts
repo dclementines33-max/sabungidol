@@ -17,6 +17,7 @@ import { seasonArchive } from "./archiveWorker";
 import { storyOf } from "./storyWorker";
 import { podiumOf } from "./honoursWorker";
 import { awardsOf } from "./awardsWorker";
+import { idolTelemetry } from "./idolTelemetryWorker";
 import { telemetryOf } from "./telemetryWorker";
 import { overview } from "./overviewWorker";
 import { awardHistory, careerTable, titlesByComp, champions, headToHead, records, idolProfile, matchPage, seasonList } from "./wikiWorker";
@@ -193,6 +194,7 @@ const api = {
   podiumDetail: async (seasonId: string, ids: string[]) => podiumOf(await open(), seasonId, ids),
   seasonAwards: async (seasonId: string) => awardsOf(await open(), seasonId),
   seasonTelemetry: async () => telemetryOf(await open()),
+  idolTelemetry: async (id: string) => idolTelemetry(await open(), id),
   overview: async () => overview(await open()),
   headToHead: async (a?: string, b?: string) => headToHead(await open(), a, b),
   matchPage: async (filter: MatchFilter, opts: { after?: string; limit?: number; newest?: boolean } = {}) => matchPage(await open(), filter, opts),

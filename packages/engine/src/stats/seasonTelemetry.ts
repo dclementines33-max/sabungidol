@@ -8,7 +8,7 @@ export type Telemetry = { idolId: string; rating: number; games: number; actual:
 
 export const MIN_GAMES = 10; // fewer games say nothing
 
-export function seasonTelemetry(matches: SimMatch[], scale = 40): Telemetry[] {
+export function seasonTelemetry(matches: SimMatch[], scale = 40, minGames = MIN_GAMES): Telemetry[] {
   const acc = new Map<string, { rating: number; games: number; won: number; expected: number }>();
   for (const m of matches) {
     const games = m.scoreA + m.scoreB;
@@ -19,7 +19,7 @@ export function seasonTelemetry(matches: SimMatch[], scale = 40): Telemetry[] {
       acc.set(id, { rating: a.rating, games: a.games + games, won: a.won + won, expected: a.expected + chance * games });
     }
   }
-  return [...acc].filter(([, a]) => a.games >= MIN_GAMES).map(([idolId, a]) => {
+  return [...acc].filter(([, a]) => a.games >= minGames).map(([idolId, a]) => {
     const actual = a.won / a.games;
     const expected = a.expected / a.games;
     return { idolId, rating: a.rating, games: a.games, actual, expected, delta: actual - expected };

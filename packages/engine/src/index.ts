@@ -38,6 +38,6 @@ export * from "./stats/newsScore";
 export * from "./stats/seasonMoments";
 export * from "./stats/simHighlights";
 export * from "./stats/careerNews";
-export { type Part, expectationParts, placeValue, prestigeOf } from "./season/expectation";
+export { type Part, type PlaceExpectation, expectationParts, placeExpectations, placeValue, prestigeOf } from "./season/expectation";
 export * from "./season/boardTargets";
 export * from "./morale";
