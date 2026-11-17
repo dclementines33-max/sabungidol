@@ -3,7 +3,7 @@
 // as big numbers (W–D–L, win rate, titles, podiums, matches) and the Head to Head button.
 import type { IdolRow } from "@sabung/db";
 import { tierOf } from "@sabung/shared";
-import { IdolPhoto, RatingBadge, SearchableIdolSelect } from "@sabung/ui";
+import { Flag, IdolPhoto, RatingBadge, SearchableIdolSelect, countryName } from "@sabung/ui";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { GitCompareArrows } from "lucide-react";
 import { useBranding } from "../../data/branding";
@@ -15,7 +15,7 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
   const navigate = useNavigate();
   const { brand } = useBranding();
   const years = age(idol.birthday);
-  const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality, years !== null ? `${years} yrs` : null, idol.active ? null : "Inactive"].filter(Boolean);
+  const facts = [idol.groupName ?? "Soloist", idol.role, idol.nationality && countryName(idol.nationality), years !== null ? `${years} yrs` : null, idol.active ? null : "Inactive"].filter(Boolean);
   const numbers: [string, string][] = [["Win rate", `${Math.round(record.winRate * 100)}%`], ["Titles", String(record.titles)], ["Podium", String(record.podiums)], ["Match", record.matches.toLocaleString("en-GB")]];
   return (
     <section aria-labelledby="idol-name" className="relative isolate space-y-6">
@@ -31,7 +31,7 @@ export function ProfileHero({ idol, idolIds, league, record }: { idol: IdolRow; 
         <div className="min-w-0 flex-1 space-y-4">
           <p className="m-0 flex flex-wrap items-center gap-2"><span className="tag">{league ? brand(league).name : "Reserve"}</span><RatingBadge rating={idol.rating} /><span className="font-gothic text-2xl text-accent-bright">Tier {tierOf(idol.rating)}</span></p>
           <h2 id="idol-name" className="m-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none break-words">{idol.name}</h2>
-          <p className="kicker m-0 text-text-secondary">{facts.join(" · ")}</p>
+          <p className="kicker m-0 flex items-center gap-2 text-text-secondary">{idol.nationality && <Flag code={idol.nationality} decorative />}{facts.join(" · ")}</p>
           <p className="m-0 flex items-baseline gap-3 font-display tabular-nums" aria-label={`Career record ${record.wins} wins, ${record.draws} draws, ${record.losses} losses`}>
             <span className="text-[clamp(2rem,5vw,3.5rem)] text-cool">{record.wins}<small className="text-sm">W</small></span>
             <span className="text-[clamp(2rem,5vw,3.5rem)]">{record.draws}<small className="text-sm">D</small></span>

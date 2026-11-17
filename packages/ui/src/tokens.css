@@ -171,6 +171,15 @@
     --tier: var(--color-tier-splus);
     --frame: conic-gradient(from 200deg, var(--color-tier-splus), color-mix(in oklab, var(--color-tier-splus) 35%, white), var(--color-brand-rose), var(--color-brand-violet), var(--color-brand-teal), var(--color-brand-lime), var(--color-tier-splus));
   }
+  /* S+ is clearly richer than S: a thicker prismatic frame, a double inner rule (gold hairline + light line) and a glow. */
+  .tcg-card[data-tier="S+"] {
+    padding: 4px;
+    box-shadow: 0 0 22px -4px color-mix(in oklab, var(--color-brand-violet) 70%, transparent), 0 0 34px -10px color-mix(in oklab, var(--color-tier-splus) 80%, transparent), 0 18px 30px -20px black;
+  }
+  .tcg-card[data-tier="S+"] > .tcg-art {
+    border-radius: calc(var(--radius-card) - 4px);
+    box-shadow: inset 0 0 0 1px var(--color-tier-splus), inset 0 0 0 3px rgb(0 0 0 / 0.55), inset 0 0 0 4px color-mix(in oklab, white 40%, transparent);
+  }
   .tcg-card[data-tier="S"] {
     --tier: var(--color-brand-gold);
     --frame: linear-gradient(150deg, color-mix(in oklab, var(--color-tier-splus) 45%, white), var(--color-brand-gold) 30%, color-mix(in oklab, var(--color-brand-gold) 45%, black) 55%, var(--color-tier-splus) 80%, color-mix(in oklab, var(--color-brand-gold) 60%, black));
@@ -186,6 +195,7 @@
     transition: background-position 900ms var(--ease-spring);
   }
   .tcg-card[data-tier="S+"]::after {
+    inset: 4px; border-radius: calc(var(--radius-card) - 4px);
     background:
       linear-gradient(115deg, transparent 35%, color-mix(in oklab, white 35%, transparent) 47%, transparent 58%) 100% 0 / 260% 260% no-repeat,
       linear-gradient(135deg, color-mix(in oklab, var(--color-brand-rose) 11%, transparent), color-mix(in oklab, var(--color-brand-gold) 9%, transparent), color-mix(in oklab, var(--color-brand-teal) 11%, transparent), color-mix(in oklab, var(--color-brand-violet) 11%, transparent));

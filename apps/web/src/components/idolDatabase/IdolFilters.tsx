@@ -1,7 +1,7 @@
 // The Idol Database toolbar: filters, sort and the grid/table switch (PRD §8).
 import type { IdolRow } from "@sabung/db";
 import { D1_LEAGUES, D2_LEAGUES, TIERS } from "@sabung/shared";
-import { Button } from "@sabung/ui";
+import { Button, countryName } from "@sabung/ui";
 import { LayoutGrid, Table } from "lucide-react";
 import type { IdolFilter } from "./filterIdols";
 
@@ -36,7 +36,7 @@ export function IdolFilters({ idols, filter, onFilter, view, onView }: {
       <Select label="Tier" value={filter.tier} onChange={set("tier")} options={[["", "All"], ...TIERS.map(({ tier }): [string, string] => [tier, tier])]} />
       <Select label="Status" value={filter.status} onChange={set("status")} options={[["", "All"], ["active", "Active"], ["inactive", "Inactive"]]} />
       {nationalities.length > 0 && ( // the default data has no nationality, so the filter waits for data that does
-        <Select label="Nationality" value={filter.nationality} onChange={set("nationality")} options={[["", "All"], ...nationalities.map((n): [string, string] => [n, n])]} />
+        <Select label="Nationality" value={filter.nationality} onChange={set("nationality")} options={[["", "All"], ...nationalities.map((n): [string, string] => [n, countryName(n)])]} />
       )}
       <Select label="Sort by" value={filter.sort} onChange={set("sort")} options={[["rating", "Rating"], ["name", "Name"]]} />
       <div className="ml-auto flex gap-1" role="group" aria-label="View">

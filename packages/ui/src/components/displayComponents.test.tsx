@@ -6,6 +6,7 @@ import { EmptyState } from "./EmptyState";
 import { FormBadge } from "./FormBadge";
 import { IdolCard } from "./IdolCard";
 import { IdolPhoto } from "./IdolPhoto";
+import { IdolSourceProvider } from "./idolSource";
 import { RatingBadge } from "./RatingBadge";
 import { SampleIdols } from "./sampleIdols";
 import { StatTile } from "./StatTile";
@@ -69,6 +70,18 @@ describe("IdolCard", () => {
     expect(screen.getByText("Soloist")).toBeTruthy();
     expect(screen.queryByLabelText(/titles/)).toBeNull();
     expect(screen.queryByText("Inactive")).toBeNull();
+  });
+  it("shows the nationality as a flag image named by country, and the group logo when the group has one", () => {
+    const idol = { id: "x", name: "Xia", groupName: "Nova", rating: 96, nationality: "kr", groupLogoId: "logo1" };
+    const { container } = render(<IdolSourceProvider source={{ idol: () => idol as never, photo: () => undefined, galleryPhoto: (id) => (id === "logo1" ? "blob:logo" : undefined) }}><IdolCard idolId="x" /></IdolSourceProvider>);
+    const flag = screen.getByRole("img", { name: "South Korea" }) as HTMLImageElement;
+    expect(flag.getAttribute("src")).toBe("/flags/kr.svg");
+    expect(container.querySelector('img[src="blob:logo"]')).toBeTruthy();
+    expect(screen.getByRole("article").getAttribute("data-tier")).toBe("S+");
+  });
+  it("a country without a flag file shows its letters, still named", () => {
+    render(<IdolSourceProvider source={{ idol: () => ({ id: "y", name: "Yu", groupName: null, rating: 70, nationality: "FR" }) as never, photo: () => undefined }}><IdolCard idolId="y" /></IdolSourceProvider>);
+    expect(screen.getByRole("img", { name: "France" }).textContent).toBe("FR");
   });
   it("marks an inactive idol", () => {
     render(<SampleIdols><IdolCard idolId="rina" /></SampleIdols>);

@@ -45,7 +45,7 @@ test("Idol Profile: from a card, tabs with career, matches, rivals", async () =>
   await page.getByRole("button", { name: "Edit profile" }).click(); // step 9: edit from the profile
   await page.getByRole("dialog").getByLabel("Country (2 letters)").fill("JP");
   await page.getByRole("dialog").getByRole("button", { name: "Save" }).click();
-  await expect(page.getByText(/· JP ·|· JP$/).first()).toBeVisible();
+  await expect(page.getByText(/· Japan ·|· Japan$/).first()).toBeVisible(); // the country by name, with its flag (2026-11-17)
   await page.getByRole("tab", { name: "Career" }).click();
   await expect(page.getByRole("cell", { name: "Combined" })).toBeVisible();
   await page.getByRole("group", { name: "Career scope" }).getByRole("button").nth(1).click(); // Update 2: career scope per competition
