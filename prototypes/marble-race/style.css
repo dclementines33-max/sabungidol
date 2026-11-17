@@ -66,6 +66,8 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .result .actions { margin-top: 18px; }
 .loading { position: fixed; inset: 0; display: grid; place-items: center; margin: 0; font: 400 24px "Bungee", sans-serif; background: var(--bg); }
 .loading[hidden] { display: none; }
+#lost { text-align: center; font-size: 18px; line-height: 1.6; }
+#lost button { margin-top: 14px; padding: 10px 22px; border: 0; transform: skewX(-10deg); background: linear-gradient(100deg, var(--accent), #c2203a); color: #fff; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 
 @media (max-width: 700px) {
   .panel { left: 8px; right: 8px; width: auto; bottom: 64px; max-height: 45%; }

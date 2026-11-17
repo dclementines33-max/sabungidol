@@ -18,6 +18,10 @@ const quality = new URLSearchParams(location.search).get("q") === "low" ? "low" 
 document.querySelectorAll("[data-quality]").forEach((b) => b.classList.toggle("on", b.dataset.quality === quality));
 const { renderer, scene, camera } = createScene($("view"), track, quality);
 const director = createDirector(camera, renderer.domElement, track);
+// If the GPU resets, three.js waits for the browser to restore the context; until then (or if it never comes) say so.
+renderer.domElement.addEventListener("webglcontextlost", () => { $("lost").hidden = false; });
+renderer.domElement.addEventListener("webglcontextrestored", () => { $("lost").hidden = true; });
+$("reload").onclick = () => location.reload();
 
 const files = await fetch("/photos.json").then((r) => r.json()).catch(() => []);
 const nameOf = (f) => f.replace(/\.jpg$/, "").replace(/ IVE$/, "");

@@ -80,6 +80,13 @@ export async function createMarble(scene, { photoUrl, color, label, R }) {
       geo.attributes.position.needsUpdate = true;
     },
     resetTrail() { filled = false; },
-    dispose() { scene.remove(group, trail); },
+    dispose() { // free the GPU side too: textures and geometries piled up race after race
+      scene.remove(group, trail);
+      for (const o of [...group.children, trail]) {
+        if (!o.isSprite) o.geometry.dispose(); // sprites share one geometry
+        if (o.material.map && o.material.map !== haloTex) o.material.map.dispose();
+        o.material.dispose();
+      }
+    },
   };
 }

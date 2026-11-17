@@ -14,11 +14,11 @@ const canvasTex = (w, h, draw) => {
 export function createScene(canvas, track, quality) {
   const th = track.def.theme;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, quality === "high" ? 2 : 1.25));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, quality === "high" ? 1.5 : 1)); // kept low: a GPU that runs out resets the WebGL context (white screen)
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.shadowMap.enabled = quality === "high";
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(th.sky[1], 45, 140);
@@ -34,7 +34,7 @@ export function createScene(canvas, track, quality) {
   const key = new THREE.DirectionalLight("#ffe9d6", 2.2);
   key.position.set(30, 45, 20);
   key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(1024, 1024);
   Object.assign(key.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 1, far: 140 });
   key.shadow.bias = -0.0005;
   scene.add(key);
