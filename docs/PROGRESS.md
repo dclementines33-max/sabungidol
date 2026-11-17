@@ -9,7 +9,15 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match preview, latest)
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match round 2, latest)
+
+**Marble Match round 2 (commit 0b1fd7a), still separate:** top scoreboard; 2–20 marbles (2 = Bo-N series for the app, 3+ =
+Grand Prix with F1 points); 15 arenas (7 new: Neon Overdrive, Crystal Corkscrew, Magma Core, Factory 9, Sky Bridges,
+Dragon Slalom, Abyss Trench) with catch-up boost pads (top speed 13 + up to 6 m/s for those behind); new kit pieces in
+`src/kit/extras.js` (boost, glass pipe, tumble drum) + wrecking ball. All 15 run with 20 marbles; details and lessons in
+`prototypes/marble-match/README.md`. Waiting for the user's feedback.
+
+## ▶ RESUME HERE (saved 2026-11-18, router-4 — marble match preview)
 
 **Marble Match preview (commit 3896070), still SEPARATE from the app:** `prototypes/marble-match/` (:5191, launch.json
 "marble-match"). 8 arenas (Seoul + Busan sprint, Tokyo pachinko/funnel, Frostbite gauntlet, Jeju spiral, Arena of
