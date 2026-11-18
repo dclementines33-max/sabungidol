@@ -9,7 +9,16 @@ file only when the task touches it. Keep this file current: update it at the end
 - The user writes Indonesian; answer in Indonesian. Plan a phase, wait for approval, then build step by
   step; the user said "run several steps in a row, efficiently" â€” stop only for real decisions.
 
-## ▶ RESUME HERE (saved 2026-11-18, router-5 — Marble Race IN THE APP, latest)
+## ▶ HANDOVER (2026-11-18, router-5 → the user's next session)
+
+Production = **524d335d** (Marble Race in the app, below). Everything committed (HEAD 8c063ca); nothing in flight; only
+the user's own CLAUDE.md change is uncommitted (leave it). The user is opening a NEW session to discuss the **next big
+project**. Earlier hint from the user: the frozen v1 marble prototype (`prototypes/marble-race`, tag
+`marble-race-prototype-v1`) is their base for a future big project (they once mentioned ~24 F1-like tracks, reusable
+for another project). Ask what the project is before planning. User decided 2026-11-18: competition-panel match rows
+do NOT need the arena name (fine as is).
+
+## ▶ RESUME HERE (saved 2026-11-18, router-5 — Marble Race IN THE APP)
 
 **Built (commits cb31bc4, 2a03377, 392a736, 1dae90c), DEPLOYED to production 524d335d (user said "deploy"). Full e2e 56 pass / 3 skip / 2 load flakes (firstOpen second
 tab, worker < 10 s; both pass alone).** The user asked: marble race in the app, arenas on
